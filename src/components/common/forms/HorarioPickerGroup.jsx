@@ -3,7 +3,6 @@ import { Grid } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
-import dayjs from 'dayjs';
 
 export default function HorarioPickerGroup({ horario }) {
   return (
@@ -12,7 +11,7 @@ export default function HorarioPickerGroup({ horario }) {
         <Grid size={{ xs: 12, sm: 6, md: 6 }}>
           <DesktopTimePicker
             label="Horario inicio"
-            defaultValue={horario.inicio || dayjs().hour(9).minute(0)}
+            defaultValue={horario.inicio}
             slots={{ actionBar: () => null }}
             sx={{ width: '100%' }}
           />
@@ -21,7 +20,7 @@ export default function HorarioPickerGroup({ horario }) {
         <Grid size={{ xs: 12, sm: 6, md: 6 }}>
           <DesktopTimePicker
             label="Horario fin"
-            defaultValue={horario.fin || dayjs().hour(12).minute(0)}
+            defaultValue={horario.fin}
             slots={{ actionBar: () => null }}
             sx={{ width: '100%' }}
           />

@@ -4,7 +4,6 @@ import HorariosSection from './HorariosSection';
 import ButtonsSection from '../common/forms/FormActions';
 import AgregarButton from '../common/forms/AgregarButton';
 import { useState } from 'react';
-import dayjs from 'dayjs';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePrestador } from '../../context/PrestadorContext';
 import LoadingOverlay from '../common/LoadingOverlay';
@@ -12,13 +11,13 @@ import LoadingOverlay from '../common/LoadingOverlay';
 const makeHorario = () => ({
   id: crypto.randomUUID(),
   dias: [],
-  duracion: 30,
-  inicio: dayjs().hour(9).minute(0),
-  fin: dayjs().hour(12).minute(0),
+  duracion: null,
+  inicio: null,
+  fin: null,
 });
 
 export default function AltaTurnosForm() {
-  const { loading } = usePrestador();
+  const { loading, direccionSeleccionada } = usePrestador();
   const [horarios, setHorarios] = useState([makeHorario()]);
 
   const handleAgregarHorario = () => {
@@ -52,7 +51,7 @@ export default function AltaTurnosForm() {
               puedeEliminar={horarios.length > 1}
               onEliminar={() => handleEliminarHorario(horario.id)}
             />
-            {index === horarios.length - 1 && (
+            {index === horarios.length - 1 && direccionSeleccionada && (
               <AgregarButton
                 onAgregar={handleAgregarHorario}
                 label={'Agregar otro horario'}
