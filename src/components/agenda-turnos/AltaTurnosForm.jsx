@@ -5,44 +5,55 @@ import ButtonsSection from './ButtonsSection';
 import AgregarHorariosButton from './AgregarHorariosButton';
 import { useState } from 'react';
 import dayjs from 'dayjs';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const makeHorario = () => ({
+  id: crypto.randomUUID(),
+  dias: [],
+  duracion: 30,
+  inicio: dayjs().hour(9).minute(0),
+  fin: dayjs().hour(12).minute(0),
+});
 
 export default function AltaTurnosForm() {
-  const [horarios, setHorarios] = useState([
-    {
-      dias: [],
-      duracion: 30,
-      inicio: dayjs('09:00', 'HH:mm'),
-      fin: dayjs('12:00', 'HH:mm'),
-    },
-  ]);
+  const [horarios, setHorarios] = useState([makeHorario()]);
 
   const handleAgregarHorario = () => {
-    setHorarios([
-      ...horarios,
-      { dias: [], duracion: 30, inicio: null, fin: null },
-    ]);
+    setHorarios((prev) => [...prev, makeHorario()]);
   };
 
-  const handleEliminarHorario = (index) => {
-    setHorarios(horarios.filter((_, i) => i !== index));
+  const handleEliminarHorario = (id) => {
+    setHorarios((prev) => prev.filter((h) => h.id !== id));
   };
+
   return (
     <Box component="form" noValidate>
       <PrestadorSection />
 
       <Divider sx={{ my: 6 }} />
 
-      {horarios.map((horario, index) => (
-        <HorariosSection
-          key={index}
-          index={index}
-          horario={horario}
-          puedeEliminar={horarios.length > 1}
-          onEliminar={() => handleEliminarHorario(index)}
-        />
-      ))}
-
-      <AgregarHorariosButton onAgregar={handleAgregarHorario} />
+      <AnimatePresence>
+        {horarios.map((horario, index) => (
+          <motion.div
+            key={horario.id}
+            initial={{ opacity: 0, y: -20, height: 0 }}
+            animate={{ opacity: 1, y: 0, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.35, ease: 'easeInOut' }}
+            style={{ overflow: 'hidden' }}
+          >
+            <HorariosSection
+              horario={horario}
+              numero={index + 1}
+              puedeEliminar={horarios.length > 1}
+              onEliminar={() => handleEliminarHorario(horario.id)}
+            />
+            {index === horarios.length - 1 && (
+              <AgregarHorariosButton onAgregar={handleAgregarHorario} />
+            )}
+          </motion.div>
+        ))}
+      </AnimatePresence>
 
       <Divider sx={{ my: 6 }} />
 
