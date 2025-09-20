@@ -19,6 +19,7 @@
     "@mui/material": "^7.3.2",
     "@mui/styled-engine-sc": "^7.3.2",
     "@mui/x-date-pickers": "^8.11.3",
+    "axios": "^1.12.2",
     "dayjs": "^1.11.18",
     "framer-motion": "^12.23.16",
     "prop-types": "^15.8.1",

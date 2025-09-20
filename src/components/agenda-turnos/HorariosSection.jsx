@@ -24,7 +24,7 @@ export default function HorariosSection({
   const duraciones = Array.from({ length: 24 }, (_, i) => (i + 1) * 5);
 
   return (
-    <Box sx={{ mt: 4 }} fullWidth="true">
+    <Box sx={{ mt: 4 }}>
       <Typography variant="h6" fontWeight="medium" sx={{ mb: 2 }}>
         Horarios de atención
       </Typography>

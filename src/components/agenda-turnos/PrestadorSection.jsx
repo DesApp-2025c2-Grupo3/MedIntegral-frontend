@@ -10,7 +10,8 @@ import {
 import { usePrestador } from '../../context/PrestadorContext';
 
 export default function PrestadorSection() {
-  const { prestador, info, seleccionarPrestador, loading } = usePrestador();
+  const { prestador, prestadores, info, seleccionarPrestador, loading } =
+    usePrestador();
 
   return (
     <Box>
@@ -23,15 +24,26 @@ export default function PrestadorSection() {
           <Autocomplete
             fullWidth
             value={prestador}
-            onChange={(_, newValue) => seleccionarPrestador(newValue)}
-            options={[
-              { id: 1, label: 'Dra. Tita Merello' },
-              { id: 2, label: 'Dr. Juan Pérez' },
-              { id: 3, label: 'Dra. María López' },
-            ]}
-            getOptionLabel={(option) => option.label || ''}
+            onChange={(_, newValue) => seleccionarPrestador(newValue?.id)}
+            options={prestadores || []}
+            getOptionLabel={(option) => option.nombre || ''}
+            isOptionEqualToValue={(option, value) => option.id === value.id}
+            loading={loading}
             renderInput={(params) => (
-              <TextField {...params} label="Prestador" variant="outlined" />
+              <TextField
+                {...params}
+                label="Prestador"
+                variant="outlined"
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: (
+                    <>
+                      {loading ? <CircularProgress size={18} /> : null}
+                      {params.InputProps.endAdornment}
+                    </>
+                  ),
+                }}
+              />
             )}
           />
         </Grid>
@@ -42,6 +54,7 @@ export default function PrestadorSection() {
               fullWidth
               options={info.especialidades}
               loading={loading}
+              getOptionLabel={(option) => option.nombre || ''}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -69,6 +82,7 @@ export default function PrestadorSection() {
                 fullWidth
                 options={info.direcciones}
                 loading={loading}
+                getOptionLabel={(option) => option.calle || option}
                 renderInput={(params) => (
                   <TextField
                     {...params}
