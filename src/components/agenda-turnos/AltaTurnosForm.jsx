@@ -1,8 +1,8 @@
 import { Box, Divider } from '@mui/material';
 import PrestadorSection from './PrestadorSection';
 import HorariosSection from './HorariosSection';
-import ButtonsSection from './ButtonsSection';
-import AgregarHorariosButton from './AgregarHorariosButton';
+import ButtonsSection from '../common/forms/FormActions';
+import AgregarButton from '../common/forms/AgregarButton';
 import { useState } from 'react';
 import dayjs from 'dayjs';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -49,7 +49,10 @@ export default function AltaTurnosForm() {
               onEliminar={() => handleEliminarHorario(horario.id)}
             />
             {index === horarios.length - 1 && (
-              <AgregarHorariosButton onAgregar={handleAgregarHorario} />
+              <AgregarButton
+                onAgregar={handleAgregarHorario}
+                label={'Agregar otro horario'}
+              />
             )}
           </motion.div>
         ))}

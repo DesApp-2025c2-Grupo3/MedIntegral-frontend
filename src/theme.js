@@ -27,8 +27,8 @@ const theme = createTheme({
       main: '#FF9800',
     },
     action: {
-      hover: '#1976D2',
-      selected: '#37474F',
+      hover: '#29B6F6',
+      selected: '#0077C8',
       disabledBackground: '#E0E0E0',
     },
     divider: '#B0BEC5',
@@ -162,20 +162,6 @@ const theme = createTheme({
     styleOverrides: {
       root: {
         borderColor: '#9B9B9B',
-      },
-    },
-  },
-  MuiButtonBase: {
-    styleOverrides: {
-      root: {
-        textTransform: 'none !important',
-      },
-    },
-  },
-  MuiButton: {
-    styleOverrides: {
-      root: {
-        textTransform: 'none !important',
       },
     },
   },

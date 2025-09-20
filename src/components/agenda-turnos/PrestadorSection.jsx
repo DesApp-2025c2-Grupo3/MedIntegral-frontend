@@ -3,11 +3,15 @@ import {
   Grid,
   Typography,
   TextField,
-  FormControl,
   Autocomplete,
+  FormControl,
+  CircularProgress,
 } from '@mui/material';
+import { usePrestador } from '../../context/PrestadorContext';
 
 export default function PrestadorSection() {
+  const { prestador, info, seleccionarPrestador, loading } = usePrestador();
+
   return (
     <Box>
       <Typography variant="h6" fontWeight="medium" sx={{ mb: 2 }}>
@@ -18,42 +22,73 @@ export default function PrestadorSection() {
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <Autocomplete
             fullWidth
+            value={prestador}
+            onChange={(_, newValue) => seleccionarPrestador(newValue)}
             options={[
-              'Dra. Tita Merello',
-              'Dr. Juan Pérez',
-              'Dra. María López',
+              { id: 1, label: 'Dra. Tita Merello' },
+              { id: 2, label: 'Dr. Juan Pérez' },
+              { id: 3, label: 'Dra. María López' },
             ]}
+            getOptionLabel={(option) => option.label || ''}
             renderInput={(params) => (
               <TextField {...params} label="Prestador" variant="outlined" />
             )}
           />
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <Autocomplete
-            fullWidth
-            options={['Cardiología', 'Pediatría', 'Dermatología']}
-            renderInput={(params) => (
-              <TextField {...params} label="Especialidad" variant="outlined" />
-            )}
-          />
-        </Grid>
-
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <FormControl fullWidth sx={{ display: 'block' }}>
+        {info.especialidades.length > 0 && (
+          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             <Autocomplete
               fullWidth
-              options={[
-                'Avenida Vergara 1908',
-                'Av. Corrientes 1234',
-                'San Martín 456',
-              ]}
+              options={info.especialidades}
+              loading={loading}
               renderInput={(params) => (
-                <TextField {...params} label="Dirección" variant="outlined" />
+                <TextField
+                  {...params}
+                  label="Especialidad"
+                  variant="outlined"
+                  InputProps={{
+                    ...params.InputProps,
+                    endAdornment: (
+                      <>
+                        {loading ? <CircularProgress size={18} /> : null}
+                        {params.InputProps.endAdornment}
+                      </>
+                    ),
+                  }}
+                />
               )}
             />
-          </FormControl>
-        </Grid>
+          </Grid>
+        )}
+
+        {info.direcciones.length > 0 && (
+          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+            <FormControl fullWidth sx={{ display: 'block' }}>
+              <Autocomplete
+                fullWidth
+                options={info.direcciones}
+                loading={loading}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Dirección"
+                    variant="outlined"
+                    InputProps={{
+                      ...params.InputProps,
+                      endAdornment: (
+                        <>
+                          {loading ? <CircularProgress size={18} /> : null}
+                          {params.InputProps.endAdornment}
+                        </>
+                      ),
+                    }}
+                  />
+                )}
+              />
+            </FormControl>
+          </Grid>
+        )}
       </Grid>
     </Box>
   );

@@ -6,10 +6,14 @@ export default function FormActions() {
       sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}
       fullWidth="true"
     >
-      <Button color="error" variant="text">
+      <Button color="error" variant="text" sx={{ textTransform: 'none' }}>
         Cancelar
       </Button>
-      <Button color="primary" variant="contained">
+      <Button
+        color="primary"
+        variant="contained"
+        sx={{ textTransform: 'none' }}
+      >
         Guardar
       </Button>
     </Box>
