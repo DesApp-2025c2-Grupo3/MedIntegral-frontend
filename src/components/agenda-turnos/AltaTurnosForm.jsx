@@ -6,6 +6,8 @@ import AgregarButton from '../common/forms/AgregarButton';
 import { useState } from 'react';
 import dayjs from 'dayjs';
 import { motion, AnimatePresence } from 'framer-motion';
+import { usePrestador } from '../../context/PrestadorContext';
+import LoadingOverlay from '../common/LoadingOverlay';
 
 const makeHorario = () => ({
   id: crypto.randomUUID(),
@@ -16,6 +18,7 @@ const makeHorario = () => ({
 });
 
 export default function AltaTurnosForm() {
+  const { loading } = usePrestador();
   const [horarios, setHorarios] = useState([makeHorario()]);
 
   const handleAgregarHorario = () => {
@@ -28,6 +31,7 @@ export default function AltaTurnosForm() {
 
   return (
     <Box component="form" noValidate>
+      <LoadingOverlay open={loading} />
       <PrestadorSection />
 
       <Divider sx={{ mt: 4 }} />

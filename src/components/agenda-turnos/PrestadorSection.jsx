@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import {
   Box,
   Grid,
@@ -19,6 +20,16 @@ export default function PrestadorSection() {
     direccionSeleccionada,
     setDireccionSeleccionada,
   } = usePrestador();
+
+  const especialidadRef = useRef(null);
+
+  useEffect(() => {
+    if (prestador && info.especialidades.length > 0) {
+      setTimeout(() => {
+        especialidadRef.current?.querySelector('input')?.focus();
+      }, 100);
+    }
+  }, [prestador, info.especialidades]);
 
   return (
     <Box>
@@ -53,6 +64,7 @@ export default function PrestadorSection() {
             renderInput={(params) => (
               <TextField {...params} label="Especialidad" variant="outlined" />
             )}
+            ref={especialidadRef}
           />
         </Grid>
 

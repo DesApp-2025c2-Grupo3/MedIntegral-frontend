@@ -91,30 +91,10 @@ const theme = createTheme({
             backgroundColor: '#FFFFFF',
             padding: '0 8px',
           },
-        },
-      },
-    },
-    MuiSelect: {
-      styleOverrides: {
-        root: {
-          width: '100%',
-          boxShadow: '0px 2px 6px rgba(0,0,0,0.05)',
-          borderRadius: 8,
-        },
-        icon: {
-          fontSize: '1.5rem',
-        },
-      },
-    },
-    MuiAutocomplete: {
-      styleOverrides: {
-        root: {
-          width: '100%',
-          boxShadow: '0px 2px 6px rgba(0,0,0,0.05)',
-          borderRadius: 8,
-        },
-        icon: {
-          fontSize: '1.5rem',
+          '&.Mui-disabled': {
+            color: '#9e9e9e',
+            transition: 'color 0.3s ease',
+          },
         },
       },
     },
@@ -122,13 +102,30 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           width: '100%',
-          boxShadow: '0px 2px 6px rgba(0,0,0,0.05)',
           borderRadius: 8,
-        },
-        inputAdornedEnd: {
-          '& .MuiSvgIcon-root': {
-            fontSize: '1.5rem',
+          boxShadow: '0px 2px 6px rgba(0,0,0,0.05)',
+          transition: 'background-color 0.3s ease, opacity 0.3s ease',
+          '&.Mui-disabled': {
+            backgroundColor: '#f5f5f5',
+            opacity: 1,
           },
+        },
+        input: {
+          transition: 'color 0.3s ease, -webkit-text-fill-color 0.3s ease',
+          '&.Mui-disabled': {
+            WebkitTextFillColor: '#9e9e9e',
+          },
+        },
+      },
+    },
+
+    MuiAutocomplete: {
+      styleOverrides: {
+        root: {
+          width: '100%',
+        },
+        popupIndicator: {
+          fontSize: '1.5rem',
         },
       },
     },
@@ -136,24 +133,6 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           fontSize: '1.5rem',
-        },
-      },
-    },
-  },
-  MuiMenuItem: {
-    styleOverrides: {
-      root: {
-        '&:hover': {
-          backgroundColor: '#00AEEF',
-          color: '#fff',
-        },
-        '&.Mui-selected': {
-          backgroundColor: '#00AEEF',
-          color: '#fff',
-        },
-        '&.Mui-selected:hover': {
-          backgroundColor: '#00AEEF',
-          color: '#fff',
         },
       },
     },
