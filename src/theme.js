@@ -10,6 +10,9 @@ const theme = createTheme({
     subtitle1: {
       fontSize: '1.25rem',
     },
+    subtitle2: {
+      fontSize: '1.15rem',
+    },
   },
   palette: {
     primary: {
