@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 export default function DiasSemanaSelector({ dias }) {
   return (
     <FormGroup sx={{ mb: 3, width: '100%', mt: 1 }}>
-      <Grid container spacing={2} sx={{ mt: 1, mb: 3 }}>
+      <Grid container spacing={2} sx={{ mt: 1 }}>
         {dias.map((dia) => (
-          <Grid item xs={6} sm={3} md={2} key={dia}>
+          <Grid sx={{ xs: 6, sm: 3, md: 2 }} key={dia}>
             <FormControlLabel control={<Checkbox />} label={dia} />
           </Grid>
         ))}

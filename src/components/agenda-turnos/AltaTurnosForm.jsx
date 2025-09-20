@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePrestador } from '../../context/PrestadorContext';
 import LoadingOverlay from '../common/LoadingOverlay';
+import { useNavigateToListado } from '../../utils/navigation';
 
 const makeHorario = () => ({
   id: crypto.randomUUID(),
@@ -17,6 +18,16 @@ const makeHorario = () => ({
 });
 
 export default function AltaTurnosForm() {
+  const navigateToListado = useNavigateToListado();
+
+  const handleGuardar = () => {
+    navigateToListado('alta-exitosa');
+  };
+
+  const handleCancelar = () => {
+    navigateToListado('alta-cancelada');
+  };
+
   const { loading, direccionSeleccionada } = usePrestador();
   const [horarios, setHorarios] = useState([makeHorario()]);
 
@@ -63,7 +74,12 @@ export default function AltaTurnosForm() {
 
       <Divider sx={{ my: 4 }} />
 
-      <ButtonsSection />
+      <ButtonsSection
+        handleGuardar={handleGuardar}
+        onConfirmCancel={handleCancelar}
+        cancelTitle="¿Cancelar alta de turnos?"
+        cancelMessage="Si cancelás ahora, se perderán todos los cambios que hayas hecho en el formulario."
+      />
     </Box>
   );
 }

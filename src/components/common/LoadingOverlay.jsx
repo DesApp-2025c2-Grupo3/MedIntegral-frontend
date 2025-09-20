@@ -10,7 +10,7 @@ export default function LoadingOverlay({ open }) {
         zIndex: (theme) => theme.zIndex.drawer + 1,
       }}
     >
-      <CircularProgress enableTrackSlot color="inherit" />
+      <CircularProgress color="inherit" />
     </Backdrop>
   );
 }
