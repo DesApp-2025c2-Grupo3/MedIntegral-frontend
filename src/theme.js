@@ -14,7 +14,7 @@ const theme = createTheme({
   palette: {
     primary: {
       main: '#00AEEF',
-      dark: '#0A0F1C',
+      dark: '#0077C8',
       contrastText: '#FFFFFF',
     },
     text: {
@@ -108,6 +108,18 @@ const theme = createTheme({
         },
       },
     },
+    MuiAutocomplete: {
+      styleOverrides: {
+        root: {
+          width: '100%',
+          boxShadow: '0px 2px 6px rgba(0,0,0,0.05)',
+          borderRadius: 8,
+        },
+        icon: {
+          fontSize: '1.5rem',
+        },
+      },
+    },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
@@ -145,6 +157,13 @@ const theme = createTheme({
           backgroundColor: '#00AEEF',
           color: '#fff',
         },
+      },
+    },
+  },
+  MuiDivider: {
+    styleOverrides: {
+      root: {
+        borderColor: '#9B9B9B',
       },
     },
   },
