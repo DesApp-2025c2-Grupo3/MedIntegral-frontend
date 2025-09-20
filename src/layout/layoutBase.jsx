@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import { Box, Container } from '@mui/material';
 import Sidebar from '../components/Sidebar';
-import BreadcrumbsNav from '../components/BreadcrumbsNav';
+import BreadcrumbsNav from '../components/common/BreadcrumbsNav';
 
 export default function LayoutBase() {
   return (
