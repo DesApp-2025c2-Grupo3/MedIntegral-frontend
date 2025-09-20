@@ -36,14 +36,14 @@ export default function HorariosSection({
 
   return (
     <Box sx={{ mt: 4 }} fullWidth="true">
-      <Typography variant="h5" fontWeight="medium" sx={{ mb: 4 }}>
+      <Typography variant="h6" fontWeight="medium" sx={{ mb: 2 }}>
         Horarios de atención
       </Typography>
 
-      <Typography variant="subtitle2" fontWeight="medium">
+      <Typography variant="subtitle1" fontWeight="medium">
         Días de la semana
       </Typography>
-      <FormGroup sx={{ mb: 4, width: '100%', mt: 2 }}>
+      <FormGroup sx={{ mb: 4, width: '100%', mt: 1 }}>
         <Grid container spacing={1}>
           {diasSemana.map((dia) => (
             <Grid size={{ xs: 6, sm: 4, md: 3 }} key={dia}>
@@ -61,10 +61,10 @@ export default function HorariosSection({
         </Grid>
       </FormGroup>
 
-      <Typography variant="subtitle2" fontWeight="medium">
+      <Typography variant="subtitle1" fontWeight="medium">
         Especificaciones del turno
       </Typography>
-      <Grid container spacing={3} sx={{ mt: 2 }}>
+      <Grid container spacing={3} sx={{ mt: 3 }}>
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <Autocomplete
             options={duraciones}
@@ -87,6 +87,7 @@ export default function HorariosSection({
               label="Horario inicio"
               defaultValue={horario.inicio || dayjs().hour(9).minute(0)}
               slots={{ actionBar: () => null }}
+              sx={{ width: '100%' }}
             />
           </Grid>
 
@@ -95,6 +96,7 @@ export default function HorariosSection({
               label="Horario fin"
               defaultValue={horario.fin || dayjs().hour(12).minute(0)}
               slots={{ actionBar: () => null }}
+              sx={{ width: '100%' }}
             />
           </Grid>
         </LocalizationProvider>

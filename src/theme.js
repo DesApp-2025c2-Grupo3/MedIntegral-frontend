@@ -7,12 +7,7 @@ const theme = createTheme({
     fontWeightMedium: 700,
     fontWeightBold: 900,
     color: '#9B9B9B',
-    subtitle1: {
-      fontSize: '1.25rem',
-    },
-    subtitle2: {
-      fontSize: '1.15rem',
-    },
+    fontSize: 14,
   },
   palette: {
     primary: {
@@ -167,6 +162,20 @@ const theme = createTheme({
     styleOverrides: {
       root: {
         borderColor: '#9B9B9B',
+      },
+    },
+  },
+  MuiButtonBase: {
+    styleOverrides: {
+      root: {
+        textTransform: 'none !important',
+      },
+    },
+  },
+  MuiButton: {
+    styleOverrides: {
+      root: {
+        textTransform: 'none !important',
       },
     },
   },

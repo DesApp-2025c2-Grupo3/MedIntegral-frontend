@@ -9,8 +9,8 @@ import {
 
 export default function PrestadorSection() {
   return (
-    <Box sx={{ mb: 3, width: '100%' }}>
-      <Typography variant="h5" fontWeight="medium" sx={{ mb: 4 }}>
+    <Box>
+      <Typography variant="h6" fontWeight="medium" sx={{ mb: 2 }}>
         Datos del prestador
       </Typography>
 

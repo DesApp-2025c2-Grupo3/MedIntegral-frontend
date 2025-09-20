@@ -30,7 +30,7 @@ export default function AltaTurnosForm() {
     <Box component="form" noValidate>
       <PrestadorSection />
 
-      <Divider sx={{ my: 6 }} />
+      <Divider sx={{ mt: 4 }} />
 
       <AnimatePresence>
         {horarios.map((horario, index) => (
@@ -55,7 +55,7 @@ export default function AltaTurnosForm() {
         ))}
       </AnimatePresence>
 
-      <Divider sx={{ my: 6 }} />
+      <Divider sx={{ my: 4 }} />
 
       <ButtonsSection />
     </Box>
