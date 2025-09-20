@@ -5,13 +5,20 @@ import {
   TextField,
   Autocomplete,
   FormControl,
-  CircularProgress,
 } from '@mui/material';
 import { usePrestador } from '../../context/PrestadorContext';
 
 export default function PrestadorSection() {
-  const { prestador, prestadores, info, seleccionarPrestador, loading } =
-    usePrestador();
+  const {
+    prestador,
+    prestadores,
+    info,
+    seleccionarPrestador,
+    especialidadSeleccionada,
+    setEspecialidadSeleccionada,
+    direccionSeleccionada,
+    setDireccionSeleccionada,
+  } = usePrestador();
 
   return (
     <Box>
@@ -24,85 +31,51 @@ export default function PrestadorSection() {
           <Autocomplete
             fullWidth
             value={prestador}
-            onChange={(_, newValue) => seleccionarPrestador(newValue?.id)}
+            onChange={(_, newValue) => seleccionarPrestador(newValue)}
             options={prestadores || []}
-            getOptionLabel={(option) => option.nombre || ''}
+            getOptionLabel={(option) => option?.nombre || ''}
             isOptionEqualToValue={(option, value) => option.id === value.id}
-            loading={loading}
             renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Prestador"
-                variant="outlined"
-                InputProps={{
-                  ...params.InputProps,
-                  endAdornment: (
-                    <>
-                      {loading ? <CircularProgress size={18} /> : null}
-                      {params.InputProps.endAdornment}
-                    </>
-                  ),
-                }}
-              />
+              <TextField {...params} label="Prestador" variant="outlined" />
             )}
           />
         </Grid>
 
-        {info.especialidades.length > 0 && (
-          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+          <Autocomplete
+            fullWidth
+            disabled={!prestador}
+            value={especialidadSeleccionada}
+            onChange={(_, newValue) => setEspecialidadSeleccionada(newValue)}
+            options={info.especialidades || []}
+            getOptionLabel={(option) => option?.nombre || ''}
+            isOptionEqualToValue={(option, value) => option.id === value.id}
+            renderInput={(params) => (
+              <TextField {...params} label="Especialidad" variant="outlined" />
+            )}
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+          <FormControl fullWidth sx={{ display: 'block' }}>
             <Autocomplete
               fullWidth
-              options={info.especialidades}
-              loading={loading}
-              getOptionLabel={(option) => option.nombre || ''}
+              disabled={!prestador}
+              value={direccionSeleccionada}
+              onChange={(_, newValue) => setDireccionSeleccionada(newValue)}
+              options={info.direcciones || []}
+              getOptionLabel={(option) =>
+                option?.calle
+                  ? `${option.calle} ${option.altura || ''}`
+                  : option
+              }
+              isOptionEqualToValue={(option, value) => option.id === value.id}
               renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Especialidad"
-                  variant="outlined"
-                  InputProps={{
-                    ...params.InputProps,
-                    endAdornment: (
-                      <>
-                        {loading ? <CircularProgress size={18} /> : null}
-                        {params.InputProps.endAdornment}
-                      </>
-                    ),
-                  }}
-                />
+                <TextField {...params} label="Dirección" variant="outlined" />
               )}
             />
-          </Grid>
-        )}
-
-        {info.direcciones.length > 0 && (
-          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-            <FormControl fullWidth sx={{ display: 'block' }}>
-              <Autocomplete
-                fullWidth
-                options={info.direcciones}
-                loading={loading}
-                getOptionLabel={(option) => option.calle || option}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Dirección"
-                    variant="outlined"
-                    InputProps={{
-                      ...params.InputProps,
-                      endAdornment: (
-                        <>
-                          {loading ? <CircularProgress size={18} /> : null}
-                          {params.InputProps.endAdornment}
-                        </>
-                      ),
-                    }}
-                  />
-                )}
-              />
-            </FormControl>
-          </Grid>
-        )}
+          </FormControl>
+        </Grid>
       </Grid>
     </Box>
   );

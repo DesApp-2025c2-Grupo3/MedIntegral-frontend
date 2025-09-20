@@ -1,28 +1,34 @@
 import axios from 'axios';
 import { prestadoresMock } from '../mocks/prestadores';
-import { prestadorDetalleMock } from '../mocks/prestadorDetalle';
+import { prestador1DetalleMock } from '../mocks/prestador1DetalleMock';
+import { prestador2DetalleMock } from '../mocks/prestador2DetalleMock';
+import { prestador3DetalleMock } from '../mocks/prestador3DetalleMock';
 
 const api = axios.create({
   baseURL: 'http://localhost:5000/api',
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  headers: { 'Content-Type': 'application/json' },
 });
 
 api.interceptors.request.use((config) => {
   if (window.location.hostname === 'localhost') {
-    console.log(config.url);
     if (config.url === '/prestadores') {
+      return Promise.reject({ isMock: true, data: prestadoresMock });
+    }
+    if (config.url === '/prestadores/1') {
+      return Promise.reject({ isMock: true, data: prestador1DetalleMock });
+    }
+    if (config.url === '/prestadores/2') {
       return Promise.reject({
         isMock: true,
-        data: prestadoresMock,
+        data: prestador2DetalleMock,
       });
     }
-    if (config.url?.startsWith('/prestadores/')) {
-      console.log('interceptando fetch a prestador detalle');
-      return Promise.reject({ isMock: true, data: prestadorDetalleMock });
+    if (config.url === '/prestadores/3') {
+      return Promise.reject({
+        isMock: true,
+        data: prestador3DetalleMock,
+      });
     }
-    console.log('no entró');
   }
   return config;
 });

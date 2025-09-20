@@ -8,50 +8,50 @@ export function PrestadorProvider({ children }) {
   const [prestadores, setPrestadores] = useState([]);
   const [prestador, setPrestador] = useState(null);
 
+  const [especialidadSeleccionada, setEspecialidadSeleccionada] =
+    useState(null);
+  const [direccionSeleccionada, setDireccionSeleccionada] = useState(null);
+
   const [info, setInfo] = useState({
     especialidades: [],
     direcciones: [],
     horarios: [],
   });
 
-  const [loadingLista, setLoadingLista] = useState(false);
-  const [loadingDetalle, setLoadingDetalle] = useState(false);
-
   useEffect(() => {
     const fetchPrestadores = async () => {
-      setLoadingLista(true);
       try {
         const res = await api.get('/prestadores');
-        setPrestadores(res.data || []);
+        setPrestadores(res.data);
       } catch (err) {
         console.error('Error cargando lista de prestadores:', err);
         setPrestadores([]);
-      } finally {
-        setLoadingLista(false);
       }
     };
-
     fetchPrestadores();
   }, []);
 
-  const seleccionarPrestador = async (id) => {
-    setPrestador(id);
-    setLoadingDetalle(true);
+  const seleccionarPrestador = async (prestadorObj) => {
+    setPrestador(prestadorObj);
+
+    setEspecialidadSeleccionada(null);
+    setDireccionSeleccionada(null);
+    setInfo({ especialidades: [], direcciones: [], horarios: [] });
+
+    if (!prestadorObj) return;
 
     try {
-      const res = await api.get(`/prestadores/${id}`);
+      const res = await api.get(`/prestadores/${prestadorObj.id}`);
       const data = res.data;
 
       setInfo({
         especialidades: data.especialidades || [],
-        direcciones: data.direcciones || [],
+        direcciones: data.centrosDeAtencion || [],
         horarios: data.horarios || [],
       });
     } catch (err) {
       console.error('Error cargando info del prestador:', err);
       setInfo({ especialidades: [], direcciones: [], horarios: [] });
-    } finally {
-      setLoadingDetalle(false);
     }
   };
 
@@ -62,8 +62,10 @@ export function PrestadorProvider({ children }) {
         prestador,
         info,
         seleccionarPrestador,
-        loadingLista,
-        loadingDetalle,
+        especialidadSeleccionada,
+        setEspecialidadSeleccionada,
+        direccionSeleccionada,
+        setDireccionSeleccionada,
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-export const prestadorDetalleMock = {
+export const prestador1DetalleMock = {
   id: 1,
   nombre: 'Dra. Tita Merello',
   cuilCuit: '27-12345678-9',
