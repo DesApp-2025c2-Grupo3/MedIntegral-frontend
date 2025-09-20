@@ -7,7 +7,9 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePrestador } from '../../context/PrestadorContext';
 import LoadingOverlay from '../common/LoadingOverlay';
-import { useNavigateToListado } from '../../utils/navigation';
+import { useNavigateToListado } from '../../hooks/navigation';
+import { useFormValidation } from '../../hooks/useFormValidation';
+import { validateAltaTurnos } from '../../utils/validations';
 
 const makeHorario = () => ({
   id: crypto.randomUUID(),
@@ -20,16 +22,35 @@ const makeHorario = () => ({
 export default function AltaTurnosForm() {
   const navigateToListado = useNavigateToListado();
 
+  const {
+    loading,
+    direccionSeleccionada,
+    prestador,
+    especialidadSeleccionada,
+  } = usePrestador();
+
+  const [horarios, setHorarios] = useState([makeHorario()]);
+
+  const { validateBeforeSave } = useFormValidation(validateAltaTurnos);
+
   const handleGuardar = () => {
-    navigateToListado('alta-exitosa');
+    validateBeforeSave(
+      {
+        prestador,
+        especialidad: especialidadSeleccionada,
+        direccion: direccionSeleccionada,
+        horarios,
+      },
+      () => {
+        console.log('✅ Guardando alta de turnos...');
+        navigateToListado('alta-exitosa');
+      }
+    );
   };
 
   const handleCancelar = () => {
     navigateToListado('alta-cancelada');
   };
-
-  const { loading, direccionSeleccionada } = usePrestador();
-  const [horarios, setHorarios] = useState([makeHorario()]);
 
   const handleAgregarHorario = () => {
     setHorarios((prev) => [...prev, makeHorario()]);
@@ -37,6 +58,10 @@ export default function AltaTurnosForm() {
 
   const handleEliminarHorario = (id) => {
     setHorarios((prev) => prev.filter((h) => h.id !== id));
+  };
+
+  const handleHorarioChange = (id, newHorario) => {
+    setHorarios((prev) => prev.map((h) => (h.id === id ? newHorario : h)));
   };
 
   return (
@@ -61,6 +86,9 @@ export default function AltaTurnosForm() {
               numero={index + 1}
               puedeEliminar={horarios.length > 1}
               onEliminar={() => handleEliminarHorario(horario.id)}
+              onChange={(newHorario) =>
+                handleHorarioChange(horario.id, newHorario)
+              }
             />
             {index === horarios.length - 1 && direccionSeleccionada && (
               <AgregarButton
