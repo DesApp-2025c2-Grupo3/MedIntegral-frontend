@@ -5,7 +5,7 @@ import DiasSemanaSelector from '../common/forms/DiasSemanaSelector';
 import EliminarButton from '../common/forms/EliminarButton';
 import HorarioPickerGroup from '../common/forms/HorarioPickerGroup';
 import { usePrestador } from '../../context/PrestadorContext';
-import { motion, AnimatePresence } from 'framer-motion';
+import FadeSlide from '../common/animations/FadeSlide';
 import { useFormValidationContext } from '../../context/FormValidationContext';
 
 export default function HorariosSection({
@@ -23,22 +23,10 @@ export default function HorariosSection({
 
   const duraciones = Array.from({ length: 24 }, (_, i) => (i + 1) * 5);
 
-  // Handlers
-  const handleDiasOnChange = (newDias) => {
-    onChange({ ...horario, dias: newDias });
-    if (newDias?.length > 0) clearError(`horario-${numero - 1}-dias`);
-  };
-
-  const handleDuracionOnChange = (_, newValue) => {
-    onChange({ ...horario, duracion: newValue });
-    if (newValue) clearError(`horario-${numero - 1}-duracion`);
-  };
-
-  const handleHorarioOnChange = (field, newValue) => {
-    onChange({ ...horario, [field]: newValue });
-    if (field === 'inicio' && newValue)
-      clearError(`horario-${numero - 1}-inicio`);
-    if (field === 'fin' && newValue) clearError(`horario-${numero - 1}-fin`);
+  // Handler genérico
+  const handleFieldChange = (field, value) => {
+    onChange({ ...horario, [field]: value });
+    if (value) clearError(`horario-${numero - 1}-${field}`);
   };
 
   return (
@@ -47,27 +35,13 @@ export default function HorariosSection({
         Horarios de atención
       </Typography>
 
-      <AnimatePresence mode="wait">
+      <FadeSlide>
         {!direccionSeleccionada ? (
-          <motion.div
-            key="no-direccion"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Typography variant="body1" color="text.secondary">
-              Seleccione una dirección para configurar los horarios de atención.
-            </Typography>
-          </motion.div>
+          <Typography variant="body1" color="text.secondary">
+            Seleccione una dirección para configurar los horarios de atención.
+          </Typography>
         ) : (
-          <motion.div
-            key="con-direccion"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
-          >
+          <>
             {/* Días de la semana */}
             <Typography variant="subtitle1" fontWeight="medium">
               Días de la semana
@@ -75,12 +49,12 @@ export default function HorariosSection({
             <DiasSemanaSelector
               dias={diasSemana}
               selected={horario.dias}
-              onChange={handleDiasOnChange}
-              data-field={`horario-${numero - 1}-dias`}
+              onChange={(newDias) => handleFieldChange('dias', newDias)}
+              dataField={`horario-${numero - 1}-dias`}
               error={error?.field === `horario-${numero - 1}-dias`}
               helperText={
                 error?.field === `horario-${numero - 1}-dias`
-                  ? error.message
+                  ? error?.message
                   : ''
               }
             />
@@ -94,7 +68,9 @@ export default function HorariosSection({
                 <Autocomplete
                   options={duraciones}
                   value={horario.duracion}
-                  onChange={handleDuracionOnChange}
+                  onChange={(_, newValue) =>
+                    handleFieldChange('duracion', newValue)
+                  }
                   getOptionLabel={(option) => `${option} min`}
                   renderInput={(params) => (
                     <TextField
@@ -105,7 +81,7 @@ export default function HorariosSection({
                       error={error?.field === `horario-${numero - 1}-duracion`}
                       helperText={
                         error?.field === `horario-${numero - 1}-duracion`
-                          ? error.message
+                          ? error?.message
                           : ''
                       }
                     />
@@ -116,26 +92,26 @@ export default function HorariosSection({
 
               <HorarioPickerGroup
                 horario={horario}
-                onChange={handleHorarioOnChange}
+                onChange={(field, value) => handleFieldChange(field, value)}
                 dataFieldGroup={`horario-${numero - 1}-horario`}
                 dataFieldInicio={`horario-${numero - 1}-inicio`}
                 dataFieldFin={`horario-${numero - 1}-fin`}
                 errorInicio={error?.field === `horario-${numero - 1}-inicio`}
                 helperTextInicio={
                   error?.field === `horario-${numero - 1}-inicio`
-                    ? error.message
+                    ? error?.message
                     : ''
                 }
                 errorFin={error?.field === `horario-${numero - 1}-fin`}
                 helperTextFin={
                   error?.field === `horario-${numero - 1}-fin`
-                    ? error.message
+                    ? error?.message
                     : ''
                 }
                 groupError={error?.field === `horario-${numero - 1}-horario`}
                 groupHelperText={
                   error?.field === `horario-${numero - 1}-horario`
-                    ? error.message
+                    ? error?.message
                     : ''
                 }
               />
@@ -148,9 +124,9 @@ export default function HorariosSection({
                 label={'Eliminar horario'}
               />
             )}
-          </motion.div>
+          </>
         )}
-      </AnimatePresence>
+      </FadeSlide>
     </Box>
   );
 }

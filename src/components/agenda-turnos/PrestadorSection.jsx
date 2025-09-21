@@ -1,13 +1,7 @@
-import { useEffect, useRef } from 'react';
-import {
-  Box,
-  Grid,
-  Typography,
-  TextField,
-  Autocomplete,
-  FormControl,
-} from '@mui/material';
+import { useLayoutEffect, useRef } from 'react';
+import { Box, Grid, Typography } from '@mui/material';
 import { usePrestador } from '../../context/PrestadorContext';
+import ValidatedAutocomplete from '../common/forms/ValidatedAutocomplete';
 import { useFormValidationContext } from '../../context/FormValidationContext';
 
 export default function PrestadorSection() {
@@ -22,31 +16,18 @@ export default function PrestadorSection() {
     setDireccionSeleccionada,
   } = usePrestador();
 
-  const { error, clearError } = useFormValidationContext();
-
+  const { clearError } = useFormValidationContext();
   const especialidadRef = useRef(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (prestador && info.especialidades.length > 0) {
-      setTimeout(() => {
-        especialidadRef.current?.querySelector('input')?.focus();
-      }, 100);
+      especialidadRef.current?.querySelector('input')?.focus();
     }
   }, [prestador, info.especialidades]);
 
-  const handlePrestadorOnChange = (_, newValue) => {
-    seleccionarPrestador(newValue);
-    if (newValue) clearError('prestador');
-  };
-
-  const handleEspecialidadOnChange = (_, newValue) => {
-    setEspecialidadSeleccionada(newValue);
-    if (newValue) clearError('especialidad');
-  };
-
-  const handleDireccionOnChange = (_, newValue) => {
-    setDireccionSeleccionada(newValue);
-    if (newValue) clearError('direccion');
+  const handleChange = (setter, clearKey) => (_, newValue) => {
+    setter(newValue);
+    if (newValue) clearError(clearKey);
   };
 
   return (
@@ -58,79 +39,46 @@ export default function PrestadorSection() {
       <Grid container spacing={3}>
         {/* Prestador */}
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <Autocomplete
-            fullWidth
+          <ValidatedAutocomplete
             value={prestador}
-            onChange={handlePrestadorOnChange}
-            options={prestadores || []}
+            onChange={handleChange(seleccionarPrestador, 'prestador')}
+            options={prestadores}
             getOptionLabel={(option) => option?.nombre || ''}
             isOptionEqualToValue={(option, value) => option.id === value.id}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Prestador"
-                variant="outlined"
-                data-field="prestador"
-                error={error?.field === 'prestador'}
-                helperText={error?.field === 'prestador' ? error.message : ''}
-              />
-            )}
+            label="Prestador"
+            dataField="prestador"
           />
         </Grid>
 
         {/* Especialidad */}
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <Autocomplete
-            fullWidth
-            disabled={!prestador}
+          <ValidatedAutocomplete
             value={especialidadSeleccionada}
-            onChange={handleEspecialidadOnChange}
-            options={info.especialidades || []}
+            onChange={handleChange(setEspecialidadSeleccionada, 'especialidad')}
+            options={info.especialidades}
             getOptionLabel={(option) => option?.nombre || ''}
             isOptionEqualToValue={(option, value) => option.id === value.id}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Especialidad"
-                variant="outlined"
-                data-field="especialidad"
-                error={error?.field === 'especialidad'}
-                helperText={
-                  error?.field === 'especialidad' ? error.message : ''
-                }
-              />
-            )}
-            ref={especialidadRef}
+            label="Especialidad"
+            dataField="especialidad"
+            disabled={!prestador}
+            inputRef={especialidadRef}
           />
         </Grid>
 
         {/* Dirección */}
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <FormControl fullWidth sx={{ display: 'block' }}>
-            <Autocomplete
-              fullWidth
-              disabled={!prestador}
-              value={direccionSeleccionada}
-              onChange={handleDireccionOnChange}
-              options={info.direcciones || []}
-              getOptionLabel={(option) =>
-                option?.calle
-                  ? `${option.calle} ${option.altura || ''}`
-                  : option
-              }
-              isOptionEqualToValue={(option, value) => option.id === value.id}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Dirección"
-                  variant="outlined"
-                  data-field="direccion"
-                  error={error?.field === 'direccion'}
-                  helperText={error?.field === 'direccion' ? error.message : ''}
-                />
-              )}
-            />
-          </FormControl>
+          <ValidatedAutocomplete
+            value={direccionSeleccionada}
+            onChange={handleChange(setDireccionSeleccionada, 'direccion')}
+            options={info.direcciones}
+            getOptionLabel={(option) =>
+              option?.calle ? `${option.calle} ${option.altura || ''}` : option
+            }
+            isOptionEqualToValue={(option, value) => option.id === value.id}
+            label="Dirección"
+            dataField="direccion"
+            disabled={!prestador}
+          />
         </Grid>
       </Grid>
     </Box>

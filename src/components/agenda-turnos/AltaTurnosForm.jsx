@@ -1,27 +1,23 @@
+import { useState, useCallback } from 'react';
 import { Box, Divider } from '@mui/material';
+import { AnimatePresence } from 'framer-motion';
+
 import PrestadorSection from './PrestadorSection';
 import HorariosSection from './HorariosSection';
 import ButtonsSection from '../common/forms/FormActions';
 import AgregarButton from '../common/forms/AgregarButton';
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { usePrestador } from '../../context/PrestadorContext';
 import LoadingOverlay from '../common/LoadingOverlay';
+
+import FadeSlide from '../common/animations/FadeSlide';
+import { makeHorario } from '../../utils/horarios';
+
+import { usePrestador } from '../../context/PrestadorContext';
 import { useNavigateToListado } from '../../hooks/navigation';
 import { useFormValidation } from '../../hooks/useFormValidation';
 import { validateAltaTurnos } from '../../utils/validations';
 
-const makeHorario = () => ({
-  id: crypto.randomUUID(),
-  dias: [],
-  duracion: null,
-  inicio: null,
-  fin: null,
-});
-
 export default function AltaTurnosForm() {
   const navigateToListado = useNavigateToListado();
-
   const {
     loading,
     direccionSeleccionada,
@@ -30,7 +26,6 @@ export default function AltaTurnosForm() {
   } = usePrestador();
 
   const [horarios, setHorarios] = useState([makeHorario()]);
-
   const { validateBeforeSave } = useFormValidation(validateAltaTurnos);
 
   const handleGuardar = () => {
@@ -60,9 +55,9 @@ export default function AltaTurnosForm() {
     setHorarios((prev) => prev.filter((h) => h.id !== id));
   };
 
-  const handleHorarioChange = (id, newHorario) => {
+  const handleHorarioChange = useCallback((id, newHorario) => {
     setHorarios((prev) => prev.map((h) => (h.id === id ? newHorario : h)));
-  };
+  }, []);
 
   return (
     <Box component="form" noValidate>
@@ -73,14 +68,7 @@ export default function AltaTurnosForm() {
 
       <AnimatePresence>
         {horarios.map((horario, index) => (
-          <motion.div
-            key={horario.id}
-            initial={{ opacity: 0, y: -20, height: 0 }}
-            animate={{ opacity: 1, y: 0, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.35, ease: 'easeInOut' }}
-            style={{ overflow: 'hidden' }}
-          >
+          <FadeSlide key={horario.id}>
             <HorariosSection
               horario={horario}
               numero={index + 1}
@@ -93,10 +81,10 @@ export default function AltaTurnosForm() {
             {index === horarios.length - 1 && direccionSeleccionada && (
               <AgregarButton
                 onAgregar={handleAgregarHorario}
-                label={'Agregar otro horario'}
+                label="Agregar otro horario"
               />
             )}
-          </motion.div>
+          </FadeSlide>
         ))}
       </AnimatePresence>
 
