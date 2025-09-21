@@ -16,6 +16,8 @@ import {
   useNavigateToListado,
   useNavigateToEdicion,
 } from '../../hooks/navigation';
+import { sleepIfLocal } from '../../utils/sleepIfLocal';
+import ErrorSnackbar from '../common/ErrorSnackbar';
 
 export default function AltaTurnosForm() {
   const navigateToListado = useNavigateToListado();
@@ -36,6 +38,7 @@ export default function AltaTurnosForm() {
   } = useHorarios();
 
   const [saving, setSaving] = useState(false);
+  const [showError, setShowError] = useState(false);
   const { validateBeforeSave } = useFormValidation(validateAltaTurnos);
 
   const handleGuardar = () => {
@@ -49,6 +52,7 @@ export default function AltaTurnosForm() {
       async () => {
         try {
           setSaving(true);
+          await sleepIfLocal(1500);
           const data = await createAgendaTurnos({
             prestador,
             especialidad: especialidadSeleccionada,
@@ -58,6 +62,7 @@ export default function AltaTurnosForm() {
           navigateToEdicion(data.id, { creacion: true });
         } catch (err) {
           console.error('Error al guardar el alta de turnos:', err);
+          setShowError(true);
         } finally {
           setSaving(false);
         }
@@ -106,6 +111,11 @@ export default function AltaTurnosForm() {
         onConfirmCancel={handleCancelar}
         cancelTitle="¿Cancelar alta de turnos?"
         cancelMessage="Si cancelás ahora, se perderán todos los cambios que hayas hecho en el formulario."
+      />
+      <ErrorSnackbar
+        open={showError}
+        onClose={() => setShowError(false)}
+        message="Ocurrió un error al guardar la agenda de turnos."
       />
     </Box>
   );
