@@ -11,6 +11,16 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
   if (window.location.hostname === 'localhost') {
+    if (config.url === '/prestadores' && config.method === 'post') {
+      return Promise.reject({
+        isMock: true,
+        data: {
+          id: crypto.randomUUID(),
+          ...config.data,
+        },
+      });
+    }
+
     if (config.url === '/prestadores') {
       return Promise.reject({ isMock: true, data: prestadoresMock });
     }
@@ -30,16 +40,6 @@ api.interceptors.request.use((config) => {
       });
     }
     if (config.url === '/agenda-turnos' && config.method === 'post') {
-      return Promise.reject({
-        isMock: true,
-        data: {
-          id: crypto.randomUUID(),
-          ...config.data,
-        },
-      });
-    }
-
-    if (configr.url === '/prestadores' && config.method === 'post'){
       return Promise.reject({
         isMock: true,
         data: {
