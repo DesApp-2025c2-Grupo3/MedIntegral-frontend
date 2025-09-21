@@ -1,43 +1,43 @@
 // Validaciones específicas de un horario individual
-export const validateHorarioBasico = (horario, index) => {
+export const validateHorarioBasico = (horario) => {
   if (!horario.dias || horario.dias.length === 0) {
     return {
-      field: `horario-${index}-dias`,
+      field: `horario-${horario.id}-dias`,
       message: 'Seleccione al menos un día de la semana',
     };
   }
 
   if (!horario.duracion) {
     return {
-      field: `horario-${index}-duracion`,
+      field: `horario-${horario.id}-duracion`,
       message: 'Debe indicar la duración del turno',
     };
   }
 
   if (!horario.inicio) {
     return {
-      field: `horario-${index}-inicio`,
+      field: `horario-${horario.id}-inicio`,
       message: 'Debe seleccionar un horario de inicio',
     };
   }
 
   if (!horario.fin) {
     return {
-      field: `horario-${index}-fin`,
+      field: `horario-${horario.id}-fin`,
       message: 'Debe seleccionar un horario de fin',
     };
   }
 
   if (horario.inicio.isSame(horario.fin)) {
     return {
-      field: `horario-${index}-horario`,
+      field: `horario-${horario.id}-horario`,
       message: 'El inicio y el fin no pueden ser iguales',
     };
   }
 
   if (horario.inicio.isAfter(horario.fin)) {
     return {
-      field: `horario-${index}-horario`,
+      field: `horario-${horario.id}-horario`,
       message: 'El horario de inicio debe ser anterior al de fin',
     };
   }
@@ -46,7 +46,7 @@ export const validateHorarioBasico = (horario, index) => {
 };
 
 // Validar que esté dentro de los horarios definidos en la dirección
-export const validateHorarioDentroDireccion = (horario, direccion, index) => {
+export const validateHorarioDentroDireccion = (horario, direccion) => {
   const rangoMin = horario.inicio.format('HH:mm');
   const rangoMax = horario.fin.format('HH:mm');
 
@@ -59,7 +59,7 @@ export const validateHorarioDentroDireccion = (horario, direccion, index) => {
     );
     if (!match) {
       return {
-        field: `horario-${index}-horario`,
+        field: `horario-${horario.id}-horario`,
         message: `El rango definido para ${dia} no está dentro de los horarios de atención del centro`,
       };
     }
@@ -69,11 +69,11 @@ export const validateHorarioDentroDireccion = (horario, direccion, index) => {
 };
 
 // Validar que la duración sea menor o igual al rango
-export const validateDuracionVsRango = (horario, index) => {
+export const validateDuracionVsRango = (horario) => {
   const rangoMinutos = horario.fin.diff(horario.inicio, 'minute');
   if (horario.duracion > rangoMinutos) {
     return {
-      field: `horario-${index}-duracion`,
+      field: `horario-${horario.id}-duracion`,
       message: 'La duración del turno no puede ser mayor que el rango horario',
     };
   }
@@ -81,24 +81,29 @@ export const validateDuracionVsRango = (horario, index) => {
 };
 
 // Validar que no se solape con otro horario
-export const validateSolapamiento = (horario, horarios, index) => {
-  for (let j = 0; j < horarios.length; j++) {
-    if (j === index) continue;
+export const validateSolapamiento = (horario, horarios) => {
+  const index = horarios.findIndex((h) => h.id === horario.id);
+
+  for (let j = 0; j < index; j++) {
     const other = horarios[j];
     const overlap = horario.dias.some((d) => other.dias.includes(d));
+
     if (overlap) {
       const startsInside =
         horario.inicio.isBefore(other.fin) &&
-        horario.inicio.isSameOrAfter(other.inicio);
+        (horario.inicio.isSame(other.inicio) ||
+          horario.inicio.isAfter(other.inicio));
+
       const endsInside =
         horario.fin.isAfter(other.inicio) &&
-        horario.fin.isSameOrBefore(other.fin);
+        (horario.fin.isSame(other.fin) || horario.fin.isBefore(other.fin));
+
       const fullyCovers =
         horario.inicio.isBefore(other.inicio) && horario.fin.isAfter(other.fin);
 
       if (startsInside || endsInside || fullyCovers) {
         return {
-          field: `horario-${index}-horario`,
+          field: `horario-${horario.id}-horario`,
           message: `El rango horario se solapa con otro definido para ${horario.dias.join(
             ', '
           )}`,
@@ -106,5 +111,6 @@ export const validateSolapamiento = (horario, horarios, index) => {
       }
     }
   }
+
   return null;
 };
