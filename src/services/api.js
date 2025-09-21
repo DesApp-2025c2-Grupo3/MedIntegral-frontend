@@ -38,6 +38,16 @@ api.interceptors.request.use((config) => {
         },
       });
     }
+
+    if (configr.url === '/prestadores' && config.method === 'post'){
+      return Promise.reject({
+        isMock: true,
+        data: {
+          id: crypto.randomUUID(),
+          ...config.data,
+        },
+      });
+    }
   }
   return config;
 });
