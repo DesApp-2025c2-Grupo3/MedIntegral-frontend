@@ -10,7 +10,6 @@ import { useFormValidationContext } from '../../context/FormValidationContext';
 
 export default function HorariosSection({
   horario,
-  numero,
   puedeEliminar,
   onEliminar,
   onChange,
@@ -26,7 +25,7 @@ export default function HorariosSection({
   // Handler genérico
   const handleFieldChange = (field, value) => {
     onChange({ ...horario, [field]: value });
-    if (value) clearError(`horario-${numero - 1}-${field}`);
+    if (value) clearError(`horario-${horario.id}-${field}`);
   };
 
   return (
@@ -50,10 +49,10 @@ export default function HorariosSection({
               dias={diasSemana}
               selected={horario.dias}
               onChange={(newDias) => handleFieldChange('dias', newDias)}
-              dataField={`horario-${numero - 1}-dias`}
-              error={error?.field === `horario-${numero - 1}-dias`}
+              dataField={`horario-${horario.id}-dias`}
+              error={error?.field === `horario-${horario.id}-dias`}
               helperText={
-                error?.field === `horario-${numero - 1}-dias`
+                error?.field === `horario-${horario.id}-dias`
                   ? error?.message
                   : ''
               }
@@ -77,10 +76,10 @@ export default function HorariosSection({
                       {...params}
                       label="Duración de turno (minutos)"
                       variant="outlined"
-                      data-field={`horario-${numero - 1}-duracion`}
-                      error={error?.field === `horario-${numero - 1}-duracion`}
+                      data-field={`horario-${horario.id}-duracion`}
+                      error={error?.field === `horario-${horario.id}-duracion`}
                       helperText={
-                        error?.field === `horario-${numero - 1}-duracion`
+                        error?.field === `horario-${horario.id}-duracion`
                           ? error?.message
                           : ''
                       }
@@ -93,24 +92,24 @@ export default function HorariosSection({
               <HorarioPickerGroup
                 horario={horario}
                 onChange={(field, value) => handleFieldChange(field, value)}
-                dataFieldGroup={`horario-${numero - 1}-horario`}
-                dataFieldInicio={`horario-${numero - 1}-inicio`}
-                dataFieldFin={`horario-${numero - 1}-fin`}
-                errorInicio={error?.field === `horario-${numero - 1}-inicio`}
+                dataFieldGroup={`horario-${horario.id}-horario`}
+                dataFieldInicio={`horario-${horario.id}-inicio`}
+                dataFieldFin={`horario-${horario.id}-fin`}
+                errorInicio={error?.field === `horario-${horario.id}-inicio`}
                 helperTextInicio={
-                  error?.field === `horario-${numero - 1}-inicio`
+                  error?.field === `horario-${horario.id}-inicio`
                     ? error?.message
                     : ''
                 }
-                errorFin={error?.field === `horario-${numero - 1}-fin`}
+                errorFin={error?.field === `horario-${horario.id}-fin`}
                 helperTextFin={
-                  error?.field === `horario-${numero - 1}-fin`
+                  error?.field === `horario-${horario.id}-fin`
                     ? error?.message
                     : ''
                 }
-                groupError={error?.field === `horario-${numero - 1}-horario`}
+                groupError={error?.field === `horario-${horario.id}-horario`}
                 groupHelperText={
-                  error?.field === `horario-${numero - 1}-horario`
+                  error?.field === `horario-${horario.id}-horario`
                     ? error?.message
                     : ''
                 }
@@ -133,12 +132,12 @@ export default function HorariosSection({
 
 HorariosSection.propTypes = {
   horario: PropTypes.shape({
+    id: PropTypes.string.isRequired,
     duracion: PropTypes.number,
     inicio: PropTypes.object,
     fin: PropTypes.object,
     dias: PropTypes.array,
   }),
-  numero: PropTypes.number.isRequired,
   puedeEliminar: PropTypes.bool,
   onEliminar: PropTypes.func,
   onChange: PropTypes.func.isRequired,
