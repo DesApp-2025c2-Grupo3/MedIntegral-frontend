@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef } from 'react';
 import { Box, Grid, Typography } from '@mui/material';
 import { usePrestador } from '../../context/PrestadorContext';
+import { useHorarios } from '../../context/HorariosContext';
 import ValidatedAutocomplete from '../common/forms/ValidatedAutocomplete';
 import { useFormValidationContext } from '../../context/FormValidationContext';
 
@@ -16,7 +17,9 @@ export default function PrestadorSection() {
     setDireccionSeleccionada,
   } = usePrestador();
 
-  const { clearError } = useFormValidationContext();
+  const { resetHorarios } = useHorarios();
+  const { clearError, clearErrorsByPrefix } = useFormValidationContext();
+
   const especialidadRef = useRef(null);
 
   useLayoutEffect(() => {
@@ -28,6 +31,15 @@ export default function PrestadorSection() {
   const handleChange = (setter, clearKey) => (_, newValue) => {
     setter(newValue);
     if (newValue) clearError(clearKey);
+  };
+
+  const handleDireccionChange = (_, newValue) => {
+    resetHorarios();
+    clearErrorsByPrefix('horario-');
+    clearError('horarios');
+
+    setDireccionSeleccionada(newValue);
+    if (newValue) clearError('direccion');
   };
 
   return (
@@ -69,7 +81,7 @@ export default function PrestadorSection() {
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <ValidatedAutocomplete
             value={direccionSeleccionada}
-            onChange={handleChange(setDireccionSeleccionada, 'direccion')}
+            onChange={handleDireccionChange}
             options={info.direcciones}
             getOptionLabel={(option) =>
               option?.calle ? `${option.calle} ${option.altura || ''}` : option

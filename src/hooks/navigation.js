@@ -1,20 +1,24 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
-/**
- * Hook que devuelve una función navigateToListado para la entidad actual.
- * Detecta el "entity" desde la URL (primer segmento del pathname).
- */
 export const useNavigateToListado = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const entity = location.pathname.split('/')[1];
-
-  const navigateToListado = (status) => {
+  return (status) => {
+    const entity = location.pathname.split('/')[1];
     const basePath = `/${entity}/listado`;
     const query = status ? `?status=${encodeURIComponent(status)}` : '';
     navigate(`${basePath}${query}`);
   };
+};
 
-  return navigateToListado;
+export const useNavigateToEdicion = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  return (id, query = {}) => {
+    const entity = location.pathname.split('/')[1];
+    const queryString = new URLSearchParams(query).toString();
+    navigate(`/${entity}/edicion/${id}${queryString ? `?${queryString}` : ''}`);
+  };
 };

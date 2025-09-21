@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import api from '../services/api';
+import { getPrestadores, getPrestadorById } from '../services/prestadores';
 import { sleepIfLocal } from '../utils/sleepIfLocal';
 
 const PrestadorContext = createContext();
@@ -23,8 +23,8 @@ export function PrestadorProvider({ children }) {
       setLoading(true);
       try {
         await sleepIfLocal(1500);
-        const res = await api.get('/prestadores');
-        setPrestadores(res.data);
+        const data = await getPrestadores();
+        setPrestadores(data);
       } catch (err) {
         console.error('Error cargando lista de prestadores:', err);
         setPrestadores([]);
@@ -32,6 +32,7 @@ export function PrestadorProvider({ children }) {
         setLoading(false);
       }
     };
+
     fetchPrestadores();
   }, []);
 
@@ -46,8 +47,7 @@ export function PrestadorProvider({ children }) {
     setLoading(true);
     try {
       await sleepIfLocal(1500);
-      const res = await api.get(`/prestadores/${prestadorObj.id}`);
-      const data = res.data;
+      const data = await getPrestadorById(prestadorObj.id);
 
       setInfo({
         especialidades: data.especialidades || [],
@@ -55,7 +55,10 @@ export function PrestadorProvider({ children }) {
         horarios: data.horarios || [],
       });
     } catch (err) {
-      console.error('Error cargando info del prestador:', err);
+      console.error(
+        `Error cargando info del prestador ${prestadorObj.id}:`,
+        err
+      );
       setInfo({ especialidades: [], direcciones: [], horarios: [] });
     } finally {
       setLoading(false);
@@ -85,4 +88,6 @@ export function usePrestador() {
   return useContext(PrestadorContext);
 }
 
-PrestadorProvider.propTypes = { children: PropTypes.node.isRequired };
+PrestadorProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};

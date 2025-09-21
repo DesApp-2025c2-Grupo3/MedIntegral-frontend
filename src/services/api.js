@@ -29,6 +29,15 @@ api.interceptors.request.use((config) => {
         data: prestador3DetalleMock,
       });
     }
+    if (config.url === '/agenda-turnos' && config.method === 'post') {
+      return Promise.reject({
+        isMock: true,
+        data: {
+          id: crypto.randomUUID(),
+          ...config.data,
+        },
+      });
+    }
   }
   return config;
 });

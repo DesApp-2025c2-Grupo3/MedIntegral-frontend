@@ -6,18 +6,16 @@ const FormValidationContext = createContext();
 export function FormValidationProvider({ children }) {
   const [error, setError] = useState(null);
 
-  const setValidationError = (field, message) => {
-    setError({ field, message });
-  };
+  const setValidationError = (field, message) => setError({ field, message });
 
   const clearError = (field) => {
-    if (error?.field === field) {
-      setError(null);
-    }
+    if (error?.field === field) setError(null);
   };
 
-  const clearErrors = () => {
-    setError(null);
+  const clearErrors = () => setError(null);
+
+  const clearErrorsByPrefix = (prefix) => {
+    if (prefix && error?.field?.startsWith(prefix)) setError(null);
   };
 
   return (
@@ -27,6 +25,7 @@ export function FormValidationProvider({ children }) {
         setValidationError,
         clearError,
         clearErrors,
+        clearErrorsByPrefix,
       }}
     >
       {children}
@@ -34,9 +33,7 @@ export function FormValidationProvider({ children }) {
   );
 }
 
-FormValidationProvider.propTypes = {
-  children: PropTypes.node.isRequired,
-};
+FormValidationProvider.propTypes = { children: PropTypes.node.isRequired };
 
 export function useFormValidationContext() {
   return useContext(FormValidationContext);

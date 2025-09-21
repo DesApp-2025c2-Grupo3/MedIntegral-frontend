@@ -22,9 +22,9 @@ export default function HorarioPickerGroup({
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Grid container spacing={3}>
+      <Grid container spacing={3} size={{ xs: 12, sm: 12, md: 8 }}>
         {/* Horario inicio */}
-        <Grid size={{ xs: 12, sm: 12, md: 8 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 6 }}>
           <DesktopTimePicker
             label="Horario inicio"
             value={horario.inicio}
@@ -51,7 +51,7 @@ export default function HorarioPickerGroup({
         </Grid>
 
         {/* Horario fin */}
-        <Grid size={{ xs: 12, sm: 12, md: 8 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 6 }}>
           <DesktopTimePicker
             label="Horario fin"
             value={horario.fin}
