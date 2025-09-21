@@ -1,14 +1,17 @@
-import { Paper, Box, Typography } from '@mui/material';
+import { Paper, Box } from '@mui/material';
+import PageHeader from '../../components/common/PageHeader';
+import AltaTurnosForm from '../../components/agenda-turnos/AltaTurnosForm';
+import { PrestadorProvider } from '../../context/PrestadorContext';
+import { HorariosProvider } from '../../context/HorariosContext';
+import { FormValidationProvider } from '../../context/FormValidationContext';
 
 export default function AltaTurnos() {
   return (
     <Box sx={{ mt: 2 }}>
-      <Typography variant="h4" gutterBottom fontWeight={'medium'}>
-        Alta de turnos
-      </Typography>
-      <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-        Ingrese los datos para crear un nuevo turno en la agenda
-      </Typography>
+      <PageHeader
+        title="Alta de turnos"
+        subtitle="Ingrese los datos para crear un nuevo turno en la agenda"
+      />
       <Paper
         elevation={3}
         sx={{
@@ -17,7 +20,13 @@ export default function AltaTurnos() {
           mt: 3,
         }}
       >
-        <Box sx={{}}>...</Box>
+        <PrestadorProvider>
+          <FormValidationProvider>
+            <HorariosProvider>
+              <AltaTurnosForm />
+            </HorariosProvider>
+          </FormValidationProvider>
+        </PrestadorProvider>
       </Paper>
     </Box>
   );

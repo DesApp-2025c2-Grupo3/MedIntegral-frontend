@@ -15,13 +15,12 @@ export default function BreadcrumbsNav() {
   const pathnames = location.pathname.split('/').filter((x) => x);
 
   return (
-    <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
+    <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }} separator=">">
       <Link
         component={RouterLink}
         underline="hover"
         color="text.secondary"
         to="/"
-        fontWeight="medium"
       >
         Home
       </Link>
