@@ -1,10 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, Divider } from '@mui/material';
 import LoadingOverlay from '../common/LoadingOverlay';
 import ButtonsSection from '../common/forms/FormActions';
 import ErrorSnackbar from '../common/ErrorSnackbar';
 import SuccessSnackbar from '../common/SuccessSnackbar';
-
 import { useFormValidation } from '../../hooks/useFormValidation';
 import { createPrestador } from '../../services/prestadores';
 import { sleepIfLocal } from '../../utils/sleepIfLocal';
@@ -16,6 +15,9 @@ import {
 
 import DatosPrincipales from './DatosPrincipales';
 import { validatePrestadorDatos } from '../../utils/validations';
+
+import { getEspecialidades } from '../../services/especialidades';
+import EspecialidadesSection from './EspecialidadesSection';
 
 function AltaPrestadorForm() {
   const navigateToEdicion = useNavigateToEdicion();
@@ -31,11 +33,26 @@ function AltaPrestadorForm() {
     centrosDeAtencion: [],
   });
 
+  const [listaEspecialidades, setListaEspecialidades] = useState([]);
+  const [formEspecialidades, setFormEspecialidades] = useState([]);
+
   const [saving, setSaving] = useState(false);
   const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
   const { validateBeforeSave } = useFormValidation(validatePrestadorDatos);
+
+  useEffect(() => {
+    const cargarEspecialidades = async () => {
+      try {
+        const dataEspecialidades = await getEspecialidades();
+        setListaEspecialidades(dataEspecialidades);
+      } catch (err) {
+        console.error('Error al obtener especialidades:', err);
+      }
+    };
+    cargarEspecialidades();
+  }, []);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -46,12 +63,17 @@ function AltaPrestadorForm() {
   };
 
   const handleGuardar = () => {
+    const findalData = {
+      ...prestadorData,
+      especialidades: formEspecialidades,
+    };
+
     validateBeforeSave(prestadorData, async () => {
       try {
         setSaving(true);
         await sleepIfLocal(1500);
 
-        const data = await createPrestador(prestadorData);
+        const data = await createPrestador(findalData);
 
         navigateToEdicion(data.id, { creacion: true });
       } catch (err) {
@@ -69,9 +91,14 @@ function AltaPrestadorForm() {
     <Box component="form" noValidate>
       <LoadingOverlay open={saving} />
 
-      {/* Sección de datos principales (nombre, dni) */}
       <DatosPrincipales prestadorData={prestadorData} onChange={handleChange} />
 
+      <Divider sx={{ my: 4 }} />
+      <EspecialidadesSection
+        especialidades={formEspecialidades}
+        onChange={setFormEspecialidades}
+        listaEspecialidades={listaEspecialidades}
+      />
       <Divider sx={{ my: 4 }} />
 
       <ButtonsSection
