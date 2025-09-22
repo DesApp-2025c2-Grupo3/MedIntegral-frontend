@@ -4,13 +4,15 @@ import AltaTurnosForm from '../../components/agenda-turnos/AltaTurnosForm';
 import { PrestadorProvider } from '../../context/PrestadorContext';
 import { HorariosProvider } from '../../context/HorariosContext';
 import { FormValidationProvider } from '../../context/FormValidationContext';
+import { usePageTitle } from '../../hooks/usePageTitle';
 
 export default function AltaTurnos() {
+  usePageTitle('MedIntegral | Alta de agenda de turnos');
   return (
     <Box sx={{ mt: 2 }}>
       <PageHeader
-        title="Alta de turnos"
-        subtitle="Ingrese los datos para crear un nuevo turno en la agenda"
+        title="Alta de agenda de turnos turnos"
+        subtitle="Ingrese los datos para crear una nueva agenda de turnos"
       />
       <Paper
         elevation={3}
