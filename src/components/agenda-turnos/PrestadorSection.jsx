@@ -1,24 +1,21 @@
 import { useLayoutEffect, useRef } from 'react';
 import { Box, Grid, Typography } from '@mui/material';
-import { usePrestador } from '../../context/PrestadorContext';
-import { useHorarios } from '../../context/HorariosContext';
 import ValidatedAutocomplete from '../common/forms/ValidatedAutocomplete';
-import { useFormValidationContext } from '../../context/FormValidationContext';
+import { useAltaTurnos } from '../../context/AltaTurnosContext';
+import PropTypes from 'prop-types';
 
-export default function PrestadorSection() {
+export default function PrestadorSection({ clearError, clearErrorsByPrefix }) {
   const {
     prestador,
     prestadores,
     info,
-    seleccionarPrestador,
-    especialidadSeleccionada,
-    setEspecialidadSeleccionada,
-    direccionSeleccionada,
-    setDireccionSeleccionada,
-  } = usePrestador();
-
-  const { resetHorarios } = useHorarios();
-  const { clearError, clearErrorsByPrefix } = useFormValidationContext();
+    setPrestador,
+    especialidad,
+    setEspecialidad,
+    direccion,
+    setDireccion,
+    resetHorarios,
+  } = useAltaTurnos();
 
   const especialidadRef = useRef(null);
 
@@ -38,7 +35,7 @@ export default function PrestadorSection() {
     clearErrorsByPrefix('horario-');
     clearError('horarios');
 
-    setDireccionSeleccionada(newValue);
+    setDireccion(newValue);
     if (newValue) clearError('direccion');
   };
 
@@ -50,10 +47,10 @@ export default function PrestadorSection() {
 
       <Grid container spacing={3}>
         {/* Prestador */}
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+        <Grid item xs={12} sm={6} md={4}>
           <ValidatedAutocomplete
             value={prestador}
-            onChange={handleChange(seleccionarPrestador, 'prestador')}
+            onChange={handleChange(setPrestador, 'prestador')}
             options={prestadores}
             getOptionLabel={(option) => option?.nombre || ''}
             isOptionEqualToValue={(option, value) => option.id === value.id}
@@ -63,10 +60,10 @@ export default function PrestadorSection() {
         </Grid>
 
         {/* Especialidad */}
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+        <Grid item xs={12} sm={6} md={4}>
           <ValidatedAutocomplete
-            value={especialidadSeleccionada}
-            onChange={handleChange(setEspecialidadSeleccionada, 'especialidad')}
+            value={especialidad}
+            onChange={handleChange(setEspecialidad, 'especialidad')}
             options={info.especialidades}
             getOptionLabel={(option) => option?.nombre || ''}
             isOptionEqualToValue={(option, value) => option.id === value.id}
@@ -78,9 +75,9 @@ export default function PrestadorSection() {
         </Grid>
 
         {/* Dirección */}
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+        <Grid item xs={12} sm={6} md={4}>
           <ValidatedAutocomplete
-            value={direccionSeleccionada}
+            value={direccion}
             onChange={handleDireccionChange}
             options={info.direcciones}
             getOptionLabel={(option) =>
@@ -96,3 +93,8 @@ export default function PrestadorSection() {
     </Box>
   );
 }
+
+PrestadorSection.propTypes = {
+  clearError: PropTypes.func.isRequired,
+  clearErrorsByPrefix: PropTypes.func.isRequired,
+};

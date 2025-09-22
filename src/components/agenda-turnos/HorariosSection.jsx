@@ -4,22 +4,17 @@ import { Box, Typography, Grid, Autocomplete, TextField } from '@mui/material';
 import DiasSemanaSelector from '../common/forms/DiasSemanaSelector';
 import EliminarButton from '../common/forms/EliminarButton';
 import HorarioPickerGroup from '../common/forms/HorarioPickerGroup';
-import { usePrestador } from '../../context/PrestadorContext';
 import FadeSlide from '../common/animations/FadeSlide';
-import { useFormValidationContext } from '../../context/FormValidationContext';
 
 export default function HorariosSection({
   horario,
+  diasSemana,
   puedeEliminar,
   onEliminar,
   onChange,
+  error,
+  clearError,
 }) {
-  const { direccionSeleccionada } = usePrestador();
-  const { error, clearError } = useFormValidationContext();
-
-  const diasSemana =
-    direccionSeleccionada?.horarios?.map((h) => h.dia.nombre) || [];
-
   const duraciones = Array.from({ length: 24 }, (_, i) => (i + 1) * 5);
 
   // Handler genérico
@@ -35,7 +30,7 @@ export default function HorariosSection({
       </Typography>
 
       <FadeSlide>
-        {!direccionSeleccionada ? (
+        {!diasSemana.length ? (
           <Typography variant="body1" color="text.secondary">
             Seleccione una dirección para configurar los horarios de atención.
           </Typography>
@@ -63,10 +58,10 @@ export default function HorariosSection({
               Especificaciones del turno
             </Typography>
             <Grid container spacing={3} sx={{ mt: 3 }}>
-              <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+              <Grid item xs={12} sm={6} md={4}>
                 <Autocomplete
                   options={duraciones}
-                  value={horario.duracion}
+                  value={horario.duracion || null}
                   onChange={(_, newValue) =>
                     handleFieldChange('duracion', newValue)
                   }
@@ -90,29 +85,9 @@ export default function HorariosSection({
               </Grid>
 
               <HorarioPickerGroup
+                prefix={`horario-${horario.id}`}
                 horario={horario}
                 onChange={(field, value) => handleFieldChange(field, value)}
-                dataFieldGroup={`horario-${horario.id}-horario`}
-                dataFieldInicio={`horario-${horario.id}-inicio`}
-                dataFieldFin={`horario-${horario.id}-fin`}
-                errorInicio={error?.field === `horario-${horario.id}-inicio`}
-                helperTextInicio={
-                  error?.field === `horario-${horario.id}-inicio`
-                    ? error?.message
-                    : ''
-                }
-                errorFin={error?.field === `horario-${horario.id}-fin`}
-                helperTextFin={
-                  error?.field === `horario-${horario.id}-fin`
-                    ? error?.message
-                    : ''
-                }
-                groupError={error?.field === `horario-${horario.id}-horario`}
-                groupHelperText={
-                  error?.field === `horario-${horario.id}-horario`
-                    ? error?.message
-                    : ''
-                }
               />
             </Grid>
 
@@ -120,7 +95,7 @@ export default function HorariosSection({
             {puedeEliminar && (
               <EliminarButton
                 onEliminar={onEliminar}
-                label={'Eliminar horario'}
+                label="Eliminar horario"
               />
             )}
           </>
@@ -134,11 +109,17 @@ HorariosSection.propTypes = {
   horario: PropTypes.shape({
     id: PropTypes.string.isRequired,
     duracion: PropTypes.number,
-    inicio: PropTypes.object,
-    fin: PropTypes.object,
-    dias: PropTypes.array,
-  }),
+    inicio: PropTypes.any,
+    fin: PropTypes.any,
+    dias: PropTypes.arrayOf(PropTypes.string),
+  }).isRequired,
+  diasSemana: PropTypes.arrayOf(PropTypes.string).isRequired,
   puedeEliminar: PropTypes.bool,
   onEliminar: PropTypes.func,
   onChange: PropTypes.func.isRequired,
+  error: PropTypes.shape({
+    field: PropTypes.string,
+    message: PropTypes.string,
+  }),
+  clearError: PropTypes.func.isRequired,
 };

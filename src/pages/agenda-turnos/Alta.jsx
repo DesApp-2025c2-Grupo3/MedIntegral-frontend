@@ -1,9 +1,7 @@
 import { Paper, Box } from '@mui/material';
 import PageHeader from '../../components/common/PageHeader';
 import AltaTurnosForm from '../../components/agenda-turnos/AltaTurnosForm';
-import { PrestadorProvider } from '../../context/PrestadorContext';
-import { HorariosProvider } from '../../context/HorariosContext';
-import { FormValidationProvider } from '../../context/FormValidationContext';
+import { AltaTurnosProvider } from '../../context/AltaTurnosContext';
 
 export default function AltaTurnos() {
   return (
@@ -20,13 +18,9 @@ export default function AltaTurnos() {
           mt: 3,
         }}
       >
-        <PrestadorProvider>
-          <FormValidationProvider>
-            <HorariosProvider>
-              <AltaTurnosForm />
-            </HorariosProvider>
-          </FormValidationProvider>
-        </PrestadorProvider>
+        <AltaTurnosProvider>
+          <AltaTurnosForm />
+        </AltaTurnosProvider>
       </Paper>
     </Box>
   );

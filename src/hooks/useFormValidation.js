@@ -1,7 +1,25 @@
-import { useFormValidationContext } from '../context/FormValidationContext';
+import { useState } from 'react';
 
 export const useFormValidation = (validator) => {
-  const { setValidationError, clearErrors } = useFormValidationContext();
+  const [errors, setErrors] = useState({});
+
+  const setValidationError = (field, message) =>
+    setErrors((prev) => ({ ...prev, [field]: message }));
+
+  const clearError = (field) => {
+    setErrors((prev) =>
+      Object.fromEntries(Object.entries(prev).filter(([key]) => key !== field))
+    );
+  };
+
+  const clearErrors = () => setErrors({});
+
+  const clearErrorsByPrefix = (prefix) =>
+    setErrors((prev) =>
+      Object.fromEntries(
+        Object.entries(prev).filter(([key]) => !key.startsWith(prefix))
+      )
+    );
 
   const validateBeforeSave = (formData, onValid) => {
     const validation = validator(formData);
@@ -12,9 +30,7 @@ export const useFormValidation = (validator) => {
       const el = document.querySelector(`[data-field="${validation.field}"]`);
       if (el) {
         el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        if (typeof el.focus === 'function') {
-          el.focus();
-        }
+        if (typeof el.focus === 'function') el.focus();
       }
 
       return false;
@@ -25,5 +41,12 @@ export const useFormValidation = (validator) => {
     return true;
   };
 
-  return { validateBeforeSave };
+  return {
+    errors,
+    setValidationError,
+    clearError,
+    clearErrors,
+    clearErrorsByPrefix,
+    validateBeforeSave,
+  };
 };
