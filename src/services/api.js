@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { prestadoresMock } from '../mocks/prestadores';
+import { listaEspecialidadesMock } from '../mocks/listaEspecialidadesMock';
 import { prestador1DetalleMock } from '../mocks/prestador1DetalleMock';
 import { prestador2DetalleMock } from '../mocks/prestador2DetalleMock';
 import { prestador3DetalleMock } from '../mocks/prestador3DetalleMock';
@@ -47,6 +48,9 @@ api.interceptors.request.use((config) => {
           ...config.data,
         },
       });
+    }
+    if (config.url === '/especialidades') {
+      return Promise.reject({ isMock: true, data: listaEspecialidadesMock });
     }
   }
   return config;
