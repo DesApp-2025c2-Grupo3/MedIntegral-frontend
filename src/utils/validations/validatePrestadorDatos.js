@@ -1,4 +1,20 @@
 export const validatePrestadorDatos = (data) => {
+  if (!data.cuilCuit) {
+    return {
+      field: 'cuilCuit',
+      message: 'El CUIL o CUIT es obligatorio.',
+    };
+  }
+
+  // Verifica si el CUIL/CUIT contiene alguna letra
+  const tieneLetras = data.cuilCuit.split('').some((char) => isNaN(char));
+  if (tieneLetras) {
+    return {
+      field: 'cuilCuit',
+      message: 'El CUIL o CUIT no puede contener letras.',
+    };
+  }
+
   if (!data.nombre) {
     return {
       field: 'nombre',
@@ -17,19 +33,24 @@ export const validatePrestadorDatos = (data) => {
     };
   }
 
-  if (!data.cuilCuit) {
+  if (data.telefonos.length === 0) {
     return {
-      field: 'cuilCuit',
-      message: 'El CUIL o CUIT es obligatorio.',
+      field: 'telefonos',
+      message: 'El teléfono es obligatorio.',
     };
   }
 
-  // Verifica si el CUIL/CUIT contiene alguna letra
-  const tieneLetras = data.cuilCuit.split('').some((char) => isNaN(char));
-  if (tieneLetras) {
+  if (data.emails.length === 0) {
     return {
-      field: 'cuilCuit',
-      message: 'El CUIL o CUIT no puede contener letras.',
+      field: 'emails',
+      message: 'El email es obligatorio.',
+    };
+  }
+
+  if (data.especialidades.length === 0) {
+    return {
+      field: 'especialidades',
+      message: 'Se debe seleccionar al menos una especialidad.',
     };
   }
 

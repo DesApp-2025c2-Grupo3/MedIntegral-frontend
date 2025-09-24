@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography, Grid, TextField, Autocomplete } from '@mui/material';
 import CentroMedicoSection from './CentroMedicoSection';
+import { useFormValidationContext } from '../../context/FormValidationContext';
 
 export default function EspecialidadesSection({
   especialidades,
@@ -13,6 +14,16 @@ export default function EspecialidadesSection({
   onSwitchChange,
   onCentroMedicoChange,
 }) {
+  const { error } = useFormValidationContext();
+
+  const getErrorProps = (fieldName) => {
+    const hasError = error?.field === fieldName;
+    return {
+      error: hasError,
+      helperText: hasError ? error.message : '',
+    };
+  };
+
   return (
     <>
       <Box sx={{ mt: 4 }}>
@@ -35,6 +46,7 @@ export default function EspecialidadesSection({
                   {...params}
                   label="Especialidades"
                   placeholder="Selecciona especialidades"
+                  {...getErrorProps('especialidades')}
                 />
               )}
             />

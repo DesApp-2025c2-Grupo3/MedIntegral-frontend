@@ -64,8 +64,10 @@ export default function DatosPrincipales({
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Teléfonos"
+                label="Telefonos"
                 placeholder="Teléfonos"
+                data-field="telefonos"
+                {...getErrorProps('telefonos')}
               />
             )}
           />
@@ -80,7 +82,12 @@ export default function DatosPrincipales({
             value={prestadorData.emails}
             onChange={(_, newEmail) => onEmailsChange(newEmail)}
             renderInput={(params) => (
-              <TextField {...params} label="Emails" placeholder="Emails" />
+              <TextField
+                {...params}
+                label="Emails"
+                placeholder="Emails"
+                {...getErrorProps('emails')}
+              />
             )}
           />
         </Grid>
@@ -92,7 +99,7 @@ export default function DatosPrincipales({
 DatosPrincipales.propTypes = {
   prestadorData: PropTypes.shape({
     nombre: PropTypes.string.isRequired,
-    cuilCuit: PropTypes.number.isRequired,
+    cuilCuit: PropTypes.string.isRequired,
     emails: PropTypes.array.isRequired,
     telefonos: PropTypes.array.isRequired,
   }).isRequired,
