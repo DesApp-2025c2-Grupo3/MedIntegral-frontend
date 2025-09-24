@@ -36,6 +36,9 @@ function AltaPrestadorForm() {
   const [listaEspecialidades, setListaEspecialidades] = useState([]);
   const [formEspecialidades, setFormEspecialidades] = useState([]);
 
+  const [integraCentroMedico, setIntegraCentroMedico] = useState(false);
+  const [centroMedicoQueIntegra, setCentroMedicoQueIntegra] = useState('');
+
   const [saving, setSaving] = useState(false);
   const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -60,6 +63,32 @@ function AltaPrestadorForm() {
       ...prevData,
       [name]: value,
     }));
+  };
+
+  // función para manejar los cambios de los interruptores
+  const handleSwitchChange = (name) => (event) => {
+    if (name === 'isCentroMedico') {
+      setPrestadorData((prevData) => ({
+        ...prevData,
+        esCentroMedico: event.target.checked,
+      }));
+      // Si "Es centro médico" se activa, reseteamos el otro switch y el textfield
+      if (event.target.checked) {
+        setIntegraCentroMedico(false);
+        setCentroMedicoQueIntegra('');
+      }
+    } else if (name === 'integraCentroMedico') {
+      setIntegraCentroMedico(event.target.checked);
+      // Si se desactiva "Integra...", reseteamos el textfield
+      if (!event.target.checked) {
+        setCentroMedicoQueIntegra('');
+      }
+    }
+  };
+
+  //función para manejar el cambio en el TextField
+  const handleCentroMedicoChange = (event) => {
+    setCentroMedicoQueIntegra(event.target.value);
   };
 
   const handleGuardar = () => {
@@ -98,6 +127,11 @@ function AltaPrestadorForm() {
         especialidades={formEspecialidades}
         onChange={setFormEspecialidades}
         listaEspecialidades={listaEspecialidades}
+        isCentroMedico={prestadorData.esCentroMedico}
+        integraCentroMedico={integraCentroMedico}
+        centroMedicoQueIntegra={centroMedicoQueIntegra}
+        onSwitchChange={handleSwitchChange}
+        onCentroMedicoChange={handleCentroMedicoChange}
       />
       <Divider sx={{ my: 4 }} />
 
