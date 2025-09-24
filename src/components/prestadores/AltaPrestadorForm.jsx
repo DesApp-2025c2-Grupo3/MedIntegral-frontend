@@ -65,6 +65,14 @@ function AltaPrestadorForm() {
     }));
   };
 
+  const handleEmailsChange = (newEmails) => {
+    setPrestadorData((prevData) => ({ ...prevData, emails: newEmails }));
+  };
+
+  const handleTelefonosChange = (newTelefono) => {
+    setPrestadorData((prevData) => ({ ...prevData, telefonos: newTelefono }));
+  };
+
   // función para manejar los cambios de los interruptores
   const handleSwitchChange = (name) => (event) => {
     if (name === 'isCentroMedico') {
@@ -120,7 +128,12 @@ function AltaPrestadorForm() {
     <Box component="form" noValidate>
       <LoadingOverlay open={saving} />
 
-      <DatosPrincipales prestadorData={prestadorData} onChange={handleChange} />
+      <DatosPrincipales
+        prestadorData={prestadorData}
+        onChange={handleChange}
+        onEmailsChange={handleEmailsChange}
+        onTelefonosChange={handleTelefonosChange}
+      />
 
       <Divider sx={{ my: 4 }} />
       <EspecialidadesSection
