@@ -36,7 +36,7 @@ export default function EspecialidadesSection({
               multiple
               value={especialidades}
               onChange={(_, nuevasEspecialidades) =>
-                onChange(nuevasEspecialidades)
+                onChange('especialidades', nuevasEspecialidades)
               }
               options={listaEspecialidades}
               getOptionLabel={(option) => option?.especialidad || ''}

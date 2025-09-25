@@ -14,8 +14,9 @@ import {
 } from '../../hooks/navigation';
 
 import DatosPrincipales from './DatosPrincipales';
+import DatosDeContacto from './DatosDeContacto';
 import { validatePrestadorDatos } from '../../utils/validations';
-
+import { handleArrayChange } from '../../utils/handleArrayChanges';
 import { getEspecialidades } from '../../services/especialidades';
 import EspecialidadesSection from './EspecialidadesSection';
 
@@ -34,8 +35,6 @@ function AltaPrestadorForm() {
   });
 
   const [listaEspecialidades, setListaEspecialidades] = useState([]);
-  const [formEspecialidades, setFormEspecialidades] = useState([]);
-
   const [integraCentroMedico, setIntegraCentroMedico] = useState(false);
   const [centroMedicoQueIntegra, setCentroMedicoQueIntegra] = useState('');
 
@@ -65,13 +64,8 @@ function AltaPrestadorForm() {
     }));
   };
 
-  const handleEmailsChange = (newEmails) => {
-    setPrestadorData((prevData) => ({ ...prevData, emails: newEmails }));
-  };
-
-  const handleTelefonosChange = (newTelefono) => {
-    setPrestadorData((prevData) => ({ ...prevData, telefonos: newTelefono }));
-  };
+  // handler genérico para arrays (emails, telefonos, especialidades)
+  const handleArray = handleArrayChange(setPrestadorData);
 
   // función para manejar los cambios de los interruptores
   const handleSwitchChange = (name) => (event) => {
@@ -100,17 +94,14 @@ function AltaPrestadorForm() {
   };
 
   const handleGuardar = () => {
-    const findalData = {
-      ...prestadorData,
-      especialidades: formEspecialidades,
-    };
+    const finalData = { ...prestadorData };
 
     validateBeforeSave(prestadorData, async () => {
       try {
         setSaving(true);
         await sleepIfLocal(1500);
 
-        const data = await createPrestador(findalData);
+        const data = await createPrestador(finalData);
 
         navigateToEdicion(data.id, { creacion: true });
       } catch (err) {
@@ -128,17 +119,14 @@ function AltaPrestadorForm() {
     <Box component="form" noValidate>
       <LoadingOverlay open={saving} />
 
-      <DatosPrincipales
-        prestadorData={prestadorData}
-        onChange={handleChange}
-        onEmailsChange={handleEmailsChange}
-        onTelefonosChange={handleTelefonosChange}
-      />
+      <DatosPrincipales prestadorData={prestadorData} onChange={handleChange} />
+
+      <DatosDeContacto contactoData={prestadorData} handleArray={handleArray} />
 
       <Divider sx={{ my: 4 }} />
       <EspecialidadesSection
-        especialidades={formEspecialidades}
-        onChange={setFormEspecialidades}
+        especialidades={prestadorData.especialidades}
+        onChange={handleArray}
         listaEspecialidades={listaEspecialidades}
         isCentroMedico={prestadorData.esCentroMedico}
         integraCentroMedico={integraCentroMedico}
