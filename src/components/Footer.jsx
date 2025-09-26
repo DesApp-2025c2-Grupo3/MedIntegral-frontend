@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import logo from '../../public/medIntegralLogo.png';
 
 export default function Footer() {
   return (
@@ -10,7 +11,11 @@ export default function Footer() {
       <Grid container spacing={3}>
         <Grid size="grow">
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <img></img>
+            <img
+              src={logo}
+              alt='"Logo MedIntegral"'
+              style={{ height: '60px' }}
+            ></img>
             <p
               style={{
                 color: '#00B1EA',
