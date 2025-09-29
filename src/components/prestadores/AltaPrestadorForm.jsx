@@ -14,11 +14,13 @@ import {
 } from '../../hooks/navigation';
 
 import DatosPrincipales from './DatosPrincipales';
-import DatosDeContacto from './DatosDeContacto';
+import DatosDeContacto from '../common/DatosDeContacto';
 import { validatePrestadorDatos } from '../../utils/validations';
 import { handleArrayChange } from '../../utils/handleArrayChanges';
 import { getEspecialidades } from '../../services/especialidades';
 import EspecialidadesSection from './EspecialidadesSection';
+import CentroAtencionSection from './CentroAtencionSection';
+import { newCentroDeAtencion } from '../../utils/prestadores';
 
 function AltaPrestadorForm() {
   const navigateToEdicion = useNavigateToEdicion();
@@ -31,7 +33,7 @@ function AltaPrestadorForm() {
     especialidades: [],
     emails: [],
     telefonos: [],
-    centrosDeAtencion: [],
+    centrosDeAtencion: [newCentroDeAtencion()],
   });
 
   const [listaEspecialidades, setListaEspecialidades] = useState([]);
@@ -135,6 +137,16 @@ function AltaPrestadorForm() {
         onCentroMedicoChange={handleCentroMedicoChange}
       />
       <Divider sx={{ my: 4 }} />
+
+      <CentroAtencionSection
+        centros={prestadorData.centrosDeAtencion}
+        onChange={(newCentros) =>
+          setPrestadorData((prev) => ({
+            ...prev,
+            centrosDeAtencion: newCentros,
+          }))
+        }
+      />
 
       <ButtonsSection
         handleGuardar={handleGuardar}
