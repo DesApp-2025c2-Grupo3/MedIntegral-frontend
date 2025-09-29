@@ -4,6 +4,7 @@ import DiasSemanaSelector from '../common/forms/DiasSemanaSelector';
 import HorarioPickerGroup from '../common/forms/HorarioPickerGroup';
 import EliminarButton from '../common/forms/EliminarButton';
 import { DIAS_SEMANA } from '../../utils/prestadores';
+import { useFormValidationContext } from '../../context/FormValidationContext';
 
 export default function HorarioSection({
   horario,
@@ -11,6 +12,8 @@ export default function HorarioSection({
   onChange,
   onEliminar,
 }) {
+  const { error } = useFormValidationContext();
+
   const handleFieldChange = (field, value) => {
     onChange({ ...horario, [field]: value });
   };
@@ -18,7 +21,7 @@ export default function HorarioSection({
   return (
     <Box sx={{ p: 2, border: '1px solid #ccc', borderRadius: 1, mb: 2 }}>
       <Grid container spacing={2} alignItems="center">
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12, sm: 6, md: 12 }}>
           <Typography variant="subtitle2" sx={{ mb: 1 }}>
             Día de la Semana
           </Typography>
@@ -27,6 +30,12 @@ export default function HorarioSection({
             selected={horario.dias}
             onChange={(newDias) => handleFieldChange('dias', newDias)}
             dataField={`horario-${horario.id}-dias`}
+            error={error?.field === `horario-${horario.id}-dias`}
+            helperText={
+              error?.field === `horario-${horario.id}-dias`
+                ? error?.message
+                : ''
+            }
           />
         </Grid>
 
@@ -37,9 +46,25 @@ export default function HorarioSection({
             dataFieldGroup={`horario-${horario.id}-horario`}
             dataFieldInicio={`horario-${horario.id}-inicio`}
             dataFieldFin={`horario-${horario.id}-fin`}
+            errorInicio={error?.field === `horario-${horario.id}-inicio`}
+            helperTextInicio={
+              error?.field === `horario-${horario.id}-inicio`
+                ? error?.message
+                : ''
+            }
+            errorFin={error?.field === `horario-${horario.id}-fin`}
+            helperTextFin={
+              error?.field === `horario-${horario.id}-fin` ? error?.message : ''
+            }
+            groupError={error?.field === `horario-${horario.id}-horario`}
+            groupHelperText={
+              error?.field === `horario-${horario.id}-horario`
+                ? error?.message
+                : ''
+            }
           />
         </Grid>
-        <Grid item xs={2} sm={1} sx={{ textAlign: 'right' }}>
+        <Grid size={{ xs: 12, sm: 6, md: 12 }}>
           {puedeEliminar && (
             <EliminarButton onEliminar={onEliminar} label="Eliminar horario" />
           )}

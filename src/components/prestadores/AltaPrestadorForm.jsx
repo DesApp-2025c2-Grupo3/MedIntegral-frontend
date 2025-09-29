@@ -15,7 +15,7 @@ import {
 
 import DatosPrincipales from './DatosPrincipales';
 import DatosDeContacto from '../common/DatosDeContacto';
-import { validatePrestadorDatos } from '../../utils/validations';
+import { validateAltaPrestador } from '../../utils/validations/validateAltaPrestador';
 import { handleArrayChange } from '../../utils/handleArrayChanges';
 import { getEspecialidades } from '../../services/especialidades';
 import EspecialidadesSection from './EspecialidadesSection';
@@ -44,7 +44,7 @@ function AltaPrestadorForm() {
   const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const { validateBeforeSave } = useFormValidation(validatePrestadorDatos);
+  const { validateBeforeSave } = useFormValidation(validateAltaPrestador);
 
   useEffect(() => {
     const cargarEspecialidades = async () => {

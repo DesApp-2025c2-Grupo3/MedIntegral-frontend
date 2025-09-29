@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import EliminarButton from './forms/EliminarButton';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import { useFormValidationContext } from '../../context/FormValidationContext';
 
 export default function DireccionSection({
   direccion,
@@ -13,6 +14,16 @@ export default function DireccionSection({
 }) {
   const handleFieldChange = (field, value) => {
     onChange({ ...direccion, [field]: value });
+  };
+
+  const { error } = useFormValidationContext();
+
+  const getErrorProps = (fieldName) => {
+    const hasError = error?.field === fieldName;
+    return {
+      error: hasError,
+      helperText: hasError ? error.message : '',
+    };
   };
 
   const [listaProvincias, setListaProvincias] = useState([]);
@@ -56,6 +67,7 @@ export default function DireccionSection({
             value={direccion.calle}
             onChange={(e) => handleFieldChange('calle', e.target.value)}
             fullWidth
+            {...getErrorProps(`centro-${direccion.id}-calle`)}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
@@ -64,6 +76,7 @@ export default function DireccionSection({
             value={direccion.altura}
             onChange={(e) => handleFieldChange('altura', e.target.value)}
             fullWidth
+            {...getErrorProps(`centro-${direccion.id}-altura`)}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
@@ -72,6 +85,7 @@ export default function DireccionSection({
             value={direccion.pisoDepto}
             onChange={(e) => handleFieldChange('pisoDepto', e.target.value)}
             fullWidth
+            {...getErrorProps(`centro-${direccion.id}-pisoDepto`)}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
@@ -80,6 +94,7 @@ export default function DireccionSection({
             value={direccion.codigoPostal}
             onChange={(e) => handleFieldChange('codigoPostal', e.target.value)}
             fullWidth
+            {...getErrorProps(`centro-${direccion.id}-codigoPostal`)}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
@@ -88,6 +103,7 @@ export default function DireccionSection({
             value={direccion.localidad}
             onChange={(e) => handleFieldChange('localidad', e.target.value)}
             fullWidth
+            {...getErrorProps(`centro-${direccion.id}-localidad`)}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
@@ -104,6 +120,7 @@ export default function DireccionSection({
             isOptionEqualToValue={(option, value) => option.id === value.id}
             label="Provincia"
             dataField="provincia"
+            {...getErrorProps('provincia')}
           />
         </Grid>
       </Grid>
