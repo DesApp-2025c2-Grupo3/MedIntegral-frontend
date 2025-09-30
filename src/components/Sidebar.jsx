@@ -11,24 +11,46 @@ import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined';
 import {
   Drawer,
+  Tooltip,
   List,
   ListItemButton,
+  ListItemIcon,
+  ListItemText,
   Typography,
-  Grid
+  Grid,
+  Collapse,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 
-
-
-
 const drawerWidth = 290;
-
 
 export default function Sidebar() {
   const [open, setOpen] = useState(true);
   const [openItems, setOpenItems] = useState([]);
+  const [anclaMenu, setAnclaMenu] = useState(null);
+  const [menuItems, setMenuItems] = useState([]);
 
   const toggleDrawer = () => {
     setOpen(!open);
+  };
+
+  const toggleItem = (key) => {
+    setOpenItems((prev) =>
+      prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key]
+    );
+  };
+
+  const isOpen = (item) => openItems.includes(item.key);
+
+  const abrirMenu = (e, items) => {
+    setAnclaMenu(e.currentTarget);
+    setMenuItems(items);
+  };
+
+  const cerrarMenu = () => {
+    setAnclaMenu(null);
+    setMenuItems([]);
   };
 
   const sidebarItems = [
@@ -84,7 +106,6 @@ export default function Sidebar() {
       ],
     },
   ];
-
 
   return (
     <>
@@ -153,10 +174,147 @@ export default function Sidebar() {
               </Grid>
             )}
           </ListItemButton>
+          {/*Dashboard*/}
+          <ListItemButton
+            sx={{
+              '&:hover': { backgroundColor: '#3D4B6B' },
+              borderRadius: '15px',
+              margin: '5px',
+            }}
+            button
+            component={RouterLink}
+            to="/"
+          >
+            <ListItemIcon
+              sx={{
+                color: 'white',
+                height: '3rem',
+                '& svg': { fontSize: '2rem' },
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <ShowChartIcon />
+            </ListItemIcon>
+            {open && (
+              <ListItemText
+                primary="Dashboard"
+                primaryTypographyProps={{ fontSize: '1.1rem' }}
+              />
+            )}
+          </ListItemButton>
+          {/* Elementos del menú */}
+          {sidebarItems.map((item, index) => (
+            <div key={index}>
+              <Tooltip title={!open ? item.label : ''} placement="right">
+                <ListItemButton
+                  sx={{
+                    '&:hover': { backgroundColor: '#3D4B6B' },
+                    borderRadius: '15px',
+                    margin: '5px',
+                  }}
+                  onClick={(e) => {
+                    if (item.children) {
+                      if (open) {
+                        toggleItem(item.key);
+                      } else {
+                        abrirMenu(e, item.children);
+                      }
+                    }
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      color: 'white',
+                      height: '3rem',
+                      '& svg': { fontSize: '2rem' },
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    {item.icon}
+                  </ListItemIcon>
+                  {open && (
+                    <ListItemText
+                      primary={item.label}
+                      primaryTypographyProps={{ fontSize: '1.1rem' }}
+                    />
+                  )}
+                  {open &&
+                    item.children &&
+                    (isOpen(item) ? (
+                      <ExpandLessOutlinedIcon />
+                    ) : (
+                      <ExpandMoreOutlinedIcon />
+                    ))}
+                </ListItemButton>
+              </Tooltip>
+
+              {/* Submenu (cuando esta expandida la sidebar) */}
+              {open && item.children && (
+                <Collapse in={isOpen(item)} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding sx={{ ml: '15px' }}>
+                    {item.children.map((child, i) => (
+                      <ListItemButton
+                        key={i}
+                        sx={{
+                          pl: 4,
+                          '&:hover': { backgroundColor: '#3D4B6B' },
+                          borderRadius: '15px',
+                          margin: '10px',
+                        }}
+                        component={RouterLink}
+                        to={child.route}
+                      >
+                        <ListItemIcon sx={{ color: 'white' }}>
+                          {child.icon}
+                        </ListItemIcon>
+                        <ListItemText primary={child.label} />
+                      </ListItemButton>
+                    ))}
+                  </List>
+                </Collapse>
+              )}
+            </div>
+          ))}
         </List>
       </Drawer>
+
+      {/*Sidebar no desplegada*/}
+      <Menu
+        anchorEl={anclaMenu}
+        open={Boolean(anclaMenu)}
+        onClose={cerrarMenu}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        PaperProps={{
+          sx: {
+            backgroundColor: '#0b111e',
+            color: '#fff',
+          },
+        }}
+      >
+        {menuItems.map((item, idx) => (
+          <MenuItem
+            sx={{
+              '&:hover': { backgroundColor: '#3D4B6B' },
+              borderRadius: '8px',
+              margin: '5px',
+            }}
+            key={idx}
+            component={RouterLink}
+            to={item.route}
+            onClick={cerrarMenu}
+          >
+            <ListItemIcon sx={{ color: 'white', minWidth: '30px' }}>
+              {item.icon}
+            </ListItemIcon>
+            <ListItemText primary={item.label} />
+          </MenuItem>
+        ))}
+      </Menu>
     </>
   );
 }
-
-
