@@ -1,14 +1,5 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { useState } from 'react';
-import ShowChartIcon from '@mui/icons-material/ShowChart';
-import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
-import MedicalInformationOutlinedIcon from '@mui/icons-material/MedicalInformationOutlined';
-import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
-import FeedOutlinedIcon from '@mui/icons-material/FeedOutlined';
-import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
-import KeyboardDoubleArrowLeftOutlinedIcon from '@mui/icons-material/KeyboardDoubleArrowLeftOutlined';
-import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
-import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined';
 import {
   Drawer,
   Tooltip,
@@ -17,22 +8,46 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
-  Grid,
   Collapse,
   Menu,
   MenuItem,
+  Toolbar,
+  IconButton,
+  useMediaQuery,
+  useTheme,
+  Box,
 } from '@mui/material';
+
+import ShowChartIcon from '@mui/icons-material/ShowChart';
+import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
+import MedicalInformationOutlinedIcon from '@mui/icons-material/MedicalInformationOutlined';
+import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
+import FeedOutlinedIcon from '@mui/icons-material/FeedOutlined';
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import KeyboardDoubleArrowLeftOutlinedIcon from '@mui/icons-material/KeyboardDoubleArrowLeftOutlined';
+import KeyboardDoubleArrowRightOutlinedIcon from '@mui/icons-material/KeyboardDoubleArrowRightOutlined';
+import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
+import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined';
+import CloseIcon from '@mui/icons-material/Close';
 
 const drawerWidth = 290;
 
 export default function Sidebar() {
-  const [open, setOpen] = useState(true);
+  const theme = useTheme();
+  const esMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  const [open, setOpen] = useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
   const [openItems, setOpenItems] = useState([]);
   const [anclaMenu, setAnclaMenu] = useState(null);
   const [menuItems, setMenuItems] = useState([]);
 
   const toggleDrawer = () => {
-    setOpen(!open);
+    if (esMobile) {
+      setOpenDrawer(!openDrawer);
+    } else {
+      setOpen(!open);
+    }
   };
 
   const toggleItem = (key) => {
@@ -107,15 +122,230 @@ export default function Sidebar() {
     },
   ];
 
+  const drawerContent = (
+    <>
+      <Toolbar>
+        <ListItemButton
+          onClick={toggleDrawer}
+          sx={{
+            mt: '1rem',
+            mb: '2rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: open ? 'space-between' : 'center',
+            padding: 0,
+            '&:hover': { backgroundColor: 'transparent' },
+          }}
+        >
+          {open || (esMobile && openDrawer) ? (
+            <>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                }}
+              >
+                <img
+                  src="/medIntegralLogo.png"
+                  alt="Logo MedIntegral"
+                  style={{ height: '4.2rem' }}
+                ></img>
+                <Typography
+                  sx={{
+                    color: '#00AEEF',
+                    margin: 0,
+                    fontSize: '1.4rem',
+                    fontWeight: '500',
+                  }}
+                >
+                  Med
+                  <span style={{ color: '#FFFFFF' }}>Integral</span>
+                </Typography>
+              </Box>
+              {esMobile ? (
+                <IconButton onClick={toggleDrawer}>
+                  <CloseIcon sx={{ color: '#ffffffff' }} />
+                </IconButton>
+              ) : (
+                <KeyboardDoubleArrowLeftOutlinedIcon />
+              )}
+            </>
+          ) : (
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <img
+                src="/medIntegralLogo.png"
+                alt='"Logo MedIntegral"'
+                style={{ height: '4.2rem' }}
+              ></img>
+            </Box>
+          )}
+        </ListItemButton>
+      </Toolbar>
+
+      <List sx={{ mt: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
+        <ListItemButton
+          sx={{
+            '&:hover': { backgroundColor: '#3D4B6B' },
+            borderRadius: '15px',
+            margin: '5px',
+          }}
+          component={RouterLink}
+          to="/"
+        >
+          <ListItemIcon
+            sx={{
+              color: 'white',
+              height: '3rem',
+              '& svg': { fontSize: '2rem' },
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <ShowChartIcon />
+          </ListItemIcon>
+          {(open || (esMobile && openDrawer)) && (
+            <ListItemText
+              primary="Dashboard"
+              primaryTypographyProps={{ fontSize: '1.1rem' }}
+            />
+          )}
+        </ListItemButton>
+
+        {sidebarItems.map((item, index) => (
+          <div key={index}>
+            <Tooltip title={!open ? item.label : ''} placement="right">
+              <ListItemButton
+                sx={{
+                  '&:hover': { backgroundColor: '#3D4B6B' },
+                  borderRadius: '15px',
+                  margin: '5px',
+                }}
+                onClick={(e) => {
+                  if (item.children) {
+                    const pantallaExpandida = open || (esMobile && openDrawer);
+                    if (pantallaExpandida) {
+                      toggleItem(item.key);
+                    } else {
+                      abrirMenu(e, item.children);
+                    }
+                  }
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    color: 'white',
+                    height: '3rem',
+                    '& svg': { fontSize: '2rem' },
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {item.icon}
+                </ListItemIcon>
+                {(open || (esMobile && openDrawer)) && (
+                  <ListItemText
+                    primary={item.label}
+                    primaryTypographyProps={{ fontSize: '1.1rem' }}
+                  />
+                )}
+                {(open || (esMobile && openDrawer)) &&
+                  item.children &&
+                  (isOpen(item) ? (
+                    <ExpandLessOutlinedIcon />
+                  ) : (
+                    <ExpandMoreOutlinedIcon />
+                  ))}
+              </ListItemButton>
+            </Tooltip>
+
+            {(open || (esMobile && openDrawer)) && item.children && (
+              <Collapse in={isOpen(item)} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding sx={{ ml: '15px' }}>
+                  {item.children.map((child, i) => (
+                    <ListItemButton
+                      key={i}
+                      sx={{
+                        pl: 4,
+                        '&:hover': { backgroundColor: '#3D4B6B' },
+                        borderRadius: '15px',
+                        margin: '10px',
+                      }}
+                      component={RouterLink}
+                      to={child.route}
+                    >
+                      <ListItemIcon sx={{ color: 'white' }}>
+                        {child.icon}
+                      </ListItemIcon>
+                      <ListItemText primary={child.label} />
+                    </ListItemButton>
+                  ))}
+                </List>
+              </Collapse>
+            )}
+          </div>
+        ))}
+      </List>
+    </>
+  );
+
   return (
     <>
+      {esMobile && (
+        <Box
+          sx={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            zIndex: 1301,
+            bgcolor: '#0b111e',
+            width: '100%',
+            p: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <img
+              src="/medIntegralLogo.png"
+              alt="Logo MedIntegral"
+              style={{ height: '4.2rem' }}
+            />
+            <Typography
+              sx={{
+                color: '#00AEEF',
+                fontSize: '1.4rem',
+                fontWeight: '500',
+              }}
+            >
+              Med<span style={{ color: '#FFFFFF' }}>Integral</span>
+            </Typography>
+          </Box>
+          <IconButton color="inherit" onClick={toggleDrawer}>
+            <KeyboardDoubleArrowRightOutlinedIcon sx={{ color: '#ffffffff' }} />
+          </IconButton>
+        </Box>
+      )}
+
       <Drawer
-        variant="permanent"
+        variant={esMobile ? 'temporary' : 'permanent'}
+        open={esMobile ? openDrawer : open}
         sx={{
-          width: open ? drawerWidth : 60,
+          zIndex: 1302,
+          width: esMobile ? drawerWidth : open ? drawerWidth : 100,
           flexShrink: 0,
+          display: { xs: 'block', sm: 'block' },
           '& .MuiDrawer-paper': {
-            width: open ? drawerWidth : 100,
+            width: esMobile ? drawerWidth : open ? drawerWidth : 100,
             boxSizing: 'border-box',
             backgroundColor: '#0b111e',
             color: '#fff',
@@ -123,166 +353,14 @@ export default function Sidebar() {
             overflowX: 'hidden',
           },
         }}
+        ModalProps={{
+          keepMounted: true,
+        }}
       >
-        <List sx={{ mt: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
-          <ListItemButton
-            sx={{
-              mb: '2rem',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: open ? 'space-between' : 'center',
-              '&:hover': { backgroundColor: 'transparent' },
-            }}
-            onClick={toggleDrawer}
-          >
-            {open ? (
-              <>
-                <Grid
-                  sx={{
-                    display: 'contents',
-                    alignItems: 'center',
-                    gap: '3rem',
-                  }}
-                >
-                  <img
-                    src="/medIntegralLogo.png"
-                    alt="Logo MedIntegral"
-                    style={{ height: '4.2rem' }}
-                  ></img>
-                  <Typography
-                    sx={{
-                      color: '#00AEEF',
-                      margin: 0,
-                      fontSize: '1.4rem',
-                      fontWeight: '500',
-                      display: { xs: 'none', sm: 'block' },
-                    }}
-                  >
-                    Med
-                    <span style={{ color: '#FFFFFF' }}>Integral</span>
-                  </Typography>
-                </Grid>
-                <KeyboardDoubleArrowLeftOutlinedIcon />
-              </>
-            ) : (
-              <Grid sx={{ display: 'flex', alignItems: 'center' }}>
-                <img
-                  src="/medIntegralLogo.png"
-                  alt='"Logo MedIntegral"'
-                  style={{ height: '4.2rem' }}
-                ></img>
-              </Grid>
-            )}
-          </ListItemButton>
-          {/*Dashboard*/}
-          <ListItemButton
-            sx={{
-              '&:hover': { backgroundColor: '#3D4B6B' },
-              borderRadius: '15px',
-              margin: '5px',
-            }}
-            button
-            component={RouterLink}
-            to="/"
-          >
-            <ListItemIcon
-              sx={{
-                color: 'white',
-                height: '3rem',
-                '& svg': { fontSize: '2rem' },
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <ShowChartIcon />
-            </ListItemIcon>
-            {open && (
-              <ListItemText
-                primary="Dashboard"
-                primaryTypographyProps={{ fontSize: '1.1rem' }}
-              />
-            )}
-          </ListItemButton>
-          {/* Elementos del menú */}
-          {sidebarItems.map((item, index) => (
-            <div key={index}>
-              <Tooltip title={!open ? item.label : ''} placement="right">
-                <ListItemButton
-                  sx={{
-                    '&:hover': { backgroundColor: '#3D4B6B' },
-                    borderRadius: '15px',
-                    margin: '5px',
-                  }}
-                  onClick={(e) => {
-                    if (item.children) {
-                      if (open) {
-                        toggleItem(item.key);
-                      } else {
-                        abrirMenu(e, item.children);
-                      }
-                    }
-                  }}
-                >
-                  <ListItemIcon
-                    sx={{
-                      color: 'white',
-                      height: '3rem',
-                      '& svg': { fontSize: '2rem' },
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    {item.icon}
-                  </ListItemIcon>
-                  {open && (
-                    <ListItemText
-                      primary={item.label}
-                      primaryTypographyProps={{ fontSize: '1.1rem' }}
-                    />
-                  )}
-                  {open &&
-                    item.children &&
-                    (isOpen(item) ? (
-                      <ExpandLessOutlinedIcon />
-                    ) : (
-                      <ExpandMoreOutlinedIcon />
-                    ))}
-                </ListItemButton>
-              </Tooltip>
-
-              {/* Submenu (cuando esta expandida la sidebar) */}
-              {open && item.children && (
-                <Collapse in={isOpen(item)} timeout="auto" unmountOnExit>
-                  <List component="div" disablePadding sx={{ ml: '15px' }}>
-                    {item.children.map((child, i) => (
-                      <ListItemButton
-                        key={i}
-                        sx={{
-                          pl: 4,
-                          '&:hover': { backgroundColor: '#3D4B6B' },
-                          borderRadius: '15px',
-                          margin: '10px',
-                        }}
-                        component={RouterLink}
-                        to={child.route}
-                      >
-                        <ListItemIcon sx={{ color: 'white' }}>
-                          {child.icon}
-                        </ListItemIcon>
-                        <ListItemText primary={child.label} />
-                      </ListItemButton>
-                    ))}
-                  </List>
-                </Collapse>
-              )}
-            </div>
-          ))}
-        </List>
+        {drawerContent}
       </Drawer>
 
-      {/*Sidebar no desplegada*/}
+      {/* submenu flotante para items con siderbar no desplegada */}
       <Menu
         anchorEl={anclaMenu}
         open={Boolean(anclaMenu)}
@@ -298,15 +376,15 @@ export default function Sidebar() {
       >
         {menuItems.map((item, idx) => (
           <MenuItem
+            key={idx}
+            component={RouterLink}
+            to={item.route}
+            onClick={cerrarMenu}
             sx={{
               '&:hover': { backgroundColor: '#3D4B6B' },
               borderRadius: '8px',
               margin: '5px',
             }}
-            key={idx}
-            component={RouterLink}
-            to={item.route}
-            onClick={cerrarMenu}
           >
             <ListItemIcon sx={{ color: 'white', minWidth: '30px' }}>
               {item.icon}
