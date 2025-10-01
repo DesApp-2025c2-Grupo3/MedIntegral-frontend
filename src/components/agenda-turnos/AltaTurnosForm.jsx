@@ -61,7 +61,7 @@ export default function AltaTurnosForm() {
           });
           navigateToEdicion(data.id, { creacion: true });
         } catch (err) {
-          console.error('Error al guardar el alta de turnos:', err);
+          console.error('Error al guardar el alta de agenda de turnos:', err);
           setShowError(true);
         } finally {
           setSaving(false);
@@ -109,7 +109,7 @@ export default function AltaTurnosForm() {
       <ButtonsSection
         handleGuardar={handleGuardar}
         onConfirmCancel={handleCancelar}
-        cancelTitle="¿Cancelar alta de turnos?"
+        cancelTitle="¿Cancelar alta de agenda de turnos?"
         cancelMessage="Si cancelás ahora, se perderán todos los cambios que hayas hecho en el formulario."
       />
       <ErrorSnackbar
