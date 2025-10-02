@@ -8,7 +8,7 @@ export default function PrestadoresAlta() {
   return (
     <Box sx={{ mt: 2 }}>
       <PageHeader
-        title="Alta de prestadores"
+        title="Alta de prestador"
         subtitle="Ingrese los datos para dar de alta un nuevo prestador"
       />
       <Paper
