@@ -37,3 +37,32 @@ export const getPrestadorById = async (id) => {
     throw err;
   }
 };
+
+/**
+ * Crear un nuevo prestador
+ */
+
+export const createPrestador = async (prestadorData) => {
+  if (!prestadorData?.nombre || !prestadorData?.cuilCuit) {
+    throw new Error('Faltan datos obligatorios para crear el prestador');
+  }
+
+  const payload = {
+    ...prestadorData,
+  };
+
+  try {
+    const { data } = await api.post('/prestadores', payload);
+
+    if (!data?.id) {
+      throw new Error(
+        'La respuesta del servidor no incluye el ID del prestador creado'
+      );
+    }
+
+    return data;
+  } catch (err) {
+    console.error('Error al crear el prestador:', err);
+    throw err;
+  }
+};
