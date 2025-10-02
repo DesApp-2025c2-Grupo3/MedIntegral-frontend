@@ -1,9 +1,14 @@
 import { Box, Grid, Typography } from '@mui/material';
-import logo from '../../public/medIntegralLogo.png';
 
 export default function Footer() {
   return (
-    <Box style={{ backgroundColor: '#0b111e', padding: '1em' }}>
+    <Box
+      sx={{
+        backgroundColor: '#0b111e',
+        padding: '1em',
+        marginLeft: { md: '5.5rem' },
+      }}
+    >
       <Grid
         container
         spacing={3}
@@ -11,7 +16,7 @@ export default function Footer() {
       >
         <Grid sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <img
-            src={logo}
+            src="/medIntegralLogo.png"
             alt='"Logo MedIntegral"'
             style={{ height: '50px' }}
           ></img>
