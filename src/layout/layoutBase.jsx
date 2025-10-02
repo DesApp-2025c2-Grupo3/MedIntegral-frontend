@@ -7,7 +7,7 @@ import BreadcrumbsNav from '../components/common/BreadcrumbsNav';
 export default function LayoutBase() {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <Container maxWidth="lg" sx={{ mt: 4, flexGrow: 1 }}>
+      <Container maxWidth="lg" sx={{ mt: { xs: 11, md: 4 }, flexGrow: 1 }}>
         <BreadcrumbsNav />
         <Sidebar />
         <Box component="main" sx={{ flexGrow: 1, mt: 3 }}>
