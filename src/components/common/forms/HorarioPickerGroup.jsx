@@ -74,5 +74,5 @@ HorarioPickerGroup.propTypes = {
     fin: PropTypes.object,
   }).isRequired,
   onChange: PropTypes.func.isRequired,
-  idPrefix: PropTypes.string.isRequired, // ejemplo: "horario-<id>"
+  idPrefix: PropTypes.string.isRequired,
 };
