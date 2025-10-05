@@ -136,7 +136,7 @@ const theme = createTheme({
         root: {
           color: '#FFFFFF',
           marginLeft: '0.3rem',
-          '& .MuiTypography-root': { fontSize: '1.05rem' },
+          '& .MuiTypography-root': { fontSize: '0.9rem' },
         },
       },
     },

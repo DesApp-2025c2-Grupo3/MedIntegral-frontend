@@ -1,5 +1,6 @@
 import { AppBar, Toolbar, IconButton, Box, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import { Link as RouterLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 export default function AppBarCustom({ onMenuClick }) {
@@ -18,7 +19,18 @@ export default function AppBarCustom({ onMenuClick }) {
           <IconButton onClick={onMenuClick} color="inherit">
             <MenuIcon />
           </IconButton>
-          <Box className="navbar-header">
+          <Box
+            component={RouterLink}
+            to="/"
+            className="navbar-header"
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
+              textDecoration: 'none',
+              cursor: 'pointer',
+            }}
+          >
             <img
               src="/medIntegralLogo.png"
               alt="Logo MedIntegral"
