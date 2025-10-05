@@ -1,14 +1,13 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { useState } from 'react';
+import SidebarItem from './SidebarItem';
 import {
   Drawer,
-  Tooltip,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
   Typography,
-  Collapse,
   Menu,
   MenuItem,
   Toolbar,
@@ -26,8 +25,6 @@ import FeedOutlinedIcon from '@mui/icons-material/FeedOutlined';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import KeyboardDoubleArrowLeftOutlinedIcon from '@mui/icons-material/KeyboardDoubleArrowLeftOutlined';
 import KeyboardDoubleArrowRightOutlinedIcon from '@mui/icons-material/KeyboardDoubleArrowRightOutlined';
-import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
-import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 
 const drawerWidth = 350;
@@ -38,7 +35,6 @@ export default function Sidebar() {
 
   const [open, setOpen] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
-  const [openItems, setOpenItems] = useState([]);
   const [anclaMenu, setAnclaMenu] = useState(null);
   const [menuItems, setMenuItems] = useState([]);
 
@@ -49,14 +45,6 @@ export default function Sidebar() {
       setOpen(!open);
     }
   };
-
-  const toggleItem = (key) => {
-    setOpenItems((prev) =>
-      prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key]
-    );
-  };
-
-  const isOpen = (item) => openItems.includes(item.key);
 
   const abrirMenu = (e, items) => {
     setAnclaMenu(e.currentTarget);
@@ -222,77 +210,13 @@ export default function Sidebar() {
         </ListItemButton>
 
         {sidebarItems.map((item, index) => (
-          <Box key={index}>
-            <Tooltip title={!open ? item.label : ''} placement="right">
-              <ListItemButton
-                sx={{
-                  '&:hover': { backgroundColor: '#3D4B6B' },
-                  borderRadius: '16px',
-                }}
-                onClick={(e) => {
-                  if (item.children) {
-                    const pantallaExpandida = open || (esMobile && openDrawer);
-                    if (pantallaExpandida) {
-                      toggleItem(item.key);
-                    } else {
-                      abrirMenu(e, item.children);
-                    }
-                  }
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    color: 'white',
-                    height: '3rem',
-                    '& svg': { fontSize: '2rem' },
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  {item.icon}
-                </ListItemIcon>
-                {(open || (esMobile && openDrawer)) && (
-                  <ListItemText
-                    primary={item.label}
-                    primaryTypographyProps={{ fontSize: '1.1rem' }}
-                  />
-                )}
-                {(open || (esMobile && openDrawer)) &&
-                  item.children &&
-                  (isOpen(item) ? (
-                    <ExpandLessOutlinedIcon />
-                  ) : (
-                    <ExpandMoreOutlinedIcon />
-                  ))}
-              </ListItemButton>
-            </Tooltip>
-
-            {(open || (esMobile && openDrawer)) && item.children && (
-              <Collapse in={isOpen(item)} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding sx={{ ml: '16px' }}>
-                  {item.children.map((child, i) => (
-                    <ListItemButton
-                      key={i}
-                      sx={{
-                        pl: 4,
-                        '&:hover': { backgroundColor: '#3D4B6B' },
-                        borderRadius: '16px',
-                        gap: '1rem',
-                      }}
-                      component={RouterLink}
-                      to={child.route}
-                    >
-                      <ListItemIcon sx={{ color: 'white', minWidth: 'auto' }}>
-                        {child.icon}
-                      </ListItemIcon>
-                      <ListItemText primary={child.label} />
-                    </ListItemButton>
-                  ))}
-                </List>
-              </Collapse>
-            )}
-          </Box>
+          <SidebarItem
+            key={index}
+            item={item}
+            open={open}
+            esMobile={esMobile && openDrawer}
+            abrirMenu={abrirMenu}
+          />
         ))}
       </List>
     </>
