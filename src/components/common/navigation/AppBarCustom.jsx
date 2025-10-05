@@ -23,12 +23,9 @@ export default function AppBarCustom({ onMenuClick }) {
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          {/* Botón del menú lateral */}
           <IconButton onClick={onMenuClick} color="inherit">
             <MenuIcon />
           </IconButton>
-
-          {/* Logo reutilizable */}
           <BrandLogo clickable size="medium" />
         </Box>
       </Toolbar>

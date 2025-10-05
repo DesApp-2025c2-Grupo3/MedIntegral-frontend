@@ -29,7 +29,7 @@ export default function SidebarModal({ open, onClose }) {
           px: 2,
         }}
       >
-        <BrandLogo clickable size="small" />{' '}
+        <BrandLogo clickable size="medium" />{' '}
         <IconButton onClick={onClose} color="inherit">
           <CloseIcon />
         </IconButton>

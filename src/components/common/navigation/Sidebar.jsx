@@ -1,21 +1,16 @@
 import {
   Drawer,
-  Toolbar,
   List,
-  ListItemButton,
   ListItemIcon,
   ListItemText,
   Menu,
   MenuItem,
 } from '@mui/material';
-import ShowChartIcon from '@mui/icons-material/ShowChart';
-import KeyboardDoubleArrowLeftOutlinedIcon from '@mui/icons-material/KeyboardDoubleArrowLeftOutlined';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { sidebarItems } from '../../../utils/sidebarItems';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import SidebarItem from './SidebarItem';
-import BrandLogo from '../BrandLogo';
 import './Sidebar.css';
 
 const drawerWidth = 280;
@@ -24,6 +19,12 @@ export default function Sidebar({ open, toggleOpen }) {
   const [anclaMenu, setAnclaMenu] = useState(null);
   const [menuItems, setMenuItems] = useState([]);
   const location = useLocation();
+
+  // 🔹 Cierra menú contextual al cambiar de ruta
+  useEffect(() => {
+    setAnclaMenu(null);
+    setMenuItems([]);
+  }, [location.pathname]);
 
   const drawerWidthActual = open ? drawerWidth : 70;
 
@@ -52,45 +53,11 @@ export default function Sidebar({ open, toggleOpen }) {
             borderRight: 'none',
             transition: 'width 0.3s ease',
             overflowX: 'hidden',
+            paddingTop: '68px',
           },
         }}
       >
-        <Toolbar
-          sx={{
-            display: 'flex',
-            justifyContent: open ? 'space-between' : 'center',
-            px: 1,
-          }}
-        >
-          {open && <BrandLogo clickable={false} size="small" />}
-          <KeyboardDoubleArrowLeftOutlinedIcon
-            onClick={toggleOpen}
-            sx={{
-              fontSize: '2rem',
-              cursor: 'pointer',
-              transform: open ? 'rotate(0deg)' : 'rotate(180deg)',
-              transition: 'transform 0.3s ease',
-            }}
-          />
-        </Toolbar>
-
         <List className="sidebar-list">
-          <ListItemButton
-            className={!open ? 'sidebar-collapsed' : ''}
-            component={RouterLink}
-            to="/"
-            selected={location.pathname === '/'}
-          >
-            <ListItemIcon>
-              <ShowChartIcon />
-            </ListItemIcon>
-            {open && (
-              <ListItemText
-                primary="Dashboard"
-                primaryTypographyProps={{ fontSize: '1.1rem' }}
-              />
-            )}
-          </ListItemButton>
           {sidebarItems.map((item) => (
             <SidebarItem
               key={item.key}
@@ -124,9 +91,12 @@ export default function Sidebar({ open, toggleOpen }) {
             key={idx}
             component={RouterLink}
             to={item.route}
-            onClick={cerrarMenu}
+            onClick={() => {
+              cerrarMenu();
+              toggleOpen(false);
+            }}
           >
-            <ListItemIcon sx={{ color: '#fff' }}>{<item.icon />}</ListItemIcon>
+            <ListItemIcon sx={{ color: '#fff' }}>{item.icon}</ListItemIcon>
             <ListItemText primary={item.label} />
           </MenuItem>
         ))}

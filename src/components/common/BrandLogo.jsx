@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 
 export default function BrandLogo({ size = 'medium', clickable = true }) {
   const sizes = {
-    small: { fontSize: '1rem', imgWidth: 28 },
-    medium: { fontSize: '1.2rem', imgWidth: 32 },
-    large: { fontSize: '1.5rem', imgWidth: 40 },
+    small: { fontSize: '0.9rem', imgWidth: 28 },
+    medium: { fontSize: '1.1rem', imgWidth: 32 },
+    large: { fontSize: '1.2rem', imgWidth: 40 },
   };
 
   const { fontSize, imgWidth } = sizes[size] || sizes.medium;
