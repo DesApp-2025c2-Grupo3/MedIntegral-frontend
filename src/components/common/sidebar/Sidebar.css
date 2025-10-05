@@ -1,4 +1,5 @@
-.sidebar-header {
+.sidebar-header,
+.navbar-header {
   display: flex;
   align-items: center;
   gap: 0.6rem;
@@ -19,6 +20,10 @@
 
 .sidebar-logo {
   height: 4.2rem;
+}
+
+.navbar-logo {
+  height: 2.5rem;
 }
 
 .sidebar-list {

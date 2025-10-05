@@ -26,7 +26,6 @@ import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined
 import FeedOutlinedIcon from '@mui/icons-material/FeedOutlined';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import KeyboardDoubleArrowLeftOutlinedIcon from '@mui/icons-material/KeyboardDoubleArrowLeftOutlined';
-import KeyboardDoubleArrowRightOutlinedIcon from '@mui/icons-material/KeyboardDoubleArrowRightOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -126,66 +125,34 @@ export default function Sidebar() {
 
   const drawerContent = (
     <>
-      <Toolbar>
-        <ListItemButton
-          onClick={toggleDrawer}
-          sx={{
-            mt: '1rem',
-            mb: '2rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: open ? 'space-between' : 'center',
-            padding: 0,
-            '&:hover': { backgroundColor: 'transparent' },
-          }}
-        >
-          {open || (esMobile && openDrawer) ? (
-            <>
-              <Box className="sidebar-header">
-                <img
-                  src="/medIntegralLogo.png"
-                  alt="Logo MedIntegral"
-                  className="sidebar-logo"
-                />
-                <Typography
-                  sx={{
-                    color: '#00AEEF',
-                    fontSize: '1.4rem',
-                    fontWeight: 500,
-                    lineHeight: 1,
-                  }}
-                >
-                  Med<span style={{ color: '#FFFFFF' }}>Integral</span>
-                </Typography>
-              </Box>
-              {esMobile ? (
-                <IconButton onClick={toggleDrawer}>
-                  <CloseIcon />
-                </IconButton>
-              ) : (
-                <KeyboardDoubleArrowLeftOutlinedIcon
-                  sx={{ fontSize: '2rem' }}
-                />
-              )}
-            </>
-          ) : (
-            <Box
+      {esMobile && openDrawer && (
+        <Toolbar>
+          <Box className="sidebar-header">
+            <img
+              src="/medIntegralLogo.png"
+              alt="Logo MedIntegral"
+              className="sidebar-logo"
+            />
+            <Typography
               sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: 0,
+                color: '#00AEEF',
+                fontSize: '1.4rem',
+                fontWeight: 500,
+                lineHeight: 1,
               }}
             >
-              <img
-                src="/medIntegralLogo.png"
-                alt="Logo MedIntegral"
-                className="sidebar-logo"
-              />
-            </Box>
+              Med<span style={{ color: '#FFFFFF' }}>Integral</span>
+            </Typography>
+          </Box>
+          {esMobile ? (
+            <IconButton onClick={toggleDrawer}>
+              <CloseIcon />
+            </IconButton>
+          ) : (
+            <KeyboardDoubleArrowLeftOutlinedIcon sx={{ fontSize: '2rem' }} />
           )}
-        </ListItemButton>
-      </Toolbar>
+        </Toolbar>
+      )}
 
       <List className="sidebar-list">
         <ListItemButton
@@ -233,21 +200,25 @@ export default function Sidebar() {
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <IconButton onClick={toggleDrawer} color="inherit">
-              {esMobile ? (
-                openDrawer ? (
-                  <CloseIcon />
-                ) : (
-                  <KeyboardDoubleArrowRightOutlinedIcon />
-                )
-              ) : open ? (
-                <KeyboardDoubleArrowLeftOutlinedIcon />
-              ) : (
-                <MenuIcon />
-              )}
+              {openDrawer ? <CloseIcon /> : <MenuIcon />}
             </IconButton>
-            <Typography variant="h6" noWrap component="div">
-              Med<span style={{ color: '#00AEEF' }}>Integral</span>
-            </Typography>
+            <Box className="navbar-header">
+              <img
+                src="/medIntegralLogo.png"
+                alt="Logo MedIntegral"
+                className="navbar-logo"
+              />
+              <Typography
+                sx={{
+                  color: '#00AEEF',
+                  fontSize: '1.2rem',
+                  fontWeight: 500,
+                  lineHeight: 1,
+                }}
+              >
+                Med<span style={{ color: '#FFFFFF' }}>Integral</span>
+              </Typography>
+            </Box>
           </Box>
         </Toolbar>
       </AppBar>
