@@ -30,7 +30,7 @@ import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 
-const drawerWidth = 290;
+const drawerWidth = 350;
 
 export default function Sidebar() {
   const theme = useTheme();
@@ -168,7 +168,9 @@ export default function Sidebar() {
                   <CloseIcon sx={{ color: '#ffffffff' }} />
                 </IconButton>
               ) : (
-                <KeyboardDoubleArrowLeftOutlinedIcon />
+                <KeyboardDoubleArrowLeftOutlinedIcon
+                  sx={{ fontSize: '2rem' }}
+                />
               )}
             </>
           ) : (
@@ -193,7 +195,7 @@ export default function Sidebar() {
         <ListItemButton
           sx={{
             '&:hover': { backgroundColor: '#3D4B6B' },
-            borderRadius: '15px',
+            borderRadius: '16px',
             margin: '5px',
           }}
           component={RouterLink}
@@ -220,13 +222,12 @@ export default function Sidebar() {
         </ListItemButton>
 
         {sidebarItems.map((item, index) => (
-          <div key={index}>
+          <Box key={index}>
             <Tooltip title={!open ? item.label : ''} placement="right">
               <ListItemButton
                 sx={{
                   '&:hover': { backgroundColor: '#3D4B6B' },
-                  borderRadius: '15px',
-                  margin: '5px',
+                  borderRadius: '16px',
                 }}
                 onClick={(e) => {
                   if (item.children) {
@@ -269,20 +270,20 @@ export default function Sidebar() {
 
             {(open || (esMobile && openDrawer)) && item.children && (
               <Collapse in={isOpen(item)} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding sx={{ ml: '15px' }}>
+                <List component="div" disablePadding sx={{ ml: '16px' }}>
                   {item.children.map((child, i) => (
                     <ListItemButton
                       key={i}
                       sx={{
                         pl: 4,
                         '&:hover': { backgroundColor: '#3D4B6B' },
-                        borderRadius: '15px',
-                        margin: '10px',
+                        borderRadius: '16px',
+                        gap: '1rem',
                       }}
                       component={RouterLink}
                       to={child.route}
                     >
-                      <ListItemIcon sx={{ color: 'white' }}>
+                      <ListItemIcon sx={{ color: 'white', minWidth: 'auto' }}>
                         {child.icon}
                       </ListItemIcon>
                       <ListItemText primary={child.label} />
@@ -291,7 +292,7 @@ export default function Sidebar() {
                 </List>
               </Collapse>
             )}
-          </div>
+          </Box>
         ))}
       </List>
     </>
@@ -331,7 +332,7 @@ export default function Sidebar() {
             </Typography>
           </Box>
           <IconButton color="inherit" onClick={toggleDrawer}>
-            <KeyboardDoubleArrowRightOutlinedIcon sx={{ color: '#ffffffff' }} />
+            <KeyboardDoubleArrowRightOutlinedIcon sx={{ color: '#FFFFFF' }} />
           </IconButton>
         </Box>
       )}
@@ -351,6 +352,8 @@ export default function Sidebar() {
             color: '#fff',
             transition: 'width 0.3s',
             overflowX: 'hidden',
+            borderRight: 'none',
+            boxShadow: '2px 0 5px rgba(0,0,0,0.1)',
           },
         }}
         ModalProps={{
