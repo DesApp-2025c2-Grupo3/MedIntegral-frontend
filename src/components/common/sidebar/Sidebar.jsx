@@ -27,6 +27,8 @@ import KeyboardDoubleArrowLeftOutlinedIcon from '@mui/icons-material/KeyboardDou
 import KeyboardDoubleArrowRightOutlinedIcon from '@mui/icons-material/KeyboardDoubleArrowRightOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 
+import './Sidebar.css';
+
 const drawerWidth = 350;
 
 export default function Sidebar() {
@@ -127,33 +129,26 @@ export default function Sidebar() {
         >
           {open || (esMobile && openDrawer) ? (
             <>
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                }}
-              >
+              <Box className="sidebar-header">
                 <img
                   src="/medIntegralLogo.png"
                   alt="Logo MedIntegral"
-                  style={{ height: '4.2rem' }}
+                  className="sidebar-logo"
                 />
                 <Typography
                   sx={{
                     color: '#00AEEF',
-                    margin: 0,
                     fontSize: '1.4rem',
-                    fontWeight: '500',
+                    fontWeight: 500,
+                    lineHeight: 1,
                   }}
                 >
-                  Med
-                  <span style={{ color: '#FFFFFF' }}>Integral</span>
+                  Med<span style={{ color: '#FFFFFF' }}>Integral</span>
                 </Typography>
               </Box>
               {esMobile ? (
                 <IconButton onClick={toggleDrawer}>
-                  <CloseIcon sx={{ color: '#ffffffff' }} />
+                  <CloseIcon />
                 </IconButton>
               ) : (
                 <KeyboardDoubleArrowLeftOutlinedIcon
@@ -167,19 +162,20 @@ export default function Sidebar() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                padding: 0,
               }}
             >
               <img
                 src="/medIntegralLogo.png"
                 alt="Logo MedIntegral"
-                style={{ height: '4.2rem' }}
+                className="sidebar-logo"
               />
             </Box>
           )}
         </ListItemButton>
       </Toolbar>
 
-      <List sx={{ mt: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
+      <List className="sidebar-list">
         <ListItemButton
           className={!open && !esMobile ? 'sidebar-collapsed' : ''}
           component={RouterLink}
@@ -213,38 +209,21 @@ export default function Sidebar() {
   return (
     <>
       {esMobile && (
-        <Box
-          sx={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            zIndex: 1301,
-            bgcolor: '#0b111e',
-            width: '100%',
-            p: 1,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <Box className="sidebar-mobile-header">
+          <Box className="sidebar-header">
             <img
               src="/medIntegralLogo.png"
               alt="Logo MedIntegral"
-              style={{ height: '4.2rem' }}
+              className="sidebar-logo"
             />
             <Typography
-              sx={{
-                color: '#00AEEF',
-                fontSize: '1.4rem',
-                fontWeight: '500',
-              }}
+              sx={{ color: '#00AEEF', fontSize: '1.4rem', fontWeight: 500 }}
             >
               Med<span style={{ color: '#FFFFFF' }}>Integral</span>
             </Typography>
           </Box>
-          <IconButton color="inherit" onClick={toggleDrawer}>
-            <KeyboardDoubleArrowRightOutlinedIcon sx={{ color: '#FFFFFF' }} />
+          <IconButton onClick={toggleDrawer}>
+            <KeyboardDoubleArrowRightOutlinedIcon />
           </IconButton>
         </Box>
       )}
@@ -253,24 +232,14 @@ export default function Sidebar() {
         variant={esMobile ? 'temporary' : 'permanent'}
         open={esMobile ? openDrawer : open}
         sx={{
-          zIndex: 1302,
-          width: esMobile ? drawerWidth : open ? drawerWidth : 100,
+          width: esMobile ? drawerWidth : open ? drawerWidth : 90,
           flexShrink: 0,
           display: { xs: 'block', sm: 'block' },
           '& .MuiDrawer-paper': {
-            width: esMobile ? drawerWidth : open ? drawerWidth : 100,
-            boxSizing: 'border-box',
-            backgroundColor: '#0b111e',
-            color: '#fff',
-            transition: 'width 0.3s ease',
-            overflowX: 'hidden',
-            borderRight: 'none',
-            boxShadow: '2px 0 5px rgba(0,0,0,0.1)',
+            width: esMobile ? drawerWidth : open ? drawerWidth : 90,
           },
         }}
-        ModalProps={{
-          keepMounted: true,
-        }}
+        ModalProps={{ keepMounted: true }}
       >
         {drawerContent}
       </Drawer>
@@ -281,16 +250,6 @@ export default function Sidebar() {
         onClose={cerrarMenu}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-        PaperProps={{
-          sx: {
-            backgroundColor: '#0b111e',
-            color: '#fff',
-            borderRadius: '12px',
-            boxShadow: '0 4px 16px rgba(0,0,0,0.25)',
-            minWidth: 190,
-            paddingY: 0.6,
-          },
-        }}
       >
         {menuItems.map((item, idx) => (
           <MenuItem
@@ -298,34 +257,11 @@ export default function Sidebar() {
             component={RouterLink}
             to={item.route}
             onClick={cerrarMenu}
-            sx={{
-              '&:hover': { backgroundColor: '#3D4B6B' },
-              borderRadius: '8px',
-              mx: '8px',
-              my: '4px',
-              gap: '0.8rem',
-              px: '12px',
-              py: '8px',
-              display: 'flex',
-              alignItems: 'center',
-            }}
           >
-            <ListItemIcon
-              sx={{
-                color: 'white',
-                minWidth: '32px',
-                display: 'flex',
-                justifyContent: 'center',
-              }}
-            >
-              {item.icon}
-            </ListItemIcon>
+            <ListItemIcon>{item.icon}</ListItemIcon>
             <ListItemText
               primary={item.label}
-              primaryTypographyProps={{
-                fontSize: '1rem',
-                fontWeight: 500,
-              }}
+              primaryTypographyProps={{ fontSize: '1rem', fontWeight: 500 }}
             />
           </MenuItem>
         ))}
