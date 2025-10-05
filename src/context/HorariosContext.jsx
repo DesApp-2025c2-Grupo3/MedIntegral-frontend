@@ -6,7 +6,6 @@ const HorariosContext = createContext();
 
 export function HorariosProvider({ children }) {
   const [horarios, setHorarios] = useState([makeHorario()]);
-  const [listVersion, setListVersion] = useState(0);
 
   const agregarHorario = () => setHorarios((prev) => [...prev, makeHorario()]);
 
@@ -18,14 +17,12 @@ export function HorariosProvider({ children }) {
 
   const resetHorarios = () => {
     setHorarios([makeHorario()]);
-    setListVersion((v) => v + 1);
   };
 
   return (
     <HorariosContext.Provider
       value={{
         horarios,
-        listVersion,
         agregarHorario,
         eliminarHorario,
         actualizarHorario,
@@ -37,6 +34,8 @@ export function HorariosProvider({ children }) {
   );
 }
 
-HorariosProvider.propTypes = { children: PropTypes.node.isRequired };
+HorariosProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 export const useHorarios = () => useContext(HorariosContext);

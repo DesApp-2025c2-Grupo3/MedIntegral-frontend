@@ -17,16 +17,40 @@ export default function HorariosSection({
   const { direccionSeleccionada } = usePrestador();
   const { error, clearError } = useFormValidationContext();
 
-  const diasSemana =
-    direccionSeleccionada?.horarios?.map((h) => h.dia.nombre) || [];
+  const horarios = React.useMemo(
+    () => direccionSeleccionada?.horarios || [],
+    [direccionSeleccionada]
+  );
 
-  const duraciones = Array.from({ length: 24 }, (_, i) => (i + 1) * 5);
+  const diasSemana = React.useMemo(
+    () => [...new Set(horarios.map((h) => h.dia.nombre))],
+    [horarios]
+  );
 
-  // Handler genérico
-  const handleFieldChange = (field, value) => {
-    onChange({ ...horario, [field]: value });
-    if (value) clearError(`horario-${horario.id}-${field}`);
-  };
+  const diasConHorarios = React.useMemo(
+    () =>
+      diasSemana.map((dia) => {
+        const rangos = horarios
+          .filter((h) => h.dia.nombre === dia)
+          .map((h) => `${h.horaInicio} - ${h.horaFin}`)
+          .join(', ');
+        return rangos ? `${dia} (${rangos})` : dia;
+      }),
+    [diasSemana, horarios]
+  );
+
+  const duraciones = React.useMemo(
+    () => Array.from({ length: 24 }, (_, i) => (i + 1) * 5),
+    []
+  );
+
+  const handleFieldChange = React.useCallback(
+    (field, value) => {
+      onChange({ ...horario, [field]: value });
+      if (value) clearError(`horario-${horario.id}-${field}`);
+    },
+    [onChange, horario, clearError]
+  );
 
   return (
     <Box sx={{ mt: 4 }}>
@@ -45,8 +69,9 @@ export default function HorariosSection({
             <Typography variant="subtitle1" fontWeight="medium">
               Días de la semana
             </Typography>
+
             <DiasSemanaSelector
-              dias={diasSemana}
+              dias={diasConHorarios}
               selected={horario.dias}
               onChange={(newDias) => handleFieldChange('dias', newDias)}
               dataField={`horario-${horario.id}-dias`}
@@ -62,6 +87,7 @@ export default function HorariosSection({
             <Typography variant="subtitle1" fontWeight="medium" sx={{ mt: 3 }}>
               Especificaciones del turno
             </Typography>
+
             <Grid container spacing={3} sx={{ mt: 3 }}>
               <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                 <Autocomplete
@@ -91,36 +117,15 @@ export default function HorariosSection({
 
               <HorarioPickerGroup
                 horario={horario}
-                onChange={(field, value) => handleFieldChange(field, value)}
-                dataFieldGroup={`horario-${horario.id}-horario`}
-                dataFieldInicio={`horario-${horario.id}-inicio`}
-                dataFieldFin={`horario-${horario.id}-fin`}
-                errorInicio={error?.field === `horario-${horario.id}-inicio`}
-                helperTextInicio={
-                  error?.field === `horario-${horario.id}-inicio`
-                    ? error?.message
-                    : ''
-                }
-                errorFin={error?.field === `horario-${horario.id}-fin`}
-                helperTextFin={
-                  error?.field === `horario-${horario.id}-fin`
-                    ? error?.message
-                    : ''
-                }
-                groupError={error?.field === `horario-${horario.id}-horario`}
-                groupHelperText={
-                  error?.field === `horario-${horario.id}-horario`
-                    ? error?.message
-                    : ''
-                }
+                onChange={handleFieldChange}
+                idPrefix={`horario-${horario.id}`}
               />
             </Grid>
 
-            {/* Botón de eliminar */}
             {puedeEliminar && (
               <EliminarButton
                 onEliminar={onEliminar}
-                label={'Eliminar horario'}
+                label="Eliminar horario"
               />
             )}
           </>
@@ -137,7 +142,7 @@ HorariosSection.propTypes = {
     inicio: PropTypes.object,
     fin: PropTypes.object,
     dias: PropTypes.array,
-  }),
+  }).isRequired,
   puedeEliminar: PropTypes.bool,
   onEliminar: PropTypes.func,
   onChange: PropTypes.func.isRequired,

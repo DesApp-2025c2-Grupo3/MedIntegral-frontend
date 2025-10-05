@@ -9,7 +9,6 @@ export default function PrestadorSection() {
   const {
     prestador,
     prestadores,
-    info,
     seleccionarPrestador,
     especialidadSeleccionada,
     setEspecialidadSeleccionada,
@@ -19,14 +18,13 @@ export default function PrestadorSection() {
 
   const { resetHorarios } = useHorarios();
   const { clearError, clearErrorsByPrefix } = useFormValidationContext();
-
   const especialidadRef = useRef(null);
 
   useLayoutEffect(() => {
-    if (prestador && info.especialidades.length > 0) {
+    if (prestador?.especialidades?.length > 0) {
       especialidadRef.current?.querySelector('input')?.focus();
     }
-  }, [prestador, info.especialidades]);
+  }, [prestador?.especialidades]);
 
   const handleChange = (setter, clearKey) => (_, newValue) => {
     setter(newValue);
@@ -37,7 +35,6 @@ export default function PrestadorSection() {
     resetHorarios();
     clearErrorsByPrefix('horario-');
     clearError('horarios');
-
     setDireccionSeleccionada(newValue);
     if (newValue) clearError('direccion');
   };
@@ -67,7 +64,7 @@ export default function PrestadorSection() {
           <ValidatedAutocomplete
             value={especialidadSeleccionada}
             onChange={handleChange(setEspecialidadSeleccionada, 'especialidad')}
-            options={info.especialidades}
+            options={prestador?.especialidades || []}
             getOptionLabel={(option) => option?.nombre || ''}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             label="Especialidad"
@@ -82,7 +79,7 @@ export default function PrestadorSection() {
           <ValidatedAutocomplete
             value={direccionSeleccionada}
             onChange={handleDireccionChange}
-            options={info.direcciones}
+            options={prestador?.centrosDeAtencion || []}
             getOptionLabel={(option) =>
               option?.calle ? `${option.calle} ${option.altura || ''}` : option
             }

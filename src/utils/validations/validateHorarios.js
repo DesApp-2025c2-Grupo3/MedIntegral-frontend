@@ -1,4 +1,15 @@
-// Validaciones específicas de un horario individual
+import dayjs from 'dayjs';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isSameOrAfter);
+
+const normalizarDia = (diaRaw) => {
+  if (typeof diaRaw !== 'string') return '';
+  return diaRaw.split('(')[0].trim();
+};
+
 export const validateHorarioBasico = (horario) => {
   if (!horario.dias || horario.dias.length === 0) {
     return {
@@ -45,18 +56,20 @@ export const validateHorarioBasico = (horario) => {
   return null;
 };
 
-// Validar que esté dentro de los horarios definidos en la dirección
 export const validateHorarioDentroDireccion = (horario, direccion) => {
   const rangoMin = horario.inicio.format('HH:mm');
   const rangoMax = horario.fin.format('HH:mm');
 
-  for (const dia of horario.dias) {
+  for (const diaRaw of horario.dias) {
+    const dia = normalizarDia(diaRaw);
+
     const match = direccion.horarios?.some(
       (dh) =>
         dh.dia.nombre === dia &&
         dh.horaInicio <= rangoMin &&
         dh.horaFin >= rangoMax
     );
+
     if (!match) {
       return {
         field: `horario-${horario.id}-horario`,
@@ -68,7 +81,6 @@ export const validateHorarioDentroDireccion = (horario, direccion) => {
   return null;
 };
 
-// Validar que la duración sea menor o igual al rango
 export const validateDuracionVsRango = (horario) => {
   const rangoMinutos = horario.fin.diff(horario.inicio, 'minute');
   if (horario.duracion > rangoMinutos) {
@@ -80,35 +92,34 @@ export const validateDuracionVsRango = (horario) => {
   return null;
 };
 
-// Validar que no se solape con otro horario
 export const validateSolapamiento = (horario, horarios) => {
   const index = horarios.findIndex((h) => h.id === horario.id);
 
   for (let j = 0; j < index; j++) {
     const other = horarios[j];
-    const overlap = horario.dias.some((d) => other.dias.includes(d));
+    const compartenDia = horario.dias.some((d) =>
+      other.dias.map(normalizarDia).includes(normalizarDia(d))
+    );
 
-    if (overlap) {
-      const startsInside =
-        horario.inicio.isBefore(other.fin) &&
-        (horario.inicio.isSame(other.inicio) ||
-          horario.inicio.isAfter(other.inicio));
+    if (!compartenDia) continue;
 
-      const endsInside =
-        horario.fin.isAfter(other.inicio) &&
-        (horario.fin.isSame(other.fin) || horario.fin.isBefore(other.fin));
+    const empiezaDuranteOtro =
+      horario.inicio.isAfter(other.inicio) &&
+      horario.inicio.isBefore(other.fin);
 
-      const fullyCovers =
-        horario.inicio.isBefore(other.inicio) && horario.fin.isAfter(other.fin);
+    const terminaDuranteOtro =
+      horario.fin.isAfter(other.inicio) && horario.fin.isBefore(other.fin);
 
-      if (startsInside || endsInside || fullyCovers) {
-        return {
-          field: `horario-${horario.id}-horario`,
-          message: `El rango horario se solapa con otro definido para ${horario.dias.join(
-            ', '
-          )}`,
-        };
-      }
+    const cubreTotalmente =
+      horario.inicio.isSameOrBefore(other.inicio) &&
+      horario.fin.isSameOrAfter(other.fin);
+
+    if (empiezaDuranteOtro || terminaDuranteOtro || cubreTotalmente) {
+      const diasLimpios = horario.dias.map(normalizarDia).join(', ');
+      return {
+        field: `horario-${horario.id}-horario`,
+        message: `El rango horario se solapa con otro definido para ${diasLimpios}`,
+      };
     }
   }
 

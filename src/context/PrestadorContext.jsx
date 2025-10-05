@@ -12,11 +12,6 @@ export function PrestadorProvider({ children }) {
   const [especialidadSeleccionada, setEspecialidadSeleccionada] =
     useState(null);
   const [direccionSeleccionada, setDireccionSeleccionada] = useState(null);
-  const [info, setInfo] = useState({
-    especialidades: [],
-    direcciones: [],
-    horarios: [],
-  });
 
   useEffect(() => {
     const fetchPrestadores = async () => {
@@ -27,7 +22,6 @@ export function PrestadorProvider({ children }) {
         setPrestadores(data);
       } catch (err) {
         console.error('Error cargando lista de prestadores:', err);
-        setPrestadores([]);
       } finally {
         setLoading(false);
       }
@@ -37,29 +31,21 @@ export function PrestadorProvider({ children }) {
   }, []);
 
   const seleccionarPrestador = async (prestadorObj) => {
-    setPrestador(prestadorObj);
+    setPrestador(null);
     setEspecialidadSeleccionada(null);
     setDireccionSeleccionada(null);
-    setInfo({ especialidades: [], direcciones: [], horarios: [] });
-
     if (!prestadorObj) return;
 
     setLoading(true);
     try {
       await sleepIfLocal(1500);
       const data = await getPrestadorById(prestadorObj.id);
-
-      setInfo({
-        especialidades: data.especialidades || [],
-        direcciones: data.centrosDeAtencion || [],
-        horarios: data.horarios || [],
-      });
+      setPrestador(data);
     } catch (err) {
       console.error(
         `Error cargando info del prestador ${prestadorObj.id}:`,
         err
       );
-      setInfo({ especialidades: [], direcciones: [], horarios: [] });
     } finally {
       setLoading(false);
     }
@@ -70,7 +56,6 @@ export function PrestadorProvider({ children }) {
       value={{
         prestadores,
         prestador,
-        info,
         seleccionarPrestador,
         especialidadSeleccionada,
         setEspecialidadSeleccionada,
