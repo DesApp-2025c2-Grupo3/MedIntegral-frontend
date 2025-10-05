@@ -54,7 +54,7 @@ export const sidebarItems = [
       {
         label: 'Ver listado',
         icon: <FeedOutlinedIcon />,
-        route: '/agenda-turnos',
+        route: '/agenda-turnos/listado',
       },
       {
         label: 'Agregar',

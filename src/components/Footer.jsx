@@ -1,46 +1,18 @@
 import { Box, Grid, Typography } from '@mui/material';
+import PropTypes from 'prop-types';
+import BrandLogo from './common/BrandLogo';
+import './Footer.css';
 
-export default function Footer() {
+export default function Footer({ sx }) {
   return (
-    <Box
-      sx={{
-        backgroundColor: '#0b111e',
-        padding: '1em',
-        marginLeft: { md: '5.5rem' },
-      }}
-    >
-      <Grid
-        container
-        spacing={3}
-        sx={{ alignItems: 'center', justifyContent: 'space-between' }}
-      >
-        <Grid sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <img
-            src="/medIntegralLogo.png"
-            alt='"Logo MedIntegral"'
-            style={{ height: '50px' }}
-          ></img>
-          <Typography
-            sx={{
-              color: '#00B1EA',
-              margin: 0,
-              fontSize: '1rem',
-              fontWeight: '500',
-              display: { xs: 'none', sm: 'block' },
-            }}
-          >
-            Med
-            <span style={{ color: '#FFFFFF' }}>Integral</span>
-          </Typography>
+    <Box className="footer-container" sx={sx}>
+      <Grid container className="footer-grid">
+        <Grid item className="footer-logo">
+          <BrandLogo clickable size="medium" />
         </Grid>
-        <Grid>
-          <Typography
-            sx={{
-              color: 'white',
-              fontSize: { xs: '0.75rem', sm: '1rem' },
-              fontWeight: '500',
-            }}
-          >
+
+        <Grid item className="footer-text">
+          <Typography variant="body2" className="footer-rights">
             © 2025 - Medicina Integral Group
           </Typography>
         </Grid>
@@ -48,3 +20,7 @@ export default function Footer() {
     </Box>
   );
 }
+
+Footer.propTypes = {
+  sx: PropTypes.object,
+};

@@ -25,31 +25,43 @@ export default function LayoutBase() {
   }, [location.pathname]);
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+        backgroundColor: theme.palette.background.default,
+      }}
+    >
       <AppBarCustom onMenuClick={esMobile ? toggleModal : toggleSidebar} />
 
       {!esMobile && <Sidebar open={sidebarOpen} toggleOpen={setSidebarOpen} />}
-
       {esMobile && <SidebarModal open={modalOpen} onClose={toggleModal} />}
 
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          mt: 8,
+          mt: 10,
           transition: 'margin 0.3s ease',
           ml: !esMobile ? (sidebarOpen ? '280px' : '70px') : 0,
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
-        <Container maxWidth="lg" sx={{ flexGrow: 1 }}>
+        <Container maxWidth="lg" sx={{ flexGrow: 1, mb: 4 }}>
           <BreadcrumbsNav />
           <Box sx={{ flexGrow: 1, mt: 3 }}>
             <Outlet />
           </Box>
         </Container>
       </Box>
-
-      <Footer />
+      <Footer
+        sx={{
+          pl: !esMobile ? (sidebarOpen ? '296px' : '86px') : '16px',
+          transition: 'padding 0.3s ease',
+        }}
+      />
     </Box>
   );
 }

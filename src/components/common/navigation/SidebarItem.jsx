@@ -12,6 +12,7 @@ import {
 import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined';
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
+import './SidebarItem.css';
 
 export default function SidebarItem({
   item,
@@ -27,49 +28,38 @@ export default function SidebarItem({
     location.pathname.startsWith(child.route)
   );
   const isSelfActive = !item.children && location.pathname === item.route;
-  const isActive = isSelfActive;
 
   useEffect(() => {
-    if (isChildActive) setIsOpen(true);
-    else setIsOpen(false);
+    setIsOpen(isChildActive);
   }, [location.pathname]);
-
-  const toggleItem = () => setIsOpen((prev) => !prev);
 
   const handleClick = (e) => {
     if (item.children) {
-      const pantallaExpandida = open || esMobile;
-      if (pantallaExpandida) toggleItem();
+      const expandedView = open || esMobile;
+      if (expandedView) setIsOpen((prev) => !prev);
       else abrirMenu(e, item.children);
     }
   };
 
-  const isCollapsedView = collapsed;
+  const collapsedView = collapsed;
+  const isActive = isSelfActive || (!open && isChildActive);
+  const hasChildren = !!item.children;
 
   return (
-    <Box>
-      <Tooltip title={isCollapsedView ? item.label : ''} placement="right">
+    <Box
+      className={`sidebar-item ${hasChildren ? 'has-children' : ''} ${
+        isActive ? 'active' : ''
+      } ${collapsedView ? 'collapsed' : ''} ${isOpen ? 'open' : ''}`}
+    >
+      <Tooltip title={collapsedView ? item.label : ''} placement="right">
         <ListItemButton
           onClick={handleClick}
-          component={!item.children ? RouterLink : 'div'}
-          to={!item.children ? item.route : undefined}
-          className={isCollapsedView ? 'sidebar-collapsed' : ''}
-          sx={{
-            borderRadius: '12px',
-            marginInline: open ? '6px' : '0',
-            transition: 'all 0.25s ease',
-            backgroundColor:
-              isCollapsedView && isActive
-                ? 'rgba(0,174,239,0.15)'
-                : 'transparent',
-            '&:hover': { backgroundColor: 'rgba(0,174,239,0.1)' },
-          }}
+          component={!hasChildren ? RouterLink : 'div'}
+          to={!hasChildren ? item.route : undefined}
+          className={`sidebar-item-button ${isActive ? 'active' : ''}`}
         >
           <ListItemIcon
-            sx={{
-              color: isActive ? '#00AEEF' : '#FFFFFF',
-              transition: 'color 0.3s ease',
-            }}
+            className={`sidebar-item-icon ${isActive ? 'active' : ''}`}
           >
             {item.icon}
           </ListItemIcon>
@@ -77,58 +67,36 @@ export default function SidebarItem({
           {(open || esMobile) && (
             <ListItemText
               primary={item.label}
-              primaryTypographyProps={{
-                fontSize: '1.1rem',
-                color: isActive ? '#00AEEF' : '#FFFFFF',
-                fontWeight: isActive ? 600 : 400,
-              }}
+              className={`sidebar-item-text ${isActive ? 'active' : ''}`}
+              primaryTypographyProps={{ fontSize: '1.1rem' }}
             />
           )}
 
           {(open || esMobile) &&
-            item.children &&
+            hasChildren &&
             (isOpen ? <ExpandLessOutlinedIcon /> : <ExpandMoreOutlinedIcon />)}
         </ListItemButton>
       </Tooltip>
 
-      {(open || esMobile) && item.children && (
+      {(open || esMobile) && hasChildren && (
         <Collapse in={isOpen} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
+          <List component="div" disablePadding className="sidebar-sublist">
             {item.children.map((child, i) => {
-              const active = location.pathname.startsWith(child.route);
-
+              const activeChild = location.pathname.startsWith(child.route);
               return (
                 <ListItemButton
                   key={i}
                   component={RouterLink}
                   to={child.route}
-                  selected={active}
-                  sx={{
-                    pl: 4,
-                    borderRadius: '8px',
-                    marginInline: open ? '8px' : '0',
-                    transition: 'all 0.25s ease',
-                    backgroundColor: active
-                      ? 'rgba(0,174,239,0.15)'
-                      : 'transparent',
-                    '&:hover': { backgroundColor: 'rgba(0,174,239,0.22)' },
-                  }}
+                  className={`sidebar-subitem ${activeChild ? 'active' : ''}`}
                 >
-                  <ListItemIcon
-                    sx={{
-                      color: active ? '#00AEEF' : '#FFFFFF',
-                      minWidth: 36,
-                    }}
-                  >
+                  <ListItemIcon className="sidebar-subitem-icon">
                     {child.icon}
                   </ListItemIcon>
                   <ListItemText
                     primary={child.label}
-                    primaryTypographyProps={{
-                      fontSize: '0.95rem',
-                      color: active ? '#00AEEF' : '#FFFFFF',
-                      fontWeight: active ? 600 : 400,
-                    }}
+                    className="sidebar-subitem-text"
+                    primaryTypographyProps={{ fontSize: '0.95rem' }}
                   />
                 </ListItemButton>
               );
