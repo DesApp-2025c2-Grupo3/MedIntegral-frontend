@@ -90,14 +90,6 @@ const theme = createTheme({
           gap: '0.5rem',
           paddingTop: 4,
           paddingBottom: 4,
-          '&.sidebar-list': {
-            marginTop: '1rem',
-            paddingLeft: '1rem',
-            paddingRight: '1rem',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.5rem',
-          },
         },
       },
     },
@@ -136,11 +128,6 @@ const theme = createTheme({
           justifyContent: 'center',
           '& svg': { fontSize: '1.8rem' },
           transition: 'all 0.3s ease',
-          '.sidebar-collapsed &': {
-            width: '100%',
-            justifyContent: 'center',
-            height: '2.2rem',
-          },
         },
       },
     },
@@ -179,7 +166,7 @@ const theme = createTheme({
         },
       },
     },
-    MuiDivider: { styleOverrides: { root: { borderColor: '#9B9B9B' } } },
+    MuiDivider: { styleOverrides: { root: { borderColor: '#B0BEC5' } } },
     MuiMenu: {
       styleOverrides: {
         paper: {
@@ -196,9 +183,8 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 8,
-          margin: '4px 8px',
-          padding: '8px 12px',
           gap: '0.8rem',
+          padding: '0 0.8rem',
           display: 'flex',
           alignItems: 'center',
           '&:hover': { backgroundColor: '#3D4B6B' },
@@ -225,7 +211,7 @@ const theme = createTheme({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: 0,
+          padding: '16px !important',
           minHeight: 'auto',
         },
       },

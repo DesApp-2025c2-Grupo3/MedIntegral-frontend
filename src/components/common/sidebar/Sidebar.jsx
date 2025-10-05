@@ -8,13 +8,15 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
-  Menu,
-  MenuItem,
   Toolbar,
   IconButton,
   useMediaQuery,
   useTheme,
   Box,
+  AppBar,
+  CssBaseline,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 
 import ShowChartIcon from '@mui/icons-material/ShowChart';
@@ -25,6 +27,7 @@ import FeedOutlinedIcon from '@mui/icons-material/FeedOutlined';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import KeyboardDoubleArrowLeftOutlinedIcon from '@mui/icons-material/KeyboardDoubleArrowLeftOutlined';
 import KeyboardDoubleArrowRightOutlinedIcon from '@mui/icons-material/KeyboardDoubleArrowRightOutlined';
+import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 
 import './Sidebar.css';
@@ -37,20 +40,20 @@ export default function Sidebar() {
 
   const [open, setOpen] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
+
   const [anclaMenu, setAnclaMenu] = useState(null);
   const [menuItems, setMenuItems] = useState([]);
 
   const toggleDrawer = () => {
-    if (esMobile) {
-      setOpenDrawer(!openDrawer);
-    } else {
-      setOpen(!open);
-    }
+    if (esMobile) setOpenDrawer(!openDrawer);
+    else setOpen(!open);
   };
 
   const abrirMenu = (e, items) => {
-    setAnclaMenu(e.currentTarget);
-    setMenuItems(items);
+    if (!open && !esMobile) {
+      setAnclaMenu(e.currentTarget);
+      setMenuItems(items);
+    }
   };
 
   const cerrarMenu = () => {
@@ -111,6 +114,15 @@ export default function Sidebar() {
       ],
     },
   ];
+
+  const drawerWidthActual =
+    esMobile && window.innerWidth <= 350
+      ? '100%'
+      : esMobile
+        ? drawerWidth
+        : open
+          ? drawerWidth
+          : 90;
 
   const drawerContent = (
     <>
@@ -208,39 +220,56 @@ export default function Sidebar() {
 
   return (
     <>
-      {esMobile && (
-        <Box className="sidebar-mobile-header">
-          <Box className="sidebar-header">
-            <img
-              src="/medIntegralLogo.png"
-              alt="Logo MedIntegral"
-              className="sidebar-logo"
-            />
-            <Typography
-              sx={{ color: '#00AEEF', fontSize: '1.4rem', fontWeight: 500 }}
-            >
-              Med<span style={{ color: '#FFFFFF' }}>Integral</span>
+      <CssBaseline />
+      <AppBar
+        position="fixed"
+        sx={{
+          backgroundColor: '#0b111e',
+          color: '#fff',
+          boxShadow: 'none',
+          zIndex: theme.zIndex.drawer + 1,
+        }}
+      >
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <IconButton onClick={toggleDrawer} color="inherit">
+              {esMobile ? (
+                openDrawer ? (
+                  <CloseIcon />
+                ) : (
+                  <KeyboardDoubleArrowRightOutlinedIcon />
+                )
+              ) : open ? (
+                <KeyboardDoubleArrowLeftOutlinedIcon />
+              ) : (
+                <MenuIcon />
+              )}
+            </IconButton>
+            <Typography variant="h6" noWrap component="div">
+              Med<span style={{ color: '#00AEEF' }}>Integral</span>
             </Typography>
           </Box>
-          <IconButton onClick={toggleDrawer}>
-            <KeyboardDoubleArrowRightOutlinedIcon />
-          </IconButton>
-        </Box>
-      )}
-
+        </Toolbar>
+      </AppBar>
       <Drawer
         variant={esMobile ? 'temporary' : 'permanent'}
         open={esMobile ? openDrawer : open}
         sx={{
-          width: esMobile ? drawerWidth : open ? drawerWidth : 90,
+          width: drawerWidthActual,
           flexShrink: 0,
           display: { xs: 'block', sm: 'block' },
           '& .MuiDrawer-paper': {
-            width: esMobile ? drawerWidth : open ? drawerWidth : 90,
+            width: drawerWidthActual,
+            backgroundColor: '#0b111e',
+            color: '#fff',
+            borderRight: 'none',
+            transition: 'width 0.3s ease',
+            overflowX: 'hidden',
           },
         }}
         ModalProps={{ keepMounted: true }}
       >
+        <Toolbar />
         {drawerContent}
       </Drawer>
 
@@ -261,7 +290,10 @@ export default function Sidebar() {
             <ListItemIcon>{item.icon}</ListItemIcon>
             <ListItemText
               primary={item.label}
-              primaryTypographyProps={{ fontSize: '1rem', fontWeight: 500 }}
+              primaryTypographyProps={{
+                fontSize: '1rem',
+                fontWeight: 500,
+              }}
             />
           </MenuItem>
         ))}
