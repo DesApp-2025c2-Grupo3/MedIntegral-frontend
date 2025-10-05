@@ -6,6 +6,6 @@ export function makeHorario() {
     dias: [],
     duracion: null,
     inicio: dayjs().hour(9).minute(0),
-    fin: dayjs().hour(17).minute(0),
+    fin: dayjs().hour(12).minute(0),
   };
 }

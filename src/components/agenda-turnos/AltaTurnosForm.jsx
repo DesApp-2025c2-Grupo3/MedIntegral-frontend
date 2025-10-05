@@ -30,13 +30,8 @@ export default function AltaTurnosForm() {
     especialidadSeleccionada,
   } = usePrestador();
 
-  const {
-    horarios,
-    listVersion,
-    agregarHorario,
-    eliminarHorario,
-    actualizarHorario,
-  } = useHorarios();
+  const { horarios, agregarHorario, eliminarHorario, actualizarHorario } =
+    useHorarios();
 
   const [saving, setSaving] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -103,7 +98,7 @@ export default function AltaTurnosForm() {
 
       {/* Horarios */}
       <AnimatePresence>
-        <div key={`horarios-group-${listVersion}`}>
+        <div>
           {horarios.map((horario, index) => (
             <FadeSlide key={horario.id}>
               <HorariosSection

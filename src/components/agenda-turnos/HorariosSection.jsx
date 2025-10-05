@@ -17,23 +17,40 @@ export default function HorariosSection({
   const { direccionSeleccionada } = usePrestador();
   const { error, clearError } = useFormValidationContext();
 
-  const horarios = direccionSeleccionada?.horarios || [];
-  const diasSemana = [...new Set(horarios.map((h) => h.dia.nombre))];
+  const horarios = React.useMemo(
+    () => direccionSeleccionada?.horarios || [],
+    [direccionSeleccionada]
+  );
 
-  const diasConHorarios = diasSemana.map((dia) => {
-    const rangos = horarios
-      .filter((h) => h.dia.nombre === dia)
-      .map((h) => `${h.horaInicio} - ${h.horaFin}`)
-      .join(', ');
-    return rangos ? `${dia} (${rangos})` : dia;
-  });
+  const diasSemana = React.useMemo(
+    () => [...new Set(horarios.map((h) => h.dia.nombre))],
+    [horarios]
+  );
 
-  const duraciones = Array.from({ length: 24 }, (_, i) => (i + 1) * 5);
+  const diasConHorarios = React.useMemo(
+    () =>
+      diasSemana.map((dia) => {
+        const rangos = horarios
+          .filter((h) => h.dia.nombre === dia)
+          .map((h) => `${h.horaInicio} - ${h.horaFin}`)
+          .join(', ');
+        return rangos ? `${dia} (${rangos})` : dia;
+      }),
+    [diasSemana, horarios]
+  );
 
-  const handleFieldChange = (field, value) => {
-    onChange({ ...horario, [field]: value });
-    if (value) clearError(`horario-${horario.id}-${field}`);
-  };
+  const duraciones = React.useMemo(
+    () => Array.from({ length: 24 }, (_, i) => (i + 1) * 5),
+    []
+  );
+
+  const handleFieldChange = React.useCallback(
+    (field, value) => {
+      onChange({ ...horario, [field]: value });
+      if (value) clearError(`horario-${horario.id}-${field}`);
+    },
+    [onChange, horario, clearError]
+  );
 
   return (
     <Box sx={{ mt: 4 }}>
