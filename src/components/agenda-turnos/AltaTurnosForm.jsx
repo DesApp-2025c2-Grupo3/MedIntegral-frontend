@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Box, Divider } from '@mui/material';
 import PrestadorSection from './PrestadorSection';
 import HorariosSection from './HorariosSection';
@@ -29,6 +29,7 @@ export default function AltaTurnosForm() {
     prestador,
     especialidadSeleccionada,
   } = usePrestador();
+
   const {
     horarios,
     listVersion,
@@ -39,9 +40,20 @@ export default function AltaTurnosForm() {
 
   const [saving, setSaving] = useState(false);
   const [showError, setShowError] = useState(false);
+
   const { validateBeforeSave } = useFormValidation(validateAltaTurnos);
 
-  const handleGuardar = () => {
+  const handleChangeHorario = useCallback(
+    (id, newHorario) => actualizarHorario(id, newHorario),
+    [actualizarHorario]
+  );
+
+  const handleEliminarHorario = useCallback(
+    (id) => eliminarHorario(id),
+    [eliminarHorario]
+  );
+
+  const handleGuardar = useCallback(() => {
     validateBeforeSave(
       {
         prestador,
@@ -68,9 +80,19 @@ export default function AltaTurnosForm() {
         }
       }
     );
-  };
+  }, [
+    validateBeforeSave,
+    prestador,
+    especialidadSeleccionada,
+    direccionSeleccionada,
+    horarios,
+    navigateToEdicion,
+  ]);
 
-  const handleCancelar = () => navigateToListado('alta-cancelada');
+  const handleCancelar = useCallback(
+    () => navigateToListado('alta-cancelada'),
+    [navigateToListado]
+  );
 
   return (
     <Box component="form" noValidate>
@@ -79,17 +101,18 @@ export default function AltaTurnosForm() {
       <PrestadorSection />
       <Divider sx={{ mt: 4 }} />
 
-      <div key={`horarios-group-${listVersion}`}>
-        <AnimatePresence>
+      {/* Horarios */}
+      <AnimatePresence>
+        <div key={`horarios-group-${listVersion}`}>
           {horarios.map((horario, index) => (
             <FadeSlide key={horario.id}>
               <HorariosSection
                 horario={horario}
                 numero={index + 1}
                 puedeEliminar={horarios.length > 1}
-                onEliminar={() => eliminarHorario(horario.id)}
+                onEliminar={() => handleEliminarHorario(horario.id)}
                 onChange={(newHorario) =>
-                  actualizarHorario(horario.id, newHorario)
+                  handleChangeHorario(horario.id, newHorario)
                 }
               />
 
@@ -101,17 +124,19 @@ export default function AltaTurnosForm() {
               )}
             </FadeSlide>
           ))}
-        </AnimatePresence>
-      </div>
+        </div>
+      </AnimatePresence>
 
       <Divider sx={{ my: 4 }} />
 
+      {/* Botones de acción */}
       <ButtonsSection
         handleGuardar={handleGuardar}
         onConfirmCancel={handleCancelar}
         cancelTitle="¿Cancelar alta de agenda de turnos?"
         cancelMessage="Si cancelás ahora, se perderán todos los cambios que hayas hecho en el formulario."
       />
+
       <ErrorSnackbar
         open={showError}
         onClose={() => setShowError(false)}

@@ -37,6 +37,8 @@ export function HorariosProvider({ children }) {
   );
 }
 
-HorariosProvider.propTypes = { children: PropTypes.node.isRequired };
+HorariosProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 export const useHorarios = () => useContext(HorariosContext);
