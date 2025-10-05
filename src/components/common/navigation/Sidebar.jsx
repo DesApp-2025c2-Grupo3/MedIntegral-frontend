@@ -9,16 +9,13 @@ import {
   MenuItem,
 } from '@mui/material';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
-import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
-import MedicalInformationOutlinedIcon from '@mui/icons-material/MedicalInformationOutlined';
-import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
-import FeedOutlinedIcon from '@mui/icons-material/FeedOutlined';
-import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import KeyboardDoubleArrowLeftOutlinedIcon from '@mui/icons-material/KeyboardDoubleArrowLeftOutlined';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { sidebarItems } from '../../../utils/sidebarItems';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 import SidebarItem from './SidebarItem';
+import BrandLogo from '../BrandLogo';
 import './Sidebar.css';
 
 const drawerWidth = 280;
@@ -26,60 +23,7 @@ const drawerWidth = 280;
 export default function Sidebar({ open, toggleOpen }) {
   const [anclaMenu, setAnclaMenu] = useState(null);
   const [menuItems, setMenuItems] = useState([]);
-
-  const sidebarItems = [
-    {
-      key: 'afiliados',
-      label: 'Afiliados',
-      icon: <PersonOutlinedIcon />,
-      children: [
-        {
-          label: 'Ver listado',
-          icon: <FeedOutlinedIcon />,
-          route: '/afiliados/listado',
-        },
-        {
-          label: 'Agregar',
-          icon: <AddOutlinedIcon />,
-          route: '/afiliados/alta',
-        },
-      ],
-    },
-    {
-      key: 'prestadores',
-      label: 'Prestadores',
-      icon: <MedicalInformationOutlinedIcon />,
-      children: [
-        {
-          label: 'Ver listado',
-          icon: <FeedOutlinedIcon />,
-          route: '/prestadores/listado',
-        },
-        {
-          label: 'Agregar',
-          icon: <AddOutlinedIcon />,
-          route: '/prestadores/alta',
-        },
-      ],
-    },
-    {
-      key: 'agendaTurnos',
-      label: 'Agenda de turnos',
-      icon: <CalendarTodayOutlinedIcon />,
-      children: [
-        {
-          label: 'Ver listado',
-          icon: <FeedOutlinedIcon />,
-          route: '/agenda-turnos',
-        },
-        {
-          label: 'Agregar',
-          icon: <AddOutlinedIcon />,
-          route: '/agenda-turnos/alta',
-        },
-      ],
-    },
-  ];
+  const location = useLocation();
 
   const drawerWidthActual = open ? drawerWidth : 70;
 
@@ -114,13 +58,19 @@ export default function Sidebar({ open, toggleOpen }) {
         <Toolbar
           sx={{
             display: 'flex',
-            justifyContent: 'flex-end',
+            justifyContent: open ? 'space-between' : 'center',
             px: 1,
           }}
         >
+          {open && <BrandLogo clickable={false} size="small" />}
           <KeyboardDoubleArrowLeftOutlinedIcon
             onClick={toggleOpen}
-            sx={{ fontSize: '2rem', cursor: 'pointer' }}
+            sx={{
+              fontSize: '2rem',
+              cursor: 'pointer',
+              transform: open ? 'rotate(0deg)' : 'rotate(180deg)',
+              transition: 'transform 0.3s ease',
+            }}
           />
         </Toolbar>
 
@@ -129,6 +79,7 @@ export default function Sidebar({ open, toggleOpen }) {
             className={!open ? 'sidebar-collapsed' : ''}
             component={RouterLink}
             to="/"
+            selected={location.pathname === '/'}
           >
             <ListItemIcon>
               <ShowChartIcon />
@@ -140,7 +91,6 @@ export default function Sidebar({ open, toggleOpen }) {
               />
             )}
           </ListItemButton>
-
           {sidebarItems.map((item) => (
             <SidebarItem
               key={item.key}
@@ -148,6 +98,7 @@ export default function Sidebar({ open, toggleOpen }) {
               open={open}
               abrirMenu={abrirMenu}
               collapsed={!open}
+              esMobile={false}
             />
           ))}
         </List>
@@ -163,6 +114,8 @@ export default function Sidebar({ open, toggleOpen }) {
           sx: {
             backgroundColor: '#0b111e',
             color: '#fff',
+            borderRadius: 2,
+            boxShadow: '0 4px 16px rgba(0,0,0,0.25)',
           },
         }}
       >
@@ -173,7 +126,7 @@ export default function Sidebar({ open, toggleOpen }) {
             to={item.route}
             onClick={cerrarMenu}
           >
-            <ListItemIcon sx={{ color: '#fff' }}>{item.icon}</ListItemIcon>
+            <ListItemIcon sx={{ color: '#fff' }}>{<item.icon />}</ListItemIcon>
             <ListItemText primary={item.label} />
           </MenuItem>
         ))}
