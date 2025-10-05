@@ -138,7 +138,7 @@ export default function Sidebar() {
                   src="/medIntegralLogo.png"
                   alt="Logo MedIntegral"
                   style={{ height: '4.2rem' }}
-                ></img>
+                />
                 <Typography
                   sx={{
                     color: '#00AEEF',
@@ -171,9 +171,9 @@ export default function Sidebar() {
             >
               <img
                 src="/medIntegralLogo.png"
-                alt='"Logo MedIntegral"'
+                alt="Logo MedIntegral"
                 style={{ height: '4.2rem' }}
-              ></img>
+              />
             </Box>
           )}
         </ListItemButton>
@@ -181,24 +181,11 @@ export default function Sidebar() {
 
       <List sx={{ mt: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
         <ListItemButton
-          sx={{
-            '&:hover': { backgroundColor: '#3D4B6B' },
-            borderRadius: '16px',
-            margin: '5px',
-          }}
+          className={!open && !esMobile ? 'sidebar-collapsed' : ''}
           component={RouterLink}
           to="/"
         >
-          <ListItemIcon
-            sx={{
-              color: 'white',
-              height: '3rem',
-              '& svg': { fontSize: '2rem' },
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
+          <ListItemIcon>
             <ShowChartIcon />
           </ListItemIcon>
           {(open || (esMobile && openDrawer)) && (
@@ -216,6 +203,7 @@ export default function Sidebar() {
             open={open}
             esMobile={esMobile && openDrawer}
             abrirMenu={abrirMenu}
+            collapsed={!open && !esMobile}
           />
         ))}
       </List>
@@ -274,7 +262,7 @@ export default function Sidebar() {
             boxSizing: 'border-box',
             backgroundColor: '#0b111e',
             color: '#fff',
-            transition: 'width 0.3s',
+            transition: 'width 0.3s ease',
             overflowX: 'hidden',
             borderRight: 'none',
             boxShadow: '2px 0 5px rgba(0,0,0,0.1)',
@@ -287,7 +275,6 @@ export default function Sidebar() {
         {drawerContent}
       </Drawer>
 
-      {/* submenu flotante para items con siderbar no desplegada */}
       <Menu
         anchorEl={anclaMenu}
         open={Boolean(anclaMenu)}
@@ -298,6 +285,10 @@ export default function Sidebar() {
           sx: {
             backgroundColor: '#0b111e',
             color: '#fff',
+            borderRadius: '12px',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.25)',
+            minWidth: 190,
+            paddingY: 0.6,
           },
         }}
       >
@@ -310,13 +301,32 @@ export default function Sidebar() {
             sx={{
               '&:hover': { backgroundColor: '#3D4B6B' },
               borderRadius: '8px',
-              margin: '5px',
+              mx: '8px',
+              my: '4px',
+              gap: '0.8rem',
+              px: '12px',
+              py: '8px',
+              display: 'flex',
+              alignItems: 'center',
             }}
           >
-            <ListItemIcon sx={{ color: 'white', minWidth: '30px' }}>
+            <ListItemIcon
+              sx={{
+                color: 'white',
+                minWidth: '32px',
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
               {item.icon}
             </ListItemIcon>
-            <ListItemText primary={item.label} />
+            <ListItemText
+              primary={item.label}
+              primaryTypographyProps={{
+                fontSize: '1rem',
+                fontWeight: 500,
+              }}
+            />
           </MenuItem>
         ))}
       </Menu>

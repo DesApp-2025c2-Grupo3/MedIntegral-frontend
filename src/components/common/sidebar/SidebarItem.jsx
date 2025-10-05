@@ -13,42 +13,36 @@ import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined';
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 import { Link as RouterLink } from 'react-router-dom';
 
-export default function SidebarItem({ item, open, esMobile, abrirMenu }) {
+export default function SidebarItem({
+  item,
+  open,
+  esMobile,
+  abrirMenu,
+  collapsed,
+}) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleItem = () => setIsOpen(!isOpen);
+
+  const handleClick = (e) => {
+    if (item.children) {
+      const pantallaExpandida = open || esMobile;
+      if (pantallaExpandida) {
+        toggleItem();
+      } else {
+        abrirMenu(e, item.children);
+      }
+    }
+  };
 
   return (
     <Box>
       <Tooltip title={!open ? item.label : ''} placement="right">
         <ListItemButton
-          sx={{
-            '&:hover': { backgroundColor: '#3D4B6B' },
-            borderRadius: '16px',
-          }}
-          onClick={(e) => {
-            if (item.children) {
-              const pantallaExpandida = open || esMobile;
-              if (pantallaExpandida) {
-                toggleItem();
-              } else {
-                abrirMenu(e, item.children);
-              }
-            }
-          }}
+          className={collapsed ? 'sidebar-collapsed' : ''}
+          onClick={handleClick}
         >
-          <ListItemIcon
-            sx={{
-              color: 'white',
-              height: '3rem',
-              '& svg': { fontSize: '2rem' },
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            {item.icon}
-          </ListItemIcon>
+          <ListItemIcon>{item.icon}</ListItemIcon>
 
           {(open || esMobile) && (
             <ListItemText
@@ -65,22 +59,15 @@ export default function SidebarItem({ item, open, esMobile, abrirMenu }) {
 
       {(open || esMobile) && item.children && (
         <Collapse in={isOpen} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding sx={{ ml: '16px' }}>
+          <List component="div" disablePadding>
             {item.children.map((child, i) => (
               <ListItemButton
                 key={i}
-                sx={{
-                  pl: 4,
-                  '&:hover': { backgroundColor: '#3D4B6B' },
-                  borderRadius: '16px',
-                  gap: '1rem',
-                }}
                 component={RouterLink}
                 to={child.route}
+                sx={{ pl: 4 }}
               >
-                <ListItemIcon sx={{ color: 'white', minWidth: 'auto' }}>
-                  {child.icon}
-                </ListItemIcon>
+                <ListItemIcon>{child.icon}</ListItemIcon>
                 <ListItemText primary={child.label} />
               </ListItemButton>
             ))}
@@ -107,4 +94,5 @@ SidebarItem.propTypes = {
   open: PropTypes.bool.isRequired,
   esMobile: PropTypes.bool.isRequired,
   abrirMenu: PropTypes.func.isRequired,
+  collapsed: PropTypes.bool,
 };
