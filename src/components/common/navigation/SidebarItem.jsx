@@ -26,7 +26,8 @@ export default function SidebarItem({
   const isChildActive = item.children?.some((child) =>
     location.pathname.startsWith(child.route)
   );
-  const isSelfActive = item.route && location.pathname === item.route;
+  const isSelfActive = !item.children && location.pathname === item.route;
+  const isActive = isSelfActive;
 
   useEffect(() => {
     if (isChildActive) setIsOpen(true);
@@ -50,34 +51,36 @@ export default function SidebarItem({
       <Tooltip title={isCollapsedView ? item.label : ''} placement="right">
         <ListItemButton
           onClick={handleClick}
+          component={!item.children ? RouterLink : 'div'}
+          to={!item.children ? item.route : undefined}
           className={isCollapsedView ? 'sidebar-collapsed' : ''}
           sx={{
             borderRadius: '12px',
             marginInline: open ? '6px' : '0',
             transition: 'all 0.25s ease',
             backgroundColor:
-              isCollapsedView && (isSelfActive || isChildActive)
+              isCollapsedView && isActive
                 ? 'rgba(0,174,239,0.15)'
                 : 'transparent',
             '&:hover': { backgroundColor: 'rgba(0,174,239,0.1)' },
-            '& .MuiListItemIcon-root svg': {
-              color:
-                isSelfActive || (!open && isChildActive)
-                  ? '#00AEEF'
-                  : '#FFFFFF',
-              transition: 'color 0.3s ease',
-            },
           }}
         >
-          <ListItemIcon>{item.icon}</ListItemIcon>
+          <ListItemIcon
+            sx={{
+              color: isActive ? '#00AEEF' : '#FFFFFF',
+              transition: 'color 0.3s ease',
+            }}
+          >
+            {item.icon}
+          </ListItemIcon>
 
           {(open || esMobile) && (
             <ListItemText
               primary={item.label}
               primaryTypographyProps={{
                 fontSize: '1.1rem',
-                color: isSelfActive ? '#00AEEF' : '#FFFFFF',
-                fontWeight: isSelfActive ? 600 : 400,
+                color: isActive ? '#00AEEF' : '#FFFFFF',
+                fontWeight: isActive ? 600 : 400,
               }}
             />
           )}
@@ -93,6 +96,7 @@ export default function SidebarItem({
           <List component="div" disablePadding>
             {item.children.map((child, i) => {
               const active = location.pathname.startsWith(child.route);
+
               return (
                 <ListItemButton
                   key={i}
