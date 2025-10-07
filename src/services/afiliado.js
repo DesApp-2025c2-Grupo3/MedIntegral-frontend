@@ -1,18 +1,19 @@
 import api from './api';
 
 export const createAfiliado = async (afiliadoData) => {
+  const payload = {
+    ...afiliadoData,
+    tipoDocumentoId: afiliadoData.tipoDocumento?.id,
+  };
+
   if (
-    !afiliadoData?.tipoDocumentoId ||
+    !payload.tipoDocumentoId ||
     !afiliadoData?.numeroDocumento ||
     !afiliadoData?.nombre ||
     !afiliadoData?.apellido
   ) {
     throw new Error('Faltan datos obligatorios para crear el afiliado');
   }
-
-  const payload = {
-    ...afiliadoData,
-  };
 
   try {
     const { data } = await api.post('/afiliados', payload);
