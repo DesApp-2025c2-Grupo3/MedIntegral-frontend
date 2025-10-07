@@ -4,6 +4,7 @@ import { listaEspecialidadesMock } from '../mocks/listaEspecialidadesMock';
 import { prestador1DetalleMock } from '../mocks/prestador1DetalleMock';
 import { prestador2DetalleMock } from '../mocks/prestador2DetalleMock';
 import { prestador3DetalleMock } from '../mocks/prestador3DetalleMock';
+import { tipoDocumentoMock } from '../mocks/tipoDocumentoMock';
 
 const api = axios.create({
   baseURL: 'http://localhost:5000/api',
@@ -13,6 +14,16 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   if (window.location.hostname === 'localhost') {
     if (config.url === '/prestadores' && config.method === 'post') {
+      return Promise.reject({
+        isMock: true,
+        data: {
+          id: crypto.randomUUID(),
+          ...config.data,
+        },
+      });
+    }
+
+    if (config.url === '/afiliados' && config.method === 'post') {
       return Promise.reject({
         isMock: true,
         data: {
@@ -51,6 +62,10 @@ api.interceptors.request.use((config) => {
     }
     if (config.url === '/especialidades') {
       return Promise.reject({ isMock: true, data: listaEspecialidadesMock });
+    }
+
+    if (config.url === '/tipoDocumento') {
+      return Promise.reject({ isMock: true, data: tipoDocumentoMock });
     }
   }
   return config;
