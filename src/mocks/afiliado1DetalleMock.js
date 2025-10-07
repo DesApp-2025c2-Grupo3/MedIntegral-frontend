@@ -42,7 +42,7 @@ export const afiliado1DetalleMock = {
   grupoFamiliar: [
     {
       id: 2,
-      parentesco: { id: 2, nombre: 'Cónyuge' },
+      parentesco: { id: 2, relacion: 'Cónyuge' },
       tipoDocumento: { id: 1, tipo: 'DNI' },
       numeroDocumento: '25876543',
       fechaNacimiento: '10/05/1988',
@@ -63,7 +63,7 @@ export const afiliado1DetalleMock = {
     },
     {
       id: 3,
-      parentesco: { id: 3, nombre: 'Hijo' },
+      parentesco: { id: 3, relacion: 'Hijo' },
       tipoDocumento: { id: 1, tipo: 'DNI' },
       numeroDocumento: '55112233',
       fechaNacimiento: '20/11/2018',
