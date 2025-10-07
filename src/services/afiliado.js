@@ -7,13 +7,16 @@ export const createAfiliado = async (afiliadoData) => {
     fechaNacimiento: afiliadoData.fechaNacimiento
       ? afiliadoData.fechaNacimiento.format('YYYY-MM-DD')
       : null,
+    coberturaId: afiliadoData.cobertura?.id,
   };
 
   if (
     !payload.tipoDocumentoId ||
     !afiliadoData?.numeroDocumento ||
     !afiliadoData?.nombre ||
-    !afiliadoData?.apellido
+    !afiliadoData?.apellido ||
+    !payload?.fechaNacimiento ||
+    !payload?.coberturaId
   ) {
     throw new Error('Faltan datos obligatorios para crear el afiliado');
   }

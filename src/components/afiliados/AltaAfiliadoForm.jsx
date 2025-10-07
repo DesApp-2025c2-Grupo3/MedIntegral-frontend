@@ -18,6 +18,8 @@ import { validateAltaAfiliado } from '../../utils/validations/validateAltaAfilia
 import { getTiposDocumento } from '../../services/tipoDocumento';
 import { handleArrayChange } from '../../utils/handleArrayChanges';
 import dayjs from 'dayjs';
+import Cobertura from './Cobertura';
+import { getPlanesMedicos } from '../../services/cobertura';
 
 const initialAfiliadoData = {
   tipoDocumento: null,
@@ -53,6 +55,7 @@ export default function AltaAfiliadoForm() {
 
   const [afiliadoData, setAfiliadoData] = useState(initialAfiliadoData);
   const [listaTiposDocumento, setListaTiposDocumento] = useState([]);
+  const [listaPlanesMedicos, setListaPlanesMedicos] = useState([]);
 
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -62,17 +65,22 @@ export default function AltaAfiliadoForm() {
   const { validateBeforeSave } = useFormValidation(validateAltaAfiliado);
 
   useEffect(() => {
-    const cargarTiposDocumento = async () => {
+    const cargarListasIniciales = async () => {
       try {
-        const dataTipos = await getTiposDocumento();
+        const [dataTipos, dataPlanes] = await Promise.all([
+          getTiposDocumento(),
+          getPlanesMedicos(),
+        ]);
+
         setListaTiposDocumento(dataTipos);
+        setListaPlanesMedicos(dataPlanes);
       } catch (err) {
-        console.error('Error al obtener tipos de documento:', err);
+        console.error('Error al obtener datos iniciales:', err);
       } finally {
         setLoading(false);
       }
     };
-    cargarTiposDocumento();
+    cargarListasIniciales();
   }, []);
 
   const handleChange = useCallback((event) => {
@@ -121,6 +129,13 @@ export default function AltaAfiliadoForm() {
 
       <Divider sx={{ my: 4 }} />
 
+      <Cobertura
+        afiliadoData={afiliadoData}
+        onAutocompleteChange={handleGeneralChange}
+        listaPlanesMedicos={listaPlanesMedicos}
+      />
+
+      <Divider sx={{ my: 4 }} />
       <ButtonsSection
         handleGuardar={handleGuardar}
         onConfirmCancel={handleCancelar}

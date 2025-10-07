@@ -5,6 +5,7 @@ import { prestador1DetalleMock } from '../mocks/prestador1DetalleMock';
 import { prestador2DetalleMock } from '../mocks/prestador2DetalleMock';
 import { prestador3DetalleMock } from '../mocks/prestador3DetalleMock';
 import { tipoDocumentoMock } from '../mocks/tipoDocumentoMock';
+import { planesMedicos } from '../mocks/planesMedicosMock';
 
 const api = axios.create({
   baseURL: 'http://localhost:5000/api',
@@ -66,6 +67,10 @@ api.interceptors.request.use((config) => {
 
     if (config.url === '/tipoDocumento') {
       return Promise.reject({ isMock: true, data: tipoDocumentoMock });
+    }
+
+    if (config.url === '/planesMedicos') {
+      return Promise.reject({ isMock: true, data: planesMedicos });
     }
   }
   return config;
