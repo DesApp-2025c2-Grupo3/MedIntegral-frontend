@@ -2,6 +2,8 @@ import { Box, Grid, TextField, Typography } from '@mui/material';
 import ValidatedAutocomplete from '../common/forms/ValidatedAutocomplete';
 import { useFormValidationContext } from '../../context/FormValidationContext';
 import PropTypes from 'prop-types';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 
 export default function DatosPersonales({
   afiliadoData,
@@ -18,6 +20,12 @@ export default function DatosPersonales({
       helperText: hasError ? error.message : '',
     };
   };
+
+  const dateValue = afiliadoData.fechaNacimiento
+    ? typeof afiliadoData.fechaNacimiento === 'string'
+      ? dayjs(afiliadoData.fechaNacimiento)
+      : afiliadoData.fechaNacimiento
+    : null;
 
   return (
     <Box>
@@ -51,15 +59,25 @@ export default function DatosPersonales({
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 6 }}>
-          <TextField
-            required
-            name="fechaNacimiento"
+          <DatePicker
+            value={dateValue}
+            onChange={(newDate) => {
+              onChange({
+                target: {
+                  name: 'fechaNacimiento',
+                  value: newDate,
+                },
+              });
+            }}
             label="Fecha de Nacimiento"
-            type="date"
-            value={afiliadoData.fechaNacimiento || ''}
-            onChange={onChange}
-            fullWidth
-            {...getErrorProps('fechaNacimiento')}
+            name="fechaNacimiento"
+            slotProps={{
+              textField: {
+                required: true,
+                fullWidth: true,
+                ...getErrorProps('fechaNacimiento'),
+              },
+            }}
           />
         </Grid>
 

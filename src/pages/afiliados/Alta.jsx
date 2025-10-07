@@ -2,6 +2,8 @@ import { Paper, Box } from '@mui/material';
 import PageHeader from '../../components/common/PageHeader';
 import AltaAfiliadoForm from '../../components/afiliados/AltaAfiliadoForm';
 import { FormValidationProvider } from '../../context/FormValidationContext';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 export default function AfiliadosAlta() {
   return (
@@ -19,7 +21,9 @@ export default function AfiliadosAlta() {
         }}
       >
         <FormValidationProvider>
-          <AltaAfiliadoForm />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <AltaAfiliadoForm />
+          </LocalizationProvider>
         </FormValidationProvider>
       </Paper>
     </Box>

@@ -4,6 +4,9 @@ export const createAfiliado = async (afiliadoData) => {
   const payload = {
     ...afiliadoData,
     tipoDocumentoId: afiliadoData.tipoDocumento?.id,
+    fechaNacimiento: afiliadoData.fechaNacimiento
+      ? afiliadoData.fechaNacimiento.format('YYYY-MM-DD')
+      : null,
   };
 
   if (
