@@ -20,6 +20,7 @@ import { handleArrayChange } from '../../utils/handleArrayChanges';
 import dayjs from 'dayjs';
 import Cobertura from './Cobertura';
 import { getPlanesMedicos } from '../../services/cobertura';
+import VigenciaSection from './VigenciaSection';
 
 const initialAfiliadoData = {
   tipoDocumento: null,
@@ -84,10 +85,13 @@ export default function AltaAfiliadoForm() {
   }, []);
 
   const handleChange = useCallback((event) => {
-    const { name, value } = event.target;
+    const { name, value, type, checked } = event.target;
+
+    const newValue = type === 'checkbox' ? checked : value;
+
     setAfiliadoData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: newValue,
     }));
   }, []);
 
@@ -136,6 +140,13 @@ export default function AltaAfiliadoForm() {
       />
 
       <Divider sx={{ my: 4 }} />
+
+      <VigenciaSection
+        afiliadoData={afiliadoData}
+        onDateChange={handleGeneralChange}
+        onSwitchChange={handleChange}
+      />
+
       <ButtonsSection
         handleGuardar={handleGuardar}
         onConfirmCancel={handleCancelar}

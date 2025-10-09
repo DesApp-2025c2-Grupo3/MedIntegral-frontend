@@ -62,12 +62,7 @@ export default function DatosPersonales({
           <DatePicker
             value={dateValue}
             onChange={(newDate) => {
-              onChange({
-                target: {
-                  name: 'fechaNacimiento',
-                  value: newDate,
-                },
-              });
+              onAutocompleteChange('fechaNacimiento', newDate);
             }}
             label="Fecha de Nacimiento"
             name="fechaNacimiento"

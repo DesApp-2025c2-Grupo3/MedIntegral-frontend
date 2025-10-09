@@ -7,6 +7,13 @@ export const createAfiliado = async (afiliadoData) => {
     fechaNacimiento: afiliadoData.fechaNacimiento
       ? afiliadoData.fechaNacimiento.format('YYYY-MM-DD')
       : null,
+    vigenciaInicio: afiliadoData.vigenciaInicio
+      ? afiliadoData.vigenciaInicio.format('YYYY-MM-DD')
+      : null,
+
+    vigenciaFin: afiliadoData.vigenciaFin
+      ? afiliadoData.vigenciaFin.format('YYYY-MM-DD')
+      : null,
     coberturaId: afiliadoData.cobertura?.id,
   };
 
