@@ -5,7 +5,7 @@ import { prestador1DetalleMock } from '../mocks/prestador1DetalleMock';
 import { prestador2DetalleMock } from '../mocks/prestador2DetalleMock';
 import { prestador3DetalleMock } from '../mocks/prestador3DetalleMock';
 import { tipoDocumentoMock } from '../mocks/tipoDocumentoMock';
-import { agendaTurnosListadoMock } from '../mocks/agendaTurnosListadoMock';
+import { getAgendaTurnosMock } from '../mocks/agendaTurnosListadoMock';
 
 const api = axios.create({
   baseURL: 'http://localhost:5000/api',
@@ -14,82 +14,56 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
   if (window.location.hostname === 'localhost') {
-    if (config.url === '/prestadores' && config.method === 'post') {
-      return Promise.reject({
-        isMock: true,
-        data: {
-          id: crypto.randomUUID(),
-          ...config.data,
-        },
-      });
-    }
-
-    if (config.url === '/afiliados' && config.method === 'post') {
-      return Promise.reject({
-        isMock: true,
-        data: {
-          id: crypto.randomUUID(),
-          ...config.data,
-        },
-      });
-    }
-
-    if (config.url === '/prestadores') {
-      return Promise.reject({ isMock: true, data: prestadoresMock });
-    }
-    if (config.url === '/prestadores/1') {
-      return Promise.reject({ isMock: true, data: prestador1DetalleMock });
-    }
-    if (config.url === '/prestadores/2') {
-      return Promise.reject({
-        isMock: true,
-        data: prestador2DetalleMock,
-      });
-    }
-    if (config.url === '/prestadores/3') {
-      return Promise.reject({
-        isMock: true,
-        data: prestador3DetalleMock,
-      });
-    }
     if (config.url.startsWith('/agenda-turnos') && config.method === 'get') {
       const url = new URL(config.url, window.location.origin);
-      const search = url.searchParams.get('search')?.toLowerCase() || '';
+      const search = url.searchParams.get('search') || '';
+      const page = parseInt(url.searchParams.get('page') || '1', 10);
+      const limit = parseInt(url.searchParams.get('limit') || '10', 10);
 
-      const filtered = agendaTurnosListadoMock.filter(
-        (a) =>
-          a.prestador.toLowerCase().includes(search) ||
-          a.especialidad.toLowerCase().includes(search)
-      );
-
-      return Promise.reject({ isMock: true, data: filtered });
+      const result = getAgendaTurnosMock(search, page, limit);
+      return Promise.reject({ isMock: true, data: result });
     }
+
     if (config.url === '/agenda-turnos' && config.method === 'post') {
       return Promise.reject({
         isMock: true,
-        data: {
-          id: crypto.randomUUID(),
-          ...config.data,
-        },
+        data: { id: crypto.randomUUID(), ...config.data },
       });
     }
-    if (config.url === '/especialidades') {
-      return Promise.reject({ isMock: true, data: listaEspecialidadesMock });
+    if (config.url === '/prestadores' && config.method === 'post') {
+      return Promise.reject({
+        isMock: true,
+        data: { id: crypto.randomUUID(), ...config.data },
+      });
+    }
+    if (config.url === '/afiliados' && config.method === 'post') {
+      return Promise.reject({
+        isMock: true,
+        data: { id: crypto.randomUUID(), ...config.data },
+      });
     }
 
-    if (config.url === '/tipoDocumento') {
+    if (config.url === '/prestadores')
+      return Promise.reject({ isMock: true, data: prestadoresMock });
+    if (config.url === '/prestadores/1')
+      return Promise.reject({ isMock: true, data: prestador1DetalleMock });
+    if (config.url === '/prestadores/2')
+      return Promise.reject({ isMock: true, data: prestador2DetalleMock });
+    if (config.url === '/prestadores/3')
+      return Promise.reject({ isMock: true, data: prestador3DetalleMock });
+    if (config.url === '/especialidades')
+      return Promise.reject({ isMock: true, data: listaEspecialidadesMock });
+    if (config.url === '/tipoDocumento')
       return Promise.reject({ isMock: true, data: tipoDocumentoMock });
-    }
   }
+
   return config;
 });
 
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.isMock) {
-      return Promise.resolve({ data: error.data });
-    }
+    if (error.isMock) return Promise.resolve({ data: error.data });
     return Promise.reject(error);
   }
 );

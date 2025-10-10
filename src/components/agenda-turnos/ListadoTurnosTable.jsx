@@ -1,4 +1,3 @@
-import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
   Box,
@@ -15,63 +14,18 @@ import {
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import TableHeader from '../common/lists/TableHeader';
 
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) return -1;
-  if (b[orderBy] > a[orderBy]) return 1;
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
-const headCells = [
-  { id: 'prestador', label: 'Nombre del prestador' },
-  { id: 'especialidad', label: 'Especialidad' },
-  { id: 'horarios', label: 'Horarios' },
-  { id: 'direccion', label: 'Dirección' },
-  { id: 'duracion', label: 'Duración de turnos' },
-];
-
-export default function AgendasTable({ rows = [], loading = false }) {
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('prestador');
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
-
-  const handleChangePage = (event, newPage) => setPage(newPage);
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const visibleRows = React.useMemo(
-    () =>
-      stableSort(rows, getComparator(order, orderBy)).slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      ),
-    [rows, order, orderBy, page, rowsPerPage]
-  );
-
+export default function AgendasTable({
+  rows = [],
+  loading = false,
+  total = 0,
+  page = 0,
+  rowsPerPage = 10,
+  onPageChange,
+  onRowsPerPageChange,
+  order = 'asc',
+  orderBy = 'prestador',
+  onRequestSort = () => {},
+}) {
   return (
     <Box sx={{ width: '100%' }}>
       <Paper
@@ -83,14 +37,19 @@ export default function AgendasTable({ rows = [], loading = false }) {
         }}
       >
         <TableContainer>
-          <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
+          <Table sx={{ minWidth: 750 }}>
             <TableHeader
               order={order}
               orderBy={orderBy}
-              onRequestSort={handleRequestSort}
-              headCells={headCells}
+              onRequestSort={onRequestSort}
+              headCells={[
+                { id: 'prestador', label: 'Nombre del prestador' },
+                { id: 'especialidad', label: 'Especialidad' },
+                { id: 'horarios', label: 'Horarios' },
+                { id: 'direccion', label: 'Dirección' },
+                { id: 'duracion', label: 'Duración de turnos' },
+              ]}
             />
-
             <TableBody>
               {loading ? (
                 <TableRow>
@@ -109,7 +68,7 @@ export default function AgendasTable({ rows = [], loading = false }) {
                   </TableCell>
                 </TableRow>
               ) : (
-                visibleRows.map((row) => (
+                rows.map((row) => (
                   <TableRow hover key={row.id}>
                     <TableCell sx={{ fontSize: '0.9rem' }}>
                       <Link
@@ -125,11 +84,18 @@ export default function AgendasTable({ rows = [], loading = false }) {
                       {row.especialidad}
                     </TableCell>
                     <TableCell sx={{ fontSize: '0.9rem' }}>
-                      {row.horarios.map((h, i) => (
-                        <Typography key={i} fontSize="0.9rem">
-                          {h}
+                      {Array.isArray(row.horarios) &&
+                      row.horarios.length > 0 ? (
+                        row.horarios.map((h, i) => (
+                          <Typography key={i} fontSize="0.9rem">
+                            {h}
+                          </Typography>
+                        ))
+                      ) : (
+                        <Typography fontSize="0.9rem" color="text.secondary">
+                          Sin horarios
                         </Typography>
-                      ))}
+                      )}
                     </TableCell>
                     <TableCell sx={{ fontSize: '0.9rem' }}>
                       <Box
@@ -161,15 +127,15 @@ export default function AgendasTable({ rows = [], loading = false }) {
           </Table>
         </TableContainer>
 
-        {!loading && rows.length > 0 && (
+        {!loading && total > 0 && (
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={rows.length}
+            count={total}
             rowsPerPage={rowsPerPage}
             page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
+            onPageChange={onPageChange}
+            onRowsPerPageChange={onRowsPerPageChange}
             labelRowsPerPage="Filas por página"
           />
         )}
@@ -181,4 +147,12 @@ export default function AgendasTable({ rows = [], loading = false }) {
 AgendasTable.propTypes = {
   rows: PropTypes.array,
   loading: PropTypes.bool,
+  total: PropTypes.number,
+  page: PropTypes.number,
+  rowsPerPage: PropTypes.number,
+  onPageChange: PropTypes.func,
+  onRowsPerPageChange: PropTypes.func,
+  order: PropTypes.string,
+  orderBy: PropTypes.string,
+  onRequestSort: PropTypes.func,
 };

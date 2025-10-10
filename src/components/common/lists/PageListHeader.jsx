@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Box, Grid, Typography, InputBase, Button, Paper } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -24,21 +24,26 @@ const headerConfig = {
 export default function PageListHeader({ type, onSearch }) {
   const config = headerConfig[type] || headerConfig['agenda-de-turnos'];
   const [searchTerm, setSearchTerm] = useState('');
-
-  const debounceDelay = 500;
-
-  const debouncedSearch = useCallback(() => {
-    if (!onSearch) return;
-    const handler = setTimeout(() => {
-      onSearch(searchTerm.trim());
-    }, debounceDelay);
-    return () => clearTimeout(handler);
-  }, [searchTerm, onSearch]);
+  const lastSearchRef = useRef('');
 
   useEffect(() => {
-    const cleanup = debouncedSearch();
-    return cleanup;
-  }, [searchTerm, debouncedSearch]);
+    if (!onSearch) return;
+    onSearch('');
+  }, []);
+
+  useEffect(() => {
+    if (!onSearch) return;
+
+    const handler = setTimeout(() => {
+      const trimmed = searchTerm.trim();
+      if (trimmed !== lastSearchRef.current) {
+        lastSearchRef.current = trimmed;
+        onSearch(trimmed);
+      }
+    }, 500);
+
+    return () => clearTimeout(handler);
+  }, [searchTerm, onSearch]);
 
   return (
     <Box sx={{ mb: 4 }}>
@@ -82,19 +87,31 @@ export default function PageListHeader({ type, onSearch }) {
               fullWidth
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder={config.placeholder}
-              inputProps={{
-                'aria-label': config.placeholder,
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  onSearch(searchTerm.trim());
+                }
               }}
+              placeholder={config.placeholder}
+              inputProps={{ 'aria-label': config.placeholder }}
               className="page-list-input"
             />
           </Paper>
 
-          <Button variant="outlined" startIcon={<FilterListIcon />}>
+          <Button
+            variant="outlined"
+            startIcon={<FilterListIcon />}
+            sx={{ textTransform: 'none' }}
+          >
             Filtros
           </Button>
 
-          <Button variant="contained" startIcon={<AddIcon />}>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            sx={{ textTransform: 'none' }}
+          >
             Agregar
           </Button>
         </Grid>
