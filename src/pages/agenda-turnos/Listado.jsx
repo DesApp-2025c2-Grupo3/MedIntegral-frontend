@@ -15,47 +15,42 @@ export default function AgendaTurnosListado() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const fetchAgendas = useCallback(async (query, pageNumber, limit) => {
+  const fetchAgendas = useCallback(async () => {
     setLoading(true);
     try {
       const { data } = await api.get('/agenda-turnos', {
         params: {
-          search: query || '',
-          page: pageNumber + 1,
-          limit,
+          search: searchQuery,
+          page: page + 1,
+          limit: rowsPerPage,
         },
       });
       setRows(data.items || []);
       setTotal(data.total || 0);
-    } catch (err) {
-      console.error('Error al obtener las agendas:', err);
+    } catch {
       setRows([]);
       setTotal(0);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [searchQuery, page, rowsPerPage]);
 
   useEffect(() => {
-    fetchAgendas(searchQuery, page, rowsPerPage);
-  }, [fetchAgendas, searchQuery, page, rowsPerPage]);
+    fetchAgendas();
+  }, [fetchAgendas]);
 
   const handleSearch = (query) => {
     setSearchQuery(query);
     setPage(0);
-    fetchAgendas(query, 0, rowsPerPage);
   };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
-    fetchAgendas(searchQuery, newPage, rowsPerPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
-    const newLimit = parseInt(event.target.value, 10);
-    setRowsPerPage(newLimit);
+    setRowsPerPage(event.target.value);
     setPage(0);
-    fetchAgendas(searchQuery, 0, newLimit);
   };
 
   return (

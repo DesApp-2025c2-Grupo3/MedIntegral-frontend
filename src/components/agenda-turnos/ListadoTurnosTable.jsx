@@ -137,6 +137,14 @@ export default function AgendasTable({
             onPageChange={onPageChange}
             onRowsPerPageChange={onRowsPerPageChange}
             labelRowsPerPage="Filas por página"
+            labelDisplayedRows={({ from, to, count }) =>
+              `${from}–${to} de ${count !== -1 ? count : `más de ${to}`}`
+            }
+            sx={{
+              color: '#0B111E',
+              '& .MuiSelect-icon': { color: '#0B111E' },
+              '& .MuiSvgIcon-root': { color: '#0B111E' },
+            }}
           />
         )}
       </Paper>

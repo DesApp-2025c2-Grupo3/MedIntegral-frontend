@@ -165,23 +165,24 @@ const allAgendas = [
   },
 ];
 
-export function getAgendaTurnosMock(search = '', page = 0, limit = 5) {
-  const searchLower = search.trim().toLowerCase();
+export function getAgendaTurnosMock(search = '', page = 1, limit = 10) {
+  const normalizedSearch = search.toLowerCase();
 
   const filtered = allAgendas.filter(
     (a) =>
-      a.prestador.toLowerCase().includes(searchLower) ||
-      a.especialidad.toLowerCase().includes(searchLower)
+      a.prestador.toLowerCase().includes(normalizedSearch) ||
+      a.especialidad.toLowerCase().includes(normalizedSearch)
   );
 
-  const start = page * limit;
-  const end = start + limit;
+  const effectiveLimit = limit >= filtered.length ? filtered.length : limit;
+  const start = (page - 1) * effectiveLimit;
+  const end = start + effectiveLimit;
   const paginated = filtered.slice(start, end);
 
   return {
     items: paginated,
     total: filtered.length,
     page,
-    limit,
+    limit: effectiveLimit,
   };
 }

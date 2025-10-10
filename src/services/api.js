@@ -15,10 +15,10 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   if (window.location.hostname === 'localhost') {
     if (config.url.startsWith('/agenda-turnos') && config.method === 'get') {
-      const url = new URL(config.url, window.location.origin);
-      const search = url.searchParams.get('search') || '';
-      const page = parseInt(url.searchParams.get('page') || '1', 10);
-      const limit = parseInt(url.searchParams.get('limit') || '10', 10);
+      const params = config.params || {};
+      const search = params.search || '';
+      const page = Number(params.page) || 1;
+      const limit = Number(params.limit) || 10;
 
       const result = getAgendaTurnosMock(search, page, limit);
       return Promise.reject({ isMock: true, data: result });
@@ -30,12 +30,14 @@ api.interceptors.request.use((config) => {
         data: { id: crypto.randomUUID(), ...config.data },
       });
     }
+
     if (config.url === '/prestadores' && config.method === 'post') {
       return Promise.reject({
         isMock: true,
         data: { id: crypto.randomUUID(), ...config.data },
       });
     }
+
     if (config.url === '/afiliados' && config.method === 'post') {
       return Promise.reject({
         isMock: true,
