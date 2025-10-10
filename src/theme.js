@@ -224,6 +224,34 @@ const theme = createTheme({
         },
       },
     },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+          fontWeight: 600,
+          boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.15)',
+        },
+        outlined: {
+          color: '#000000',
+          borderColor: '#B0BEC5',
+          backgroundColor: '#FFFFFF',
+          fontWeight: 400,
+          '&:hover': {
+            borderColor: '#0077C8',
+            backgroundColor: 'rgba(0, 174, 239, 0.04)',
+          },
+        },
+      },
+    },
+    MuiTableRow: {
+      styleOverrides: {
+        root: {
+          '&:not(.MuiTableRow-head):hover': {
+            backgroundColor: 'rgba(0,174,239,0.08) !important',
+          },
+        },
+      },
+    },
   },
 });
 
