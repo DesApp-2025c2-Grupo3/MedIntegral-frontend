@@ -5,6 +5,7 @@ import { prestador1DetalleMock } from '../mocks/prestador1DetalleMock';
 import { prestador2DetalleMock } from '../mocks/prestador2DetalleMock';
 import { prestador3DetalleMock } from '../mocks/prestador3DetalleMock';
 import { tipoDocumentoMock } from '../mocks/tipoDocumentoMock';
+import { agendaTurnosListadoMock } from '../mocks/agendaTurnosListadoMock';
 
 const api = axios.create({
   baseURL: 'http://localhost:5000/api',
@@ -50,6 +51,18 @@ api.interceptors.request.use((config) => {
         isMock: true,
         data: prestador3DetalleMock,
       });
+    }
+    if (config.url.startsWith('/agenda-turnos') && config.method === 'get') {
+      const url = new URL(config.url, window.location.origin);
+      const search = url.searchParams.get('search')?.toLowerCase() || '';
+
+      const filtered = agendaTurnosListadoMock.filter(
+        (a) =>
+          a.prestador.toLowerCase().includes(search) ||
+          a.especialidad.toLowerCase().includes(search)
+      );
+
+      return Promise.reject({ isMock: true, data: filtered });
     }
     if (config.url === '/agenda-turnos' && config.method === 'post') {
       return Promise.reject({

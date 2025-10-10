@@ -1,0 +1,40 @@
+export const agendaTurnosListadoMock = [
+  {
+    id: 1,
+    prestador: 'Clínica Modelo de Morón',
+    especialidad: 'Cardiología',
+    horarios: ['Lunes 10hs - 20hs', 'Martes 10hs - 18hs'],
+    direccion: 'Av. Rivadavia 8900, Morón, Buenos Aires',
+    duracion: '25 minutos',
+  },
+  {
+    id: 2,
+    prestador: 'Clínica Modelo de Morón',
+    especialidad: 'Obstetricia',
+    horarios: ['Miércoles 8hs - 17hs'],
+    direccion: 'Av. Rivadavia 8900, Morón, Buenos Aires',
+    duracion: '30 minutos',
+  },
+  {
+    id: 3,
+    prestador: 'Clínica Mariano Moreno',
+    especialidad: 'Pediatría',
+    horarios: [
+      'Lunes 8hs - 12hs',
+      'Martes 8hs - 12hs',
+      'Miércoles 10hs - 14hs',
+      'Jueves 8hs - 12hs',
+      'Viernes 8hs - 12hs',
+    ],
+    direccion: 'Av. San Martín 1234, Moreno, Buenos Aires',
+    duracion: '20 minutos',
+  },
+  {
+    id: 4,
+    prestador: 'Dr. Sigmund Freud',
+    especialidad: 'Psiquiatría',
+    horarios: ['Martes 18hs - 22hs', 'Jueves 14hs - 20hs'],
+    direccion: 'Av. Boulogne 5678, Boulogne, Buenos Aires',
+    duracion: '10 minutos',
+  },
+];

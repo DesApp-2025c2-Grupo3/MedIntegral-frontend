@@ -1,3 +1,4 @@
+import { useState, useEffect, useCallback } from 'react';
 import { Box, Grid, Typography, InputBase, Button, Paper } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -20,8 +21,24 @@ const headerConfig = {
   },
 };
 
-export default function PageListHeader({ type }) {
+export default function PageListHeader({ type, onSearch }) {
   const config = headerConfig[type] || headerConfig['agenda-de-turnos'];
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const debounceDelay = 500;
+
+  const debouncedSearch = useCallback(() => {
+    if (!onSearch) return;
+    const handler = setTimeout(() => {
+      onSearch(searchTerm.trim());
+    }, debounceDelay);
+    return () => clearTimeout(handler);
+  }, [searchTerm, onSearch]);
+
+  useEffect(() => {
+    const cleanup = debouncedSearch();
+    return cleanup;
+  }, [searchTerm, debouncedSearch]);
 
   return (
     <Box sx={{ mb: 4 }}>
@@ -63,6 +80,8 @@ export default function PageListHeader({ type }) {
             <InputBase
               id={`search-${type}`}
               fullWidth
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               placeholder={config.placeholder}
               inputProps={{
                 'aria-label': config.placeholder,
@@ -91,4 +110,5 @@ export default function PageListHeader({ type }) {
 PageListHeader.propTypes = {
   type: PropTypes.oneOf(['agenda-de-turnos', 'prestador', 'afiliado'])
     .isRequired,
+  onSearch: PropTypes.func,
 };
