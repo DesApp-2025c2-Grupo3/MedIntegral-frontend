@@ -3,27 +3,34 @@ import { Box, Grid, Typography, InputBase, Button, Paper } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import AddIcon from '@mui/icons-material/Add';
+import { Link as RouterLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './PageListHeader.css';
+import FiltrosModalBase from './FiltrosModalBase';
+import { filtrosConfig } from '../../../utils/filtrosConfig';
 
 const headerConfig = {
   'agenda-de-turnos': {
     title: 'Agendas de turnos',
     placeholder: 'Buscar por prestador, especialidad...',
+    addLink: '/agenda-turnos/alta',
   },
   prestador: {
     title: 'Prestadores',
     placeholder: 'Buscar por nombre, especialidad, CUIT/CUIL...',
+    addLink: '/prestadores/alta',
   },
   afiliado: {
     title: 'Afiliados',
     placeholder: 'Buscar por nombre, DNI o número de afiliado...',
+    addLink: '/afiliados/alta',
   },
 };
 
 export default function PageListHeader({ type, onSearch }) {
   const config = headerConfig[type] || headerConfig['agenda-de-turnos'];
   const [searchTerm, setSearchTerm] = useState('');
+  const [openFilter, setOpenFilter] = useState(false);
   const lastSearchRef = useRef('');
 
   useEffect(() => {
@@ -33,7 +40,6 @@ export default function PageListHeader({ type, onSearch }) {
 
   useEffect(() => {
     if (!onSearch) return;
-
     const handler = setTimeout(() => {
       const trimmed = searchTerm.trim();
       if (trimmed !== lastSearchRef.current) {
@@ -41,7 +47,6 @@ export default function PageListHeader({ type, onSearch }) {
         onSearch(trimmed);
       }
     }, 500);
-
     return () => clearTimeout(handler);
   }, [searchTerm, onSearch]);
 
@@ -103,12 +108,15 @@ export default function PageListHeader({ type, onSearch }) {
             variant="outlined"
             startIcon={<FilterListIcon />}
             sx={{ textTransform: 'none' }}
+            onClick={() => setOpenFilter(true)}
           >
             Filtros
           </Button>
 
           <Button
             variant="contained"
+            component={RouterLink}
+            to={config.addLink}
             startIcon={<AddIcon />}
             sx={{ textTransform: 'none' }}
           >
@@ -120,6 +128,12 @@ export default function PageListHeader({ type, onSearch }) {
       <Typography variant="subtitle1" color="text.secondary" sx={{ mt: 1.5 }}>
         Resultados de la búsqueda
       </Typography>
+
+      <FiltrosModalBase
+        open={openFilter}
+        onClose={() => setOpenFilter(false)}
+        fields={filtrosConfig[type]}
+      />
     </Box>
   );
 }

@@ -216,20 +216,11 @@ const theme = createTheme({
         },
       },
     },
-    MuiIconButton: {
-      styleOverrides: {
-        root: {
-          color: '#FFFFFF',
-          '&:hover': { backgroundColor: 'transparent' },
-        },
-      },
-    },
     MuiButton: {
       styleOverrides: {
         root: {
           textTransform: 'none',
           fontWeight: 600,
-          boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.15)',
         },
         outlined: {
           color: '#000000',
@@ -251,6 +242,9 @@ const theme = createTheme({
           },
         },
       },
+    },
+    MuiDialogContent: {
+      styleOverrides: { root: { padding: '20px 24px !important' } },
     },
   },
 });
