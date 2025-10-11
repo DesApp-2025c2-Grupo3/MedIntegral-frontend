@@ -13,34 +13,39 @@ export default function AgendaTurnosListado() {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [searchQuery, setSearchQuery] = useState('');
+
+  const [filters, setFilters] = useState({ textInputSearch: '' });
 
   const fetchAgendas = useCallback(async () => {
     setLoading(true);
     try {
-      const { data } = await api.get('/agenda-turnos', {
+      const { data } = await api.get('/agenda-turnos/search', {
         params: {
-          search: searchQuery,
+          ...filters,
           page: page + 1,
           limit: rowsPerPage,
         },
       });
       setRows(data.items || []);
       setTotal(data.total || 0);
-    } catch {
+    } catch (err) {
+      console.error('Error al obtener agendas:', err);
       setRows([]);
       setTotal(0);
     } finally {
       setLoading(false);
     }
-  }, [searchQuery, page, rowsPerPage]);
+  }, [filters, page, rowsPerPage]);
 
   useEffect(() => {
     fetchAgendas();
   }, [fetchAgendas]);
 
-  const handleSearch = (query) => {
-    setSearchQuery(query);
+  const handleSearch = (newFilters) => {
+    setFilters((prev) => ({
+      ...prev,
+      ...newFilters,
+    }));
     setPage(0);
   };
 
@@ -49,13 +54,14 @@ export default function AgendaTurnosListado() {
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(event.target.value);
+    setRowsPerPage(Number(event.target.value));
     setPage(0);
   };
 
   return (
     <Box sx={{ mt: 2 }}>
       <PageListHeader type="agenda-de-turnos" onSearch={handleSearch} />
+
       <ListadoTurnosTable
         rows={rows}
         loading={loading}

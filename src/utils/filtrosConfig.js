@@ -3,16 +3,27 @@ import validateFiltrosAgendaTurnos from './validations/validateFiltrosAgendaTurn
 export const filtrosConfig = {
   'agenda-de-turnos': {
     fields: [
-      { name: 'prestador', label: 'Prestador', type: 'select', options: [] },
       {
-        name: 'especialidad',
-        label: 'Especialidad',
+        name: 'provincia',
+        label: 'Provincia',
         type: 'select',
         options: [],
+        asyncSearchUrl: '/api/agenda-turnos/provincias',
       },
-      { name: 'provincia', label: 'Provincia', type: 'select', options: [] },
-      { name: 'localidad', label: 'Localidad', type: 'text' },
-      { name: 'dia', label: 'Día', type: 'select', options: [] },
+      {
+        name: 'localidad',
+        label: 'Localidad',
+        type: 'select',
+        options: [],
+        asyncSearchUrl: '/api/agenda-turnos/localidades',
+      },
+      {
+        name: 'dia',
+        label: 'Día',
+        type: 'select',
+        options: [],
+        asyncSearchUrl: '/api/agenda-turnos/dias',
+      },
       { name: 'horarioInicio', label: 'Horario inicio', type: 'time' },
       { name: 'horarioFin', label: 'Horario fin', type: 'time' },
       { name: 'creacionDesde', label: 'Creación desde', type: 'date' },
@@ -60,7 +71,6 @@ export const filtrosConfig = {
     fields: [
       { name: 'nombre', label: 'Nombre / Apellido', type: 'text' },
       { name: 'documento', label: 'Documento', type: 'text' },
-
       {
         name: 'tipoDocumento',
         label: 'Tipo de documento',

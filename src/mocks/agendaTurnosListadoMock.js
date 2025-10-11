@@ -165,24 +165,74 @@ const allAgendas = [
   },
 ];
 
-export function getAgendaTurnosMock(search = '', page = 1, limit = 10) {
-  const normalizedSearch = search.toLowerCase();
+const unique = (arr) => [...new Set(arr.filter(Boolean))];
 
-  const filtered = allAgendas.filter(
-    (a) =>
-      a.prestador.toLowerCase().includes(normalizedSearch) ||
-      a.especialidad.toLowerCase().includes(normalizedSearch)
-  );
+const dias = unique(
+  allAgendas.flatMap((a) =>
+    a.horarios.flatMap((h) =>
+      h
+        .replace('a ', '')
+        .split(' ')
+        .filter((w) =>
+          [
+            'Lunes',
+            'Martes',
+            'Miércoles',
+            'Jueves',
+            'Viernes',
+            'Sábado',
+          ].includes(w)
+        )
+    )
+  )
+);
 
-  const effectiveLimit = limit >= filtered.length ? filtered.length : limit;
-  const start = (page - 1) * effectiveLimit;
-  const end = start + effectiveLimit;
-  const paginated = filtered.slice(start, end);
+const provincias = unique(allAgendas.map((a) => a.direccion.split(', ').pop()));
+const localidades = unique(
+  allAgendas.map((a) => a.direccion.split(', ').slice(-2, -1)[0])
+);
 
-  return {
-    items: paginated,
-    total: filtered.length,
-    page,
-    limit: effectiveLimit,
-  };
+export function searchAgendaTurnosMock(filters = {}, page = 1, limit = 10) {
+  const text = (filters.textInputSearch || '').toLowerCase();
+
+  const filtered = allAgendas.filter((a) => {
+    if (
+      text &&
+      !a.prestador.toLowerCase().includes(text) &&
+      !a.especialidad.toLowerCase().includes(text)
+    )
+      return false;
+    if (filters.provincia && !a.direccion.includes(filters.provincia))
+      return false;
+    if (filters.localidad && !a.direccion.includes(filters.localidad))
+      return false;
+    if (filters.dia && !a.horarios.some((h) => h.includes(filters.dia)))
+      return false;
+    return true;
+  });
+
+  const total = filtered.length;
+  const start = (page - 1) * limit;
+  const end = start + limit;
+  const items = filtered.slice(start, end);
+
+  return { items, total, page, limit };
 }
+
+const mapOptions = (arr) =>
+  arr.map((nombre) => ({ value: nombre, label: nombre }));
+
+export const agendaTurnosFiltrosMocks = {
+  '/api/agenda-turnos/provincias': (search = '') =>
+    mapOptions(
+      provincias.filter((p) => p.toLowerCase().includes(search.toLowerCase()))
+    ),
+  '/api/agenda-turnos/localidades': (search = '') =>
+    mapOptions(
+      localidades.filter((l) => l.toLowerCase().includes(search.toLowerCase()))
+    ),
+  '/api/agenda-turnos/dias': (search = '') =>
+    mapOptions(
+      dias.filter((d) => d.toLowerCase().includes(search.toLowerCase()))
+    ),
+};

@@ -12,6 +12,7 @@ import {
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import ErrorSnackbar from '../ErrorSnackbar';
+import { debouncedFetch } from '../../../utils/debouncedFetch';
 
 export default function FiltrosModalBase({
   open,
@@ -22,6 +23,7 @@ export default function FiltrosModalBase({
   const [values, setValues] = useState({});
   const [error, setError] = useState(null);
   const [toastOpen, setToastOpen] = useState(false);
+  const [optionsMap, setOptionsMap] = useState({});
 
   const handleChange = (name, value) => {
     setValues((prev) => ({ ...prev, [name]: value }));
@@ -45,29 +47,35 @@ export default function FiltrosModalBase({
     setError(null);
   };
 
+  const handleAsyncSearch = (field, inputValue) => {
+    if (!field.asyncSearchUrl) return;
+    debouncedFetch(
+      field.asyncSearchUrl,
+      inputValue,
+      (opts) =>
+        setOptionsMap((prev) => ({
+          ...prev,
+          [field.name]: opts,
+        })),
+      field.debounceDelay || 400,
+      field.formatter,
+      { textInputSearch: inputValue }
+    );
+  };
+
   return (
     <>
       <Dialog
         open={open}
-        onClose={onClose}
+        onClose={() => onClose(null)}
         maxWidth="md"
         PaperProps={{
           component: Paper,
           elevation: 2,
-          sx: {
-            borderRadius: 3,
-            p: 3,
-            width: '100%',
-            maxWidth: 750,
-          },
+          sx: { borderRadius: 3, p: 3, width: '100%', maxWidth: 750 },
         }}
       >
-        <DialogTitle
-          sx={{
-            fontWeight: 'bold',
-            fontSize: '1.25rem',
-          }}
-        >
+        <DialogTitle sx={{ fontWeight: 'bold', fontSize: '1.25rem' }}>
           Filtros de búsqueda
         </DialogTitle>
 
@@ -93,15 +101,25 @@ export default function FiltrosModalBase({
                   <Autocomplete
                     fullWidth
                     size="medium"
-                    options={field.options || []}
+                    options={
+                      field.asyncSearchUrl
+                        ? optionsMap[field.name] || []
+                        : field.options || []
+                    }
                     getOptionLabel={(opt) =>
                       typeof opt === 'string' ? opt : opt.label
                     }
                     value={values[field.name] ?? null}
-                    onChange={(_, newValue) => {
-                      handleChange(field.name, newValue);
-                      if (field.onChange) field.onChange(newValue);
-                    }}
+                    isOptionEqualToValue={(opt, val) =>
+                      opt?.value === val?.value
+                    }
+                    onInputChange={(_, inputValue) =>
+                      field.asyncSearchUrl &&
+                      handleAsyncSearch(field, inputValue)
+                    }
+                    onChange={(_, newValue) =>
+                      handleChange(field.name, newValue)
+                    }
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -131,12 +149,7 @@ export default function FiltrosModalBase({
             ))}
           </Grid>
 
-          <Box
-            mt={3}
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-          >
+          <Box mt={3} display="flex" justifyContent="space-between">
             <Button
               color="error"
               sx={{ textTransform: 'none' }}
@@ -167,15 +180,6 @@ export default function FiltrosModalBase({
 FiltrosModalBase.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  fields: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      label: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['text', 'select', 'date', 'time']),
-      options: PropTypes.array,
-      defaultValue: PropTypes.any,
-      onChange: PropTypes.func,
-    })
-  ),
+  fields: PropTypes.array,
   validateFn: PropTypes.func,
 };

@@ -30,12 +30,13 @@ const headerConfig = {
 export default function PageListHeader({ type, onSearch }) {
   const config = headerConfig[type] || headerConfig['agenda-de-turnos'];
   const [searchTerm, setSearchTerm] = useState('');
+  const [filterValues, setFilterValues] = useState({});
   const [openFilter, setOpenFilter] = useState(false);
   const lastSearchRef = useRef('');
 
   useEffect(() => {
     if (!onSearch) return;
-    onSearch('');
+    onSearch({ textInputSearch: '', ...filterValues });
   }, []);
 
   useEffect(() => {
@@ -44,11 +45,11 @@ export default function PageListHeader({ type, onSearch }) {
       const trimmed = searchTerm.trim();
       if (trimmed !== lastSearchRef.current) {
         lastSearchRef.current = trimmed;
-        onSearch(trimmed);
+        onSearch({ textInputSearch: trimmed, ...filterValues });
       }
     }, 500);
     return () => clearTimeout(handler);
-  }, [searchTerm, onSearch]);
+  }, [searchTerm, filterValues, onSearch]);
 
   return (
     <Box sx={{ mb: 4 }}>
@@ -95,7 +96,10 @@ export default function PageListHeader({ type, onSearch }) {
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   e.preventDefault();
-                  onSearch(searchTerm.trim());
+                  onSearch({
+                    textInputSearch: searchTerm.trim(),
+                    ...filterValues,
+                  });
                 }
               }}
               placeholder={config.placeholder}
@@ -131,7 +135,13 @@ export default function PageListHeader({ type, onSearch }) {
 
       <FiltrosModalBase
         open={openFilter}
-        onClose={() => setOpenFilter(false)}
+        onClose={(values) => {
+          setOpenFilter(false);
+          if (values) {
+            setFilterValues(values);
+            onSearch({ textInputSearch: searchTerm.trim(), ...values });
+          }
+        }}
         fields={filtrosConfig[type]?.fields}
         validateFn={filtrosConfig[type]?.validateFn}
       />
