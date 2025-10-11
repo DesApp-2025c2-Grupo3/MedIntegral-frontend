@@ -132,7 +132,8 @@ export default function PageListHeader({ type, onSearch }) {
       <FiltrosModalBase
         open={openFilter}
         onClose={() => setOpenFilter(false)}
-        fields={filtrosConfig[type]}
+        fields={filtrosConfig[type]?.fields}
+        validateFn={filtrosConfig[type]?.validateFn}
       />
     </Box>
   );

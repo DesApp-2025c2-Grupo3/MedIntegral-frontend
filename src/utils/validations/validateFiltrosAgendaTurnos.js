@@ -1,0 +1,100 @@
+import dayjs from 'dayjs';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isSameOrAfter);
+
+export default function validateFiltrosAgendaTurnos(filtros) {
+  const {
+    prestador,
+    especialidad,
+    provincia,
+    localidad,
+    dia,
+    horarioInicio,
+    horarioFin,
+    creacionDesde,
+    creacionHasta,
+  } = filtros;
+
+  const algunoCargado = [
+    prestador,
+    especialidad,
+    provincia,
+    localidad,
+    dia,
+    horarioInicio,
+    horarioFin,
+    creacionDesde,
+    creacionHasta,
+  ].some((v) => !!v && v !== '');
+
+  if (!algunoCargado) {
+    return {
+      field: null,
+      message: 'Debe completar al menos un filtro para realizar la búsqueda.',
+    };
+  }
+
+  if (prestador && typeof prestador === 'string') {
+    return {
+      field: 'prestador',
+      message: 'Debe seleccionar un prestador válido de la lista.',
+    };
+  }
+
+  if (especialidad && typeof especialidad === 'string') {
+    return {
+      field: 'especialidad',
+      message: 'Debe seleccionar una especialidad válida de la lista.',
+    };
+  }
+
+  if (provincia && typeof provincia === 'string') {
+    return {
+      field: 'provincia',
+      message: 'Seleccione una provincia válida.',
+    };
+  }
+
+  if (localidad && localidad.length < 3) {
+    return {
+      field: 'localidad',
+      message: 'Ingrese al menos 3 caracteres para buscar una localidad.',
+    };
+  }
+
+  if (creacionDesde && creacionHasta) {
+    const desde = dayjs(creacionDesde);
+    const hasta = dayjs(creacionHasta);
+
+    if (desde.isAfter(hasta)) {
+      return {
+        field: 'creacionHasta',
+        message: 'La fecha "hasta" no puede ser anterior a la fecha "desde".',
+      };
+    }
+  }
+
+  if (horarioInicio && horarioFin) {
+    const inicio = dayjs(horarioInicio, 'HH:mm');
+    const fin = dayjs(horarioFin, 'HH:mm');
+
+    if (inicio.isAfter(fin)) {
+      return {
+        field: 'horarioFin',
+        message: 'El horario de inicio debe ser anterior al de fin.',
+      };
+    }
+
+    if (inicio.isSame(fin)) {
+      return {
+        field: 'horarioFin',
+        message: 'El inicio y el fin no pueden ser iguales.',
+      };
+    }
+  }
+
+  return null;
+}
