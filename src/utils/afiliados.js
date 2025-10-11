@@ -8,3 +8,13 @@ export const newSituacionTerapeutica = () => ({
   finaliza: false,
   fechaFin: null,
 });
+
+export const newDireccion = () => ({
+  id: generateId(),
+  calle: '',
+  altura: '',
+  pisoDepto: '',
+  codigoPostal: '',
+  localidad: '',
+  provincia: null,
+});

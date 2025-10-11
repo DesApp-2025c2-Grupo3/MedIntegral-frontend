@@ -24,6 +24,8 @@ import { getSituacionesTerapeuticas } from '../../services/situacionesTerapeutic
 import FechaVigenciaGroup from './FechaVigenciaGroup';
 import SituacionesTerapeuticasSection from './SituacionesTerapeuticasSection';
 import DatosDeContacto from '../common/DatosDeContacto';
+import { newDireccion } from '../../utils/afiliados';
+import DireccionAfiliadoSection from './DireccionAfiliadoSection';
 
 const initialAfiliadoData = {
   tipoDocumento: null,
@@ -41,9 +43,7 @@ const initialAfiliadoData = {
   telefonos: [
     /*newTelefono()*/
   ],
-  direcciones: [
-    /*newDireccion()*/
-  ],
+  direcciones: [newDireccion()],
   tieneSituacionTerapeutica: false,
   situacionesTerapeuticas: [
     /*newSituacionTerapeutica()*/
@@ -173,6 +173,15 @@ export default function AltaAfiliadoForm() {
         contactoData={afiliadoData}
         handleArray={handleGeneralChange}
       />
+
+      <Divider sx={{ my: 4 }} />
+
+      <DireccionAfiliadoSection
+        direcciones={afiliadoData.direcciones}
+        onChange={handleGeneralChange}
+      />
+
+      <Divider sx={{ my: 4 }} />
 
       <ButtonsSection
         handleGuardar={handleGuardar}
