@@ -1,3 +1,5 @@
+import api from '../services/api';
+
 const debounceTimers = new Map();
 
 export const debouncedFetch = (
@@ -18,13 +20,9 @@ export const debouncedFetch = (
     }
 
     try {
-      const params = new URLSearchParams({
-        textInputSearch: trimmed,
-        ...extraParams,
+      const { data } = await api.get(baseUrl, {
+        params: { textInputSearch: trimmed, ...extraParams },
       });
-      const res = await fetch(`${baseUrl}?${params.toString()}`);
-      if (!res.ok) throw new Error(`Error ${res.status}`);
-      const data = await res.json();
 
       const formatted =
         formatter?.(data) ||

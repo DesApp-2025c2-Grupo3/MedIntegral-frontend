@@ -35,8 +35,7 @@ export default function PageListHeader({ type, onSearch }) {
   const lastSearchRef = useRef('');
 
   useEffect(() => {
-    if (!onSearch) return;
-    onSearch({ textInputSearch: '', ...filterValues });
+    if (onSearch) onSearch({ textInputSearch: '' });
   }, []);
 
   useEffect(() => {
@@ -49,7 +48,28 @@ export default function PageListHeader({ type, onSearch }) {
       }
     }, 500);
     return () => clearTimeout(handler);
-  }, [searchTerm, filterValues, onSearch]);
+  }, [searchTerm]);
+
+  const handleFilterApply = (values) => {
+    setOpenFilter(false);
+
+    if (values === null) return;
+
+    if (values.__clearFilters) {
+      setFilterValues({});
+      onSearch({ textInputSearch: searchTerm.trim() });
+      return;
+    }
+
+    if (Object.keys(values).length === 0) {
+      setFilterValues({});
+      onSearch({ textInputSearch: searchTerm.trim() });
+      return;
+    }
+
+    setFilterValues(values);
+    onSearch({ textInputSearch: searchTerm.trim(), ...values });
+  };
 
   return (
     <Box sx={{ mb: 4 }}>
@@ -135,13 +155,7 @@ export default function PageListHeader({ type, onSearch }) {
 
       <FiltrosModalBase
         open={openFilter}
-        onClose={(values) => {
-          setOpenFilter(false);
-          if (values) {
-            setFilterValues(values);
-            onSearch({ textInputSearch: searchTerm.trim(), ...values });
-          }
-        }}
+        onClose={handleFilterApply}
         fields={filtrosConfig[type]?.fields}
         validateFn={filtrosConfig[type]?.validateFn}
       />

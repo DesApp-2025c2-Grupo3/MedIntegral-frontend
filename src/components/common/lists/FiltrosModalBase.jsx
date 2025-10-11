@@ -45,6 +45,11 @@ export default function FiltrosModalBase({
   const handleBorrar = () => {
     setValues({});
     setError(null);
+    onClose({ __clearFilters: true });
+  };
+
+  const handleCerrar = () => {
+    onClose(null);
   };
 
   const handleAsyncSearch = (field, inputValue) => {
@@ -58,8 +63,7 @@ export default function FiltrosModalBase({
           [field.name]: opts,
         })),
       field.debounceDelay || 400,
-      field.formatter,
-      { textInputSearch: inputValue }
+      field.formatter
     );
   };
 
@@ -67,7 +71,7 @@ export default function FiltrosModalBase({
     <>
       <Dialog
         open={open}
-        onClose={() => onClose(null)}
+        onClose={handleCerrar}
         maxWidth="md"
         PaperProps={{
           component: Paper,
@@ -149,7 +153,12 @@ export default function FiltrosModalBase({
             ))}
           </Grid>
 
-          <Box mt={3} display="flex" justifyContent="space-between">
+          <Box
+            mt={3}
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
             <Button
               color="error"
               sx={{ textTransform: 'none' }}

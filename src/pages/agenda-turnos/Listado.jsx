@@ -13,19 +13,24 @@ export default function AgendaTurnosListado() {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-
   const [filters, setFilters] = useState({ textInputSearch: '' });
 
   const fetchAgendas = useCallback(async () => {
     setLoading(true);
     try {
-      const { data } = await api.get('/agenda-turnos/search', {
-        params: {
+      const params = Object.fromEntries(
+        Object.entries({
           ...filters,
           page: page + 1,
           limit: rowsPerPage,
-        },
-      });
+        }).map(([key, val]) => [
+          key,
+          typeof val === 'object' ? val?.value || '' : val,
+        ])
+      );
+
+      const { data } = await api.get('/agenda-turnos/search', { params });
+
       setRows(data.items || []);
       setTotal(data.total || 0);
     } catch (err) {
@@ -42,6 +47,12 @@ export default function AgendaTurnosListado() {
   }, [fetchAgendas]);
 
   const handleSearch = (newFilters) => {
+    if (!newFilters || Object.keys(newFilters).length === 0) {
+      setFilters({ textInputSearch: '' });
+      setPage(0);
+      return;
+    }
+
     setFilters((prev) => ({
       ...prev,
       ...newFilters,
@@ -49,7 +60,7 @@ export default function AgendaTurnosListado() {
     setPage(0);
   };
 
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (_, newPage) => {
     setPage(newPage);
   };
 
