@@ -20,7 +20,10 @@ import { handleArrayChange } from '../../utils/handleArrayChanges';
 import dayjs from 'dayjs';
 import Cobertura from './Cobertura';
 import { getPlanesMedicos } from '../../services/cobertura';
+import { getSituacionesTerapeuticas } from '../../services/situacionesTerapeuticas';
 import FechaVigenciaGroup from './FechaVigenciaGroup';
+import SituacionesTerapeuticasSection from './SituacionesTerapeuticasSection';
+import DatosDeContacto from '../common/DatosDeContacto';
 
 const initialAfiliadoData = {
   tipoDocumento: null,
@@ -57,6 +60,7 @@ export default function AltaAfiliadoForm() {
   const [afiliadoData, setAfiliadoData] = useState(initialAfiliadoData);
   const [listaTiposDocumento, setListaTiposDocumento] = useState([]);
   const [listaPlanesMedicos, setListaPlanesMedicos] = useState([]);
+  const [listaSituaciones, setListaSituaciones] = useState([]);
 
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -68,13 +72,15 @@ export default function AltaAfiliadoForm() {
   useEffect(() => {
     const cargarListasIniciales = async () => {
       try {
-        const [dataTipos, dataPlanes] = await Promise.all([
+        const [dataTipos, dataPlanes, dataSituaciones] = await Promise.all([
           getTiposDocumento(),
           getPlanesMedicos(),
+          getSituacionesTerapeuticas(),
         ]);
 
         setListaTiposDocumento(dataTipos);
         setListaPlanesMedicos(dataPlanes);
+        setListaSituaciones(dataSituaciones);
       } catch (err) {
         console.error('Error al obtener datos iniciales:', err);
       } finally {
@@ -151,6 +157,22 @@ export default function AltaAfiliadoForm() {
           onSwitchChange={handleChange}
         />
       </Box>
+
+      <Divider sx={{ my: 4 }} />
+
+      <SituacionesTerapeuticasSection
+        afiliadoData={afiliadoData}
+        onSwitchChange={handleChange}
+        onArrayChange={handleGeneralChange}
+        listaSituaciones={listaSituaciones}
+      />
+
+      <Divider sx={{ my: 4 }} />
+
+      <DatosDeContacto
+        contactoData={afiliadoData}
+        handleArray={handleGeneralChange}
+      />
 
       <ButtonsSection
         handleGuardar={handleGuardar}

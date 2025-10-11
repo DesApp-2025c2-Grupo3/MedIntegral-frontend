@@ -1,6 +1,21 @@
 import api from './api';
 
 export const createAfiliado = async (afiliadoData) => {
+  const situacionesFormateadas = afiliadoData.situacionesTerapeuticas.map(
+    (item) => ({
+      situacionId: item.situacion?.id,
+
+      fechaInicio: item.fechaInicio
+        ? item.fechaInicio.format('YYYY-MM-DD')
+        : null,
+
+      fechaFin:
+        item.finaliza && item.fechaFin
+          ? item.fechaFin.format('YYYY-MM-DD')
+          : null,
+    })
+  );
+
   const payload = {
     ...afiliadoData,
     tipoDocumentoId: afiliadoData.tipoDocumento?.id,
@@ -15,6 +30,10 @@ export const createAfiliado = async (afiliadoData) => {
       ? afiliadoData.vigenciaFin.format('YYYY-MM-DD')
       : null,
     coberturaId: afiliadoData.cobertura?.id,
+
+    tieneSituacionTerapeutica: afiliadoData.tieneSituacionTerapeutica,
+
+    situacionesTerapeuticas: situacionesFormateadas,
   };
 
   if (
