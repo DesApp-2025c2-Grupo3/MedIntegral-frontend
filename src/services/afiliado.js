@@ -23,7 +23,8 @@ export const createAfiliado = async (afiliadoData) => {
     !afiliadoData?.nombre ||
     !afiliadoData?.apellido ||
     !payload?.fechaNacimiento ||
-    !payload?.coberturaId
+    !payload?.coberturaId ||
+    !payload?.vigenciaInicio
   ) {
     throw new Error('Faltan datos obligatorios para crear el afiliado');
   }

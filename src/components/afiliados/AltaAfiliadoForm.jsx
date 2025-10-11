@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Box, Divider } from '@mui/material';
+import { Box, Divider, Typography } from '@mui/material';
 import LoadingOverlay from '../common/LoadingOverlay';
 import ButtonsSection from '../common/forms/FormActions';
 import ErrorSnackbar from '../common/ErrorSnackbar';
@@ -20,7 +20,7 @@ import { handleArrayChange } from '../../utils/handleArrayChanges';
 import dayjs from 'dayjs';
 import Cobertura from './Cobertura';
 import { getPlanesMedicos } from '../../services/cobertura';
-import VigenciaSection from './VigenciaSection';
+import FechaVigenciaGroup from './FechaVigenciaGroup';
 
 const initialAfiliadoData = {
   tipoDocumento: null,
@@ -141,11 +141,16 @@ export default function AltaAfiliadoForm() {
 
       <Divider sx={{ my: 4 }} />
 
-      <VigenciaSection
-        afiliadoData={afiliadoData}
-        onDateChange={handleGeneralChange}
-        onSwitchChange={handleChange}
-      />
+      <Box>
+        <Typography variant="h6" fontWeight="medium" sx={{ mb: 2 }}>
+          Vigencia
+        </Typography>
+        <FechaVigenciaGroup
+          data={afiliadoData}
+          onDateChange={handleGeneralChange}
+          onSwitchChange={handleChange}
+        />
+      </Box>
 
       <ButtonsSection
         handleGuardar={handleGuardar}
