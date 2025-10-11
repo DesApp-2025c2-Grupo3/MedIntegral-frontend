@@ -35,7 +35,7 @@ export default function PageListHeader({ type, onSearch }) {
   const lastSearchRef = useRef('');
 
   useEffect(() => {
-    if (onSearch) onSearch({ textInputSearch: '' });
+    if (onSearch) onSearch({});
   }, []);
 
   useEffect(() => {
@@ -57,7 +57,8 @@ export default function PageListHeader({ type, onSearch }) {
 
     if (values.__clearFilters) {
       setFilterValues({});
-      onSearch({ textInputSearch: searchTerm.trim() });
+      setSearchTerm('');
+      onSearch({});
       return;
     }
 
