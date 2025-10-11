@@ -29,7 +29,7 @@ export default function AgendaTurnosListado() {
         ])
       );
 
-      const { data } = await api.get('/agenda-turnos/search', { params });
+      const { data } = await api.get('/agenda-turnos', { params });
 
       setRows(data.items || []);
       setTotal(data.total || 0);
