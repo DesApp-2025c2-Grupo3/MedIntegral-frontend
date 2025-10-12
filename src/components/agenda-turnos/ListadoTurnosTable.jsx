@@ -22,9 +22,6 @@ export default function AgendasTable({
   rowsPerPage = 10,
   onPageChange,
   onRowsPerPageChange,
-  order = 'asc',
-  orderBy = 'prestador',
-  onRequestSort = () => {},
 }) {
   return (
     <Box sx={{ width: '100%' }}>
@@ -39,9 +36,6 @@ export default function AgendasTable({
         <TableContainer>
           <Table sx={{ minWidth: 750 }}>
             <TableHeader
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={onRequestSort}
               headCells={[
                 { id: 'prestador', label: 'Nombre del prestador' },
                 { id: 'especialidad', label: 'Especialidad' },
@@ -160,7 +154,4 @@ AgendasTable.propTypes = {
   rowsPerPage: PropTypes.number,
   onPageChange: PropTypes.func,
   onRowsPerPageChange: PropTypes.func,
-  order: PropTypes.string,
-  orderBy: PropTypes.string,
-  onRequestSort: PropTypes.func,
 };
