@@ -1,8 +1,8 @@
 const allAgendas = [
   {
     id: 1,
-    prestador: { id: 1, nombre: 'Clínica Modelo de Morón' },
-    especialidad: { id: 1, nombre: 'Cardiología' },
+    prestador: 'Clínica Modelo de Morón',
+    especialidad: 'Cardiología',
     horarioAtencion: [
       { dias: ['Lunes'], horarioInicio: '10:00', horarioFin: '20:00' },
       { dias: ['Martes'], horarioInicio: '10:00', horarioFin: '18:00' },
