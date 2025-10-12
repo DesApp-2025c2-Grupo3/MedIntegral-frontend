@@ -5,9 +5,11 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
 
-const normalizarDia = (diaRaw) => {
-  if (typeof diaRaw !== 'string') return '';
-  return diaRaw.split('(')[0].trim();
+const obtenerNombreDia = (diaRaw) => {
+  if (!diaRaw) return '';
+  if (typeof diaRaw === 'object' && diaRaw.nombre) return diaRaw.nombre;
+  if (typeof diaRaw === 'string') return diaRaw.split('(')[0].trim();
+  return '';
 };
 
 export const validateHorarioBasico = (horario) => {
@@ -61,11 +63,11 @@ export const validateHorarioDentroDireccion = (horario, direccion) => {
   const rangoMax = horario.fin.format('HH:mm');
 
   for (const diaRaw of horario.dias) {
-    const dia = normalizarDia(diaRaw);
+    const diaNombre = obtenerNombreDia(diaRaw);
 
     const match = direccion.horarios?.some(
       (dh) =>
-        dh.dia.nombre === dia &&
+        dh.dia.nombre === diaNombre &&
         dh.horaInicio <= rangoMin &&
         dh.horaFin >= rangoMax
     );
@@ -73,7 +75,7 @@ export const validateHorarioDentroDireccion = (horario, direccion) => {
     if (!match) {
       return {
         field: `horario-${horario.id}-horario`,
-        message: `El rango definido para ${dia} no está dentro de los horarios de atención del centro`,
+        message: `El rango definido para ${diaNombre} no está dentro de los horarios de atención del centro`,
       };
     }
   }
@@ -97,8 +99,9 @@ export const validateSolapamiento = (horario, horarios) => {
 
   for (let j = 0; j < index; j++) {
     const other = horarios[j];
+
     const compartenDia = horario.dias.some((d) =>
-      other.dias.map(normalizarDia).includes(normalizarDia(d))
+      other.dias.some((od) => obtenerNombreDia(od) === obtenerNombreDia(d))
     );
 
     if (!compartenDia) continue;
@@ -115,7 +118,9 @@ export const validateSolapamiento = (horario, horarios) => {
       horario.fin.isSameOrAfter(other.fin);
 
     if (empiezaDuranteOtro || terminaDuranteOtro || cubreTotalmente) {
-      const diasLimpios = horario.dias.map(normalizarDia).join(', ');
+      const diasLimpios = horario.dias
+        .map((d) => obtenerNombreDia(d))
+        .join(', ');
       return {
         field: `horario-${horario.id}-horario`,
         message: `El rango horario se solapa con otro definido para ${diasLimpios}`,
