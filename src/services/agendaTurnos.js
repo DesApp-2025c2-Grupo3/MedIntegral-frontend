@@ -20,8 +20,8 @@ export const createAgendaTurnos = async ({
     horarios: horarios.map((h) => ({
       dias: h.dias.map((d) => d.id),
       duracion: h.duracion,
-      horaInicio: h.inicio?.hour?.() ?? 0,
-      horaFin: h.fin?.hour?.() ?? 0,
+      horaInicio: h.inicio?.format?.('HH:mm') ?? null,
+      horaFin: h.fin?.format?.('HH:mm') ?? null,
     })),
   };
 
