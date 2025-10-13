@@ -1,0 +1,99 @@
+import PropTypes from 'prop-types';
+import { Box, Grid, FormControlLabel, Switch } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { useFormValidationContext } from '../../context/FormValidationContext';
+
+const DEFAULT_LABEL_DESDE = 'Vigencia desde';
+const DEFAULT_LABEL_HASTA = 'Vigencia hasta';
+const DEFAULT_LABEL_SWITCH = 'Registrar fecha baja';
+
+export default function FechaVigenciaGroup({
+  data,
+  onDateChange,
+  onSwitchChange,
+  dateDesdeField,
+  switchFinField,
+  dateHastaField,
+  labelDesde,
+  labelHasta,
+  labelSwitch,
+}) {
+  const safeData = data || {};
+
+  const FIELD_DESDE = dateDesdeField || 'vigenciaInicio';
+  const FIELD_SWITCH = switchFinField || 'tieneFechaBaja';
+  const FIELD_HASTA = dateHastaField || 'vigenciaFin';
+
+  const currentLabelDesde = labelDesde || DEFAULT_LABEL_DESDE;
+  const currentLabelHasta = labelHasta || DEFAULT_LABEL_HASTA;
+  const currentLabelSwitch = labelSwitch || DEFAULT_LABEL_SWITCH;
+
+  const { error } = useFormValidationContext();
+
+  const getErrorProps = (fieldName) => ({
+    error: error?.field === fieldName,
+    helperText: error?.field === fieldName ? error?.message : '',
+  });
+
+  return (
+    <Box>
+      <Grid container spacing={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+          <DatePicker
+            label={currentLabelDesde}
+            value={safeData[FIELD_DESDE]}
+            onChange={(newValue) => onDateChange(FIELD_DESDE, newValue)}
+            slotProps={{
+              textField: {
+                fullWidth: true,
+                required: true,
+                ...getErrorProps(FIELD_DESDE),
+              },
+            }}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={safeData[FIELD_SWITCH]}
+                onChange={onSwitchChange}
+                name={FIELD_SWITCH}
+              />
+            }
+            label={currentLabelSwitch}
+          />
+        </Grid>
+        {safeData[FIELD_SWITCH] && (
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <DatePicker
+              label={currentLabelHasta}
+              value={safeData[FIELD_HASTA]}
+              onChange={(newValue) => onDateChange(FIELD_HASTA, newValue)}
+              slotProps={{
+                textField: {
+                  fullWidth: true,
+                  ...getErrorProps(FIELD_HASTA),
+                },
+              }}
+            />
+          </Grid>
+        )}
+      </Grid>
+    </Box>
+  );
+}
+
+FechaVigenciaGroup.propTypes = {
+  data: PropTypes.object.isRequired,
+  onDateChange: PropTypes.func.isRequired,
+  onSwitchChange: PropTypes.func.isRequired,
+  dateDesdeField: PropTypes.string,
+  switchFinField: PropTypes.string,
+  dateHastaField: PropTypes.string,
+  labelDesde: PropTypes.string,
+  labelHasta: PropTypes.string,
+  labelSwitch: PropTypes.string,
+};
+
+FechaVigenciaGroup.defaultProps = {};

@@ -5,6 +5,9 @@ import { prestador1DetalleMock } from '../mocks/prestador1DetalleMock';
 import { prestador2DetalleMock } from '../mocks/prestador2DetalleMock';
 import { prestador3DetalleMock } from '../mocks/prestador3DetalleMock';
 import { tipoDocumentoMock } from '../mocks/tipoDocumentoMock';
+import { planesMedicos } from '../mocks/planesMedicosMock';
+import { SituacionesTerapeuticasMock } from '../mocks/situacionesTerapeuticasMock';
+import { parentescoMock } from '../mocks/parentescoMock';
 import {
   agendaTurnosFiltrosMocks,
   searchAgendaTurnosMock,
@@ -80,15 +83,19 @@ api.interceptors.request.use((config) => {
 
     if (config.url === '/prestadores')
       return Promise.reject({ isMock: true, data: prestadoresMock });
+
     if (config.url === '/prestadores/1')
       return Promise.reject({ isMock: true, data: prestador1DetalleMock });
+
     if (config.url === '/prestadores/2')
       return Promise.reject({ isMock: true, data: prestador2DetalleMock });
+
     if (config.url === '/prestadores/3')
       return Promise.reject({ isMock: true, data: prestador3DetalleMock });
 
     if (config.url === '/especialidades')
       return Promise.reject({ isMock: true, data: listaEspecialidadesMock });
+
     if (config.url === '/tipoDocumento')
       return Promise.reject({ isMock: true, data: tipoDocumentoMock });
 
@@ -97,6 +104,21 @@ api.interceptors.request.use((config) => {
         isMock: true,
         data: { id: crypto.randomUUID(), ...config.data },
       });
+    }
+
+    if (config.url === '/planesMedicos') {
+      return Promise.reject({ isMock: true, data: planesMedicos });
+    }
+
+    if (config.url === '/situacionesTerapeuticas') {
+      return Promise.reject({
+        isMock: true,
+        data: SituacionesTerapeuticasMock,
+      });
+    }
+
+    if (config.url === '/parentescos') {
+      return Promise.reject({ isMock: true, data: parentescoMock });
     }
   }
 
