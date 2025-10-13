@@ -216,13 +216,35 @@ const theme = createTheme({
         },
       },
     },
-    MuiIconButton: {
+    MuiButton: {
       styleOverrides: {
         root: {
-          color: '#FFFFFF',
-          '&:hover': { backgroundColor: 'transparent' },
+          textTransform: 'none',
+          fontWeight: 600,
+        },
+        outlined: {
+          color: '#000000',
+          borderColor: '#B0BEC5',
+          backgroundColor: '#FFFFFF',
+          fontWeight: 400,
+          '&:hover': {
+            borderColor: '#0077C8',
+            backgroundColor: 'rgba(0, 174, 239, 0.04)',
+          },
         },
       },
+    },
+    MuiTableRow: {
+      styleOverrides: {
+        root: {
+          '&:not(.MuiTableRow-head):hover': {
+            backgroundColor: 'rgba(0,174,239,0.08) !important',
+          },
+        },
+      },
+    },
+    MuiDialogContent: {
+      styleOverrides: { root: { padding: '20px 24px !important' } },
     },
   },
 });
