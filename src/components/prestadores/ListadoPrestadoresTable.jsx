@@ -48,8 +48,9 @@ export default function ListadoPrestadoresTable({
                 { id: 'prestador', label: 'Nombre del Prestador' },
                 { id: 'tipoPrestador', label: 'Tipo de prestador' },
                 { id: 'especialidades', label: 'Especialidades' },
-                { id: 'contacto', label: 'Contacto' },
-                { id: 'fechaCreacion', label: 'Fecha de creación' },
+                { id: 'direcciones', label: 'Direcciones' },
+                { id: 'telefonos', label: 'Teléfonos' },
+                { id: 'emails', label: 'Emails' },
               ]}
             />
             <TableBody>
@@ -85,15 +86,7 @@ export default function ListadoPrestadoresTable({
                       {row.esCentroMedico ? 'Centro médico' : 'Médico'}
                     </TableCell>
                     <TableCell sx={{ fontSize: '0.9rem' }}>
-                      {Array.isArray(row.especialidades) &&
-                      row.especialidades.length > 0 ? (
-                        row.especialidades.map((e) => e.nombre).join(', ')
-                      ) : (
-                        //Puede un prestador no tener especialidades?
-                        <Typography fontSize="0.9rem" color="text.secondary">
-                          Sin especialidades
-                        </Typography>
-                      )}
+                      {row.especialidades.map((e) => e.nombre).join(', ')}
                     </TableCell>
                     <TableCell sx={{ fontSize: '0.9rem' }}>
                       <Box
@@ -103,62 +96,84 @@ export default function ListadoPrestadoresTable({
                           gap: 1,
                         }}
                       >
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            flexDirection: 'flex-start',
-                            gap: 1,
-                          }}
-                        >
-                          <LocationOnIcon
+                        {row.direcciones.map((d, i) => (
+                          <Box
+                            key={i}
                             sx={{
-                              fontSize: 18,
-                              color: 'text.secondary',
-                              mt: 0.3,
+                              display: 'flex',
+                              flexDirection: 'flex-start',
+                              gap: 1,
                             }}
-                          />
-                          <Typography fontSize="0.9rem">
-                            {row.direccion}
-                          </Typography>
-                        </Box>
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            flexDirection: 'flex-start',
-                            gap: 1,
-                          }}
-                        >
-                          <PhoneIphoneIcon
+                          >
+                            <LocationOnIcon
+                              sx={{
+                                fontSize: 18,
+                                color: 'text.secondary',
+                                mt: 0.3,
+                              }}
+                            />
+                            <Typography fontSize="0.9rem">{d}</Typography>
+                          </Box>
+                        ))}
+                      </Box>
+                    </TableCell>
+                    <TableCell sx={{ fontSize: '0.9rem', padding: 'inherit' }}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: 1,
+                        }}
+                      >
+                        {row.telefonos.map((t, i) => (
+                          <Box
+                            key={i}
                             sx={{
-                              fontSize: 18,
-                              color: 'text.secondary',
-                              mt: 0.3,
+                              display: 'flex',
+                              flexDirection: 'flex-start',
+                              gap: 1,
                             }}
-                          />
-                          <Typography fontSize="0.9rem">
-                            {row.telefono}
-                          </Typography>
-                        </Box>
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            flexDirection: 'flex-start',
-                            gap: 1,
-                          }}
-                        >
-                          <MailOutlineIcon
-                            sx={{
-                              fontSize: 18,
-                              color: 'text.secondary',
-                              mt: 0.3,
-                            }}
-                          />
-                          <Typography fontSize="0.9rem">{row.email}</Typography>
-                        </Box>
+                          >
+                            <PhoneIphoneIcon
+                              sx={{
+                                fontSize: 18,
+                                color: 'text.secondary',
+                                mt: 0.3,
+                              }}
+                            />
+                            <Typography fontSize="0.8rem">{t}</Typography>
+                          </Box>
+                        ))}
                       </Box>
                     </TableCell>
                     <TableCell sx={{ fontSize: '0.9rem' }}>
-                      {row.createdAt}
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: 1,
+                        }}
+                      >
+                        {row.emails.map((e, i) => (
+                          <Box
+                            key={i}
+                            sx={{
+                              display: 'flex',
+                              flexDirection: 'flex-start',
+                              gap: 1,
+                            }}
+                          >
+                            <MailOutlineIcon
+                              sx={{
+                                fontSize: 18,
+                                color: 'text.secondary',
+                                mt: 0.3,
+                              }}
+                            />
+                            <Typography fontSize="0.9rem">{e}</Typography>
+                          </Box>
+                        ))}
+                      </Box>
                     </TableCell>
                   </TableRow>
                 ))
