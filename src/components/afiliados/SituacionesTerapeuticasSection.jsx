@@ -10,6 +10,8 @@ import { AnimatePresence } from 'framer-motion';
 import AgregarButton from '../common/forms/AgregarButton';
 import SituacionTerapeuticaItem from './SituacionTerapeuticaItem';
 import { newSituacionTerapeutica } from '../../utils/afiliados';
+import { useEffect } from 'react';
+import { useCallback } from 'react';
 
 export default function SituacionesTerapeuticasSection({
   afiliadoData,
@@ -20,25 +22,31 @@ export default function SituacionesTerapeuticasSection({
   const { tieneSituacionTerapeutica, situacionesTerapeuticas } = afiliadoData;
 
   const handleSwitchPrincipalChange = (event) => {
-    const isChecked = event.target.checked;
     onSwitchChange(event);
-
-    if (isChecked) {
-      if (situacionesTerapeuticas.length === 0) {
-        handleAgregarSituacion();
-      }
-    } else {
-      onArrayChange('situacionesTerapeuticas', []);
-    }
   };
 
-  const handleAgregarSituacion = () => {
+  useEffect(() => {
+    if (!tieneSituacionTerapeutica && situacionesTerapeuticas.length > 0) {
+      onArrayChange('situacionesTerapeuticas', []);
+    }
+
+    if (tieneSituacionTerapeutica && situacionesTerapeuticas.length === 0) {
+      handleAgregarSituacion();
+    }
+  }, [
+    tieneSituacionTerapeutica,
+    situacionesTerapeuticas.length,
+    onArrayChange,
+    handleAgregarSituacion,
+  ]);
+
+  const handleAgregarSituacion = useCallback(() => {
     const nuevaSituacion = newSituacionTerapeutica();
     onArrayChange('situacionesTerapeuticas', [
       ...situacionesTerapeuticas,
       nuevaSituacion,
     ]);
-  };
+  }, [situacionesTerapeuticas, onArrayChange]);
 
   const handleEliminarSituacion = (id) => {
     const nuevoArray = situacionesTerapeuticas.filter((s) => s.id !== id);
