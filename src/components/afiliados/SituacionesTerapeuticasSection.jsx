@@ -25,6 +25,14 @@ export default function SituacionesTerapeuticasSection({
     onSwitchChange(event);
   };
 
+  const handleAgregarSituacion = useCallback(() => {
+    const nuevaSituacion = newSituacionTerapeutica();
+    onArrayChange('situacionesTerapeuticas', [
+      ...situacionesTerapeuticas,
+      nuevaSituacion,
+    ]);
+  }, [situacionesTerapeuticas, onArrayChange]);
+
   useEffect(() => {
     if (!tieneSituacionTerapeutica && situacionesTerapeuticas.length > 0) {
       onArrayChange('situacionesTerapeuticas', []);
@@ -39,14 +47,6 @@ export default function SituacionesTerapeuticasSection({
     onArrayChange,
     handleAgregarSituacion,
   ]);
-
-  const handleAgregarSituacion = useCallback(() => {
-    const nuevaSituacion = newSituacionTerapeutica();
-    onArrayChange('situacionesTerapeuticas', [
-      ...situacionesTerapeuticas,
-      nuevaSituacion,
-    ]);
-  }, [situacionesTerapeuticas, onArrayChange]);
 
   const handleEliminarSituacion = (id) => {
     const nuevoArray = situacionesTerapeuticas.filter((s) => s.id !== id);
