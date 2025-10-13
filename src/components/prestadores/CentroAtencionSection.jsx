@@ -77,6 +77,7 @@ export default function CentroAtencionSection({ centros, onChange }) {
               <DireccionSection
                 direccion={centro}
                 onChange={(nuevo) => handleActualizarCentro(centro.id, nuevo)}
+                idPrefix={`centro-${centro.id}`}
               />
 
               <Divider sx={{ my: 3 }} />

@@ -59,6 +59,7 @@ export default function DireccionAfiliadoSection({ direcciones, onChange }) {
                 onChange={(nuevo) =>
                   handleActualizarDireccion(direccion.id, nuevo)
                 }
+                idPrefix={`direccion-${direccion.id}`}
               />
             </Box>
           </FadeSlide>
