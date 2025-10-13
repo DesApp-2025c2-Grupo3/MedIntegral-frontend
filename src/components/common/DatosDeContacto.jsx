@@ -2,11 +2,17 @@ import { Box, Typography, Grid, TextField, Autocomplete } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useFormValidationContext } from '../../context/FormValidationContext';
 
-export default function DatosDeContacto({ contactoData, handleArray }) {
+export default function DatosDeContacto({
+  contactoData,
+  handleArray,
+  idPrefix,
+}) {
   const { error } = useFormValidationContext();
 
   const getErrorProps = (fieldName) => {
-    const hasError = error?.field === fieldName;
+    const fullFieldName = idPrefix ? `${idPrefix}-${fieldName}` : fieldName;
+
+    const hasError = error?.field === fullFieldName;
     return {
       error: hasError,
       helperText: hasError ? error.message : '',
@@ -69,4 +75,5 @@ DatosDeContacto.propTypes = {
     telefonos: PropTypes.array.isRequired,
   }).isRequired,
   handleArray: PropTypes.func.isRequired,
+  idPrefix: PropTypes.string,
 };

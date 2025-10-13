@@ -10,11 +10,13 @@ export default function DatosPersonales({
   onChange,
   onAutocompleteChange,
   listaTiposDocumento,
+  idPrefix,
 }) {
   const { error } = useFormValidationContext();
 
   const getErrorProps = (fieldName) => {
-    const hasError = error?.field === fieldName;
+    const fullFieldName = idPrefix ? `${idPrefix}-${fieldName}` : fieldName;
+    const hasError = error?.field === fullFieldName;
     return {
       error: hasError,
       helperText: hasError ? error.message : '',
@@ -44,7 +46,8 @@ export default function DatosPersonales({
             getOptionLabel={(option) => option?.tipo || ''}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             label="Tipo Documento"
-            dataField="tipoDocumento"
+            dataField={idPrefix ? `${idPrefix}-tipoDocumento` : 'tipoDocumento'}
+            {...getErrorProps('tipoDocumento')}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
@@ -108,4 +111,5 @@ DatosPersonales.propTypes = {
   onChange: PropTypes.func.isRequired,
   onAutocompleteChange: PropTypes.func.isRequired,
   listaTiposDocumento: PropTypes.array.isRequired,
+  idPrefix: PropTypes.string,
 };

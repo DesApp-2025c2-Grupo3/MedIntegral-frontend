@@ -9,7 +9,7 @@ const REGEX_EMAIL = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; //format
  */
 const validateBaseNumeric = (id, fieldName) => {
   if (!id) {
-    return { field: fieldName, message: `El ${fieldName} es obligatorio.` };
+    return { field: fieldName, message: `El documento es obligatorio.` };
   }
 
   const cleanValue = String(id).replace(/[-.]/g, '');
@@ -59,12 +59,12 @@ export const validateNumeroDocumento = (
  */
 export const validateNombre = (nombre, fieldName = 'nombre') => {
   if (!nombre) {
-    return { field: fieldName, message: `El ${fieldName} es obligatorio.` };
+    return { field: fieldName, message: `El nombre/apellido es obligatorio.` };
   }
   if (!REGEX_NOMBRE.test(nombre)) {
     return {
       field: fieldName,
-      message: `El ${fieldName} solo puede contener letras y espacios (Mín. 2 caracteres).`,
+      message: `El nombre/apellido solo puede contener letras y espacios (Mín. 2 caracteres).`,
     };
   }
   return null;
