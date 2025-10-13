@@ -3,7 +3,7 @@ const allAgendas = [
     id: 1,
     prestador: 'Clínica Modelo de Morón',
     especialidad: 'Cardiología',
-    horarioAtencion: [
+    horariosAtencion: [
       { dias: ['Lunes'], horarioInicio: '10:00', horarioFin: '20:00' },
       { dias: ['Martes'], horarioInicio: '10:00', horarioFin: '18:00' },
     ],
@@ -20,7 +20,7 @@ const allAgendas = [
     id: 2,
     prestador: 'Clínica Modelo de Morón',
     especialidad: 'Obstetricia',
-    horarioAtencion: [
+    horariosAtencion: [
       { dias: ['Miércoles'], horarioInicio: '08:00', horarioFin: '17:00' },
     ],
     direccion: {
@@ -36,7 +36,7 @@ const allAgendas = [
     id: 3,
     prestador: 'Clínica Mariano Moreno',
     especialidad: 'Pediatría',
-    horarioAtencion: [
+    horariosAtencion: [
       { dias: ['Lunes'], horarioInicio: '08:00', horarioFin: '12:00' },
       { dias: ['Martes'], horarioInicio: '08:00', horarioFin: '12:00' },
       { dias: ['Miércoles'], horarioInicio: '10:00', horarioFin: '14:00' },
@@ -54,7 +54,7 @@ const allAgendas = [
     id: 4,
     prestador: 'Dr. Sigmund Freud',
     especialidad: 'Psiquiatría',
-    horarioAtencion: [
+    horariosAtencion: [
       { dias: ['Martes'], horarioInicio: '18:00', horarioFin: '22:00' },
       { dias: ['Jueves'], horarioInicio: '14:00', horarioFin: '20:00' },
     ],
@@ -71,7 +71,7 @@ const allAgendas = [
     id: 5,
     prestador: 'Hospital Italiano',
     especialidad: 'Dermatología',
-    horarioAtencion: [
+    horariosAtencion: [
       { dias: ['Lunes'], horarioInicio: '08:00', horarioFin: '16:00' },
       { dias: ['Miércoles'], horarioInicio: '09:00', horarioFin: '15:00' },
     ],
@@ -88,9 +88,9 @@ const allAgendas = [
     id: 6,
     prestador: 'Sanatorio Las Lomas',
     especialidad: 'Traumatología',
-    horarioAtencion: [
-      { dia: ['Martes'], horarioInicio: '10:00', horarioFin: '18:00' },
-      { dia: ['Jueves'], horarioInicio: '08:00', horarioFin: '16:00' },
+    horariosAtencion: [
+      { dias: ['Martes'], horarioInicio: '10:00', horarioFin: '18:00' },
+      { dias: ['Jueves'], horarioInicio: '08:00', horarioFin: '16:00' },
     ],
     direccion: {
       calle: 'Italia',
@@ -105,9 +105,9 @@ const allAgendas = [
     id: 7,
     prestador: 'Centro Médico Ramos',
     especialidad: 'Clínica Médica',
-    horarioAtencion: [
+    horariosAtencion: [
       {
-        dia: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'],
+        dias: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'],
         horarioInicio: '08:00',
         horarioFin: '14:00',
       },
@@ -125,9 +125,9 @@ const allAgendas = [
     id: 8,
     prestador: 'Clínica San Justo',
     especialidad: 'Ginecología',
-    horarioAtencion: [
+    horariosAtencion: [
       {
-        dia: ['Lunes', 'Miércoles'],
+        dias: ['Lunes', 'Miércoles'],
         horarioInicio: '09:00',
         horarioFin: '17:00',
       },
@@ -145,9 +145,9 @@ const allAgendas = [
     id: 9,
     prestador: 'Hospital Austral',
     especialidad: 'Neurología',
-    horarioAtencion: [
-      { dia: ['Lunes'], horarioInicio: '12:00', horarioFin: '18:00' },
-      { dia: ['Viernes'], horarioInicio: '13:00', horarioFin: '20:00' },
+    horariosAtencion: [
+      { dias: ['Lunes'], horarioInicio: '12:00', horarioFin: '18:00' },
+      { dias: ['Viernes'], horarioInicio: '13:00', horarioFin: '20:00' },
     ],
     direccion: {
       calle: 'Av. Juan Domingo Perón',
@@ -162,8 +162,8 @@ const allAgendas = [
     id: 10,
     prestador: 'Clínica del Sol',
     especialidad: 'Oftalmología',
-    horarioAtencion: [
-      { dia: ['Miércoles'], horarioInicio: '09:00', horarioFin: '17:00' },
+    horariosAtencion: [
+      { dias: ['Miércoles'], horarioInicio: '09:00', horarioFin: '17:00' },
     ],
     direccion: {
       calle: 'Av. Santa Fe',
@@ -178,9 +178,9 @@ const allAgendas = [
     id: 11,
     prestador: 'Hospital Posadas',
     especialidad: 'Neumonología',
-    horarioAtencion: [
-      { dia: ['Lunes'], horarioInicio: '08:00', horarioFin: '12:00' },
-      { dia: ['Miércoles'], horarioInicio: '10:00', horarioFin: '14:00' },
+    horariosAtencion: [
+      { dias: ['Lunes'], horarioInicio: '08:00', horarioFin: '12:00' },
+      { dias: ['Miércoles'], horarioInicio: '10:00', horarioFin: '14:00' },
     ],
     direccion: {
       calle: 'Av. Illia y Marconi',
@@ -195,9 +195,9 @@ const allAgendas = [
     id: 12,
     prestador: 'Dr. Carlos Diol',
     especialidad: 'Otorrinolaringología',
-    horarioAtencion: [
-      { dia: ['Martes'], horarioInicio: '14:00', horarioFin: '20:00' },
-      { dia: ['Viernes'], horarioInicio: '08:00', horarioFin: '13:00' },
+    horariosAtencion: [
+      { dias: ['Martes'], horarioInicio: '14:00', horarioFin: '20:00' },
+      { dias: ['Viernes'], horarioInicio: '08:00', horarioFin: '13:00' },
     ],
     direccion: {
       calle: 'Av. Rivadavia',
@@ -212,9 +212,9 @@ const allAgendas = [
     id: 13,
     prestador: 'Clínica San Fernando',
     especialidad: 'Urología',
-    horarioAtencion: [
+    horariosAtencion: [
       {
-        dia: ['Martes', 'Jueves'],
+        dias: ['Martes', 'Jueves'],
         horarioInicio: '09:00',
         horarioFin: '17:00',
       },
@@ -232,9 +232,9 @@ const allAgendas = [
     id: 14,
     prestador: 'Sanatorio Anchorena',
     especialidad: 'Cardiología',
-    horarioAtencion: [
-      { dia: ['Lunes'], horarioInicio: '10:00', horarioFin: '18:00' },
-      { dia: ['Viernes'], horarioInicio: '09:00', horarioFin: '15:00' },
+    horariosAtencion: [
+      { dias: ['Lunes'], horarioInicio: '10:00', horarioFin: '18:00' },
+      { dias: ['Viernes'], horarioInicio: '09:00', horarioFin: '15:00' },
     ],
     direccion: {
       calle: 'Pueyrredón',
@@ -249,9 +249,9 @@ const allAgendas = [
     id: 15,
     prestador: 'Dra. Lucía Pérez',
     especialidad: 'Endocrinología',
-    horarioAtencion: [
-      { dia: ['Lunes'], horarioInicio: '09:00', horarioFin: '13:00' },
-      { dia: ['Jueves'], horarioInicio: '10:00', horarioFin: '18:00' },
+    horariosAtencion: [
+      { dias: ['Lunes'], horarioInicio: '09:00', horarioFin: '13:00' },
+      { dias: ['Jueves'], horarioInicio: '10:00', horarioFin: '18:00' },
     ],
     direccion: {
       calle: 'Av. Libertador',
@@ -266,9 +266,9 @@ const allAgendas = [
     id: 16,
     prestador: 'Centro Médico Norte',
     especialidad: 'Reumatología',
-    horarioAtencion: [
-      { dia: ['Martes'], horarioInicio: '08:00', horarioFin: '12:00' },
-      { dia: ['Viernes'], horarioInicio: '12:00', horarioFin: '16:00' },
+    horariosAtencion: [
+      { dias: ['Martes'], horarioInicio: '08:00', horarioFin: '12:00' },
+      { dias: ['Viernes'], horarioInicio: '12:00', horarioFin: '16:00' },
     ],
     direccion: {
       calle: 'Av. Roca',
@@ -283,9 +283,9 @@ const allAgendas = [
     id: 17,
     prestador: 'Dr. Pablo González',
     especialidad: 'Kinesiología',
-    horarioAtencion: [
+    horariosAtencion: [
       {
-        dia: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'],
+        dias: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'],
         horarioInicio: '09:00',
         horarioFin: '18:00',
       },
@@ -303,9 +303,9 @@ const allAgendas = [
     id: 18,
     prestador: 'Clínica Santa Isabel',
     especialidad: 'Pediatría',
-    horarioAtencion: [
-      { dia: ['Lunes'], horarioInicio: '08:00', horarioFin: '14:00' },
-      { dia: ['Miércoles'], horarioInicio: '10:00', horarioFin: '18:00' },
+    horariosAtencion: [
+      { dias: ['Lunes'], horarioInicio: '08:00', horarioFin: '14:00' },
+      { dias: ['Miércoles'], horarioInicio: '10:00', horarioFin: '18:00' },
     ],
     direccion: {
       calle: 'Av. Directorio',
@@ -320,8 +320,8 @@ const allAgendas = [
     id: 19,
     prestador: 'Hospital Español',
     especialidad: 'Dermatología',
-    horarioAtencion: [
-      { dia: ['Martes'], horarioInicio: '10:00', horarioFin: '18:00' },
+    horariosAtencion: [
+      { dias: ['Martes'], horarioInicio: '10:00', horarioFin: '18:00' },
     ],
     direccion: {
       calle: 'Av. Belgrano',
@@ -336,9 +336,9 @@ const allAgendas = [
     id: 20,
     prestador: 'Clínica Olivos',
     especialidad: 'Gastroenterología',
-    horarioAtencion: [
+    horariosAtencion: [
       {
-        dia: ['Lunes', 'Miércoles'],
+        dias: ['Lunes', 'Miércoles'],
         horarioInicio: '08:00',
         horarioFin: '15:00',
       },
@@ -357,7 +357,7 @@ const allAgendas = [
 const unique = (arr) => [...new Set(arr.filter(Boolean))];
 
 const dias = unique(
-  allAgendas.flatMap((a) => a.horarioAtencion?.flatMap((h) => h.dia) || [])
+  allAgendas.flatMap((a) => a.horariosAtencion?.flatMap((h) => h.dia) || [])
 );
 
 const provincias = unique(allAgendas.map((a) => a.direccion?.provincia));
@@ -385,7 +385,7 @@ export function searchAgendaTurnosMock(filters = {}, page = 1, limit = 10) {
       return false;
     if (
       filters.dia &&
-      !a.horarioAtencion?.some((h) =>
+      !a.horariosAtencion?.some((h) =>
         h.dia.some((d) => d.toLowerCase() === filters.dia.toLowerCase())
       )
     )
