@@ -26,6 +26,7 @@ import SituacionesTerapeuticasSection from './SituacionesTerapeuticasSection';
 import DatosDeContacto from '../common/DatosDeContacto';
 import { newDireccion } from '../../utils/afiliados';
 import DireccionAfiliadoSection from './DireccionAfiliadoSection';
+import GrupoFamiliarSection from './GrupoFamiliarSection';
 
 const initialAfiliadoData = {
   tipoDocumento: null,
@@ -179,6 +180,16 @@ export default function AltaAfiliadoForm() {
       <DireccionAfiliadoSection
         direcciones={afiliadoData.direcciones}
         onChange={handleGeneralChange}
+      />
+
+      <Divider sx={{ my: 4 }} />
+
+      <GrupoFamiliarSection
+        afiliadoData={afiliadoData}
+        onSwitchChange={handleChange}
+        onArrayChange={handleGeneralChange}
+        listaTiposDocumento={listaTiposDocumento}
+        listaSituaciones={listaSituaciones}
       />
 
       <Divider sx={{ my: 4 }} />

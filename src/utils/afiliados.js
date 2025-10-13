@@ -18,3 +18,18 @@ export const newDireccion = () => ({
   localidad: '',
   provincia: null,
 });
+
+export const newMiembroGrupoFamiliar = () => ({
+  id: generateId(),
+  parentesco: null,
+  tipoDocumento: null,
+  numeroDocumento: '',
+  fechaNacimiento: null,
+  nombre: '',
+  apellido: '',
+  emails: [],
+  telefonos: [],
+  direcciones: [],
+  tieneSituacionTerapeutica: false,
+  situacionesTerapeuticas: [],
+});
