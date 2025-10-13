@@ -79,6 +79,7 @@ export default function ListadoPrestadoresTable({
                       >
                         {row.nombre}
                       </Link>
+                      <Typography fontSize="0.8rem">{row.cuilCuit}</Typography>
                     </TableCell>
                     <TableCell sx={{ fontSize: '0.9rem' }}>
                       {row.esCentroMedico ? 'Centro médico' : 'Médico'}
@@ -117,10 +118,6 @@ export default function ListadoPrestadoresTable({
                             }}
                           />
                           <Typography fontSize="0.9rem">
-                            {/*{row.centrosDeAtencion[0].calle}{' '}
-                            {row.centrosDeAtencion[0].altura},{' '}
-                            {row.centrosDeAtencion[0].localidad},{' '}
-                            {row.centrosDeAtencion[0].provincia}*/}
                             {row.direccion}
                           </Typography>
                         </Box>

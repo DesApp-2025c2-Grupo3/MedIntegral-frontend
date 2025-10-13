@@ -9,6 +9,10 @@ import {
   agendaTurnosFiltrosMocks,
   searchAgendaTurnosMock,
 } from '../mocks/agendaTurnosListadoMock';
+import {
+  searchPrestadoresListadoMock,
+  prestadoresFiltrosMock,
+} from '../mocks/prestadoresListadoMock';
 
 const api = axios.create({
   baseURL: 'http://localhost:5000/api',
@@ -62,6 +66,49 @@ api.interceptors.request.use((config) => {
           items: itemsFormateados,
         },
       });
+    }
+
+    for (const [url, fn] of Object.entries(prestadoresFiltrosMock)) {
+      if (config.url.startsWith(url) && config.method === 'get') {
+        const search = config.params?.textInputSearch || '';
+        const data = fn(search);
+        return Promise.reject({ isMock: true, data });
+      }
+
+      if (config.url.startsWith('/prestadores') && config.method === 'get') {
+        const filters = config.params || {};
+        const page = Number(filters.page) || 1;
+        const limit = Number(filters.limit) || 10;
+
+        const data = searchPrestadoresListadoMock(filters, page, limit);
+
+        const itemsFormateados = data.items.map((p) => {
+          const lugar = p.centrosDeAtencion[0];
+          const dir = `${lugar.calle} ${lugar.altura || ''}, ${lugar.localidad}, ${lugar.provincia}`;
+
+          const tel = p.telefonos[0].numero;
+          const correo = p.emails[0].direccion;
+
+          return {
+            id: p.id,
+            nombre: p.nombre,
+            cuilCuit: p.cuilCuit,
+            esCentroMedico: p.esCentroMedico,
+            especialidades: p.especialidades,
+            direccion: dir,
+            telefono: tel,
+            email: correo,
+            createdAt: p.createdAt,
+          };
+        });
+        return Promise.reject({
+          isMock: true,
+          data: {
+            ...data,
+            items: itemsFormateados,
+          },
+        });
+      }
     }
 
     if (config.url === '/agenda-turnos' && config.method === 'post') {

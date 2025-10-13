@@ -551,4 +551,87 @@ const prestadores = [
   },
 ];
 
-export default prestadores;
+const unique = (arr) => [...new Set(arr.filter(Boolean))];
+const provincias = unique(
+  prestadores.map((a) => a.centrosDeAtencion[0]?.provincia)
+);
+
+const localidades = unique(
+  prestadores.map((a) => a.centrosDeAtencion[0]?.localidad)
+);
+
+const especialidades = unique(
+  prestadores.flatMap((p) => p.especialidades.map((e) => e.nombre))
+);
+
+export function searchPrestadoresListadoMock(
+  filters = {},
+  page = 1,
+  limit = 10
+) {
+  const text = (filters.textInputSearch || '').toLowerCase();
+
+  const filtered = prestadores.filter((a) => {
+    if (
+      text &&
+      !a.nombre.toLowerCase().includes(text) &&
+      !a.cuilCuit.includes(text) &&
+      !a.especialidades.some((e) => e.nombre.toLowerCase().includes(text))
+    )
+      return false;
+    if (
+      filters.tipoPrestador &&
+      a.esCentroMedico !==
+        (filters.tipoPrestador === 'true' || filters.tipoPrestador === 'true')
+    )
+      return false;
+    if (
+      filters.provincia &&
+      a.centrosDeAtencion[0]?.provincia?.toLowerCase() !==
+        filters.provincia.toLowerCase()
+    )
+      return false;
+    if (
+      filters.localidad &&
+      a.centrosDeAtencion[0]?.localidad?.toLowerCase() !==
+        filters.localidad.toLowerCase()
+    )
+      return false;
+    if (
+      filters.especialidades &&
+      !a.especialidades?.some(
+        (e) =>
+          e.nombre.some.toLowerCase() === filters.especialidades.toLowerCase()
+      )
+    )
+      return false;
+    return true;
+  });
+
+  const total = filtered.length;
+  const start = (page - 1) * limit;
+  const end = start + limit;
+  const items = filtered.slice(start, end);
+
+  return { items, total, page, limit };
+}
+
+const mapOptions = (arr) =>
+  arr.map((nombre) => ({ value: nombre, label: nombre }));
+
+export const prestadoresFiltrosMock = {
+  '/api/prestadores/provincias': (search = '') =>
+    mapOptions(
+      provincias.filter((p) => p.toLowerCase().includes(search.toLowerCase()))
+    ),
+  '/api/prestadores/localidades': (search = '') =>
+    mapOptions(
+      localidades.filter((l) => l.toLowerCase().includes(search.toLowerCase()))
+    ),
+  '/api/prestadores/especialidades': (search = '') =>
+    mapOptions(
+      especialidades.filter((e) =>
+        e.toLowerCase().includes(search.toLowerCase())
+      )
+    ),
+};
