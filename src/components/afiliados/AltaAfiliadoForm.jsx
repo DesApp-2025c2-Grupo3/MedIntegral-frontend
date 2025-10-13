@@ -105,7 +105,13 @@ export default function AltaAfiliadoForm() {
   const handleGeneralChange = handleArrayChange(setAfiliadoData);
 
   const handleGuardar = () => {
-    validateBeforeSave(afiliadoData, async () => {
+    const dataToValidate = {
+      ...afiliadoData,
+      vigenciaInicio: afiliadoData.vigenciaInicio?.toDate?.(),
+      vigenciaFin: afiliadoData.vigenciaFin?.toDate?.(),
+    };
+
+    validateBeforeSave(dataToValidate, async () => {
       try {
         setSaving(true);
         await sleepIfLocal(1500);

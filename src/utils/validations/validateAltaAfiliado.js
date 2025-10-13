@@ -34,6 +34,12 @@ const validateMiembroFamiliar = (miembro, index) => {
       message: 'La fecha de nacimiento es obligatoria.',
     };
 
+  if (new Date(miembro.fechaNacimiento) > new Date())
+    return {
+      field: `${prefijo}fechaNacimiento`,
+      message: 'La fecha de nacimiento no puede ser futura.',
+    };
+
   error = validateNombre(miembro.nombre, `${prefijo}nombre`);
   if (error) return error;
 
@@ -84,6 +90,12 @@ export const validateAltaAfiliado = (data) => {
       message: 'La fecha de nacimiento es obligatoria.',
     };
 
+  if (new Date(data.fechaNacimiento) > new Date())
+    return {
+      field: 'fechaNacimiento',
+      message: 'La fecha de nacimiento no puede ser futura.',
+    };
+
   if (!data.cobertura)
     return {
       field: 'cobertura',
@@ -96,12 +108,22 @@ export const validateAltaAfiliado = (data) => {
       message: 'La fecha de inicio de vigencia es obligatoria.',
     };
 
-  if (data.tieneFechaBaja && !data.vigenciaFin) {
-    return {
-      field: 'vigenciaFin',
-      message:
-        'La fecha de fin de vigencia es obligatoria si se marca la opción.',
-    };
+  if (data.tieneFechaBaja) {
+    if (!data.vigenciaFin) {
+      return {
+        field: 'vigenciaFin',
+        message:
+          'La fecha de fin de vigencia es obligatoria si se marca la opción.',
+      };
+    }
+
+    if (data.vigenciaFin < data.vigenciaInicio) {
+      return {
+        field: 'vigenciaFin',
+        message:
+          'La fecha de fin de vigencia no puede ser anterior a la de inicio.',
+      };
+    }
   }
 
   error = validateTelefonos(data.telefonos);
