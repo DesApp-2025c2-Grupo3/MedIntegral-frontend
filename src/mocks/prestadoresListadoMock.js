@@ -11,8 +11,8 @@ const prestadores = [
     ],
 
     emails: [
-      { id: 1, direccion: 'tita.merello@hospital.com' },
-      { id: 2, direccion: 'consultas@clinicamerello.com' },
+      { id: 1, direccion: 'titamerello@hospital.com' },
+      { id: 2, direccion: 'consultas@clinicamrello.com' },
     ],
 
     telefonos: [
@@ -530,9 +530,18 @@ const prestadores = [
     cuilCuit: '20-10101010-2',
     esCentroMedico: false,
 
-    especialidades: [{ id: 5, nombre: 'Dermatología' }],
+    especialidades: [
+      { id: 5, nombre: 'Dermatología' },
+      { id: 6, nombre: 'Ginecología' },
+      { id: 7, nombre: 'Diabetología' },
+    ],
 
-    emails: [{ id: 21, direccion: 'martin.suarez@dermatologia.com' }],
+    emails: [
+      { id: 21, direccion: 'martin.suarez@dermatologia.com' },
+      { id: 22, direccion: 'mtn.suarez@ginecologia.com' },
+      { id: 23, direccion: 'mtn.suarez@diabetologia.com' },
+      { id: 24, direccion: 'martin.suarez@gmail.com' },
+    ],
 
     telefonos: [{ id: 21, numero: '11 6111-4444' }],
 
@@ -548,6 +557,148 @@ const prestadores = [
 
     agendaTurnos: [],
     createdAt: '18/09/2024',
+  },
+  {
+    id: 21,
+    nombre: 'Marcelo Peñalva',
+    cuilCuit: '20-78965125-2',
+    esCentroMedico: false,
+
+    especialidades: [{ id: 7, nombre: 'Diabetología' }],
+
+    emails: [{ id: 25, direccion: 'marcelo.medico@gmail.com' }],
+
+    telefonos: [
+      { id: 22, numero: '11 4963-4444' },
+      { id: 23, numero: '11 7896-7854' },
+      { id: 24, numero: '11 3200-5410' },
+      { id: 25, numero: '11 1148-2578' },
+    ],
+
+    centrosDeAtencion: [
+      {
+        id: 22,
+        calle: 'Av. Pueyrredón',
+        altura: '3300',
+        localidad: 'Palermo',
+        provincia: 'Buenos Aires',
+      },
+    ],
+
+    agendaTurnos: [],
+    createdAt: '10/03/2023',
+  },
+  {
+    id: 22,
+    nombre: 'Esperanza Rosales',
+    cuilCuit: '20-08962458-2',
+    esCentroMedico: false,
+
+    especialidades: [
+      { id: 7, nombre: 'Diabetología' },
+      { id: 6, nombre: 'Ginecología' },
+    ],
+
+    emails: [{ id: 26, direccion: 'esperanza.rs@gmail.com' }],
+
+    telefonos: [
+      { id: 26, numero: '11 4963-7896' },
+      { id: 27, numero: '11 0032-7854' },
+    ],
+
+    centrosDeAtencion: [
+      {
+        id: 23,
+        calle: 'Av. Pueyrredón',
+        altura: '3300',
+        localidad: 'Palermo',
+        provincia: 'Buenos Aires',
+      },
+      {
+        id: 24,
+        calle: 'Av. Pueyrredón',
+        altura: '3300',
+        localidad: 'Palermo',
+        provincia: 'Buenos Aires',
+      },
+      {
+        id: 25,
+        calle: 'Av. Pueyrredón',
+        altura: '3300',
+        localidad: 'Palermo',
+        provincia: 'Buenos Aires',
+      },
+      {
+        id: 26,
+        calle: 'Av. Pueyrredón',
+        altura: '3300',
+        localidad: 'Palermo',
+        provincia: 'Buenos Aires',
+      },
+    ],
+
+    agendaTurnos: [],
+    createdAt: '10/03/2023',
+  },
+  {
+    id: 23,
+    nombre: 'Luciano Suarez',
+    cuilCuit: '20-23658963-2',
+    esCentroMedico: false,
+
+    especialidades: [
+      { id: 7, nombre: 'Diabetología' },
+      { id: 6, nombre: 'Ginecología' },
+      { id: 3, nombre: 'Pediatría' },
+    ],
+
+    emails: [
+      { id: 26, direccion: 'esperanza.rs@gmail.com' },
+      { id: 27, direccion: 'suarez.dt@gmail.com' },
+      { id: 28, direccion: 'suarez.gn@gmail.com' },
+      { id: 29, direccion: 'suarez.pd@gmail.com' },
+    ],
+
+    telefonos: [
+      { id: 28, numero: '11 4963-7896' },
+      { id: 29, numero: '11 0032-7854' },
+      { id: 30, numero: '11 0032-7854' },
+      { id: 31, numero: '11 0032-7854' },
+    ],
+
+    centrosDeAtencion: [
+      {
+        id: 27,
+        calle: 'Av. Pueyrredón',
+        altura: '3300',
+        localidad: 'Palermo',
+        provincia: 'Buenos Aires',
+      },
+      {
+        id: 28,
+        calle: 'Av. Pueyrredón',
+        altura: '3300',
+        localidad: 'Palermo',
+        provincia: 'Buenos Aires',
+      },
+      {
+        id: 29,
+        calle: 'Av. Pueyrredón',
+        altura: '3300',
+        localidad: 'Palermo',
+        provincia: 'Buenos Aires',
+      },
+      {
+        id: 30,
+        calle: 'Av. Pueyrredón',
+        altura: '3300',
+        localidad: 'Palermo',
+        provincia: 'Buenos Aires',
+      },
+    ],
+
+    agendaTurnos: [],
+    createdAt: '10/03/2023',
   },
 ];
 
@@ -585,23 +736,30 @@ export function searchPrestadoresListadoMock(
         (filters.tipoPrestador === 'true' || filters.tipoPrestador === 'true')
     )
       return false;
-    if (
+    {
+      /*if (
       filters.provincia &&
-      a.centrosDeAtencion[0]?.provincia?.toLowerCase() !==
-        filters.provincia.toLowerCase()
+      !a.direcciones.some((d) =>
+        d.toLowerCase().includes(filters.provincia.toLowerCase())
+      )
     )
       return false;
     if (
       filters.localidad &&
-      a.centrosDeAtencion[0]?.localidad?.toLowerCase() !==
-        filters.localidad.toLowerCase()
+      !(
+        Array.isArray(a.direcciones) &&
+        a.direcciones.some((d) =>
+          d.toLowerCase().includes(filters.localidad.toLowerCase().trim())
+        )
+      )
     )
-      return false;
+      return false;*/
+    }
     if (
-      filters.especialidades &&
+      filters.especialidad &&
       !a.especialidades?.some(
         (e) =>
-          e.nombre.some.toLowerCase() === filters.especialidades.toLowerCase()
+          e.nombre.toLowerCase() === filters.especialidad.toLowerCase().trim()
       )
     )
       return false;

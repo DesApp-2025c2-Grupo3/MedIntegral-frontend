@@ -83,11 +83,14 @@ api.interceptors.request.use((config) => {
         const data = searchPrestadoresListadoMock(filters, page, limit);
 
         const itemsFormateados = data.items.map((p) => {
-          const lugar = p.centrosDeAtencion[0];
-          const dir = `${lugar.calle} ${lugar.altura || ''}, ${lugar.localidad}, ${lugar.provincia}`;
+          const centrosAtencion = p.centrosDeAtencion;
+          const dirCentros = centrosAtencion.map(
+            (c) =>
+              `${c.calle} ${c.altura || ''}, ${c.localidad}, ${c.provincia}`
+          );
 
-          const tel = p.telefonos[0].numero;
-          const correo = p.emails[0].direccion;
+          const numeros = p.telefonos.map((t) => t.numero);
+          const correos = p.emails.map((e) => e.direccion);
 
           return {
             id: p.id,
@@ -95,9 +98,9 @@ api.interceptors.request.use((config) => {
             cuilCuit: p.cuilCuit,
             esCentroMedico: p.esCentroMedico,
             especialidades: p.especialidades,
-            direccion: dir,
-            telefono: tel,
-            email: correo,
+            direcciones: dirCentros,
+            telefonos: numeros,
+            emails: correos,
             createdAt: p.createdAt,
           };
         });

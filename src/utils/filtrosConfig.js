@@ -1,4 +1,5 @@
 import validateFiltrosAgendaTurnos from './validations/validateFiltrosAgendaTurnos.js';
+import validateFiltrosPrestadores from './validations/validateFiltrosPrestadores.js';
 
 export const filtrosConfig = {
   'agenda-de-turnos': {
@@ -34,8 +35,6 @@ export const filtrosConfig = {
 
   prestador: {
     fields: [
-      { name: 'nombre', label: 'Nombre del prestador', type: 'text' },
-      { name: 'cuit', label: 'CUIT/CUIL', type: 'text' },
       {
         name: 'tipoPrestador',
         label: 'Tipo de prestador',
@@ -66,10 +65,10 @@ export const filtrosConfig = {
         options: [],
         asyncSearchUrl: '/api/prestadores/provincias',
       },
-      //{ name: 'creacionDesde', label: 'Creación desde', type: 'date' },
-      //{ name: 'creacionHasta', label: 'Creación hasta', type: 'date' },
+      { name: 'creacionDesde', label: 'Creación desde', type: 'date' },
+      { name: 'creacionHasta', label: 'Creación hasta', type: 'date' },
     ],
-    validateFn: null, // TODO
+    validateFn: validateFiltrosPrestadores,
   },
 
   afiliado: {

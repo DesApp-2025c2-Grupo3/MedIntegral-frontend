@@ -45,7 +45,7 @@ export default function ListadoPrestadoresTable({
               orderBy={orderBy}
               onRequestSort={onRequestSort}
               headCells={[
-                { id: 'prestador', label: 'Nombre del Prestador' },
+                { id: 'prestador', label: 'Prestador' },
                 { id: 'tipoPrestador', label: 'Tipo de prestador' },
                 { id: 'especialidades', label: 'Especialidades' },
                 { id: 'direcciones', label: 'Direcciones' },
