@@ -736,25 +736,25 @@ export function searchPrestadoresListadoMock(
         (filters.tipoPrestador === 'true' || filters.tipoPrestador === 'true')
     )
       return false;
-    {
-      /*if (
+
+    if (
       filters.provincia &&
-      !a.direcciones.some((d) =>
-        d.toLowerCase().includes(filters.provincia.toLowerCase())
+      !a.centrosDeAtencion?.some((d) =>
+        d.provincia.toLowerCase().includes(filters.provincia.toLowerCase())
       )
     )
       return false;
+
     if (
       filters.localidad &&
-      !(
-        Array.isArray(a.direcciones) &&
-        a.direcciones.some((d) =>
-          d.toLowerCase().includes(filters.localidad.toLowerCase().trim())
-        )
+      !a.centrosDeAtencion?.some((d) =>
+        d.localidad
+          .toLowerCase()
+          .includes(filters.localidad.toLowerCase().trim())
       )
     )
-      return false;*/
-    }
+      return false;
+
     if (
       filters.especialidad &&
       !a.especialidades?.some(

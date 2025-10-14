@@ -112,7 +112,9 @@ export default function ListadoPrestadoresTable({
                                 mt: 0.3,
                               }}
                             />
-                            <Typography fontSize="0.9rem">{d}</Typography>
+                            <Typography fontSize="0.9rem">
+                              {`${d.calle} ${d.altura || ''}, ${d.localidad}, ${d.provincia}`}
+                            </Typography>
                           </Box>
                         ))}
                       </Box>
