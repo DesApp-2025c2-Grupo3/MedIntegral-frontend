@@ -1,4 +1,5 @@
 import api from './api';
+import { formatAgendaTurnosListado } from '../utils/formats/agendaTurnosListado';
 
 /**
  * Crear una nueva agenda de turnos
@@ -16,12 +17,12 @@ export const createAgendaTurnos = async ({
   const payload = {
     prestadorId: prestador.id,
     especialidadId: especialidad.id,
-    direccionId: direccion.id,
+    lugaratencionId: direccion.id,
     horarios: horarios.map((h) => ({
-      dias: h.dias,
+      dias: h.dias.map((d) => d.id),
       duracion: h.duracion,
-      inicio: h.inicio?.format?.('HH:mm'),
-      fin: h.fin?.format?.('HH:mm'),
+      horaInicio: h.inicio?.format?.('HH:mm') ?? null,
+      horaFin: h.fin?.format?.('HH:mm') ?? null,
     })),
   };
 
@@ -37,6 +38,34 @@ export const createAgendaTurnos = async ({
     return data;
   } catch (err) {
     console.error('Error al crear la agenda de turnos:', err);
+    throw err;
+  }
+};
+
+/**
+ * Obtener listado de agendas de turnos con filtros y paginación
+ */
+export const getAgendaTurnosListado = async (
+  filters = {},
+  page = 0,
+  limit = 10
+) => {
+  const params = Object.fromEntries(
+    Object.entries({
+      ...filters,
+      page: page + 1,
+      limit,
+    }).map(([key, val]) => [
+      key,
+      typeof val === 'object' ? val?.value || '' : val,
+    ])
+  );
+
+  try {
+    const { data } = await api.get('/agenda-turnos/listado', { params });
+    return formatAgendaTurnosListado(data);
+  } catch (err) {
+    console.error('Error al obtener listado de agendas de turnos:', err);
     throw err;
   }
 };

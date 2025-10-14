@@ -13,8 +13,10 @@ import {
   searchAgendaTurnosMock,
 } from '../mocks/agendaTurnosListadoMock';
 
+const USE_AGENDA_TURNOS_MOCKS = false;
+
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: 'http://localhost:3002/api',
   headers: { 'Content-Type': 'application/json' },
 });
 
@@ -28,46 +30,28 @@ api.interceptors.request.use((config) => {
       }
     }
 
-    if (config.url.startsWith('/agenda-turnos') && config.method === 'get') {
+    if (
+      config.url.startsWith('/agenda-turnos/listado') &&
+      config.method === 'get' &&
+      USE_AGENDA_TURNOS_MOCKS
+    ) {
       const filters = config.params || {};
       const page = Number(filters.page) || 1;
       const limit = Number(filters.limit) || 10;
 
       const data = searchAgendaTurnosMock(filters, page, limit);
 
-      const itemsFormateados = data.items.map((a) => {
-        const dir = a.direccion
-          ? `${a.direccion.calle} ${a.direccion.altura || ''}${
-              a.direccion.pisoDepto ? ', ' + a.direccion.pisoDepto : ''
-            }, ${a.direccion.localidad}, ${a.direccion.provincia}`
-          : '';
-
-        const horarios =
-          a.horarioAtencion?.map(
-            (h) =>
-              `${h.dia.join(', ')} - ${h.horarioInicio}hs a ${h.horarioFin}hs`
-          ) || [];
-
-        return {
-          id: a.id,
-          prestador: a.prestador,
-          especialidad: a.especialidad,
-          horarios,
-          direccion: dir,
-          duracion: `${a.duracion} minutos`,
-        };
-      });
-
       return Promise.reject({
         isMock: true,
-        data: {
-          ...data,
-          items: itemsFormateados,
-        },
+        data: data,
       });
     }
 
-    if (config.url === '/agenda-turnos' && config.method === 'post') {
+    if (
+      config.url === '/agenda-turnos' &&
+      config.method === 'post' &&
+      USE_AGENDA_TURNOS_MOCKS
+    ) {
       return Promise.reject({
         isMock: true,
         data: { id: crypto.randomUUID(), ...config.data },
@@ -121,7 +105,6 @@ api.interceptors.request.use((config) => {
       return Promise.reject({ isMock: true, data: parentescoMock });
     }
   }
-
   return config;
 });
 

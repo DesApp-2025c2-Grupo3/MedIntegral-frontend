@@ -3,9 +3,19 @@ const allAgendas = [
     id: 1,
     prestador: 'Clínica Modelo de Morón',
     especialidad: 'Cardiología',
-    horarioAtencion: [
-      { dia: ['Lunes'], horarioInicio: 10, horarioFin: 20 },
-      { dia: ['Martes'], horarioInicio: 10, horarioFin: 18 },
+    horariosAtencion: [
+      {
+        dias: ['Lunes'],
+        horaInicio: '10:00',
+        horaFin: '20:00',
+        duracion: 25,
+      },
+      {
+        dias: ['Martes'],
+        horaInicio: '10:00',
+        horaFin: '18:00',
+        duracion: 25,
+      },
     ],
     direccion: {
       calle: 'Av. Rivadavia',
@@ -14,13 +24,19 @@ const allAgendas = [
       localidad: 'Morón',
       provincia: 'Buenos Aires',
     },
-    duracion: 25,
   },
   {
     id: 2,
     prestador: 'Clínica Modelo de Morón',
     especialidad: 'Obstetricia',
-    horarioAtencion: [{ dia: ['Miércoles'], horarioInicio: 8, horarioFin: 17 }],
+    horariosAtencion: [
+      {
+        dias: ['Miércoles'],
+        horaInicio: '08:00',
+        horaFin: '17:00',
+        duracion: 30,
+      },
+    ],
     direccion: {
       calle: 'Av. Rivadavia',
       altura: 8900,
@@ -28,16 +44,30 @@ const allAgendas = [
       localidad: 'Morón',
       provincia: 'Buenos Aires',
     },
-    duracion: 30,
   },
   {
     id: 3,
     prestador: 'Clínica Mariano Moreno',
     especialidad: 'Pediatría',
-    horarioAtencion: [
-      { dia: ['Lunes'], horarioInicio: 8, horarioFin: 12 },
-      { dia: ['Martes'], horarioInicio: 8, horarioFin: 12 },
-      { dia: ['Miércoles'], horarioInicio: 10, horarioFin: 14 },
+    horariosAtencion: [
+      {
+        dias: ['Lunes'],
+        horaInicio: '08:00',
+        horaFin: '12:00',
+        duracion: 20,
+      },
+      {
+        dias: ['Martes'],
+        horaInicio: '08:00',
+        horaFin: '12:00',
+        duracion: 20,
+      },
+      {
+        dias: ['Miércoles'],
+        horaInicio: '10:00',
+        horaFin: '14:00',
+        duracion: 20,
+      },
     ],
     direccion: {
       calle: 'Av. San Martín',
@@ -46,15 +76,24 @@ const allAgendas = [
       localidad: 'Moreno',
       provincia: 'Buenos Aires',
     },
-    duracion: 20,
   },
   {
     id: 4,
     prestador: 'Dr. Sigmund Freud',
     especialidad: 'Psiquiatría',
-    horarioAtencion: [
-      { dia: ['Martes'], horarioInicio: 18, horarioFin: 22 },
-      { dia: ['Jueves'], horarioInicio: 14, horarioFin: 20 },
+    horariosAtencion: [
+      {
+        dias: ['Martes'],
+        horaInicio: '18:00',
+        horaFin: '22:00',
+        duracion: 10,
+      },
+      {
+        dias: ['Jueves'],
+        horaInicio: '14:00',
+        horaFin: '20:00',
+        duracion: 10,
+      },
     ],
     direccion: {
       calle: 'Av. Boulogne',
@@ -63,15 +102,24 @@ const allAgendas = [
       localidad: 'Boulogne',
       provincia: 'Buenos Aires',
     },
-    duracion: 10,
   },
   {
     id: 5,
     prestador: 'Hospital Italiano',
     especialidad: 'Dermatología',
-    horarioAtencion: [
-      { dia: ['Lunes'], horarioInicio: 8, horarioFin: 16 },
-      { dia: ['Miércoles'], horarioInicio: 9, horarioFin: 15 },
+    horariosAtencion: [
+      {
+        dias: ['Lunes'],
+        horaInicio: '08:00',
+        horaFin: '16:00',
+        duracion: 20,
+      },
+      {
+        dias: ['Miércoles'],
+        horaInicio: '09:00',
+        horaFin: '15:00',
+        duracion: 20,
+      },
     ],
     direccion: {
       calle: 'Gascón',
@@ -80,15 +128,24 @@ const allAgendas = [
       localidad: 'CABA',
       provincia: 'Buenos Aires',
     },
-    duracion: 20,
   },
   {
     id: 6,
     prestador: 'Sanatorio Las Lomas',
     especialidad: 'Traumatología',
-    horarioAtencion: [
-      { dia: ['Martes'], horarioInicio: 10, horarioFin: 18 },
-      { dia: ['Jueves'], horarioInicio: 8, horarioFin: 16 },
+    horariosAtencion: [
+      {
+        dias: ['Martes'],
+        horaInicio: '10:00',
+        horaFin: '18:00',
+        duracion: 25,
+      },
+      {
+        dias: ['Jueves'],
+        horaInicio: '08:00',
+        horaFin: '16:00',
+        duracion: 25,
+      },
     ],
     direccion: {
       calle: 'Italia',
@@ -97,17 +154,17 @@ const allAgendas = [
       localidad: 'San Isidro',
       provincia: 'Buenos Aires',
     },
-    duracion: 25,
   },
   {
     id: 7,
     prestador: 'Centro Médico Ramos',
     especialidad: 'Clínica Médica',
-    horarioAtencion: [
+    horariosAtencion: [
       {
-        dia: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'],
-        horarioInicio: 8,
-        horarioFin: 14,
+        dias: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'],
+        horaInicio: '08:00',
+        horaFin: '14:00',
+        duracion: 30,
       },
     ],
     direccion: {
@@ -117,14 +174,18 @@ const allAgendas = [
       localidad: 'Ramos Mejía',
       provincia: 'Buenos Aires',
     },
-    duracion: 30,
   },
   {
     id: 8,
     prestador: 'Clínica San Justo',
     especialidad: 'Ginecología',
-    horarioAtencion: [
-      { dia: ['Lunes', 'Miércoles'], horarioInicio: 9, horarioFin: 17 },
+    horariosAtencion: [
+      {
+        dias: ['Lunes', 'Miércoles'],
+        horaInicio: '09:00',
+        horaFin: '17:00',
+        duracion: 20,
+      },
     ],
     direccion: {
       calle: 'Av. Illia',
@@ -133,15 +194,24 @@ const allAgendas = [
       localidad: 'San Justo',
       provincia: 'Buenos Aires',
     },
-    duracion: 20,
   },
   {
     id: 9,
     prestador: 'Hospital Austral',
     especialidad: 'Neurología',
-    horarioAtencion: [
-      { dia: ['Lunes'], horarioInicio: 12, horarioFin: 18 },
-      { dia: ['Viernes'], horarioInicio: 13, horarioFin: 20 },
+    horariosAtencion: [
+      {
+        dias: ['Lunes'],
+        horaInicio: '12:00',
+        horaFin: '18:00',
+        duracion: 25,
+      },
+      {
+        dias: ['Viernes'],
+        horaInicio: '13:00',
+        horaFin: '20:00',
+        duracion: 25,
+      },
     ],
     direccion: {
       calle: 'Av. Juan Domingo Perón',
@@ -150,13 +220,19 @@ const allAgendas = [
       localidad: 'Pilar',
       provincia: 'Buenos Aires',
     },
-    duracion: 25,
   },
   {
     id: 10,
     prestador: 'Clínica del Sol',
     especialidad: 'Oftalmología',
-    horarioAtencion: [{ dia: ['Miércoles'], horarioInicio: 9, horarioFin: 17 }],
+    horariosAtencion: [
+      {
+        dias: ['Miércoles'],
+        horaInicio: '09:00',
+        horaFin: '17:00',
+        duracion: 15,
+      },
+    ],
     direccion: {
       calle: 'Av. Santa Fe',
       altura: 4800,
@@ -164,15 +240,24 @@ const allAgendas = [
       localidad: 'Palermo',
       provincia: 'CABA',
     },
-    duracion: 15,
   },
   {
     id: 11,
     prestador: 'Hospital Posadas',
     especialidad: 'Neumonología',
-    horarioAtencion: [
-      { dia: ['Lunes'], horarioInicio: 8, horarioFin: 12 },
-      { dia: ['Miércoles'], horarioInicio: 10, horarioFin: 14 },
+    horariosAtencion: [
+      {
+        dias: ['Lunes'],
+        horaInicio: '08:00',
+        horaFin: '12:00',
+        duracion: 25,
+      },
+      {
+        dias: ['Miércoles'],
+        horaInicio: '10:00',
+        horaFin: '14:00',
+        duracion: 25,
+      },
     ],
     direccion: {
       calle: 'Av. Illia y Marconi',
@@ -181,15 +266,24 @@ const allAgendas = [
       localidad: 'El Palomar',
       provincia: 'Buenos Aires',
     },
-    duracion: 25,
   },
   {
     id: 12,
     prestador: 'Dr. Carlos Diol',
     especialidad: 'Otorrinolaringología',
-    horarioAtencion: [
-      { dia: ['Martes'], horarioInicio: 14, horarioFin: 20 },
-      { dia: ['Viernes'], horarioInicio: 8, horarioFin: 13 },
+    horariosAtencion: [
+      {
+        dias: ['Martes'],
+        horaInicio: '14:00',
+        horaFin: '20:00',
+        duracion: 20,
+      },
+      {
+        dias: ['Viernes'],
+        horaInicio: '08:00',
+        horaFin: '13:00',
+        duracion: 20,
+      },
     ],
     direccion: {
       calle: 'Av. Rivadavia',
@@ -198,14 +292,18 @@ const allAgendas = [
       localidad: 'Liniers',
       provincia: 'CABA',
     },
-    duracion: 20,
   },
   {
     id: 13,
     prestador: 'Clínica San Fernando',
     especialidad: 'Urología',
-    horarioAtencion: [
-      { dia: ['Martes', 'Jueves'], horarioInicio: 9, horarioFin: 17 },
+    horariosAtencion: [
+      {
+        dias: ['Martes', 'Jueves'],
+        horaInicio: '09:00',
+        horaFin: '17:00',
+        duracion: 30,
+      },
     ],
     direccion: {
       calle: 'Constitución',
@@ -214,15 +312,24 @@ const allAgendas = [
       localidad: 'San Fernando',
       provincia: 'Buenos Aires',
     },
-    duracion: 30,
   },
   {
     id: 14,
     prestador: 'Sanatorio Anchorena',
     especialidad: 'Cardiología',
-    horarioAtencion: [
-      { dia: ['Lunes'], horarioInicio: 10, horarioFin: 18 },
-      { dia: ['Viernes'], horarioInicio: 9, horarioFin: 15 },
+    horariosAtencion: [
+      {
+        dias: ['Lunes'],
+        horaInicio: '10:00',
+        horaFin: '18:00',
+        duracion: 25,
+      },
+      {
+        dias: ['Viernes'],
+        horaInicio: '09:00',
+        horaFin: '15:00',
+        duracion: 25,
+      },
     ],
     direccion: {
       calle: 'Pueyrredón',
@@ -231,15 +338,24 @@ const allAgendas = [
       localidad: 'CABA',
       provincia: 'Buenos Aires',
     },
-    duracion: 25,
   },
   {
     id: 15,
     prestador: 'Dra. Lucía Pérez',
     especialidad: 'Endocrinología',
-    horarioAtencion: [
-      { dia: ['Lunes'], horarioInicio: 9, horarioFin: 13 },
-      { dia: ['Jueves'], horarioInicio: 10, horarioFin: 18 },
+    horariosAtencion: [
+      {
+        dias: ['Lunes'],
+        horaInicio: '09:00',
+        horaFin: '13:00',
+        duracion: 20,
+      },
+      {
+        dias: ['Jueves'],
+        horaInicio: '10:00',
+        horaFin: '18:00',
+        duracion: 20,
+      },
     ],
     direccion: {
       calle: 'Av. Libertador',
@@ -248,15 +364,24 @@ const allAgendas = [
       localidad: 'Belgrano',
       provincia: 'CABA',
     },
-    duracion: 20,
   },
   {
     id: 16,
     prestador: 'Centro Médico Norte',
     especialidad: 'Reumatología',
-    horarioAtencion: [
-      { dia: ['Martes'], horarioInicio: 8, horarioFin: 12 },
-      { dia: ['Viernes'], horarioInicio: 12, horarioFin: 16 },
+    horariosAtencion: [
+      {
+        dias: ['Martes'],
+        horaInicio: '08:00',
+        horaFin: '12:00',
+        duracion: 30,
+      },
+      {
+        dias: ['Viernes'],
+        horaInicio: '12:00',
+        horaFin: '16:00',
+        duracion: 30,
+      },
     ],
     direccion: {
       calle: 'Av. Roca',
@@ -265,17 +390,17 @@ const allAgendas = [
       localidad: 'Munro',
       provincia: 'Buenos Aires',
     },
-    duracion: 30,
   },
   {
     id: 17,
     prestador: 'Dr. Pablo González',
     especialidad: 'Kinesiología',
-    horarioAtencion: [
+    horariosAtencion: [
       {
-        dia: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'],
-        horarioInicio: 9,
-        horarioFin: 18,
+        dias: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'],
+        horaInicio: '09:00',
+        horaFin: '18:00',
+        duracion: 45,
       },
     ],
     direccion: {
@@ -285,15 +410,24 @@ const allAgendas = [
       localidad: 'Wilde',
       provincia: 'Buenos Aires',
     },
-    duracion: 45,
   },
   {
     id: 18,
     prestador: 'Clínica Santa Isabel',
     especialidad: 'Pediatría',
-    horarioAtencion: [
-      { dia: ['Lunes'], horarioInicio: 8, horarioFin: 14 },
-      { dia: ['Miércoles'], horarioInicio: 10, horarioFin: 18 },
+    horariosAtencion: [
+      {
+        dias: ['Lunes'],
+        horaInicio: '08:00',
+        horaFin: '14:00',
+        duracion: 20,
+      },
+      {
+        dias: ['Miércoles'],
+        horaInicio: '10:00',
+        horaFin: '18:00',
+        duracion: 20,
+      },
     ],
     direccion: {
       calle: 'Av. Directorio',
@@ -302,13 +436,19 @@ const allAgendas = [
       localidad: 'CABA',
       provincia: 'Buenos Aires',
     },
-    duracion: 20,
   },
   {
     id: 19,
     prestador: 'Hospital Español',
     especialidad: 'Dermatología',
-    horarioAtencion: [{ dia: ['Martes'], horarioInicio: 10, horarioFin: 18 }],
+    horariosAtencion: [
+      {
+        dias: ['Martes'],
+        horaInicio: '10:00',
+        horaFin: '18:00',
+        duracion: 25,
+      },
+    ],
     direccion: {
       calle: 'Av. Belgrano',
       altura: 2975,
@@ -316,14 +456,18 @@ const allAgendas = [
       localidad: 'CABA',
       provincia: 'Buenos Aires',
     },
-    duracion: 25,
   },
   {
     id: 20,
     prestador: 'Clínica Olivos',
     especialidad: 'Gastroenterología',
-    horarioAtencion: [
-      { dia: ['Lunes', 'Miércoles'], horarioInicio: 8, horarioFin: 15 },
+    horariosAtencion: [
+      {
+        dias: ['Lunes', 'Miércoles'],
+        horaInicio: '08:00',
+        horaFin: '15:00',
+        duracion: 30,
+      },
     ],
     direccion: {
       calle: 'Corrientes',
@@ -332,18 +476,18 @@ const allAgendas = [
       localidad: 'Olivos',
       provincia: 'Buenos Aires',
     },
-    duracion: 30,
   },
 ];
 
 const unique = (arr) => [...new Set(arr.filter(Boolean))];
 
 const dias = unique(
-  allAgendas.flatMap((a) => a.horarioAtencion?.flatMap((h) => h.dia) || [])
+  allAgendas.flatMap((a) => a.horariosAtencion?.flatMap((h) => h.dia) || [])
 );
 
 const provincias = unique(allAgendas.map((a) => a.direccion?.provincia));
 const localidades = unique(allAgendas.map((a) => a.direccion?.localidad));
+
 export function searchAgendaTurnosMock(filters = {}, page = 1, limit = 10) {
   const text = (filters.textInputSearch || '').toLowerCase();
 
@@ -366,7 +510,7 @@ export function searchAgendaTurnosMock(filters = {}, page = 1, limit = 10) {
       return false;
     if (
       filters.dia &&
-      !a.horarioAtencion?.some((h) =>
+      !a.horariosAtencion?.some((h) =>
         h.dia.some((d) => d.toLowerCase() === filters.dia.toLowerCase())
       )
     )
