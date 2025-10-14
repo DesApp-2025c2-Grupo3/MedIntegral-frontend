@@ -17,7 +17,7 @@ export const createAgendaTurnos = async ({
   const payload = {
     prestadorId: prestador.id,
     especialidadId: especialidad.id,
-    direccionId: direccion.id,
+    lugaratencionId: direccion.id,
     horarios: horarios.map((h) => ({
       dias: h.dias.map((d) => d.id),
       duracion: h.duracion,

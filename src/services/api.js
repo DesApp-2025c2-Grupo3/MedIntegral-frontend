@@ -10,6 +10,8 @@ import {
   searchAgendaTurnosMock,
 } from '../mocks/agendaTurnosListadoMock';
 
+const USE_AGENDA_TURNOS_MOCKS = false;
+
 const api = axios.create({
   baseURL: 'http://localhost:3002/api',
   headers: { 'Content-Type': 'application/json' },
@@ -27,7 +29,8 @@ api.interceptors.request.use((config) => {
 
     if (
       config.url.startsWith('/agenda-turnos/listado') &&
-      config.method === 'get'
+      config.method === 'get' &&
+      USE_AGENDA_TURNOS_MOCKS
     ) {
       const filters = config.params || {};
       const page = Number(filters.page) || 1;
@@ -41,7 +44,11 @@ api.interceptors.request.use((config) => {
       });
     }
 
-    if (config.url === '/agenda-turnos' && config.method === 'post') {
+    if (
+      config.url === '/agenda-turnos' &&
+      config.method === 'post' &&
+      USE_AGENDA_TURNOS_MOCKS
+    ) {
       return Promise.reject({
         isMock: true,
         data: { id: crypto.randomUUID(), ...config.data },

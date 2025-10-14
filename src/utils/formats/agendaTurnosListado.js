@@ -1,10 +1,10 @@
 export const formatAgendaTurnosListado = (data) => {
   try {
-    if (!data || !Array.isArray(data.items)) {
+    if (!data || !Array.isArray(data)) {
       throw new Error('La respuesta no tiene el formato esperado');
     }
 
-    const itemsFormateados = data.items.map((a) => {
+    const itemsFormateados = data.map((a) => {
       const dir = a.direccion
         ? `${a.direccion.calle || ''} ${a.direccion.altura || ''}${
             a.direccion.pisoDepto ? ', ' + a.direccion.pisoDepto : ''
@@ -17,7 +17,7 @@ export const formatAgendaTurnosListado = (data) => {
             h.dias?.map((d) => (typeof d === 'string' ? d : d?.nombre || '')) ||
             [];
 
-          return `${dias.join(', ')} - ${h.horarioInicio || '?'}hs a ${h.horarioFin || '?'}hs`;
+          return `${dias.join(', ')} - ${h.horaInicio || '?'}hs a ${h.horaFin || '?'}hs (${h.duracion} minutos)`;
         }) || [];
 
       return {
@@ -32,7 +32,7 @@ export const formatAgendaTurnosListado = (data) => {
             : (a.especialidad ?? ''),
         horarios,
         direccion: dir,
-        duracion: a.duracion ? `${a.duracion} minutos` : '',
+        url: a.id ? `/agenda-turnos/${a.id}` : null,
       };
     });
 

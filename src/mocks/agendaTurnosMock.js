@@ -2,7 +2,7 @@ export const agendaTurnosMock = {
   id: 'mock-agenda-1234',
   prestadorId: 1,
   especialidadId: 2,
-  direccionId: 2,
+  lugaratencionId: 2,
   horarios: [
     {
       id: 'mock-horario-1',

@@ -39,9 +39,8 @@ export default function AgendasTable({
               headCells={[
                 { id: 'prestador', label: 'Nombre del prestador' },
                 { id: 'especialidad', label: 'Especialidad' },
-                { id: 'horarios', label: 'Horarios' },
+                { id: 'horarios', label: 'Horarios - Duración' },
                 { id: 'direccion', label: 'Dirección' },
-                { id: 'duracion', label: 'Duración de turnos' },
               ]}
             />
             <TableBody>
@@ -66,7 +65,7 @@ export default function AgendasTable({
                   <TableRow hover key={row.id}>
                     <TableCell sx={{ fontSize: '0.9rem' }}>
                       <Link
-                        href="#"
+                        href={row.url}
                         underline="always"
                         color="text.primary"
                         sx={{ fontSize: '0.9rem', fontWeight: 500 }}
@@ -110,9 +109,6 @@ export default function AgendasTable({
                           {row.direccion}
                         </Typography>
                       </Box>
-                    </TableCell>
-                    <TableCell sx={{ fontSize: '0.9rem' }}>
-                      {row.duracion}
                     </TableCell>
                   </TableRow>
                 ))
