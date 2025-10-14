@@ -609,29 +609,29 @@ const prestadores = [
     centrosDeAtencion: [
       {
         id: 23,
-        calle: 'Av. Pueyrredón',
+        calle: 'Av. Santa Fe',
         altura: '3300',
         localidad: 'Palermo',
         provincia: 'Buenos Aires',
       },
       {
         id: 24,
-        calle: 'Av. Pueyrredón',
+        calle: 'Av. General Paz',
         altura: '3300',
-        localidad: 'Palermo',
+        localidad: 'San Martin',
         provincia: 'Buenos Aires',
       },
       {
         id: 25,
-        calle: 'Av. Pueyrredón',
+        calle: 'Helguera',
         altura: '3300',
-        localidad: 'Palermo',
+        localidad: 'Flores',
         provincia: 'Buenos Aires',
       },
       {
         id: 26,
         calle: 'Av. Pueyrredón',
-        altura: '3300',
+        altura: '5100',
         localidad: 'Palermo',
         provincia: 'Buenos Aires',
       },
@@ -669,16 +669,16 @@ const prestadores = [
     centrosDeAtencion: [
       {
         id: 27,
-        calle: 'Av. Pueyrredón',
-        altura: '3300',
-        localidad: 'Palermo',
+        calle: 'Av. Camargo',
+        altura: '210',
+        localidad: 'Hurlingham',
         provincia: 'Buenos Aires',
       },
       {
         id: 28,
-        calle: 'Av. Pueyrredón',
+        calle: 'La Patria',
         altura: '3300',
-        localidad: 'Palermo',
+        localidad: 'Hurlingham',
         provincia: 'Buenos Aires',
       },
       {
@@ -690,15 +690,99 @@ const prestadores = [
       },
       {
         id: 30,
-        calle: 'Av. Pueyrredón',
-        altura: '3300',
-        localidad: 'Palermo',
+        calle: 'Aranguren',
+        altura: '512',
+        localidad: 'Flores',
         provincia: 'Buenos Aires',
       },
     ],
 
     agendaTurnos: [],
     createdAt: '10/03/2023',
+  },
+  {
+    id: 24,
+    nombre: 'Onofre Paz',
+    cuilCuit: '22-08963214-2',
+    esCentroMedico: false,
+
+    especialidades: [
+      { id: 7, nombre: 'Diabetología' },
+      { id: 6, nombre: 'Ginecología' },
+      { id: 3, nombre: 'Pediatría' },
+    ],
+
+    emails: [
+      { id: 30, direccion: 'pazonofre@gmail.com' },
+      { id: 31, direccion: 'clinicapaz@gmail.com' },
+    ],
+
+    telefonos: [
+      { id: 32, numero: '4456-8987' },
+      { id: 33, numero: '11 2031-6594' },
+    ],
+
+    centrosDeAtencion: [
+      {
+        id: 31,
+        calle: 'Los Menhires',
+        altura: '510',
+        localidad: 'Los Juries',
+        provincia: 'Santiago del Estero',
+      },
+      {
+        id: 32,
+        calle: 'Calle principal',
+        altura: '3300',
+        localidad: 'Colonia Dora',
+        provincia: 'Santiago del Estero',
+      },
+    ],
+
+    agendaTurnos: [],
+    createdAt: '15/06/2024',
+  },
+  {
+    id: 25,
+    nombre: 'Oscar Esperanza',
+    cuilCuit: '25-06125478-2',
+    esCentroMedico: false,
+
+    especialidades: [
+      { id: 1, nombre: 'Cardiología' },
+      { id: 8, nombre: 'Oncología' },
+      { id: 5, nombre: 'Dermatología' },
+    ],
+
+    emails: [
+      { id: 32, direccion: 'esperanzaoscar@gmail.com' },
+      { id: 33, direccion: 'clinicaesperanza@gmail.com' },
+    ],
+
+    telefonos: [
+      { id: 34, numero: '4486-7896' },
+      { id: 35, numero: '11 3032-6478' },
+    ],
+
+    centrosDeAtencion: [
+      {
+        id: 32,
+        calle: 'La Patria',
+        altura: '789',
+        localidad: 'Los Tapiales',
+        provincia: 'Neuquen',
+      },
+      {
+        id: 33,
+        calle: 'Calle Gobernador',
+        altura: '1120',
+        localidad: 'Ojo de Agua',
+        provincia: 'Neuquen',
+      },
+    ],
+
+    agendaTurnos: [],
+    createdAt: '02/11/2024',
   },
 ];
 
