@@ -1,4 +1,4 @@
-export const afiliadosListadoMock = [
+const afiliados = [
   {
     id: 1,
     nombre: 'Emiliano',
@@ -9,7 +9,7 @@ export const afiliadosListadoMock = [
     cobertura: { id: 2, plan: '310' },
     vigenciaInicio: '01/08/2023',
     emails: [{ id: 1, direccion: 'emilopez@email.com' }],
-    telefonos: [{ id: 1, numero: '+54 9 11 1234-5678' }],
+    telefonos: [{ id: 1, numero: '11 1234-5678' }],
     direcciones: [
       {
         id: 1,
@@ -18,7 +18,7 @@ export const afiliadosListadoMock = [
         pisoDepto: '10A',
         codigoPostal: '1426',
         localidad: 'Palermo',
-        provincia: { id: 1, nombre: 'CABA' },
+        provincia: { id: 1, nombre: 'Buenos Aires' },
       },
     ],
   },
@@ -29,10 +29,10 @@ export const afiliadosListadoMock = [
     tipoDocumento: { id: 1, tipo: 'DNI' },
     numeroDocumento: '32569874',
     nroAfiliado: '0000002-01',
-    cobertura: { id: 3, plan: '220' },
+    cobertura: { id: 2, plan: '310' },
     vigenciaInicio: '15/09/2022',
     emails: [{ id: 2, direccion: 'lucia.perez@email.com' }],
-    telefonos: [{ id: 2, numero: '+54 9 11 9988-7766' }],
+    telefonos: [{ id: 2, numero: '11 9988-7766' }],
     direcciones: [
       {
         id: 2,
@@ -41,7 +41,7 @@ export const afiliadosListadoMock = [
         pisoDepto: '3B',
         codigoPostal: '1425',
         localidad: 'Recoleta',
-        provincia: { id: 1, nombre: 'CABA' },
+        provincia: { id: 1, nombre: 'Buenos Aires' },
       },
     ],
   },
@@ -49,18 +49,18 @@ export const afiliadosListadoMock = [
     id: 3,
     nombre: 'Martín',
     apellido: 'González',
-    tipoDocumento: { id: 1, tipo: 'DNI' },
+    tipoDocumento: { id: 2, tipo: 'PAS' },
     numeroDocumento: '28956321',
     nroAfiliado: '0000003-01',
-    cobertura: { id: 4, plan: '410' },
+    cobertura: { id: 4, plan: '510' },
     vigenciaInicio: '10/03/2024',
     emails: [
       { id: 3, direccion: 'martin.gonzalez@email.com' },
       { id: 4, direccion: 'mgonzalez@workmail.com' },
     ],
     telefonos: [
-      { id: 3, numero: '+54 9 11 3344-2211' },
-      { id: 4, numero: '+54 9 11 8877-6655' },
+      { id: 3, numero: '11 3344-2211' },
+      { id: 4, numero: '11 8877-6655' },
     ],
     direcciones: [
       {
@@ -70,7 +70,7 @@ export const afiliadosListadoMock = [
         pisoDepto: '7C',
         codigoPostal: '1426',
         localidad: 'Palermo',
-        provincia: { id: 1, nombre: 'CABA' },
+        provincia: { id: 1, nombre: 'Buenos Aires' },
       },
       {
         id: 4,
@@ -78,7 +78,7 @@ export const afiliadosListadoMock = [
         altura: '4500',
         codigoPostal: '1416',
         localidad: 'Villa Devoto',
-        provincia: { id: 1, nombre: 'CABA' },
+        provincia: { id: 1, nombre: 'Buenos Aires' },
       },
     ],
   },
@@ -89,10 +89,10 @@ export const afiliadosListadoMock = [
     tipoDocumento: { id: 1, tipo: 'DNI' },
     numeroDocumento: '41236598',
     nroAfiliado: '0000004-01',
-    cobertura: { id: 5, plan: '150' },
+    cobertura: { id: 1, plan: '210' },
     vigenciaInicio: '05/01/2023',
     emails: [{ id: 5, direccion: 'sofia.ramirez@email.com' }],
-    telefonos: [{ id: 5, numero: '+54 9 11 6677-8899' }],
+    telefonos: [{ id: 5, numero: '11 6677-8899' }],
     direcciones: [
       {
         id: 5,
@@ -100,7 +100,7 @@ export const afiliadosListadoMock = [
         altura: '9500',
         codigoPostal: '1408',
         localidad: 'Flores',
-        provincia: { id: 1, nombre: 'CABA' },
+        provincia: { id: 1, nombre: 'Buenos Aires' },
       },
     ],
   },
@@ -111,13 +111,13 @@ export const afiliadosListadoMock = [
     tipoDocumento: { id: 1, tipo: 'DNI' },
     numeroDocumento: '30548765',
     nroAfiliado: '0000005-01',
-    cobertura: { id: 2, plan: '310' },
+    cobertura: { id: 3, plan: '410' },
     vigenciaInicio: '20/02/2022',
     emails: [
       { id: 6, direccion: 'fede.sanchez@email.com' },
       { id: 7, direccion: 'fsanchez@empresa.com' },
     ],
-    telefonos: [{ id: 6, numero: '+54 9 11 4455-3311' }],
+    telefonos: [{ id: 6, numero: '11 4455-3311' }],
     direcciones: [
       {
         id: 6,
@@ -126,7 +126,7 @@ export const afiliadosListadoMock = [
         pisoDepto: '4A',
         codigoPostal: '1090',
         localidad: 'Monserrat',
-        provincia: { id: 1, nombre: 'CABA' },
+        provincia: { id: 1, nombre: 'Buenos Aires' },
       },
     ],
   },
@@ -137,12 +137,12 @@ export const afiliadosListadoMock = [
     tipoDocumento: { id: 1, tipo: 'DNI' },
     numeroDocumento: '37569852',
     nroAfiliado: '0000006-01',
-    cobertura: { id: 6, plan: '500' },
+    cobertura: { id: 4, plan: '510' },
     vigenciaInicio: '12/11/2021',
     emails: [{ id: 8, direccion: 'valentina.torres@email.com' }],
     telefonos: [
-      { id: 7, numero: '+54 9 11 6677-5522' },
-      { id: 8, numero: '+54 9 11 1111-2222' },
+      { id: 7, numero: '11 6677-5522' },
+      { id: 8, numero: '11 1111-2222' },
     ],
     direcciones: [
       {
@@ -151,7 +151,7 @@ export const afiliadosListadoMock = [
         altura: '1800',
         codigoPostal: '1024',
         localidad: 'Recoleta',
-        provincia: { id: 1, nombre: 'CABA' },
+        provincia: { id: 1, nombre: 'Buenos Aires' },
       },
     ],
   },
@@ -159,13 +159,13 @@ export const afiliadosListadoMock = [
     id: 7,
     nombre: 'Diego',
     apellido: 'Martínez',
-    tipoDocumento: { id: 1, tipo: 'DNI' },
+    tipoDocumento: { id: 2, tipo: 'PAS' },
     numeroDocumento: '29984562',
     nroAfiliado: '0000007-01',
-    cobertura: { id: 3, plan: '220' },
+    cobertura: { id: 3, plan: '410' },
     vigenciaInicio: '01/05/2020',
     emails: [{ id: 9, direccion: 'diego.martinez@email.com' }],
-    telefonos: [{ id: 9, numero: '+54 9 11 7777-8888' }],
+    telefonos: [{ id: 9, numero: '11 7777-8888' }],
     direcciones: [
       {
         id: 8,
@@ -173,7 +173,7 @@ export const afiliadosListadoMock = [
         altura: '4300',
         codigoPostal: '1416',
         localidad: 'Villa Crespo',
-        provincia: { id: 1, nombre: 'CABA' },
+        provincia: { id: 1, nombre: 'Buenos Aires' },
       },
     ],
   },
@@ -187,7 +187,7 @@ export const afiliadosListadoMock = [
     cobertura: { id: 2, plan: '310' },
     vigenciaInicio: '09/07/2019',
     emails: [{ id: 10, direccion: 'caro.fernandez@email.com' }],
-    telefonos: [{ id: 10, numero: '+54 9 11 9999-1234' }],
+    telefonos: [{ id: 10, numero: '11 9999-1234' }],
     direcciones: [
       {
         id: 9,
@@ -195,7 +195,7 @@ export const afiliadosListadoMock = [
         altura: '2900',
         codigoPostal: '1428',
         localidad: 'Belgrano',
-        provincia: { id: 1, nombre: 'CABA' },
+        provincia: { id: 1, nombre: 'Buenos Aires' },
       },
     ],
   },
@@ -206,13 +206,13 @@ export const afiliadosListadoMock = [
     tipoDocumento: { id: 1, tipo: 'DNI' },
     numeroDocumento: '20365498',
     nroAfiliado: '0000009-01',
-    cobertura: { id: 4, plan: '410' },
+    cobertura: { id: 4, plan: '510' },
     vigenciaInicio: '22/03/2022',
     emails: [
       { id: 11, direccion: 'juan.alvarez@email.com' },
       { id: 12, direccion: 'jalvarez@empresa.com' },
     ],
-    telefonos: [{ id: 11, numero: '+54 9 11 3333-5555' }],
+    telefonos: [{ id: 11, numero: '11 3333-5555' }],
     direcciones: [
       {
         id: 10,
@@ -220,7 +220,7 @@ export const afiliadosListadoMock = [
         altura: '4600',
         codigoPostal: '1414',
         localidad: 'Almagro',
-        provincia: { id: 1, nombre: 'CABA' },
+        provincia: { id: 1, nombre: 'Buenos Aires' },
       },
     ],
   },
@@ -228,13 +228,13 @@ export const afiliadosListadoMock = [
     id: 10,
     nombre: 'Laura',
     apellido: 'Giménez',
-    tipoDocumento: { id: 1, tipo: 'DNI' },
+    tipoDocumento: { id: 3, tipo: 'LC' },
     numeroDocumento: '31547895',
     nroAfiliado: '0000010-01',
-    cobertura: { id: 5, plan: '150' },
+    cobertura: { id: 1, plan: '210' },
     vigenciaInicio: '11/12/2023',
     emails: [{ id: 13, direccion: 'laura.gimenez@email.com' }],
-    telefonos: [{ id: 12, numero: '+54 9 11 2222-9999' }],
+    telefonos: [{ id: 12, numero: '11 2222-9999' }],
     direcciones: [
       {
         id: 11,
@@ -242,7 +242,7 @@ export const afiliadosListadoMock = [
         altura: '3700',
         codigoPostal: '1407',
         localidad: 'Flores',
-        provincia: { id: 1, nombre: 'CABA' },
+        provincia: { id: 1, nombre: 'Buenos Aires' },
       },
     ],
   },
@@ -253,12 +253,12 @@ export const afiliadosListadoMock = [
     tipoDocumento: { id: 1, tipo: 'DNI' },
     numeroDocumento: '28954736',
     nroAfiliado: '0000011-01',
-    cobertura: { id: 6, plan: '500' },
+    cobertura: { id: 4, plan: '510' },
     vigenciaInicio: '10/04/2021',
     emails: [{ id: 14, direccion: 'nicolas.ruiz@email.com' }],
     telefonos: [
-      { id: 13, numero: '+54 9 11 5555-6666' },
-      { id: 14, numero: '+54 9 11 7777-3333' },
+      { id: 13, numero: '11 5555-6666' },
+      { id: 14, numero: '11 7777-3333' },
     ],
     direcciones: [
       {
@@ -268,7 +268,7 @@ export const afiliadosListadoMock = [
         pisoDepto: '5B',
         codigoPostal: '1425',
         localidad: 'Recoleta',
-        provincia: { id: 1, nombre: 'CABA' },
+        provincia: { id: 1, nombre: 'Buenos Aires' },
       },
     ],
   },
@@ -279,13 +279,13 @@ export const afiliadosListadoMock = [
     tipoDocumento: { id: 1, tipo: 'DNI' },
     numeroDocumento: '33456982',
     nroAfiliado: '0000012-01',
-    cobertura: { id: 3, plan: '220' },
+    cobertura: { id: 1, plan: '210' },
     vigenciaInicio: '04/06/2020',
     emails: [
       { id: 15, direccion: 'julieta.caceres@email.com' },
       { id: 16, direccion: 'jcaceres@corp.com' },
     ],
-    telefonos: [{ id: 15, numero: '+54 9 11 1111-4444' }],
+    telefonos: [{ id: 15, numero: '11 1111-4444' }],
     direcciones: [
       {
         id: 13,
@@ -293,7 +293,7 @@ export const afiliadosListadoMock = [
         altura: '800',
         codigoPostal: '1179',
         localidad: 'Almagro',
-        provincia: { id: 1, nombre: 'CABA' },
+        provincia: { id: 1, nombre: 'Buenos Aires' },
       },
     ],
   },
@@ -304,10 +304,10 @@ export const afiliadosListadoMock = [
     tipoDocumento: { id: 1, tipo: 'DNI' },
     numeroDocumento: '30214567',
     nroAfiliado: '0000013-01',
-    cobertura: { id: 4, plan: '410' },
+    cobertura: { id: 4, plan: '510' },
     vigenciaInicio: '23/09/2023',
     emails: [{ id: 17, direccion: 'camila.dominguez@email.com' }],
-    telefonos: [{ id: 16, numero: '+54 9 11 9876-5432' }],
+    telefonos: [{ id: 16, numero: '11 9876-5432' }],
     direcciones: [
       {
         id: 14,
@@ -316,7 +316,7 @@ export const afiliadosListadoMock = [
         pisoDepto: '2C',
         codigoPostal: '1061',
         localidad: 'Retiro',
-        provincia: { id: 1, nombre: 'CABA' },
+        provincia: { id: 1, nombre: 'Buenos Aires' },
       },
     ],
   },
@@ -327,10 +327,10 @@ export const afiliadosListadoMock = [
     tipoDocumento: { id: 1, tipo: 'DNI' },
     numeroDocumento: '27659874',
     nroAfiliado: '0000014-01',
-    cobertura: { id: 5, plan: '150' },
+    cobertura: { id: 1, plan: '210' },
     vigenciaInicio: '02/02/2022',
     emails: [{ id: 18, direccion: 'gonzalo.moreno@email.com' }],
-    telefonos: [{ id: 17, numero: '+54 9 11 8765-4321' }],
+    telefonos: [{ id: 17, numero: '11 8765-4321' }],
     direcciones: [
       {
         id: 15,
@@ -338,7 +338,7 @@ export const afiliadosListadoMock = [
         altura: '2600',
         codigoPostal: '1428',
         localidad: 'Belgrano',
-        provincia: { id: 1, nombre: 'CABA' },
+        provincia: { id: 1, nombre: 'Buenos Aires' },
       },
     ],
   },
@@ -349,15 +349,15 @@ export const afiliadosListadoMock = [
     tipoDocumento: { id: 1, tipo: 'DNI' },
     numeroDocumento: '31598742',
     nroAfiliado: '0000015-01',
-    cobertura: { id: 6, plan: '500' },
+    cobertura: { id: 3, plan: '410' },
     vigenciaInicio: '14/07/2021',
     emails: [
       { id: 19, direccion: 'paula.herrera@email.com' },
       { id: 20, direccion: 'pherrera@empresa.com' },
     ],
     telefonos: [
-      { id: 18, numero: '+54 9 11 6543-2109' },
-      { id: 19, numero: '+54 9 11 7777-1111' },
+      { id: 18, numero: '11 6543-2109' },
+      { id: 19, numero: '11 7777-1111' },
     ],
     direcciones: [
       {
@@ -365,17 +365,108 @@ export const afiliadosListadoMock = [
         calle: 'Scalabrini Ortiz',
         altura: '1300',
         codigoPostal: '1414',
-        localidad: 'Palermo',
-        provincia: { id: 1, nombre: 'CABA' },
+        localidad: 'Cachi',
+        provincia: { id: 1, nombre: 'Salta' },
       },
       {
         id: 17,
         calle: 'Honduras',
         altura: '5000',
         codigoPostal: '1414',
-        localidad: 'Palermo',
-        provincia: { id: 1, nombre: 'CABA' },
+        localidad: 'Cafayate',
+        provincia: { id: 1, nombre: 'Salta' },
       },
     ],
   },
 ];
+
+const unique = (arr) => [...new Set(arr.filter(Boolean))];
+const provincias = unique(
+  afiliados.flatMap((a) => a.direcciones.map((d) => d.provincia.nombre))
+);
+
+const localidades = unique(
+  afiliados.flatMap((a) => a.direcciones.map((d) => d.localidad))
+);
+
+export function searchAfiliadosMock(filters = {}, page = 1, limit = 10) {
+  const text = (filters.textInputSearch || '').toLowerCase();
+
+  const filtered = afiliados.filter((a) => {
+    if (
+      text &&
+      !a.nombre.toLowerCase().includes(text) &&
+      !a.apellido.toLowerCase().includes(text) &&
+      !a.numeroDocumento.includes(text) &&
+      !a.nroAfiliado.includes(text)
+    )
+      return false;
+
+    if (filters.tipoDocumento && filters.tipoDocumento !== a.tipoDocumento.id)
+      return false;
+
+    if (filters.planMedico && filters.planMedico !== a.cobertura.id)
+      return false;
+
+    if (
+      filters.numeroDocumento &&
+      filters.numeroDocumento !== a.numeroDocumento
+    )
+      return false;
+
+    if (
+      filters.provincia &&
+      !a.direcciones?.some((d) =>
+        d.provincia?.nombre
+          ?.toLowerCase()
+          .includes(filters.provincia.toLowerCase())
+      )
+    )
+      return false;
+
+    if (
+      filters.localidad &&
+      !a.direcciones?.some((d) =>
+        d.localidad
+          .toLowerCase()
+          .includes(filters.localidad.toLowerCase().trim())
+      )
+    )
+      return false;
+
+    if (
+      filters.telefono &&
+      !a.telefonos?.some((t) => t.numero?.includes(filters.telefono))
+    )
+      return false;
+
+    if (
+      filters.email &&
+      !a.emails?.some((e) => e.direccion?.includes(filters.email))
+    )
+      return false;
+
+    return true;
+  });
+
+  const total = filtered.length;
+  const start = (page - 1) * limit;
+  const end = start + limit;
+  const items = filtered.slice(start, end);
+
+  return { items, total, page, limit };
+}
+
+const mapOptions = (arr) =>
+  arr.map((nombre) => ({ value: nombre, label: nombre }));
+
+export const afiliadosFiltrosMock = {
+  '/api/afiliados/provincias': (search = '') =>
+    mapOptions(
+      provincias.filter((p) => p.toLowerCase().includes(search.toLowerCase()))
+    ),
+  '/api/afiliados/localidades': (search = '') =>
+    mapOptions(
+      localidades.filter((l) => l.toLowerCase().includes(search.toLowerCase()))
+    ),
+};

@@ -51,7 +51,7 @@ export default function ListadoAfiliadosTable({
                 { id: 'direcciones', label: 'Direcciones' },
                 { id: 'telefonos', label: 'Teléfonos' },
                 { id: 'emails', label: 'Emails' },
-                { id: 'fechaAlta', label: 'Fecha de alta' },
+                { id: 'vigenciaInicio', label: 'Fecha de alta' },
               ]}
             />
             <TableBody>
@@ -81,14 +81,17 @@ export default function ListadoAfiliadosTable({
                       >
                         {row.afiliado}
                       </Link>
-                      <Typography fontSize="0.8rem">{row.cuilCuit}</Typography>
                     </TableCell>
                     <TableCell sx={{ fontSize: '0.9rem' }}>
-                      <Typography>
+                      <Typography sx={{ fontSize: '0.8rem' }}>
                         {row.documento}
-                        {/*`${row.tipoDocumento} ${row.nroDocumento}`*/}
                       </Typography>
-                      <Typography>`${row.nroAfiliado}`</Typography>
+                      <Typography sx={{ fontSize: '0.9rem' }}>
+                        {row.nroAfiliado}
+                      </Typography>
+                    </TableCell>
+                    <TableCell sx={{ fontSize: '0.9rem' }}>
+                      {row.planMedico}
                     </TableCell>
                     <TableCell sx={{ fontSize: '0.9rem' }}>
                       <Box
@@ -114,10 +117,7 @@ export default function ListadoAfiliadosTable({
                                 mt: 0.3,
                               }}
                             />
-                            <Typography fontSize="0.9rem">
-                              {d.direccion}
-                              {/*`${d.calle} ${d.altura || ''}, ${d.localidad}, ${d.provincia}`*/}
-                            </Typography>
+                            <Typography fontSize="0.9rem">{d}</Typography>
                           </Box>
                         ))}
                       </Box>

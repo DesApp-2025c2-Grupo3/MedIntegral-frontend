@@ -12,6 +12,10 @@ import {
   agendaTurnosFiltrosMocks,
   searchAgendaTurnosMock,
 } from '../mocks/agendaTurnosListadoMock';
+import {
+  afiliadosFiltrosMock,
+  searchAfiliadosMock,
+} from '../mocks/afiliadosListadoMock';
 
 const api = axios.create({
   baseURL: 'http://localhost:5000/api',
@@ -55,6 +59,53 @@ api.interceptors.request.use((config) => {
           horarios,
           direccion: dir,
           duracion: `${a.duracion} minutos`,
+        };
+      });
+
+      return Promise.reject({
+        isMock: true,
+        data: {
+          ...data,
+          items: itemsFormateados,
+        },
+      });
+    }
+
+    for (const [url, fn] of Object.entries(afiliadosFiltrosMock)) {
+      if (config.url.startsWith(url) && config.method === 'get') {
+        const search = config.params?.textInputSearch || '';
+        const data = fn(search);
+        return Promise.reject({ isMock: true, data });
+      }
+    }
+
+    if (config.url.startsWith('/afiliados') && config.method === 'get') {
+      const filters = config.params || {};
+      const page = Number(filters.page) || 1;
+      const limit = Number(filters.limit) || 10;
+
+      const data = searchAfiliadosMock(filters, page, limit);
+
+      const itemsFormateados = data.items.map((a) => {
+        const nombreCompleto = `${a.nombre} ${a.apellido}`;
+        const tipoYDocumento = `${a.tipoDocumento.tipo} ${a.numeroDocumento}`;
+        const dirs = a.direcciones.map(
+          (d) =>
+            `${d.calle} ${d.altura || ''}, ${d.localidad}, ${d.provincia.nombre}`
+        );
+        const numeros = a.telefonos.map((t) => t.numero);
+        const correos = a.emails.map((t) => t.direccion);
+
+        return {
+          id: a.afiliado,
+          afiliado: nombreCompleto,
+          documento: tipoYDocumento,
+          nroAfiliado: a.nroAfiliado,
+          planMedico: a.cobertura.plan,
+          direcciones: dirs,
+          telefonos: numeros,
+          emails: correos,
+          vigenciaInicio: a.vigenciaInicio,
         };
       });
 

@@ -6,7 +6,7 @@ import ListadoAfiliadosTable from '../../components/afiliados/ListadoAfiliadosTa
 import api from '../../services/api';
 
 export default function PrestadoresListado() {
-  usePageTitle('MedIntegral | Listado de prestadores');
+  usePageTitle('MedIntegral | Listado de afiliados');
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -30,7 +30,6 @@ export default function PrestadoresListado() {
       );
 
       const { data } = await api.get('/afiliados', { params });
-
       setRows(data.items || []);
       setTotal(data.total || 0);
     } catch (err) {
@@ -68,10 +67,9 @@ export default function PrestadoresListado() {
     setRowsPerPage(Number(event.target.value));
     setPage(0);
   };
-
   return (
     <Box sx={{ mb: 2 }}>
-      <PageListHeader type="afiliados" onSearch={handleSearch} />
+      <PageListHeader type="afiliado" onSearch={handleSearch} />
 
       <ListadoAfiliadosTable
         rows={rows}

@@ -69,13 +69,15 @@ export const filtrosConfig = {
 
   afiliado: {
     fields: [
-      { name: 'nombre', label: 'Nombre / Apellido', type: 'text' },
-      { name: 'documento', label: 'Documento', type: 'text' },
       {
         name: 'tipoDocumento',
         label: 'Tipo de documento',
         type: 'select',
-        options: [{ value: '', label: 'Seleccionar' }],
+        options: [
+          { value: 1, label: 'DNI' },
+          { value: 2, label: 'Pasaporte' },
+          { value: 3, label: 'Libreta Cívica' },
+        ],
       },
       { name: 'numeroDocumento', label: 'Nro de Documento', type: 'text' },
       { name: 'fechaNacimiento', label: 'Fecha de nacimiento', type: 'date' },
@@ -83,35 +85,31 @@ export const filtrosConfig = {
         name: 'planMedico',
         label: 'Plan Médico',
         type: 'select',
-        options: [{ value: '', label: 'Seleccionar' }],
+        options: [
+          { value: 1, label: '210' },
+          { value: 2, label: '310' },
+          { value: 3, label: '410' },
+          { value: 4, label: '510' },
+        ],
       },
       {
         name: 'provincia',
         label: 'Provincia',
         type: 'select',
-        options: [{ value: '', label: 'Seleccionar' }],
+        options: [],
+        asyncSearchUrl: '/api/afiliados/provincias',
       },
       {
         name: 'localidad',
         label: 'Localidad',
         type: 'select',
-        options: [{ value: '', label: 'Seleccionar' }],
+        options: [],
+        asyncSearchUrl: '/api/afiliados/localidades',
       },
       { name: 'telefono', label: 'Teléfono', type: 'text' },
       { name: 'email', label: 'E-mail', type: 'text' },
-      {
-        name: 'situacion',
-        label: 'Situación terapéutica',
-        type: 'select',
-        options: [{ value: '', label: 'Seleccionar' }],
-      },
       { name: 'vigenciaDesde', label: 'Vigencia desde', type: 'date' },
       { name: 'vigenciaHasta', label: 'Vigencia hasta', type: 'date' },
-      {
-        name: 'grupoFamiliar',
-        label: '¿Tiene grupo familiar?',
-        type: 'switch',
-      },
     ],
     validateFn: null, // TODO
   },
