@@ -61,8 +61,7 @@ export default function validateFiltrosAgendaTurnos(filtros) {
 
   if (
     numeroDocumento &&
-    !REGEX_NUMERIC.test(numeroDocumento) &&
-    !numeroDocumento.length < 8
+    (!REGEX_NUMERIC.test(numeroDocumento) || !numeroDocumento.length < 8)
   ) {
     return {
       field: 'numeroDocumento',
