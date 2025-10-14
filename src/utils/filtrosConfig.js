@@ -1,4 +1,5 @@
 import validateFiltrosAgendaTurnos from './validations/validateFiltrosAgendaTurnos.js';
+import validateFiltrosAfiliados from './validations/validateFiltrosAfiliados.js';
 
 export const filtrosConfig = {
   'agenda-de-turnos': {
@@ -111,6 +112,6 @@ export const filtrosConfig = {
       { name: 'vigenciaDesde', label: 'Vigencia desde', type: 'date' },
       { name: 'vigenciaHasta', label: 'Vigencia hasta', type: 'date' },
     ],
-    validateFn: null, // TODO
+    validateFn: validateFiltrosAfiliados,
   },
 };
