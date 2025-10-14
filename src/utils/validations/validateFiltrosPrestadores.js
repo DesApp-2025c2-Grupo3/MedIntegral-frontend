@@ -6,21 +6,10 @@ dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
 
 export default function validateFiltrosAgendaTurnos(filtros) {
-  const {
-    nombre,
-    cuilCuit,
-    tipoPrestador,
-    especialidad,
-    localidad,
-    provincia,
-    creacionDesde,
-    creacionHasta,
-  } = filtros;
+  const { especialidad, localidad, provincia, creacionDesde, creacionHasta } =
+    filtros;
 
   const algunoCargado = [
-    nombre,
-    cuilCuit,
-    tipoPrestador,
     especialidad,
     localidad,
     provincia,
@@ -32,20 +21,6 @@ export default function validateFiltrosAgendaTurnos(filtros) {
     return {
       field: null,
       message: 'Debe completar al menos un filtro para realizar la búsqueda.',
-    };
-  }
-
-  if (nombre && typeof nombre === 'string') {
-    return {
-      field: 'nombre',
-      message: 'Debe ingresar un nombre válido.',
-    };
-  }
-
-  if (cuilCuit && typeof cuilCuit === 'string') {
-    return {
-      field: 'cuilCuit',
-      message: 'Debe ingresar un número de Cuit/Cuil válido.',
     };
   }
 
