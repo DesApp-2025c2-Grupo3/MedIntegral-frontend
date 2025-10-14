@@ -85,6 +85,10 @@ api.interceptors.request.use((config) => {
         const itemsFormateados = data.items.map((p) => {
           const numeros = p.telefonos.map((t) => t.numero);
           const correos = p.emails.map((e) => e.direccion);
+          const dirs = p.centrosDeAtencion.map(
+            (d) =>
+              `${d.calle} ${d.altura || ''}, ${d.localidad}, ${d.provincia}`
+          );
 
           return {
             id: p.id,
@@ -92,7 +96,7 @@ api.interceptors.request.use((config) => {
             cuilCuit: p.cuilCuit,
             esCentroMedico: p.esCentroMedico,
             especialidades: p.especialidades,
-            direcciones: p.centrosDeAtencion,
+            direcciones: dirs,
             telefonos: numeros,
             emails: correos,
             createdAt: p.createdAt,
