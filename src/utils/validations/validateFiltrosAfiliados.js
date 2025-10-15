@@ -13,9 +13,11 @@ export default function validateFiltrosAgendaTurnos(filtros) {
   const {
     nombre,
     apellido,
+    tipoDocumento,
     numeroDocumento,
     nroAfiliado,
     fechaNacimiento,
+    planMedico,
     provincia,
     localidad,
     telefono,
@@ -27,9 +29,11 @@ export default function validateFiltrosAgendaTurnos(filtros) {
   const algunoCargado = [
     nombre,
     apellido,
+    tipoDocumento,
     numeroDocumento,
     nroAfiliado,
     fechaNacimiento,
+    planMedico,
     provincia,
     localidad,
     telefono,
@@ -61,7 +65,7 @@ export default function validateFiltrosAgendaTurnos(filtros) {
 
   if (
     numeroDocumento &&
-    (!REGEX_NUMERIC.test(numeroDocumento) || !numeroDocumento.length < 8)
+    (!REGEX_NUMERIC.test(numeroDocumento) || numeroDocumento.length < 8)
   ) {
     return {
       field: 'numeroDocumento',
@@ -105,7 +109,8 @@ export default function validateFiltrosAgendaTurnos(filtros) {
     if (!REGEX_TELEFONO_CLEAN.test(limpio)) {
       return {
         field: 'telefono',
-        message: 'El teléfono debe ser numérico y tener entre 8 y 15 dígitos.',
+        message:
+          'El teléfono debe contener números y tener entre 8 y 15 dígitos.',
       };
     }
   }
