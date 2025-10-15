@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import PageListHeader from '../../components/common/lists/PageListHeader';
 import { usePageTitle } from '../../hooks/usePageTitle';
 import ListadoTurnosTable from '../../components/agenda-turnos/ListadoTurnosTable';
-import api from '../../services/api';
+import { getAgendaTurnosListado } from '../../services/agendaTurnos';
 
 export default function AgendaTurnosListado() {
   usePageTitle('MedIntegral | Listado de agendas de turnos');
@@ -15,36 +15,24 @@ export default function AgendaTurnosListado() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filters, setFilters] = useState({ textInputSearch: '' });
 
-  const fetchAgendas = useCallback(async () => {
-    setLoading(true);
-    try {
-      const params = Object.fromEntries(
-        Object.entries({
-          ...filters,
-          page: page + 1,
-          limit: rowsPerPage,
-        }).map(([key, val]) => [
-          key,
-          typeof val === 'object' ? val?.value || '' : val,
-        ])
-      );
-
-      const { data } = await api.get('/agenda-turnos', { params });
-
-      setRows(data.items || []);
-      setTotal(data.total || 0);
-    } catch (err) {
-      console.error('Error al obtener agendas:', err);
-      setRows([]);
-      setTotal(0);
-    } finally {
-      setLoading(false);
-    }
-  }, [filters, page, rowsPerPage]);
-
   useEffect(() => {
+    const fetchAgendas = async () => {
+      setLoading(true);
+      try {
+        const data = await getAgendaTurnosListado(filters, page, rowsPerPage);
+        setRows(data.items || []);
+        setTotal(data.total || 0);
+      } catch (err) {
+        console.error('Error al obtener agendas:', err);
+        setRows([]);
+        setTotal(0);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchAgendas();
-  }, [fetchAgendas]);
+  }, [filters, page, rowsPerPage]);
 
   const handleSearch = (newFilters) => {
     if (!newFilters || Object.keys(newFilters).length === 0) {

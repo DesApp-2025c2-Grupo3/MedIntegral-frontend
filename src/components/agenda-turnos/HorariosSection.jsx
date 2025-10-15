@@ -22,21 +22,14 @@ export default function HorariosSection({
     [direccionSeleccionada]
   );
 
-  const diasSemana = React.useMemo(
-    () => [...new Set(horarios.map((h) => h.dia.nombre))],
-    [horarios]
-  );
-
   const diasConHorarios = React.useMemo(
     () =>
-      diasSemana.map((dia) => {
-        const rangos = horarios
-          .filter((h) => h.dia.nombre === dia)
-          .map((h) => `${h.horaInicio} - ${h.horaFin}`)
-          .join(', ');
-        return rangos ? `${dia} (${rangos})` : dia;
-      }),
-    [diasSemana, horarios]
+      horarios.map((h) => ({
+        id: h.dia.id,
+        nombre: h.dia.nombre,
+        label: `${h.dia.nombre} (${h.horaInicio} - ${h.horaFin})`,
+      })),
+    [horarios]
   );
 
   const duraciones = React.useMemo(

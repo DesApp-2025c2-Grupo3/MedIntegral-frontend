@@ -5,47 +5,63 @@ const routeNameMap = {
   'agenda-turnos': 'Agenda de turnos',
   prestadores: 'Prestadores',
   afiliados: 'Afiliados',
-  listado: 'Listado',
-  alta: 'Alta',
-  edicion: 'Edición',
 };
 
 export default function BreadcrumbsNav() {
   const location = useLocation();
-  const pathnames = location.pathname.split('/').filter((x) => x);
+  const { pathname } = location;
+
+  const isHome = pathname === '/';
+  if (isHome) {
+    return (
+      <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }} separator=">">
+        <Typography color="text.secondary" fontWeight="medium">
+          Home
+        </Typography>
+      </Breadcrumbs>
+    );
+  }
+
+  const segments = pathname.split('/').filter(Boolean);
+  const mainSection = segments[0];
+  const subSection = segments[1];
+  const isDetalle = /^\d+$/.test(subSection);
+
+  const crumbs = [
+    { label: 'Home', to: '/' },
+    {
+      label: routeNameMap[mainSection] || mainSection,
+      to:
+        subSection && subSection !== 'listado' && !isDetalle
+          ? `/${mainSection}/listado`
+          : null,
+    },
+  ];
+
+  if (subSection === 'alta') crumbs.push({ label: 'Alta' });
+  else if (subSection === 'edicion') crumbs.push({ label: 'Edición' });
+  else if (isDetalle) crumbs.push({ label: 'Detalle' });
 
   return (
     <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }} separator=">">
-      <Link
-        component={RouterLink}
-        underline="hover"
-        color="text.secondary"
-        to="/"
-      >
-        Home
-      </Link>
-      {pathnames.map((value, index) => {
-        const to = `/${pathnames.slice(0, index + 1).join('/')}`;
-        const isLast = index === pathnames.length - 1;
-        const label = routeNameMap[value] || value;
-
-        return isLast ? (
-          <Typography key={to} color="text.secondary" fontWeight="medium">
-            {label}
-          </Typography>
-        ) : (
+      {crumbs.map((crumb, index) =>
+        crumb.to ? (
           <Link
-            key={to}
+            key={index}
             component={RouterLink}
             underline="hover"
             color="text.secondary"
-            to={to}
+            to={crumb.to}
             fontWeight="medium"
           >
-            {label}
+            {crumb.label}
           </Link>
-        );
-      })}
+        ) : (
+          <Typography key={index} color="text.secondary" fontWeight="medium">
+            {crumb.label}
+          </Typography>
+        )
+      )}
     </Breadcrumbs>
   );
 }

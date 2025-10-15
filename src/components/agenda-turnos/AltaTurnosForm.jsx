@@ -60,12 +60,14 @@ export default function AltaTurnosForm() {
         try {
           setSaving(true);
           await sleepIfLocal(1500);
+
           const data = await createAgendaTurnos({
             prestador,
             especialidad: especialidadSeleccionada,
             direccion: direccionSeleccionada,
             horarios,
           });
+
           navigateToEdicion(data.id, { creacion: true });
         } catch (err) {
           console.error('Error al guardar el alta de agenda de turnos:', err);
