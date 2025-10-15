@@ -51,7 +51,6 @@ export default function ListadoAfiliadosTable({
                 { id: 'direcciones', label: 'Direcciones' },
                 { id: 'telefonos', label: 'Teléfonos' },
                 { id: 'emails', label: 'Emails' },
-                { id: 'vigenciaInicio', label: 'Fecha de alta' },
               ]}
             />
             <TableBody>
@@ -81,16 +80,16 @@ export default function ListadoAfiliadosTable({
                       >
                         {row.afiliado}
                       </Link>
-                    </TableCell>
-                    <TableCell sx={{ fontSize: '0.9rem' }}>
-                      <Typography sx={{ fontSize: '0.8rem' }}>
-                        {row.documento}
-                      </Typography>
                       <Typography sx={{ fontSize: '0.9rem' }}>
                         {row.nroAfiliado}
                       </Typography>
                     </TableCell>
                     <TableCell sx={{ fontSize: '0.9rem' }}>
+                      <Typography sx={{ fontSize: '0.9rem' }}>
+                        {row.documento}
+                      </Typography>
+                    </TableCell>
+                    <TableCell sx={{ fontSize: '0.9rem', textAlign: 'center' }}>
                       {row.planMedico}
                     </TableCell>
                     <TableCell sx={{ fontSize: '0.9rem' }}>
@@ -146,7 +145,9 @@ export default function ListadoAfiliadosTable({
                                 mt: 0.3,
                               }}
                             />
-                            <Typography fontSize="0.8rem">{t}</Typography>
+                            <Typography sx={{ fontSize: '0.9rem' }}>
+                              {t}
+                            </Typography>
                           </Box>
                         ))}
                       </Box>
@@ -175,13 +176,12 @@ export default function ListadoAfiliadosTable({
                                 mt: 0.3,
                               }}
                             />
-                            <Typography fontSize="0.9rem">{e}</Typography>
+                            <Typography sx={{ fontSize: '0.9rem' }}>
+                              {e}
+                            </Typography>
                           </Box>
                         ))}
                       </Box>
-                    </TableCell>
-                    <TableCell sx={{ fontSize: '0.9rem' }}>
-                      {row.vigenciaInicio}
                     </TableCell>
                   </TableRow>
                 ))
