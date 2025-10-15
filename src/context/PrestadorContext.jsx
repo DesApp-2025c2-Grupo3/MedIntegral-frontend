@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { getPrestadores, getPrestadorById } from '../services/prestadores';
+import { getPrestadorById, getPrestadores } from '../services/agendaTurnos';
 import { sleepIfLocal } from '../utils/sleepIfLocal';
 
 const PrestadorContext = createContext();
