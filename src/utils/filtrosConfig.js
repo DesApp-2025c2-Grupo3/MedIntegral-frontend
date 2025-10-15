@@ -1,4 +1,5 @@
 import validateFiltrosAgendaTurnos from './validations/validateFiltrosAgendaTurnos.js';
+import validateFiltrosPrestadores from './validations/validateFiltrosPrestadores.js';
 
 export const filtrosConfig = {
   'agenda-de-turnos': {
@@ -34,37 +35,40 @@ export const filtrosConfig = {
 
   prestador: {
     fields: [
-      { name: 'nombre', label: 'Nombre del prestador', type: 'text' },
-      { name: 'cuit', label: 'CUIT/CUIL', type: 'text' },
       {
         name: 'tipoPrestador',
         label: 'Tipo de prestador',
         type: 'select',
-        options: [{ value: '', label: 'Seleccionar' }],
+        options: [
+          { value: 'false', label: 'Médico' },
+          { value: 'true', label: 'Centro médico' },
+        ],
       },
       {
         name: 'especialidad',
         label: 'Especialidad',
         type: 'select',
-        options: [{ value: '', label: 'Seleccionar' }],
+        options: [],
+        asyncSearchUrl: '/api/prestadores/especialidades',
       },
-      { name: 'centroAsociado', label: 'Centro médico asociado', type: 'text' },
       {
         name: 'localidad',
         label: 'Localidad',
         type: 'select',
-        options: [{ value: '', label: 'Seleccionar' }],
+        options: [],
+        asyncSearchUrl: '/api/prestadores/localidades',
       },
       {
         name: 'provincia',
         label: 'Provincia',
         type: 'select',
-        options: [{ value: '', label: 'Seleccionar' }],
+        options: [],
+        asyncSearchUrl: '/api/prestadores/provincias',
       },
       { name: 'creacionDesde', label: 'Creación desde', type: 'date' },
       { name: 'creacionHasta', label: 'Creación hasta', type: 'date' },
     ],
-    validateFn: null, // TODO
+    validateFn: validateFiltrosPrestadores,
   },
 
   afiliado: {
