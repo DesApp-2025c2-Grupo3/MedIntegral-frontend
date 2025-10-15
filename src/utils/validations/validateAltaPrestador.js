@@ -1,74 +1,25 @@
+import {
+  validateCuilCuit,
+  validateNombre,
+  validateTelefonos,
+  validateEmails,
+} from './validateContacto';
+import { validateSingleDireccion } from './validateDireccion';
+
 export const validateAltaPrestador = (data) => {
-  if (!data.cuilCuit) {
-    return {
-      field: 'cuilCuit',
-      message: 'El CUIL o CUIT es obligatorio.',
-    };
-  }
+  let error;
 
-  // Verifica si el CUIL/CUIT contiene alguna letra
-  const tieneLetras = isNaN(data.cuilCuit);
-  if (tieneLetras) {
-    return {
-      field: 'cuilCuit',
-      message: 'El CUIL o CUIT no puede contener letras.',
-    };
-  }
+  error = validateCuilCuit(data.cuilCuit);
+  if (error) return error;
 
-  if (!data.nombre) {
-    return {
-      field: 'nombre',
-      message: 'El nombre es obligatorio.',
-    };
-  }
+  error = validateNombre(data.nombre);
+  if (error) return error;
 
-  // Verifica si el nombre contiene algún número
-  const tieneNumeros = data.nombre
-    .split('')
-    .some((char) => !isNaN(char) && char !== ' ');
-  if (tieneNumeros) {
-    return {
-      field: 'nombre',
-      message: 'El nombre no puede contener números.',
-    };
-  }
+  error = validateTelefonos(data.telefonos);
+  if (error) return error;
 
-  // Verificación de teléfonos
-  if (!data.telefonos || data.telefonos.length === 0) {
-    return {
-      field: 'telefonos',
-      message: 'El teléfono es obligatorio.',
-    };
-  }
-
-  for (const telefono of data.telefonos) {
-    const tieneLetras = isNaN(telefono);
-    if (tieneLetras) {
-      return {
-        field: 'telefonos',
-        message: 'El teléfono no debe contener letras.',
-      };
-    }
-  }
-
-  // Verificación de emails
-  if (!data.emails || data.emails.length === 0) {
-    return {
-      field: 'emails',
-      message: 'El email es obligatorio.',
-    };
-  }
-
-  for (const email of data.emails) {
-    const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const tieneFormatoEmail = regexEmail.test(email);
-    if (!tieneFormatoEmail) {
-      return {
-        field: 'emails',
-        message: 'El email debe tener el formato correspondiente.',
-      };
-    }
-  }
+  error = validateEmails(data.emails);
+  if (error) return error;
 
   if (data.especialidades.length === 0) {
     return {
@@ -77,54 +28,23 @@ export const validateAltaPrestador = (data) => {
     };
   }
 
+  if (!data.centrosDeAtencion || data.centrosDeAtencion.length === 0) {
+    return {
+      field: 'centrosDeAtencion',
+      message: 'Debe agregar al menos un centro de atención.',
+    };
+  }
+
   //Verificación de centros de atencion (dirección y horarios)
   for (const centro of data.centrosDeAtencion) {
-    if (!centro.calle) {
-      return {
-        field: `centro-${centro.id}-calle`,
-        message: 'La calle es obligatoria.',
-      };
-    }
+    const idPrefijo = `centro-${centro.id}`;
+    error = validateSingleDireccion(centro, idPrefijo);
+    if (error) return error;
 
-    if (!centro.altura) {
+    if (!centro.horarios || centro.horarios.length === 0) {
       return {
-        field: `centro-${centro.id}-altura`,
-        message: 'La altura es obligatoria.',
-      };
-    }
-
-    if (isNaN(centro.altura)) {
-      return {
-        field: `centro-${centro.id}-altura`,
-        message: 'La altura no debe contener letras.',
-      };
-    }
-
-    if (!centro.codigoPostal) {
-      return {
-        field: `centro-${centro.id}-codigoPostal`,
-        message: 'El código postal es obligatorio.',
-      };
-    }
-
-    if (isNaN(centro.codigoPostal)) {
-      return {
-        field: `centro-${centro.id}-codigoPostal`,
-        message: 'El código postal no debe contener letras.',
-      };
-    }
-
-    if (!centro.localidad) {
-      return {
-        field: `centro-${centro.id}-localidad`,
-        message: 'La localidad es obligatoria.',
-      };
-    }
-
-    if (!centro.provincia) {
-      return {
-        field: 'provincia',
-        message: 'La provincia es obligatoria.',
+        field: `centro-${centro.id}-horarios`,
+        message: 'Debe agregar al menos un horario al centro.',
       };
     }
 

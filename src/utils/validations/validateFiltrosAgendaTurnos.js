@@ -12,8 +12,8 @@ export default function validateFiltrosAgendaTurnos(filtros) {
     provincia,
     localidad,
     dia,
-    horarioInicio,
-    horarioFin,
+    horaInicio,
+    horaFin,
     creacionDesde,
     creacionHasta,
   } = filtros;
@@ -24,8 +24,8 @@ export default function validateFiltrosAgendaTurnos(filtros) {
     provincia,
     localidad,
     dia,
-    horarioInicio,
-    horarioFin,
+    horaInicio,
+    horaFin,
     creacionDesde,
     creacionHasta,
   ].some((v) => !!v && v !== '');
@@ -77,20 +77,20 @@ export default function validateFiltrosAgendaTurnos(filtros) {
     }
   }
 
-  if (horarioInicio && horarioFin) {
-    const inicio = dayjs(horarioInicio, 'HH:mm');
-    const fin = dayjs(horarioFin, 'HH:mm');
+  if (horaInicio && horaFin) {
+    const inicio = dayjs(horaInicio, 'HH:mm');
+    const fin = dayjs(horaFin, 'HH:mm');
 
     if (inicio.isAfter(fin)) {
       return {
-        field: 'horarioFin',
+        field: 'horaFin',
         message: 'El horario de inicio debe ser anterior al de fin.',
       };
     }
 
     if (inicio.isSame(fin)) {
       return {
-        field: 'horarioFin',
+        field: 'horaFin',
         message: 'El inicio y el fin no pueden ser iguales.',
       };
     }

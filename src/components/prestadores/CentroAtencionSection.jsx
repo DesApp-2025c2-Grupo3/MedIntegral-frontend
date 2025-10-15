@@ -6,6 +6,7 @@ import DireccionSection from '../common/DireccionSection';
 import HorarioDeAtencion from './HorarioDeAtencion';
 import FadeSlide from '../common/animations/FadeSlide';
 import { newHorario, newCentroDeAtencion } from '../../utils/prestadores';
+import EliminarButton from '../common/forms/EliminarButton';
 
 export default function CentroAtencionSection({ centros, onChange }) {
   const handleAgregarCentro = () => {
@@ -53,16 +54,30 @@ export default function CentroAtencionSection({ centros, onChange }) {
             <Box
               sx={{ mb: 4, p: 3, border: '2px solid #ddd', borderRadius: 2 }}
             >
-              <Typography variant="h6" gutterBottom>
-                Centro de Atención #{index + 1}
-              </Typography>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  mb: 2,
+                }}
+              >
+                <Typography variant="h6" gutterBottom>
+                  Centro de Atención #{index + 1}
+                </Typography>
+
+                {centros.length > 1 && (
+                  <EliminarButton
+                    onEliminar={() => handleEliminarCentro(centro.id)}
+                    label="Eliminar centro"
+                  />
+                )}
+              </Box>
 
               <DireccionSection
                 direccion={centro}
-                numero={index + 1}
-                puedeEliminar={centros.length > 1}
                 onChange={(nuevo) => handleActualizarCentro(centro.id, nuevo)}
-                onEliminar={() => handleEliminarCentro(centro.id)}
+                idPrefix={`centro-${centro.id}`}
               />
 
               <Divider sx={{ my: 3 }} />

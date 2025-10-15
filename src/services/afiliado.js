@@ -1,18 +1,52 @@
 import api from './api';
 
 export const createAfiliado = async (afiliadoData) => {
-  if (
-    !afiliadoData?.tipoDocumentoId ||
-    !afiliadoData?.numeroDocumento ||
-    !afiliadoData?.nombre ||
-    !afiliadoData?.apellido
-  ) {
-    throw new Error('Faltan datos obligatorios para crear el afiliado');
-  }
+  const situacionesFormateadas = afiliadoData.situacionesTerapeuticas.map(
+    (item) => ({
+      situacionId: item.situacion?.id,
+
+      fechaInicio: item.fechaInicio
+        ? item.fechaInicio.format('YYYY-MM-DD')
+        : null,
+
+      fechaFin:
+        item.finaliza && item.fechaFin
+          ? item.fechaFin.format('YYYY-MM-DD')
+          : null,
+    })
+  );
 
   const payload = {
     ...afiliadoData,
+    tipoDocumentoId: afiliadoData.tipoDocumento?.id,
+    fechaNacimiento: afiliadoData.fechaNacimiento
+      ? afiliadoData.fechaNacimiento.format('YYYY-MM-DD')
+      : null,
+    vigenciaInicio: afiliadoData.vigenciaInicio
+      ? afiliadoData.vigenciaInicio.format('YYYY-MM-DD')
+      : null,
+
+    vigenciaFin: afiliadoData.vigenciaFin
+      ? afiliadoData.vigenciaFin.format('YYYY-MM-DD')
+      : null,
+    coberturaId: afiliadoData.cobertura?.id,
+
+    tieneSituacionTerapeutica: afiliadoData.tieneSituacionTerapeutica,
+
+    situacionesTerapeuticas: situacionesFormateadas,
   };
+
+  if (
+    !payload.tipoDocumentoId ||
+    !afiliadoData?.numeroDocumento ||
+    !afiliadoData?.nombre ||
+    !afiliadoData?.apellido ||
+    !payload?.fechaNacimiento ||
+    !payload?.coberturaId ||
+    !payload?.vigenciaInicio
+  ) {
+    throw new Error('Faltan datos obligatorios para crear el afiliado');
+  }
 
   try {
     const { data } = await api.post('/afiliados', payload);
