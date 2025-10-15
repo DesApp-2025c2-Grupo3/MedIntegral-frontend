@@ -16,6 +16,10 @@ import {
   searchPrestadoresListadoMock,
   prestadoresFiltrosMock,
 } from '../mocks/prestadoresListadoMock';
+import {
+  afiliadosFiltrosMock,
+  searchAfiliadosMock,
+} from '../mocks/afiliadosListadoMock';
 
 const USE_AGENDA_TURNOS_MOCKS = false;
 
@@ -57,44 +61,92 @@ api.interceptors.request.use((config) => {
         const data = fn(search);
         return Promise.reject({ isMock: true, data });
       }
+    }
+    
+    if (config.url.startsWith('/prestadores') && config.method === 'get') {
+      const filters = config.params || {};
+      const page = Number(filters.page) || 1;
+      const limit = Number(filters.limit) || 10;
 
-      if (config.url.startsWith('/prestadores') && config.method === 'get') {
-        const filters = config.params || {};
-        const page = Number(filters.page) || 1;
-        const limit = Number(filters.limit) || 10;
+      const data = searchPrestadoresListadoMock(filters, page, limit);
 
-        const data = searchPrestadoresListadoMock(filters, page, limit);
+      const itemsFormateados = data.items.map((p) => {
+        const numeros = p.telefonos.map((t) => t.numero);
+        const correos = p.emails.map((e) => e.direccion);
+        const dirs = p.centrosDeAtencion.map(
+          (d) =>
+           `${d.calle} ${d.altura || ''}, ${d.localidad}, ${d.provincia}`
+        );
 
-        const itemsFormateados = data.items.map((p) => {
-          const numeros = p.telefonos.map((t) => t.numero);
-          const correos = p.emails.map((e) => e.direccion);
-          const dirs = p.centrosDeAtencion.map(
-            (d) =>
-              `${d.calle} ${d.altura || ''}, ${d.localidad}, ${d.provincia}`
-          );
-
-          return {
-            id: p.id,
-            nombre: p.nombre,
-            cuilCuit: p.cuilCuit,
-            esCentroMedico: p.esCentroMedico,
-            especialidades: p.especialidades,
-            direcciones: dirs,
-            telefonos: numeros,
-            emails: correos,
-            createdAt: p.createdAt,
-          };
-        });
-        return Promise.reject({
-          isMock: true,
-          data: {
-            ...data,
-            items: itemsFormateados,
-          },
-        });
+        return {
+          id: p.id,
+          nombre: p.nombre,
+          cuilCuit: p.cuilCuit,
+          esCentroMedico: p.esCentroMedico,
+          especialidades: p.especialidades,
+          direcciones: dirs,
+          telefonos: numeros,
+          emails: correos,
+          createdAt: p.createdAt,
+        };
+       });
+       return Promise.reject({
+         isMock: true,
+         data: {
+           ...data,
+           items: itemsFormateados,
+         },
+       });
+     }
+    
+    for (const [url, fn] of Object.entries(afiliadosFiltrosMock)) {
+      if (config.url.startsWith(url) && config.method === 'get') {
+        const search = config.params?.textInputSearch || '';
+        const data = fn(search);
+        return Promise.reject({ isMock: true, data });
       }
     }
 
+    if (config.url.startsWith('/afiliados') && config.method === 'get') {
+      const filters = config.params || {};
+      const page = Number(filters.page) || 1;
+      const limit = Number(filters.limit) || 10;
+
+      const data = searchAfiliadosMock(filters, page, limit);
+
+      const itemsFormateados = data.items.map((a) => {
+        const nombreCompleto = `${a.nombre} ${a.apellido}`;
+        const tipoYDocumento = `${a.tipoDocumento.tipo} ${a.numeroDocumento}`;
+        const dirs = a.direcciones.map(
+          (d) =>
+            `${d.calle} ${d.altura || ''}, ${d.localidad}, ${d.provincia.nombre}`
+        );
+        const numeros = a.telefonos.map((t) => t.numero);
+        const correos = a.emails.map((t) => t.direccion);
+
+        return {
+          id: a.afiliado,
+          afiliado: nombreCompleto,
+          documento: tipoYDocumento,
+          nroAfiliado: a.nroAfiliado,
+          planMedico: a.cobertura.plan,
+          direcciones: dirs,
+          telefonos: numeros,
+          emails: correos,
+          vigenciaInicio: a.vigenciaInicio,
+        };
+      });
+
+      return Promise.reject({
+        isMock: true,
+        data: {
+          ...data,
+          items: itemsFormateados,
+        },
+      });
+    }
+    
+    
     if (
       config.url === '/agenda-turnos' &&
       config.method === 'post' &&
