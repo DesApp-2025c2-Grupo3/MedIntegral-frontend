@@ -18,13 +18,14 @@ export const newCentroDeAtencion = () => ({
   horarios: [newHorario()],
 });
 
+//TODO: Dinámico para obtener los ids dinámicos
 export const DIAS_SEMANA = [
-  'Lunes',
-  'Martes',
-  'Miércoles',
-  'Jueves',
-  'Viernes',
-  'Sábado',
+  { id: 1, nombre: 'lunes', label: 'Lunes' },
+  { id: 2, nombre: 'martes', label: 'Martes' },
+  { id: 3, nombre: 'miercoles', label: 'Miércoles' },
+  { id: 4, nombre: 'jueves', label: 'Jueves' },
+  { id: 5, nombre: 'viernes', label: 'Viernes' },
+  { id: 6, nombre: 'sabado', label: 'Sábado' },
 ];
 
 export const diaToBackend = (nombre) => ({

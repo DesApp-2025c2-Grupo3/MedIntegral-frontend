@@ -62,8 +62,8 @@ api.interceptors.request.use((config) => {
         return Promise.reject({ isMock: true, data });
       }
     }
-    
-    if (config.url.startsWith('/prestadores') && config.method === 'get') {
+
+    if (config.url == '/prestadores' && config.method === 'get') {
       const filters = config.params || {};
       const page = Number(filters.page) || 1;
       const limit = Number(filters.limit) || 10;
@@ -74,8 +74,7 @@ api.interceptors.request.use((config) => {
         const numeros = p.telefonos.map((t) => t.numero);
         const correos = p.emails.map((e) => e.direccion);
         const dirs = p.centrosDeAtencion.map(
-          (d) =>
-           `${d.calle} ${d.altura || ''}, ${d.localidad}, ${d.provincia}`
+          (d) => `${d.calle} ${d.altura || ''}, ${d.localidad}, ${d.provincia}`
         );
 
         return {
@@ -89,16 +88,16 @@ api.interceptors.request.use((config) => {
           emails: correos,
           createdAt: p.createdAt,
         };
-       });
-       return Promise.reject({
-         isMock: true,
-         data: {
-           ...data,
-           items: itemsFormateados,
-         },
-       });
-     }
-    
+      });
+      return Promise.reject({
+        isMock: true,
+        data: {
+          ...data,
+          items: itemsFormateados,
+        },
+      });
+    }
+
     for (const [url, fn] of Object.entries(afiliadosFiltrosMock)) {
       if (config.url.startsWith(url) && config.method === 'get') {
         const search = config.params?.textInputSearch || '';
@@ -107,7 +106,7 @@ api.interceptors.request.use((config) => {
       }
     }
 
-    if (config.url.startsWith('/afiliados') && config.method === 'get') {
+    if (config.url == '/afiliados' && config.method === 'get') {
       const filters = config.params || {};
       const page = Number(filters.page) || 1;
       const limit = Number(filters.limit) || 10;
@@ -145,8 +144,7 @@ api.interceptors.request.use((config) => {
         },
       });
     }
-    
-    
+
     if (
       config.url === '/agenda-turnos' &&
       config.method === 'post' &&
@@ -165,7 +163,7 @@ api.interceptors.request.use((config) => {
       });
     }
 
-    if (config.url === '/prestadores')
+    if (config.url === '/agenda-turnos/prestadores')
       return Promise.reject({ isMock: true, data: prestadoresMock });
 
     if (config.url === '/prestadores/1')
