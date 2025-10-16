@@ -21,7 +21,8 @@ import {
   searchAfiliadosMock,
 } from '../mocks/afiliadosListadoMock';
 
-const USE_AGENDA_TURNOS_MOCKS = false;
+const USE_AGENDA_TURNOS_MOCKS = true;
+const USE_PRESTADORES_MOCKS = true;
 
 const api = axios.create({
   baseURL: 'http://localhost:3002/api',
@@ -63,38 +64,20 @@ api.interceptors.request.use((config) => {
       }
     }
 
-    if (config.url == '/prestadores' && config.method === 'get') {
+    if (
+      config.url.startsWith('/prestadores/listado') &&
+      config.method === 'get' &&
+      USE_PRESTADORES_MOCKS
+    ) {
       const filters = config.params || {};
       const page = Number(filters.page) || 1;
       const limit = Number(filters.limit) || 10;
 
       const data = searchPrestadoresListadoMock(filters, page, limit);
 
-      const itemsFormateados = data.items.map((p) => {
-        const numeros = p.telefonos.map((t) => t.numero);
-        const correos = p.emails.map((e) => e.direccion);
-        const dirs = p.centrosDeAtencion.map(
-          (d) => `${d.calle} ${d.altura || ''}, ${d.localidad}, ${d.provincia}`
-        );
-
-        return {
-          id: p.id,
-          nombre: p.nombre,
-          cuilCuit: p.cuilCuit,
-          esCentroMedico: p.esCentroMedico,
-          especialidades: p.especialidades,
-          direcciones: dirs,
-          telefonos: numeros,
-          emails: correos,
-          createdAt: p.createdAt,
-        };
-      });
       return Promise.reject({
         isMock: true,
-        data: {
-          ...data,
-          items: itemsFormateados,
-        },
+        data: data,
       });
     }
 
