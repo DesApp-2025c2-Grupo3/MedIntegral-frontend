@@ -9,6 +9,12 @@ export const agendaTurnosMock = {
       horaFin: '15:00',
       duracion: 30,
     },
+    {
+      dias: ['Jueves', 'Viernes', 'Sábado'],
+      horaInicio: '08:30',
+      horaFin: '16:00',
+      duracion: 30,
+    },
   ],
   direccion: {
     calle: 'Corrientes',

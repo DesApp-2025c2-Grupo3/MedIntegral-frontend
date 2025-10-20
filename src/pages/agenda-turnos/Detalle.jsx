@@ -7,10 +7,17 @@ import {
   CircularProgress,
   Grid,
   Stack,
+  IconButton,
+  Tooltip,
+  Divider,
 } from '@mui/material';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import LocalHospitalOutlinedIcon from '@mui/icons-material/LocalHospitalOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined';
+import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
 import PageHeader from '../../components/common/PageHeader';
 import SuccessSnackbar from '../../components/common/SuccessSnackbar';
 import api from '../../services/api';
@@ -73,6 +80,27 @@ export default function TurnosDetalle() {
       }, ${agenda.direccion.localidad}, ${agenda.direccion.provincia}`
     : 'Sin dirección especificada';
 
+  const formatearDias = (dias = []) => {
+    if (!Array.isArray(dias)) return '';
+    if (dias.length === 1) return dias[0];
+    if (dias.length === 2) return `${dias[0]} y ${dias[1]}`;
+    const ultimosDos = dias.slice(-2).join(' y ');
+    return `${dias.slice(0, -2).join(', ')}, ${ultimosDos}`;
+  };
+
+  const formatearFecha = (fecha) =>
+    new Date(fecha).toLocaleDateString('es-AR', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+    });
+
+  const formatearHora = (fecha) =>
+    new Date(fecha).toLocaleTimeString('es-AR', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+
   return (
     <Box sx={{ mt: 2 }}>
       <PageHeader
@@ -81,19 +109,29 @@ export default function TurnosDetalle() {
       />
 
       <Grid container spacing={3} mt={1}>
-        {/* Información del Prestador */}
         <Grid size={{ xs: 12, md: 6 }}>
           <Paper
             elevation={3}
             sx={{
               p: 3,
               borderRadius: 3,
+              position: 'relative',
               display: 'flex',
               flexDirection: 'column',
               gap: 1,
               height: '100%',
             }}
           >
+            <Tooltip title="Editar información del prestador">
+              <IconButton
+                size="small"
+                color="primary"
+                sx={{ position: 'absolute', top: 10, right: 10 }}
+              >
+                <EditOutlinedIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+
             <Stack direction="row" alignItems="center" spacing={1} mb={1}>
               <LocalHospitalOutlinedIcon color="primary" />
               <Typography variant="subtitle1" fontWeight={600}>
@@ -109,9 +147,10 @@ export default function TurnosDetalle() {
               <strong>Especialidad:</strong>{' '}
               {agenda.especialidad?.nombre || agenda.especialidad}
             </Typography>
-            <Stack direction="row" alignItems="center" spacing={1}>
+
+            <Stack direction="row" alignItems="center" spacing={1} mt={1}>
               <LocationOnOutlinedIcon fontSize="small" color="action" />
-              <Typography>{direccion}</Typography>
+              <Typography variant="body2">{direccion}</Typography>
             </Stack>
           </Paper>
         </Grid>
@@ -122,12 +161,23 @@ export default function TurnosDetalle() {
             sx={{
               p: 3,
               borderRadius: 3,
-              height: '100%',
+              position: 'relative',
               display: 'flex',
               flexDirection: 'column',
-              gap: 1,
+              gap: 1.5,
+              height: '100%',
             }}
           >
+            <Tooltip title="Editar horarios de atención">
+              <IconButton
+                size="small"
+                color="primary"
+                sx={{ position: 'absolute', top: 10, right: 10 }}
+              >
+                <EditOutlinedIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+
             <Stack direction="row" alignItems="center" spacing={1} mb={1}>
               <CalendarMonthOutlinedIcon color="primary" />
               <Typography variant="subtitle1" fontWeight={600}>
@@ -136,12 +186,30 @@ export default function TurnosDetalle() {
             </Stack>
 
             {agenda.horariosAtencion?.length > 0 ? (
-              agenda.horariosAtencion.map((h, index) => (
-                <Typography key={index}>
-                  {h.dias?.join(', ')} — {h.horaInicio} a {h.horaFin} hs (
-                  Duración: {h.duracion} min)
-                </Typography>
-              ))
+              <Stack spacing={1.5}>
+                {agenda.horariosAtencion.map((h, index) => (
+                  <Box key={index}>
+                    <Typography variant="body1" fontWeight={500}>
+                      {formatearDias(h.dias)}
+                    </Typography>
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      spacing={1}
+                      mt={1}
+                    >
+                      <AccessTimeOutlinedIcon fontSize="small" color="action" />
+                      <Typography variant="body2" color="text.secondary">
+                        {h.horaInicio} a {h.horaFin} hs — Duración por turno:{' '}
+                        {h.duracion} min
+                      </Typography>
+                    </Stack>
+                    {index < agenda.horariosAtencion.length - 1 && (
+                      <Divider sx={{ my: 2 }} />
+                    )}
+                  </Box>
+                ))}
+              </Stack>
             ) : (
               <Typography color="text.secondary">
                 No hay horarios registrados
@@ -151,6 +219,34 @@ export default function TurnosDetalle() {
         </Grid>
       </Grid>
 
+      <Box
+        sx={{
+          mt: 4,
+          color: 'text.secondary',
+        }}
+      >
+        <Stack
+          direction={{ xs: 'column', md: 'row' }}
+          justifyContent={{ xs: 'flex-start', md: 'flex-end' }}
+          spacing={{ xs: 1, md: 2 }}
+          alignItems={{ xs: 'flex-end', md: 'center' }}
+        >
+          <Stack direction="row" alignItems="center" spacing={0.5}>
+            <EventOutlinedIcon fontSize="small" />
+            <Typography variant="caption">
+              Creado el {formatearFecha(agenda.createdAt)} —{' '}
+              {formatearHora(agenda.createdAt)} hs
+            </Typography>
+          </Stack>
+          <Stack direction="row" alignItems="center" spacing={0.5}>
+            <HistoryOutlinedIcon fontSize="small" />
+            <Typography variant="caption">
+              Última modificación: {formatearFecha(agenda.updatedAt)} —{' '}
+              {formatearHora(agenda.updatedAt)} hs
+            </Typography>
+          </Stack>
+        </Stack>
+      </Box>
       <SuccessSnackbar
         open={openSnackbar}
         onClose={() => setOpenSnackbar(false)}
