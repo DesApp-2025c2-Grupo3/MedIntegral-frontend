@@ -5,15 +5,15 @@ import Home from './pages/Home';
 
 import AgendaListado from './pages/agenda-turnos/Listado';
 import AgendaAlta from './pages/agenda-turnos/Alta';
-import AgendaEdicion from './pages/agenda-turnos/Edicion';
+import AgendaDetalle from './pages/agenda-turnos/Detalle';
 
 import PrestadoresListado from './pages/prestadores/Listado';
 import PrestadoresAlta from './pages/prestadores/Alta';
-import PrestadoresEdicion from './pages/prestadores/Edicion';
+import PrestadoresDetalle from './pages/prestadores/Detalle';
 
 import AfiliadosListado from './pages/afiliados/Listado';
 import AfiliadosAlta from './pages/afiliados/Alta';
-import AfiliadosEdicion from './pages/afiliados/Edicion';
+import AfiliadosDetalle from './pages/afiliados/Detalle';
 
 function App() {
   return (
@@ -24,19 +24,19 @@ function App() {
         <Route path="agenda-turnos">
           <Route path="listado" element={<AgendaListado />} />
           <Route path="alta" element={<AgendaAlta />} />
-          <Route path="edicion/:id" element={<AgendaEdicion />} />
+          <Route path="detalle/:id" element={<AgendaDetalle />} />
         </Route>
 
         <Route path="prestadores">
           <Route path="listado" element={<PrestadoresListado />} />
           <Route path="alta" element={<PrestadoresAlta />} />
-          <Route path="edicion/:id" element={<PrestadoresEdicion />} />
+          <Route path="detalle/:id" element={<PrestadoresDetalle />} />
         </Route>
 
         <Route path="afiliados">
           <Route path="listado" element={<AfiliadosListado />} />
           <Route path="alta" element={<AfiliadosAlta />} />
-          <Route path="edicion/:id" element={<AfiliadosEdicion />} />
+          <Route path="detalle/:id" element={<AfiliadosDetalle />} />
         </Route>
 
         <Route path="*" element={<h1>404 - No encontrado</h1>} />

@@ -20,6 +20,7 @@ import {
   afiliadosFiltrosMock,
   searchAfiliadosMock,
 } from '../mocks/afiliadosListadoMock';
+import { agendaTurnosMock } from '../mocks/agendaTurnosMock';
 
 const USE_AGENDA_TURNOS_MOCKS = false;
 
@@ -201,6 +202,10 @@ api.interceptors.request.use((config) => {
 
     if (config.url === '/parentescos') {
       return Promise.reject({ isMock: true, data: parentescoMock });
+    }
+
+    if (config.url.startsWith('/agenda-turnos/1') && config.method === 'get') {
+      return Promise.reject({ isMock: true, data: agendaTurnosMock });
     }
   }
   return config;

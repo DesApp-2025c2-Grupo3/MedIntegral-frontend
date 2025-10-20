@@ -1,16 +1,22 @@
 export const agendaTurnosMock = {
-  id: 'mock-agenda-1234',
-  prestadorId: 1,
-  especialidadId: 2,
-  lugaratencionId: 2,
-  horarios: [
+  id: 20,
+  prestador: 'Clínica Olivos',
+  especialidad: 'Gastroenterología',
+  horariosAtencion: [
     {
-      id: 'mock-horario-1',
       dias: ['Lunes', 'Miércoles'],
+      horaInicio: '08:00',
+      horaFin: '15:00',
       duracion: 30,
-      inicio: '09:00',
-      fin: '12:00',
     },
   ],
+  direccion: {
+    calle: 'Corrientes',
+    altura: 450,
+    pisoDepto: null,
+    localidad: 'Olivos',
+    provincia: 'Buenos Aires',
+  },
   createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
 };

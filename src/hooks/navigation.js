@@ -19,6 +19,6 @@ export const useNavigateToEdicion = () => {
   return (id, query = {}) => {
     const entity = location.pathname.split('/')[1];
     const queryString = new URLSearchParams(query).toString();
-    navigate(`/${entity}/edicion/${id}${queryString ? `?${queryString}` : ''}`);
+    navigate(`/${entity}/detalle/${id}${queryString ? `?${queryString}` : ''}`);
   };
 };
