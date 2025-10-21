@@ -5,9 +5,9 @@ import PageHeader from '../../components/common/PageHeader';
 import SuccessSnackbar from '../../components/common/SuccessSnackbar';
 import { usePageTitle } from '../../hooks/usePageTitle';
 import { getAgendaTurnoById } from '../../services/agendaTurnos';
-import PrestadorInfo from '../../components/common/details/PrestadorInfo';
-import HorariosAtencion from '../../components/common/details/HorariosAtencion';
-import MetadataInfo from '../../components/common/details/MetadataInfo';
+import PrestadorDetailsSection from '../../components/agenda-turnos/PrestadorDetailsSection';
+import HorariosDetailsSection from '../../components/agenda-turnos/HorariosDetailsSection';
+import AuditInfoSection from '../../components/common/details/AuditInfoSection';
 
 export default function DetalleAgendaTurnos() {
   usePageTitle('MedIntegral | Detalle de agenda de turnos');
@@ -69,14 +69,14 @@ export default function DetalleAgendaTurnos() {
 
       <Grid container spacing={3} mt={1}>
         <Grid size={{ xs: 12 }}>
-          <PrestadorInfo agenda={agenda} onEdit={() => {}} />
+          <PrestadorDetailsSection agenda={agenda} onEdit={() => {}} />
         </Grid>
         <Grid size={{ xs: 12 }}>
-          <HorariosAtencion agenda={agenda} onEdit={() => {}} />
+          <HorariosDetailsSection agenda={agenda} onEdit={() => {}} />
         </Grid>
       </Grid>
 
-      <MetadataInfo
+      <AuditInfoSection
         createdAtFecha={agenda.createdAtFecha}
         createdAtHora={agenda.createdAtHora}
         updatedAtFecha={agenda.updatedAtFecha}

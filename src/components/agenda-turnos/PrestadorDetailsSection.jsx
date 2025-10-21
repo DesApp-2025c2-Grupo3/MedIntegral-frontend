@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import { Stack, Typography, Divider } from '@mui/material';
 import LocalHospitalOutlinedIcon from '@mui/icons-material/LocalHospitalOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
-import DetailsSection from './DetailsSection';
+import DetailsSection from '../common/details/DetailsSection';
 
-export default function PrestadorInfo({ agenda, onEdit }) {
+export default function PrestadorDetailsSection({ agenda, onEdit }) {
   return (
     <DetailsSection
       title="Datos del Prestador"
@@ -31,7 +31,7 @@ export default function PrestadorInfo({ agenda, onEdit }) {
   );
 }
 
-PrestadorInfo.propTypes = {
+PrestadorDetailsSection.propTypes = {
   agenda: PropTypes.shape({
     prestador: PropTypes.string,
     especialidad: PropTypes.string,

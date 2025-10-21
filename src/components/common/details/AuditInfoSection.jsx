@@ -3,7 +3,7 @@ import { Box, Stack, Typography } from '@mui/material';
 import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
 import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined';
 
-export default function MetadataInfo({
+export default function AuditInfoSection({
   createdAtFecha,
   createdAtHora,
   updatedAtFecha,
@@ -38,7 +38,7 @@ export default function MetadataInfo({
   );
 }
 
-MetadataInfo.propTypes = {
+AuditInfoSection.propTypes = {
   createdAtFecha: PropTypes.string,
   createdAtHora: PropTypes.string,
   updatedAtFecha: PropTypes.string,

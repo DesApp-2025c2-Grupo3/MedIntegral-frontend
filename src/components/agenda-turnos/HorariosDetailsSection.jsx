@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import { Stack, Typography, Divider, Box } from '@mui/material';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
-import DetailsSection from './DetailsSection';
+import DetailsSection from '../common/details/DetailsSection';
 
-export default function HorariosAtencion({ agenda, onEdit }) {
+export default function HorariosDetailsSection({ agenda, onEdit }) {
   return (
     <DetailsSection
       title="Horarios de Atención"
@@ -39,7 +39,7 @@ export default function HorariosAtencion({ agenda, onEdit }) {
   );
 }
 
-HorariosAtencion.propTypes = {
+HorariosDetailsSection.propTypes = {
   agenda: PropTypes.shape({
     horariosAtencion: PropTypes.arrayOf(
       PropTypes.shape({
