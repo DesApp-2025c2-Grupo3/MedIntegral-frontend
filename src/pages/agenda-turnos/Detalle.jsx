@@ -109,7 +109,7 @@ export default function TurnosDetalle() {
       />
 
       <Grid container spacing={3} mt={1}>
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12 }}>
           <Paper
             elevation={3}
             sx={{
@@ -120,9 +120,18 @@ export default function TurnosDetalle() {
               flexDirection: 'column',
               gap: 1,
               height: '100%',
+              transition: 'all 0.25s ease',
+              cursor: 'default',
+              '&:hover': {
+                transform: 'scale(1.02)',
+                boxShadow: (theme) =>
+                  theme.palette.mode === 'dark'
+                    ? '0px 4px 15px rgba(255, 255, 255, 0.1)'
+                    : '0px 4px 15px rgba(0, 0, 0, 0.15)',
+              },
             }}
           >
-            <Tooltip title="Editar información del prestador">
+            <Tooltip title="Editar datos del prestador">
               <IconButton
                 size="small"
                 color="primary"
@@ -131,14 +140,12 @@ export default function TurnosDetalle() {
                 <EditOutlinedIcon fontSize="small" />
               </IconButton>
             </Tooltip>
-
             <Stack direction="row" alignItems="center" spacing={1} mb={1}>
               <LocalHospitalOutlinedIcon color="primary" />
               <Typography variant="subtitle1" fontWeight={600}>
-                Información del Prestador
+                Datos del Prestador
               </Typography>
             </Stack>
-
             <Typography>
               <strong>Prestador:</strong>{' '}
               {agenda.prestador?.nombre || agenda.prestador}
@@ -147,15 +154,15 @@ export default function TurnosDetalle() {
               <strong>Especialidad:</strong>{' '}
               {agenda.especialidad?.nombre || agenda.especialidad}
             </Typography>
-
-            <Stack direction="row" alignItems="center" spacing={1} mt={1}>
+            <Divider sx={{ my: 1.5 }} />
+            <Stack direction="row" alignItems="center" spacing={1}>
               <LocationOnOutlinedIcon fontSize="small" color="action" />
               <Typography variant="body2">{direccion}</Typography>
             </Stack>
           </Paper>
         </Grid>
 
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12 }}>
           <Paper
             elevation={3}
             sx={{
@@ -166,6 +173,15 @@ export default function TurnosDetalle() {
               flexDirection: 'column',
               gap: 1.5,
               height: '100%',
+              transition: 'all 0.25s ease',
+              cursor: 'default',
+              '&:hover': {
+                transform: 'scale(1.02)',
+                boxShadow: (theme) =>
+                  theme.palette.mode === 'dark'
+                    ? '0px 4px 15px rgba(255, 255, 255, 0.1)'
+                    : '0px 4px 15px rgba(0, 0, 0, 0.15)',
+              },
             }}
           >
             <Tooltip title="Editar horarios de atención">
@@ -247,6 +263,7 @@ export default function TurnosDetalle() {
           </Stack>
         </Stack>
       </Box>
+
       <SuccessSnackbar
         open={openSnackbar}
         onClose={() => setOpenSnackbar(false)}
