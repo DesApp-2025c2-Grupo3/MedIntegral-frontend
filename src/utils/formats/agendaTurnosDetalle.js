@@ -1,6 +1,7 @@
 import { formatDireccion } from './formatDireccion';
 import { formatHorarios } from './formatHorarios';
 import { formatDias } from './formatDias';
+import { formatFecha, formatHora } from './formatFechaHora';
 
 export const formatAgendaTurnosDetalle = (data) => {
   try {
@@ -9,7 +10,6 @@ export const formatAgendaTurnosDetalle = (data) => {
     }
 
     const horariosTexto = formatHorarios(data.horariosAtencion);
-
     const horariosAtencion = Array.isArray(data.horariosAtencion)
       ? data.horariosAtencion.map((h, idx) => ({
           dias: formatDias(h.dias),
@@ -30,8 +30,10 @@ export const formatAgendaTurnosDetalle = (data) => {
       direccion: formatDireccion(data.direccion),
       horariosAtencion,
       duracion: data.duracion ?? null,
-      createdAt: data.createdAt || null,
-      updatedAt: data.updatedAt || null,
+      createdAtFecha: formatFecha(data.createdAt),
+      createdAtHora: formatHora(data.createdAt),
+      updatedAtFecha: formatFecha(data.updatedAt),
+      updatedAtHora: formatHora(data.updatedAt),
     };
   } catch (err) {
     console.error('Error al formatear detalle de agenda:', err);
@@ -42,8 +44,10 @@ export const formatAgendaTurnosDetalle = (data) => {
       direccion: '',
       horariosAtencion: [],
       duracion: null,
-      createdAt: null,
-      updatedAt: null,
+      createdAtFecha: '',
+      createdAtHora: '',
+      updatedAtFecha: '',
+      updatedAtHora: '',
       error: true,
       errorMessage: err.message,
     };

@@ -69,14 +69,19 @@ export default function DetalleAgendaTurnos() {
 
       <Grid container spacing={3} mt={1}>
         <Grid size={{ xs: 12 }}>
-          <PrestadorInfo agenda={agenda} />
+          <PrestadorInfo agenda={agenda} onEdit={() => {}} />
         </Grid>
         <Grid size={{ xs: 12 }}>
-          <HorariosAtencion agenda={agenda} />
+          <HorariosAtencion agenda={agenda} onEdit={() => {}} />
         </Grid>
       </Grid>
 
-      <MetadataInfo agenda={agenda} />
+      <MetadataInfo
+        createdAtFecha={agenda.createdAtFecha}
+        createdAtHora={agenda.createdAtHora}
+        updatedAtFecha={agenda.updatedAtFecha}
+        updatedAtHora={agenda.updatedAtHora}
+      />
 
       <SuccessSnackbar
         open={openSnackbar}
