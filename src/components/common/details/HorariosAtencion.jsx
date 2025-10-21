@@ -13,14 +13,6 @@ import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 export default function HorariosAtencion({ agenda }) {
-  const formatearDias = (dias = []) => {
-    if (!Array.isArray(dias)) return '';
-    if (dias.length === 1) return dias[0];
-    if (dias.length === 2) return `${dias[0]} y ${dias[1]}`;
-    const ultimosDos = dias.slice(-2).join(' y ');
-    return `${dias.slice(0, -2).join(', ')}, ${ultimosDos}`;
-  };
-
   return (
     <Paper
       elevation={3}
@@ -63,13 +55,12 @@ export default function HorariosAtencion({ agenda }) {
           {agenda.horariosAtencion.map((h, index) => (
             <Box key={index}>
               <Typography variant="body1" fontWeight={500}>
-                {formatearDias(h.dias)}
+                {h.dias}
               </Typography>
               <Stack direction="row" alignItems="center" spacing={1} mt={1}>
                 <AccessTimeOutlinedIcon fontSize="small" color="action" />
                 <Typography variant="body2" color="text.secondary">
-                  {h.horaInicio} a {h.horaFin} hs — Duración por turno:{' '}
-                  {h.duracion} min
+                  {h.horarios}
                 </Typography>
               </Stack>
               {index < agenda.horariosAtencion.length - 1 && (
@@ -91,10 +82,8 @@ HorariosAtencion.propTypes = {
   agenda: PropTypes.shape({
     horariosAtencion: PropTypes.arrayOf(
       PropTypes.shape({
-        dias: PropTypes.arrayOf(PropTypes.string),
-        horaInicio: PropTypes.string,
-        horaFin: PropTypes.string,
-        duracion: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        dias: PropTypes.string,
+        horarios: PropTypes.string,
       })
     ),
   }).isRequired,

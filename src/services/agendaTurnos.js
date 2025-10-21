@@ -1,5 +1,6 @@
 import api from './api';
 import { formatAgendaTurnosListado } from '../utils/formats/agendaTurnosListado';
+import { formatAgendaTurnosDetalle } from '../utils/formats/agendaTurnosDetalle';
 
 /**
  * Crear una nueva agenda de turnos
@@ -104,6 +105,31 @@ export const getPrestadorById = async (id) => {
     return data;
   } catch (err) {
     console.error(`Error al obtener prestador con ID ${id}:`, err);
+    throw err;
+  }
+};
+
+/**
+ * Obtener detalle de una agenda de turnos por ID
+ */
+export const getAgendaTurnoById = async (id) => {
+  if (!id) {
+    throw new Error('Se requiere un ID de agenda de turnos');
+  }
+
+  try {
+    const { data } = await api.get(`/agenda-turnos/${id}`);
+
+    if (!data || typeof data !== 'object') {
+      throw new Error(
+        `Agenda de turnos con ID ${id} no encontrada o formato inválido`
+      );
+    }
+
+    const formatted = formatAgendaTurnosDetalle(data);
+    return formatted;
+  } catch (err) {
+    console.error(`Error al obtener detalle de agenda con ID ${id}:`, err);
     throw err;
   }
 };

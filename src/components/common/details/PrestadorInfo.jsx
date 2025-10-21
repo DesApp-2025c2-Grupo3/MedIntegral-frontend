@@ -12,12 +12,6 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 export default function PrestadorInfo({ agenda }) {
-  const direccion = agenda.direccion
-    ? `${agenda.direccion.calle} ${agenda.direccion.altura}${
-        agenda.direccion.pisoDepto ? ', ' + agenda.direccion.pisoDepto : ''
-      }, ${agenda.direccion.localidad}, ${agenda.direccion.provincia}`
-    : 'Sin dirección especificada';
-
   return (
     <Paper
       elevation={3}
@@ -56,20 +50,20 @@ export default function PrestadorInfo({ agenda }) {
       </Stack>
 
       <Typography>
-        <strong>Prestador:</strong>{' '}
-        {agenda.prestador?.nombre || agenda.prestador}
+        <strong>Prestador:</strong> {agenda.prestador || '—'}
       </Typography>
 
       <Typography>
-        <strong>Especialidad:</strong>{' '}
-        {agenda.especialidad?.nombre || agenda.especialidad}
+        <strong>Especialidad:</strong> {agenda.especialidad || '—'}
       </Typography>
 
       <Divider sx={{ my: 1.5 }} />
 
       <Stack direction="row" alignItems="center" spacing={1}>
         <LocationOnOutlinedIcon fontSize="small" color="action" />
-        <Typography variant="body2">{direccion}</Typography>
+        <Typography variant="body2">
+          {agenda.direccion || 'Sin dirección especificada'}
+        </Typography>
       </Stack>
     </Paper>
   );
@@ -77,26 +71,8 @@ export default function PrestadorInfo({ agenda }) {
 
 PrestadorInfo.propTypes = {
   agenda: PropTypes.shape({
-    prestador: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.shape({
-        id: PropTypes.number,
-        nombre: PropTypes.string,
-      }),
-    ]),
-    especialidad: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.shape({
-        id: PropTypes.number,
-        nombre: PropTypes.string,
-      }),
-    ]),
-    direccion: PropTypes.shape({
-      calle: PropTypes.string,
-      altura: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-      pisoDepto: PropTypes.string,
-      localidad: PropTypes.string,
-      provincia: PropTypes.string,
-    }),
+    prestador: PropTypes.string,
+    especialidad: PropTypes.string,
+    direccion: PropTypes.string,
   }).isRequired,
 };

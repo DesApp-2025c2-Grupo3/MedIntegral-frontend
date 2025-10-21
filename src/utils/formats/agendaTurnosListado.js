@@ -1,24 +1,28 @@
+import { formatDireccion } from './formatDireccion';
+import { formatHorarios } from './formatHorarios';
+import { formatDias } from './formatDias';
+
 export const formatAgendaTurnosListado = (data) => {
   try {
-    if (!data || !Array.isArray(data)) {
+    const rawItems = Array.isArray(data)
+      ? data
+      : Array.isArray(data.items)
+        ? data.items
+        : [];
+
+    if (!rawItems.length) {
       throw new Error('La respuesta no tiene el formato esperado');
     }
 
-    const itemsFormateados = data.map((a) => {
-      const dir = a.direccion
-        ? `${a.direccion.calle || ''} ${a.direccion.altura || ''}${
-            a.direccion.pisoDepto ? ', ' + a.direccion.pisoDepto : ''
-          }, ${a.direccion.localidad || ''}, ${a.direccion.provincia || ''}`.trim()
-        : '';
+    const itemsFormateados = rawItems.map((a) => {
+      const horariosTexto = formatHorarios(a.horariosAtencion);
 
-      const horarios =
-        a.horariosAtencion?.map((h) => {
-          const dias =
-            h.dias?.map((d) => (typeof d === 'string' ? d : d?.nombre || '')) ||
-            [];
-
-          return `${dias.join(', ')} - ${h.horaInicio || '?'}hs a ${h.horaFin || '?'}hs (${h.duracion} minutos)`;
-        }) || [];
+      const horariosAtencion = Array.isArray(a.horariosAtencion)
+        ? a.horariosAtencion.map((h, idx) => ({
+            dias: formatDias(h.dias),
+            horarios: horariosTexto[idx] || '',
+          }))
+        : [];
 
       return {
         id: a.id ?? null,
@@ -30,21 +34,18 @@ export const formatAgendaTurnosListado = (data) => {
           typeof a.especialidad === 'object'
             ? (a.especialidad?.nombre ?? '')
             : (a.especialidad ?? ''),
-        horarios,
-        direccion: dir,
+        direccion: formatDireccion(a.direccion),
+        horariosAtencion,
         url: a.id ? `/agenda-turnos/${a.id}` : null,
       };
     });
 
-    return {
-      ...data,
-      items: itemsFormateados,
-    };
+    return { ...data, items: itemsFormateados };
   } catch (err) {
     console.error('Error al formatear agendas:', err);
     return {
       ...data,
-      items: data?.items || [],
+      items: [],
       error: true,
       errorMessage: err.message,
     };

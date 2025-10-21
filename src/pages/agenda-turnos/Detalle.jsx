@@ -3,8 +3,8 @@ import { useParams, useLocation } from 'react-router-dom';
 import { Box, CircularProgress, Typography, Grid } from '@mui/material';
 import PageHeader from '../../components/common/PageHeader';
 import SuccessSnackbar from '../../components/common/SuccessSnackbar';
-import api from '../../services/api';
 import { usePageTitle } from '../../hooks/usePageTitle';
+import { getAgendaTurnoById } from '../../services/agendaTurnos';
 import PrestadorInfo from '../../components/common/details/PrestadorInfo';
 import HorariosAtencion from '../../components/common/details/HorariosAtencion';
 import MetadataInfo from '../../components/common/details/MetadataInfo';
@@ -20,10 +20,10 @@ export default function DetalleAgendaTurnos() {
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
   useEffect(() => {
-    const fetchAgendaDetalle = async () => {
+    const loadAgenda = async () => {
       try {
-        const { data } = await api.get(`/agenda-turnos/${id}`);
-        setAgenda(data);
+        const agendaData = await getAgendaTurnoById(id);
+        setAgenda(agendaData);
       } catch (err) {
         console.error('Error al obtener detalle de agenda:', err);
         setError('No se pudo obtener el detalle de la agenda.');
@@ -32,7 +32,7 @@ export default function DetalleAgendaTurnos() {
       }
     };
 
-    fetchAgendaDetalle();
+    loadAgenda();
   }, [id]);
 
   useEffect(() => {
