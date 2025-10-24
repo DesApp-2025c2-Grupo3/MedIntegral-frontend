@@ -1,0 +1,61 @@
+export const formatFecha = (date) => {
+  return date && date.format ? date.format('YYYY-MM-DD') : null;
+};
+
+export const formatEmails = (emails) => {
+  return emails?.map((e) => ({
+    direccion: e.direccion,
+  }));
+};
+
+export const formatTelefonos = (telefonos) => {
+  return telefonos?.map((t) => ({
+    numero: t.numero,
+  }));
+};
+
+export const formatDirecciones = (direccion) => {
+  return direccion?.map((d) => ({
+    calle: d.calle,
+    altura: d.altura,
+    pisoDepto: d.pisoDepto,
+    codigoPostal: d.codigoPostal,
+    localidad: d.localidad,
+    provinciaId: d.provincia?.id,
+  }));
+};
+
+export const formatSituacionesTerapeuticas = (situaciones) => {
+  return situaciones?.map((item) => ({
+    situacionId: item.situacion?.id,
+    fechaInicio: formatFecha(item.fechaInicio),
+    fechaFin:
+      item.finaliza && item.fechaFin ? formatFecha(item.fechaFin) : null,
+  }));
+};
+
+export const formatAfiliadoData = (afiliadoData) => {
+  return {
+    tipoDocumentoId: afiliadoData.tipoDocumento?.id,
+    numeroDocumento: afiliadoData.numeroDocumento,
+    fechaNacimiento: formatFecha(afiliadoData.fechaNacimiento),
+    nombre: afiliadoData.nombre,
+    apellido: afiliadoData.apellido,
+    vigenciaInicio: formatFecha(afiliadoData.vigenciaInicio),
+    vigenciaFin: formatFecha(afiliadoData.vigenciaFin),
+    emails: formatEmails(afiliadoData.emails),
+    telefonos: formatTelefonos(afiliadoData.telefonos),
+    direcciones: formatDirecciones(afiliadoData.direcciones),
+    tieneSituacionTerapeutica: afiliadoData.tieneSituacionTerapeutica,
+    situacionesTerapeuticas: formatSituacionesTerapeuticas(
+      afiliadoData.situacionesTerapeuticas
+    ),
+  };
+};
+
+export const formatGrupoFamiliar = (grupoFamiliar) => {
+  return grupoFamiliar?.map((familiar) => ({
+    ...formatAfiliadoData(familiar),
+    parentescoId: familiar.parentesco?.id,
+  }));
+};

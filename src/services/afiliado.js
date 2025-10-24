@@ -1,48 +1,29 @@
 import api from './api';
+import {
+  formatGrupoFamiliar,
+  formatAfiliadoData,
+} from '../utils/formats/afiliadoPayload';
 
 export const createAfiliado = async (afiliadoData) => {
-  const situacionesFormateadas = afiliadoData.situacionesTerapeuticas.map(
-    (item) => ({
-      situacionId: item.situacion?.id,
-
-      fechaInicio: item.fechaInicio
-        ? item.fechaInicio.format('YYYY-MM-DD')
-        : null,
-
-      fechaFin:
-        item.finaliza && item.fechaFin
-          ? item.fechaFin.format('YYYY-MM-DD')
-          : null,
-    })
+  const grupoFamiliarFormateado = formatGrupoFamiliar(
+    afiliadoData.grupoFamiliar
   );
 
   const payload = {
-    ...afiliadoData,
-    tipoDocumentoId: afiliadoData.tipoDocumento?.id,
-    fechaNacimiento: afiliadoData.fechaNacimiento
-      ? afiliadoData.fechaNacimiento.format('YYYY-MM-DD')
-      : null,
-    vigenciaInicio: afiliadoData.vigenciaInicio
-      ? afiliadoData.vigenciaInicio.format('YYYY-MM-DD')
-      : null,
-
-    vigenciaFin: afiliadoData.vigenciaFin
-      ? afiliadoData.vigenciaFin.format('YYYY-MM-DD')
-      : null,
-    coberturaId: afiliadoData.cobertura?.id,
-
-    tieneSituacionTerapeutica: afiliadoData.tieneSituacionTerapeutica,
-
-    situacionesTerapeuticas: situacionesFormateadas,
+    ...formatAfiliadoData(afiliadoData),
+    planId: afiliadoData.cobertura?.id,
+    tieneGrupoFamiliar:
+      afiliadoData.tieneGrupoFamiliar || grupoFamiliarFormateado.length > 0,
+    grupoFamiliar: grupoFamiliarFormateado,
   };
 
   if (
     !payload.tipoDocumentoId ||
-    !afiliadoData?.numeroDocumento ||
-    !afiliadoData?.nombre ||
-    !afiliadoData?.apellido ||
+    !payload.numeroDocumento ||
+    !payload.nombre ||
+    !payload.apellido ||
     !payload?.fechaNacimiento ||
-    !payload?.coberturaId ||
+    !payload?.planId ||
     !payload?.vigenciaInicio
   ) {
     throw new Error('Faltan datos obligatorios para crear el afiliado');
