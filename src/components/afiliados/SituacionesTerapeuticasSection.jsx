@@ -18,6 +18,7 @@ export default function SituacionesTerapeuticasSection({
   onSwitchChange,
   onArrayChange,
   listaSituaciones,
+  idPrefix,
 }) {
   const { tieneSituacionTerapeutica, situacionesTerapeuticas } = afiliadoData;
 
@@ -94,6 +95,8 @@ export default function SituacionesTerapeuticasSection({
                     handleActualizarSituacion(situacion.id, nuevo)
                   }
                   onEliminar={() => handleEliminarSituacion(situacion.id)}
+                  idPrefix={idPrefix}
+                  index={index}
                 />
               ))}
           </AnimatePresence>
@@ -113,4 +116,5 @@ SituacionesTerapeuticasSection.propTypes = {
   onSwitchChange: PropTypes.func.isRequired,
   onArrayChange: PropTypes.func.isRequired,
   listaSituaciones: PropTypes.array.isRequired,
+  idPrefix: PropTypes.string,
 };

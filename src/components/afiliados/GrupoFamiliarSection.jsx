@@ -19,6 +19,7 @@ import { newMiembroGrupoFamiliar } from '../../utils/afiliados';
 import { useEffect, useState } from 'react';
 import { getParentescos } from '../../services/parentesco';
 import { useFormValidationContext } from '../../context/FormValidationContext';
+import { getErrorProps } from '../../utils/formHelper';
 
 export default function GrupoFamiliarSection({
   afiliadoData,
@@ -74,14 +75,6 @@ export default function GrupoFamiliarSection({
   };
 
   const { error } = useFormValidationContext();
-
-  const getErrorProps = (fieldName) => {
-    const hasError = error?.field === fieldName;
-    return {
-      error: hasError,
-      helperText: hasError ? error.message : '',
-    };
-  };
 
   return (
     <Box>
@@ -144,7 +137,11 @@ export default function GrupoFamiliarSection({
                   label="Parentesco"
                   dataField={`grupoFamiliar-${index}-parentesco`}
                   required
-                  {...getErrorProps(`grupoFamiliar-${index}-parentesco`)}
+                  {...getErrorProps(
+                    error,
+                    'parentesco',
+                    `grupoFamiliar-${index}`
+                  )}
                 />
 
                 <Divider sx={{ my: 3 }} />
@@ -162,7 +159,7 @@ export default function GrupoFamiliarSection({
                     handleActualizarMiembro(miembro.id, field, value)
                   }
                   listaTiposDocumento={listaTiposDocumento}
-                  idPrefix={`grupoFamiliar-${index}`}
+                  idPrefix={`grupoFamiliar-${index}-`}
                 />
 
                 <Divider sx={{ my: 3 }} />
@@ -180,6 +177,7 @@ export default function GrupoFamiliarSection({
                     handleActualizarMiembro(miembro.id, field, value)
                   }
                   listaSituaciones={listaSituaciones}
+                  idPrefix={`grupoFamiliar-${index}-`}
                 />
 
                 <Divider sx={{ my: 3 }} />

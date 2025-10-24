@@ -5,6 +5,7 @@ import {
   validateNumeroDocumento,
 } from './validateContacto';
 import { validateDireccionesArray } from './validateDireccion';
+import { validateSituacionesTerapeuticasArray } from './validateSituacionesTerapeuticas';
 
 const validateMiembroFamiliar = (miembro, index) => {
   let error;
@@ -46,22 +47,19 @@ const validateMiembroFamiliar = (miembro, index) => {
   error = validateNombre(miembro.apellido, `${prefijo}apellido`);
   if (error) return error;
 
+  if (miembro.tieneSituacionTerapeutica) {
+    error = validateSituacionesTerapeuticasArray(
+      miembro.situacionesTerapeuticas,
+      prefijo
+    );
+    if (error) return error;
+  }
+
   error = validateTelefonos(miembro.telefonos, `${prefijo}telefonos`);
   if (error) return error;
 
   error = validateEmails(miembro.emails, `${prefijo}emails`);
   if (error) return error;
-
-  if (
-    miembro.tieneSituacionTerapeutica &&
-    (!miembro.situacionesTerapeuticas ||
-      miembro.situacionesTerapeuticas.length === 0)
-  ) {
-    return {
-      field: `${prefijo}situacionesTerapeuticas`,
-      message: 'Debe agregar al menos una situación terapéutica.',
-    };
-  }
 
   return null;
 };
@@ -126,6 +124,11 @@ export const validateAltaAfiliado = (data) => {
     }
   }
 
+  if (data.tieneSituacionTerapeutica) {
+    error = validateSituacionesTerapeuticasArray(data.situacionesTerapeuticas);
+    if (error) return error;
+  }
+
   error = validateTelefonos(data.telefonos);
   if (error) return error;
 
@@ -134,16 +137,6 @@ export const validateAltaAfiliado = (data) => {
 
   error = validateDireccionesArray(data.direcciones);
   if (error) return error;
-
-  if (
-    data.tieneSituacionTerapeutica &&
-    (!data.situacionesTerapeuticas || data.situacionesTerapeuticas.length === 0)
-  ) {
-    return {
-      field: 'situacionesTerapeuticas',
-      message: 'Debe agregar al menos una situación terapéutica.',
-    };
-  }
 
   if (data.tieneGrupoFamiliar) {
     if (!data.grupoFamiliar || data.grupoFamiliar.length === 0) {

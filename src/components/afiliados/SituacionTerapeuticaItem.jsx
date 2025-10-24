@@ -4,6 +4,8 @@ import FadeSlide from '../common/animations/FadeSlide';
 import EliminarButton from '../common/forms/EliminarButton';
 import ValidatedAutocomplete from '../common/forms/ValidatedAutocomplete';
 import FechaVigenciaGroup from './FechaVigenciaGroup';
+import { getErrorProps } from '../../utils/formHelper';
+import { useFormValidationContext } from '../../context/FormValidationContext';
 
 export default function SituacionTerapeuticaItem({
   situacion,
@@ -12,7 +14,19 @@ export default function SituacionTerapeuticaItem({
   onChange,
   onEliminar,
   listaSituaciones,
+  idPrefix,
+  index,
 }) {
+  const { error } = useFormValidationContext();
+
+  const getFieldName = (field) => {
+    if (idPrefix) {
+      return `${idPrefix}situacionesTerapeuticas-${index}-${field}`;
+    } else {
+      return `situacionesTerapeuticas-${index}-${field}`;
+    }
+  };
+
   const handleFieldChange = (field, value) => {
     let situacionActualizada = { ...situacion, [field]: value };
 
@@ -65,8 +79,9 @@ export default function SituacionTerapeuticaItem({
               getOptionLabel={(option) => option?.nombre || ''}
               isOptionEqualToValue={(option, value) => option.id === value.id}
               label="Situación Terapéutica"
-              dataField={`situacion-${situacion.id}`}
+              dataField={getFieldName('situacion')}
               required
+              {...getErrorProps(error, getFieldName('situacion'))}
             />
           </Grid>
 
@@ -81,6 +96,11 @@ export default function SituacionTerapeuticaItem({
               labelDesde="Desde"
               labelHasta="Hasta"
               labelSwitch="Registrar fecha de finalización"
+              idPrefix={
+                idPrefix
+                  ? `${idPrefix}situacionesTerapeuticas-${index}-`
+                  : `situacionesTerapeuticas-${index}-`
+              }
             />
           </Grid>
         </Grid>
@@ -96,4 +116,6 @@ SituacionTerapeuticaItem.propTypes = {
   onChange: PropTypes.func.isRequired,
   onEliminar: PropTypes.func.isRequired,
   listaSituaciones: PropTypes.array.isRequired,
+  idPrefix: PropTypes.string,
+  index: PropTypes.number.isRequired,
 };

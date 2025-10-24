@@ -4,6 +4,7 @@ import { useFormValidationContext } from '../../context/FormValidationContext';
 import PropTypes from 'prop-types';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
+import { getErrorProps } from '../../utils/formHelper';
 
 export default function DatosPersonales({
   afiliadoData,
@@ -13,15 +14,6 @@ export default function DatosPersonales({
   idPrefix,
 }) {
   const { error } = useFormValidationContext();
-
-  const getErrorProps = (fieldName) => {
-    const fullFieldName = idPrefix ? `${idPrefix}-${fieldName}` : fieldName;
-    const hasError = error?.field === fullFieldName;
-    return {
-      error: hasError,
-      helperText: hasError ? error.message : '',
-    };
-  };
 
   const dateValue = afiliadoData.fechaNacimiento
     ? typeof afiliadoData.fechaNacimiento === 'string'
@@ -46,8 +38,8 @@ export default function DatosPersonales({
             getOptionLabel={(option) => option?.tipo || ''}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             label="Tipo Documento"
-            dataField={idPrefix ? `${idPrefix}-tipoDocumento` : 'tipoDocumento'}
-            {...getErrorProps('tipoDocumento')}
+            dataField={idPrefix ? `${idPrefix}tipoDocumento` : 'tipoDocumento'}
+            {...getErrorProps(error, 'tipoDocumento', idPrefix)}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
@@ -58,7 +50,7 @@ export default function DatosPersonales({
             value={afiliadoData.numeroDocumento}
             onChange={onChange}
             fullWidth
-            {...getErrorProps('numeroDocumento')}
+            {...getErrorProps(error, 'numeroDocumento', idPrefix)}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 6 }}>
@@ -73,7 +65,7 @@ export default function DatosPersonales({
               textField: {
                 required: true,
                 fullWidth: true,
-                ...getErrorProps('fechaNacimiento'),
+                ...getErrorProps(error, 'fechaNacimiento', idPrefix),
               },
             }}
           />
@@ -87,7 +79,7 @@ export default function DatosPersonales({
             value={afiliadoData.nombre}
             onChange={onChange}
             fullWidth
-            {...getErrorProps('nombre')}
+            {...getErrorProps(error, 'nombre', idPrefix)}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 6 }}>
@@ -98,7 +90,7 @@ export default function DatosPersonales({
             value={afiliadoData.apellido}
             onChange={onChange}
             fullWidth
-            {...getErrorProps('apellido')}
+            {...getErrorProps(error, 'apellido', idPrefix)}
           />
         </Grid>
       </Grid>
