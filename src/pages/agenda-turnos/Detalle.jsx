@@ -73,7 +73,7 @@ export default function DetalleAgendaTurnos() {
             prestador={agenda.prestador}
             especialidad={agenda.especialidad}
             direccion={agenda.direccion}
-            onEdit={() => {}}
+            idAgenda={agenda.id}
           />
         </Grid>
         <Grid size={{ xs: 12 }}>
