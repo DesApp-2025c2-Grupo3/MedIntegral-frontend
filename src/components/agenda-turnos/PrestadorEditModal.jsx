@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useRef, useLayoutEffect, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -7,14 +7,15 @@ import {
   DialogActions,
   Grid,
   Box,
-  TextField,
+  Typography,
   Autocomplete,
+  TextField,
   Alert,
   Stack,
   IconButton,
-  Tooltip,
+  Link,
 } from '@mui/material';
-import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
+import CloseIcon from '@mui/icons-material/Close';
 import ButtonsSection from '../common/forms/FormActions';
 import { validateEspecialidad } from '../../utils/validations/validateEspecialidad';
 
@@ -24,62 +25,97 @@ export default function PrestadorEditModal({
   prestador,
   direccion,
   especialidad,
-  setEspecialidad,
   idAgenda,
   handleGuardar,
 }) {
   const [error, setError] = useState(null);
+  const [especialidadLocal, setEspecialidadLocal] = useState(especialidad);
   const especialidadRef = useRef(null);
 
-  useLayoutEffect(() => {
-    if (prestador?.especialidades?.length > 0) {
-      especialidadRef.current?.querySelector('input')?.focus();
+  useEffect(() => {
+    if (open) {
+      setEspecialidadLocal(especialidad);
+      setError(null);
     }
-  }, [prestador?.especialidades]);
+  }, [especialidad, open]);
 
   const handleEspecialidadChange = (_, newValue) => {
-    setEspecialidad(newValue);
+    setEspecialidadLocal(newValue);
     setError(null);
   };
 
   const onGuardar = () => {
-    const validation = validateEspecialidad(especialidad);
+    const validation = validateEspecialidad(especialidadLocal);
     if (validation) {
       setError(validation.message);
       return;
     }
-    handleGuardar();
+    handleGuardar(especialidadLocal);
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>Editar datos del prestador (Agenda #{idAgenda})</DialogTitle>
+    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+      <DialogTitle
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          pr: 1,
+        }}
+      >
+        Editar datos del prestador (Agenda #{idAgenda})
+        <IconButton
+          onClick={onClose}
+          size="small"
+          color="default"
+          aria-label="Cerrar"
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
 
       <DialogContent dividers>
-        <Box sx={{ mt: 1 }}>
+        <Box>
           <Grid container spacing={3}>
-            {/* Prestador */}
-            <Grid size={{ xs: 12, sm: 6, md: 6 }}>
+            <Grid size={{ xs: 12 }}>
+              <Alert severity="info">
+                Si quiere actualizar el prestador o la dirección, deberá{' '}
+                <Link
+                  href="/agenda-turnos/alta"
+                  style={{
+                    fontWeight: 600,
+                    fontSize: '0.875rem',
+                    color: '#1976d2',
+                    textDecoration: 'none',
+                  }}
+                  sx={{
+                    '&:hover': {
+                      textDecoration: 'underline !important',
+                    },
+                  }}
+                >
+                  crear una nueva agenda de turnos
+                </Link>
+              </Alert>
+            </Grid>
+            <Grid size={{ xs: 12 }}>
               <Stack direction="row" alignItems="center" spacing={1}>
-                <TextField
-                  fullWidth
-                  label="Prestador"
-                  value={prestador?.nombre || ''}
-                  disabled
-                />
-                <Tooltip title="No se puede editar el prestador de una agenda de turnos. Para cambiarlo, creá una nueva agenda.">
-                  <IconButton size="small" color="action">
-                    <HelpOutlineOutlinedIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
+                <Typography variant="body1">
+                  <strong>Prestador:</strong> {prestador?.nombre || '—'}
+                </Typography>
+              </Stack>
+
+              <Stack direction="row" alignItems="center" spacing={1}>
+                <Typography variant="body1">
+                  <strong>Dirección:</strong> {direccion || 'Sin dirección'}
+                </Typography>
               </Stack>
             </Grid>
 
-            {/* Especialidad */}
-            <Grid size={{ xs: 12, sm: 6, md: 6 }}>
+            <Grid size={{ xs: 12 }}>
               <Autocomplete
                 fullWidth
-                value={especialidad}
+                value={especialidadLocal || null}
                 onChange={handleEspecialidadChange}
                 options={prestador?.especialidades || []}
                 getOptionLabel={(option) => option?.nombre || ''}
@@ -95,30 +131,7 @@ export default function PrestadorEditModal({
                 )}
               />
             </Grid>
-
-            {/* Dirección */}
-            <Grid size={{ xs: 12, sm: 6, md: 6 }}>
-              <Stack direction="row" alignItems="center" spacing={1}>
-                <TextField
-                  fullWidth
-                  label="Dirección"
-                  value={direccion}
-                  disabled
-                />
-                <Tooltip title="No se puede editar la dirección de una agenda de turnos. Para cambiarla, creá una nueva agenda.">
-                  <IconButton size="small" color="action">
-                    <HelpOutlineOutlinedIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-              </Stack>
-            </Grid>
           </Grid>
-
-          {error && (
-            <Alert severity="error" sx={{ mt: 2 }}>
-              {error}
-            </Alert>
-          )}
         </Box>
       </DialogContent>
 
@@ -141,9 +154,10 @@ PrestadorEditModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   prestador: PropTypes.object.isRequired,
   direccion: PropTypes.string.isRequired,
-  especialidad: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
-    .isRequired,
-  setEspecialidad: PropTypes.func.isRequired,
+  especialidad: PropTypes.shape({
+    id: PropTypes.number,
+    nombre: PropTypes.string,
+  }).isRequired,
   idAgenda: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   handleGuardar: PropTypes.func.isRequired,
 };

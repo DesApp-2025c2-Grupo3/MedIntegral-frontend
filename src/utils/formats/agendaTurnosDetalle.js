@@ -22,7 +22,7 @@ export const formatAgendaTurnosDetalle = (data) => {
           id: data.prestador.id ?? null,
           nombre: data.prestador.nombre ?? '',
           especialidades: Array.isArray(data.prestador.especialidades)
-            ? data.prestador.especialidades.map((e) => e.nombre)
+            ? data.prestador.especialidades
             : [],
           horariosAtencion: Array.isArray(data.prestador.horariosAtencion)
             ? data.prestador.horariosAtencion.map((h) => ({

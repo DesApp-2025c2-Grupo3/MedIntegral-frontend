@@ -1,17 +1,20 @@
-import PropTypes from 'prop-types';
 import { Stack, Typography, Divider, Box } from '@mui/material';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import DetailsSection from '../common/details/DetailsSection';
+import { useAgenda } from '../../context/AgendaContext';
 
-export default function HorariosDetailsSection({ horariosAtencion, onEdit }) {
+export default function HorariosDetailsSection() {
+  const { agenda } = useAgenda();
+  const horariosAtencion = agenda?.horariosAtencion || [];
+
   return (
     <DetailsSection
       title="Horarios de Atención"
       icon={CalendarMonthOutlinedIcon}
-      onEdit={onEdit}
+      onEdit={() => {}}
     >
-      {horariosAtencion?.length > 0 ? (
+      {horariosAtencion.length > 0 ? (
         <Stack spacing={1.5}>
           {horariosAtencion.map((h, index) => (
             <Box key={index}>
@@ -38,13 +41,3 @@ export default function HorariosDetailsSection({ horariosAtencion, onEdit }) {
     </DetailsSection>
   );
 }
-
-HorariosDetailsSection.propTypes = {
-  horariosAtencion: PropTypes.arrayOf(
-    PropTypes.shape({
-      dias: PropTypes.string,
-      horarios: PropTypes.string,
-    })
-  ),
-  onEdit: PropTypes.func,
-};

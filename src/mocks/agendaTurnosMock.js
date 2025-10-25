@@ -1,5 +1,5 @@
 export const agendaTurnosMock = {
-  id: 20,
+  id: 1,
   prestador: {
     id: 1,
     nombre: 'Clínica Olivos',
@@ -36,7 +36,7 @@ export const agendaTurnosMock = {
       },
     ],
   },
-  especialidad: 'Gastroenterología',
+  especialidad: { id: 1, nombre: 'Gastroenterología' },
   horariosAtencion: [
     {
       dias: ['Lunes', 'Miércoles'],

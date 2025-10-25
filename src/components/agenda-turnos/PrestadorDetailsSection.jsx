@@ -1,28 +1,28 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
 import { Stack, Typography, Divider } from '@mui/material';
 import LocalHospitalOutlinedIcon from '@mui/icons-material/LocalHospitalOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import DetailsSection from '../common/details/DetailsSection';
 import PrestadorEditModal from './PrestadorEditModal';
+import { useAgenda } from '../../context/AgendaContext';
 
-export default function PrestadorDetailsSection({
-  prestador,
-  especialidad,
-  direccion,
-  idAgenda,
-}) {
+export default function PrestadorDetailsSection() {
+  const { agenda, updateAgendaPartial, refetchAgenda } = useAgenda();
   const [openModal, setOpenModal] = useState(false);
-  const [especialidadSeleccionada, setEspecialidadSeleccionada] =
-    useState(especialidad);
 
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
 
-  const handleGuardar = () => {
-    console.log('Guardado especialidad:', especialidadSeleccionada);
-    handleClose();
+  const handleGuardar = async (nuevaEspecialidad) => {
+    try {
+      updateAgendaPartial({ especialidad: nuevaEspecialidad });
+      refetchAgenda();
+    } finally {
+      handleClose();
+    }
   };
+
+  const { prestador, especialidad, direccion } = agenda;
 
   return (
     <>
@@ -36,8 +36,7 @@ export default function PrestadorDetailsSection({
         </Typography>
 
         <Typography>
-          <strong>Especialidad:</strong>{' '}
-          {especialidadSeleccionada?.nombre || especialidad || '—'}
+          <strong>Especialidad:</strong> {especialidad?.nombre || '—'}
         </Typography>
 
         <Divider sx={{ my: 1.5 }} />
@@ -55,34 +54,10 @@ export default function PrestadorDetailsSection({
         onClose={handleClose}
         prestador={prestador}
         direccion={direccion}
-        especialidad={especialidadSeleccionada}
-        setEspecialidad={setEspecialidadSeleccionada}
-        idAgenda={idAgenda}
+        idAgenda={agenda.id}
+        especialidad={especialidad}
         handleGuardar={handleGuardar}
       />
     </>
   );
 }
-
-PrestadorDetailsSection.propTypes = {
-  prestador: PropTypes.shape({
-    id: PropTypes.number,
-    nombre: PropTypes.string,
-    especialidades: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.number,
-        nombre: PropTypes.string,
-      })
-    ),
-    horariosAtencion: PropTypes.array,
-  }),
-  especialidad: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.shape({
-      id: PropTypes.number,
-      nombre: PropTypes.string,
-    }),
-  ]),
-  direccion: PropTypes.string,
-  idAgenda: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-};

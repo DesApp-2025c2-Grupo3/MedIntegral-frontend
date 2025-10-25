@@ -1,86 +1,45 @@
-import { useEffect, useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
 import { Box, CircularProgress, Typography, Grid } from '@mui/material';
+import { useParams, useLocation } from 'react-router-dom';
 import PageHeader from '../../components/common/PageHeader';
 import SuccessSnackbar from '../../components/common/SuccessSnackbar';
-import { usePageTitle } from '../../hooks/usePageTitle';
-import { getAgendaTurnoById } from '../../services/agendaTurnos';
 import PrestadorDetailsSection from '../../components/agenda-turnos/PrestadorDetailsSection';
 import HorariosDetailsSection from '../../components/agenda-turnos/HorariosDetailsSection';
 import AuditInfoSection from '../../components/common/details/AuditInfoSection';
+import { AgendaProvider, useAgenda } from '../../context/AgendaContext';
+import { usePageTitle } from '../../hooks/usePageTitle';
 
-export default function DetalleAgendaTurnos() {
-  usePageTitle('MedIntegral | Detalle de agenda de turnos');
-  const { id } = useParams();
-  const location = useLocation();
+function DetalleAgendaContent() {
+  const { agenda, loading, error } = useAgenda();
 
-  const [agenda, setAgenda] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-
-  useEffect(() => {
-    const loadAgenda = async () => {
-      try {
-        const agendaData = await getAgendaTurnoById(id);
-        setAgenda(agendaData);
-      } catch (err) {
-        console.error('Error al obtener detalle de agenda:', err);
-        setError('No se pudo obtener el detalle de la agenda.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadAgenda();
-  }, [id]);
-
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    if (params.get('creacion') === 'true') {
-      setOpenSnackbar(true);
-    }
-  }, [location]);
-
-  if (loading) {
+  if (loading)
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}>
         <CircularProgress />
       </Box>
     );
-  }
 
-  if (error) {
+  if (error)
     return (
       <Box sx={{ textAlign: 'center', mt: 4 }}>
         <Typography color="error">{error}</Typography>
       </Box>
     );
-  }
 
   if (!agenda) return null;
 
   return (
     <Box sx={{ mt: 2 }}>
       <PageHeader
-        title="Detalle de agenda de turnos"
-        subtitle={`Visualizando la agenda de turnos #${id}`}
+        title={`Agenda de turnos #${agenda.id}`}
+        subtitle="Detalles con opción de edición"
       />
 
       <Grid container spacing={3} mt={1}>
         <Grid size={{ xs: 12 }}>
-          <PrestadorDetailsSection
-            prestador={agenda.prestador}
-            especialidad={agenda.especialidad}
-            direccion={agenda.direccion}
-            idAgenda={agenda.id}
-          />
+          <PrestadorDetailsSection />
         </Grid>
         <Grid size={{ xs: 12 }}>
-          <HorariosDetailsSection
-            horariosAtencion={agenda.horariosAtencion}
-            onEdit={() => {}}
-          />
+          <HorariosDetailsSection />
         </Grid>
       </Grid>
 
@@ -90,12 +49,25 @@ export default function DetalleAgendaTurnos() {
         updatedAtFecha={agenda.updatedAtFecha}
         updatedAtHora={agenda.updatedAtHora}
       />
-
-      <SuccessSnackbar
-        open={openSnackbar}
-        onClose={() => setOpenSnackbar(false)}
-        message="Agenda de turnos cargada con éxito"
-      />
     </Box>
+  );
+}
+
+export default function DetalleAgendaTurnos() {
+  usePageTitle('MedIntegral | Detalle de agenda de turnos');
+  const { id } = useParams();
+  const location = useLocation();
+
+  return (
+    <AgendaProvider idAgenda={id}>
+      <DetalleAgendaContent />
+      {location.search.includes('creacion=true') && (
+        <SuccessSnackbar
+          open
+          message="Agenda de turnos cargada con éxito"
+          onClose={() => {}}
+        />
+      )}
+    </AgendaProvider>
   );
 }
