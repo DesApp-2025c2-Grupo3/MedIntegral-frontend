@@ -69,10 +69,18 @@ export default function DetalleAgendaTurnos() {
 
       <Grid container spacing={3} mt={1}>
         <Grid size={{ xs: 12 }}>
-          <PrestadorDetailsSection agenda={agenda} onEdit={() => {}} />
+          <PrestadorDetailsSection
+            prestador={agenda.prestador}
+            especialidad={agenda.especialidad}
+            direccion={agenda.direccion}
+            onEdit={() => {}}
+          />
         </Grid>
         <Grid size={{ xs: 12 }}>
-          <HorariosDetailsSection agenda={agenda} onEdit={() => {}} />
+          <HorariosDetailsSection
+            horariosAtencion={agenda.horariosAtencion}
+            onEdit={() => {}}
+          />
         </Grid>
       </Grid>
 

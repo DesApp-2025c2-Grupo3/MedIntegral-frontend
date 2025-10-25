@@ -4,7 +4,12 @@ import LocalHospitalOutlinedIcon from '@mui/icons-material/LocalHospitalOutlined
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import DetailsSection from '../common/details/DetailsSection';
 
-export default function PrestadorDetailsSection({ agenda, onEdit }) {
+export default function PrestadorDetailsSection({
+  prestador,
+  especialidad,
+  direccion,
+  onEdit,
+}) {
   return (
     <DetailsSection
       title="Datos del Prestador"
@@ -12,11 +17,11 @@ export default function PrestadorDetailsSection({ agenda, onEdit }) {
       onEdit={onEdit}
     >
       <Typography>
-        <strong>Prestador:</strong> {agenda.prestador || '—'}
+        <strong>Prestador:</strong> {prestador || '—'}
       </Typography>
 
       <Typography>
-        <strong>Especialidad:</strong> {agenda.especialidad || '—'}
+        <strong>Especialidad:</strong> {especialidad || '—'}
       </Typography>
 
       <Divider sx={{ my: 1.5 }} />
@@ -24,7 +29,7 @@ export default function PrestadorDetailsSection({ agenda, onEdit }) {
       <Stack direction="row" alignItems="center" spacing={1}>
         <LocationOnOutlinedIcon fontSize="small" color="action" />
         <Typography variant="body2">
-          {agenda.direccion || 'Sin dirección especificada'}
+          {direccion || 'Sin dirección especificada'}
         </Typography>
       </Stack>
     </DetailsSection>
@@ -32,10 +37,8 @@ export default function PrestadorDetailsSection({ agenda, onEdit }) {
 }
 
 PrestadorDetailsSection.propTypes = {
-  agenda: PropTypes.shape({
-    prestador: PropTypes.string,
-    especialidad: PropTypes.string,
-    direccion: PropTypes.string,
-  }).isRequired,
+  prestador: PropTypes.string,
+  especialidad: PropTypes.string,
+  direccion: PropTypes.string,
   onEdit: PropTypes.func,
 };
