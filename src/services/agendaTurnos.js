@@ -133,3 +133,27 @@ export const getAgendaTurnoById = async (id) => {
     throw err;
   }
 };
+
+/**
+ * Actualizar la especialidad de una agenda de turnos existente
+ */
+export const updateAgendaEspecialidad = async (id, especialidadId) => {
+  try {
+    const { data, status } = await api.post(
+      `/agenda-turnos/${id}/especialidades`,
+      { especialidadId }
+    );
+
+    if (status !== 200) {
+      throw new Error(`Error al actualizar la especialidad (status ${status})`);
+    }
+
+    return data;
+  } catch (error) {
+    console.error(
+      `Error al actualizar la especialidad de la agenda ${id}:`,
+      error
+    );
+    throw error;
+  }
+};

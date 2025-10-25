@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Box, CircularProgress, Typography, Grid } from '@mui/material';
 import { useParams, useLocation } from 'react-router-dom';
 import PageHeader from '../../components/common/PageHeader';
@@ -7,8 +8,9 @@ import HorariosDetailsSection from '../../components/agenda-turnos/HorariosDetai
 import AuditInfoSection from '../../components/common/details/AuditInfoSection';
 import { AgendaProvider, useAgenda } from '../../context/AgendaContext';
 import { usePageTitle } from '../../hooks/usePageTitle';
+import { useState } from 'react';
 
-function DetalleAgendaContent() {
+function DetalleAgendaContent({ onSuccess }) {
   const { agenda, loading, error } = useAgenda();
 
   if (loading)
@@ -36,7 +38,7 @@ function DetalleAgendaContent() {
 
       <Grid container spacing={3} mt={1}>
         <Grid size={{ xs: 12 }}>
-          <PrestadorDetailsSection />
+          <PrestadorDetailsSection onSuccess={onSuccess} />
         </Grid>
         <Grid size={{ xs: 12 }}>
           <HorariosDetailsSection />
@@ -53,19 +55,26 @@ function DetalleAgendaContent() {
   );
 }
 
+DetalleAgendaContent.propTypes = {
+  onSuccess: PropTypes.func,
+};
+
 export default function DetalleAgendaTurnos() {
   usePageTitle('MedIntegral | Detalle de agenda de turnos');
   const { id } = useParams();
   const location = useLocation();
+  const [successMessage, setSuccessMessage] = useState('');
+
+  const handleSuccess = (msg) => setSuccessMessage(msg);
 
   return (
     <AgendaProvider idAgenda={id}>
-      <DetalleAgendaContent />
-      {location.search.includes('creacion=true') && (
+      <DetalleAgendaContent onSuccess={handleSuccess} />
+      {(location.search.includes('creacion=true') || successMessage) && (
         <SuccessSnackbar
           open
-          message="Agenda de turnos cargada con éxito"
-          onClose={() => {}}
+          message={successMessage || 'Agenda de turnos cargada con éxito'}
+          onClose={() => setSuccessMessage('')}
         />
       )}
     </AgendaProvider>

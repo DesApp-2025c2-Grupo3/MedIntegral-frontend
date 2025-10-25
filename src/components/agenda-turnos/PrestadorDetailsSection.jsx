@@ -7,20 +7,13 @@ import PrestadorEditModal from './PrestadorEditModal';
 import { useAgenda } from '../../context/AgendaContext';
 
 export default function PrestadorDetailsSection() {
-  const { agenda, updateAgendaPartial, refetchAgenda } = useAgenda();
+  const { agenda } = useAgenda();
   const [openModal, setOpenModal] = useState(false);
+
+  if (!agenda) return null;
 
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
-
-  const handleGuardar = async (nuevaEspecialidad) => {
-    try {
-      updateAgendaPartial({ especialidad: nuevaEspecialidad });
-      refetchAgenda();
-    } finally {
-      handleClose();
-    }
-  };
 
   const { prestador, especialidad, direccion } = agenda;
 
@@ -49,15 +42,7 @@ export default function PrestadorDetailsSection() {
         </Stack>
       </DetailsSection>
 
-      <PrestadorEditModal
-        open={openModal}
-        onClose={handleClose}
-        prestador={prestador}
-        direccion={direccion}
-        idAgenda={agenda.id}
-        especialidad={especialidad}
-        handleGuardar={handleGuardar}
-      />
+      <PrestadorEditModal open={openModal} onClose={handleClose} />
     </>
   );
 }
