@@ -17,19 +17,29 @@ export const formatAgendaTurnosDetalle = (data) => {
         }))
       : [];
 
+    const prestador = data.prestador
+      ? {
+          id: data.prestador.id ?? null,
+          nombre: data.prestador.nombre ?? '',
+          especialidades: Array.isArray(data.prestador.especialidades)
+            ? data.prestador.especialidades.map((e) => e.nombre)
+            : [],
+          horariosAtencion: Array.isArray(data.prestador.horariosAtencion)
+            ? data.prestador.horariosAtencion.map((h) => ({
+                dia: h.dia?.nombre ?? '',
+                horaInicio: h.horaInicio ?? '',
+                horaFin: h.horaFin ?? '',
+              }))
+            : [],
+        }
+      : null;
+
     return {
       id: data.id ?? null,
-      prestador:
-        typeof data.prestador === 'object'
-          ? (data.prestador.nombre ?? '')
-          : (data.prestador ?? ''),
-      especialidad:
-        typeof data.especialidad === 'object'
-          ? (data.especialidad.nombre ?? '')
-          : (data.especialidad ?? ''),
+      prestador,
+      especialidad: data.especialidad ?? '',
       direccion: formatDireccion(data.direccion),
       horariosAtencion,
-      duracion: data.duracion ?? null,
       createdAtFecha: formatFecha(data.createdAt),
       createdAtHora: formatHora(data.createdAt),
       updatedAtFecha: formatFecha(data.updatedAt),
@@ -37,13 +47,18 @@ export const formatAgendaTurnosDetalle = (data) => {
     };
   } catch (err) {
     console.error('Error al formatear detalle de agenda:', err);
+
     return {
       id: null,
-      prestador: '',
+      prestador: {
+        id: null,
+        nombre: '',
+        especialidades: [],
+        horariosAtencion: [],
+      },
       especialidad: '',
       direccion: '',
       horariosAtencion: [],
-      duracion: null,
       createdAtFecha: '',
       createdAtHora: '',
       updatedAtFecha: '',

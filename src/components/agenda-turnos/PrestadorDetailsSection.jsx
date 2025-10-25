@@ -17,7 +17,7 @@ export default function PrestadorDetailsSection({
       onEdit={onEdit}
     >
       <Typography>
-        <strong>Prestador:</strong> {prestador || '—'}
+        <strong>Prestador:</strong> {prestador.nombre || '—'}
       </Typography>
 
       <Typography>
