@@ -13,6 +13,7 @@ import {
 import SuccessSnackbar from '../components/common/SuccessSnackbar';
 import ErrorSnackbar from '../components/common/ErrorSnackbar';
 import { Backdrop, CircularProgress } from '@mui/material';
+import { sleepIfLocal } from '../utils/sleepIfLocal';
 
 const AgendaContext = createContext();
 
@@ -41,8 +42,8 @@ export function AgendaProvider({ idAgenda, children }) {
     fetchAgenda();
   }, [fetchAgenda]);
 
-  const updateAgenda = (partialData) => {
-    setAgenda((prev) => ({ ...prev, ...partialData }));
+  const updateAgenda = (newAgenda) => {
+    setAgenda(newAgenda);
   };
 
   const updateEspecialidad = async (especialidad) => {
@@ -50,8 +51,9 @@ export function AgendaProvider({ idAgenda, children }) {
 
     setGlobalLoading(true);
     try {
-      await updateAgendaEspecialidad(agenda.id, especialidad.id);
-      updateAgenda({ especialidad });
+      const data = await updateAgendaEspecialidad(agenda.id, especialidad.id);
+      await sleepIfLocal(1500);
+      updateAgenda(data);
       setSuccessMessage('Especialidad actualizada con éxito');
     } catch (err) {
       console.error('Error al actualizar especialidad:', err);

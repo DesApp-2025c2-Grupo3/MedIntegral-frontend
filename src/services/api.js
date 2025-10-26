@@ -50,10 +50,7 @@ api.interceptors.request.use((config) => {
 
       const data = searchAgendaTurnosMock(filters, page, limit);
 
-      return Promise.reject({
-        isMock: true,
-        data: data,
-      });
+      return Promise.reject({ isMock: true, data });
     }
 
     for (const [url, fn] of Object.entries(prestadoresFiltrosMock)) {
@@ -64,11 +61,10 @@ api.interceptors.request.use((config) => {
       }
     }
 
-    if (config.url == '/prestadores' && config.method === 'get') {
+    if (config.url === '/prestadores' && config.method === 'get') {
       const filters = config.params || {};
       const page = Number(filters.page) || 1;
       const limit = Number(filters.limit) || 10;
-
       const data = searchPrestadoresListadoMock(filters, page, limit);
 
       const itemsFormateados = data.items.map((p) => {
@@ -90,12 +86,10 @@ api.interceptors.request.use((config) => {
           createdAt: p.createdAt,
         };
       });
+
       return Promise.reject({
         isMock: true,
-        data: {
-          ...data,
-          items: itemsFormateados,
-        },
+        data: { ...data, items: itemsFormateados },
       });
     }
 
@@ -107,11 +101,10 @@ api.interceptors.request.use((config) => {
       }
     }
 
-    if (config.url == '/afiliados' && config.method === 'get') {
+    if (config.url === '/afiliados' && config.method === 'get') {
       const filters = config.params || {};
       const page = Number(filters.page) || 1;
       const limit = Number(filters.limit) || 10;
-
       const data = searchAfiliadosMock(filters, page, limit);
 
       const itemsFormateados = data.items.map((a) => {
@@ -139,10 +132,7 @@ api.interceptors.request.use((config) => {
 
       return Promise.reject({
         isMock: true,
-        data: {
-          ...data,
-          items: itemsFormateados,
-        },
+        data: { ...data, items: itemsFormateados },
       });
     }
 
@@ -164,24 +154,6 @@ api.interceptors.request.use((config) => {
       });
     }
 
-    if (config.url === '/agenda-turnos/prestadores')
-      return Promise.reject({ isMock: true, data: prestadoresMock });
-
-    if (config.url === '/prestadores/1')
-      return Promise.reject({ isMock: true, data: prestador1DetalleMock });
-
-    if (config.url === '/prestadores/2')
-      return Promise.reject({ isMock: true, data: prestador2DetalleMock });
-
-    if (config.url === '/prestadores/3')
-      return Promise.reject({ isMock: true, data: prestador3DetalleMock });
-
-    if (config.url === '/especialidades')
-      return Promise.reject({ isMock: true, data: listaEspecialidadesMock });
-
-    if (config.url === '/tipoDocumento')
-      return Promise.reject({ isMock: true, data: tipoDocumentoMock });
-
     if (config.url === '/afiliados' && config.method === 'post') {
       return Promise.reject({
         isMock: true,
@@ -189,32 +161,71 @@ api.interceptors.request.use((config) => {
       });
     }
 
-    if (config.url === '/planesMedicos') {
-      return Promise.reject({ isMock: true, data: planesMedicos });
-    }
+    if (config.url === '/agenda-turnos/prestadores')
+      return Promise.reject({ isMock: true, data: prestadoresMock });
 
-    if (config.url === '/situacionesTerapeuticas') {
+    if (config.url === '/prestadores/1')
+      return Promise.reject({ isMock: true, data: prestador1DetalleMock });
+    if (config.url === '/prestadores/2')
+      return Promise.reject({ isMock: true, data: prestador2DetalleMock });
+    if (config.url === '/prestadores/3')
+      return Promise.reject({ isMock: true, data: prestador3DetalleMock });
+
+    if (config.url === '/especialidades')
+      return Promise.reject({ isMock: true, data: listaEspecialidadesMock });
+    if (config.url === '/tipoDocumento')
+      return Promise.reject({ isMock: true, data: tipoDocumentoMock });
+    if (config.url === '/planesMedicos')
+      return Promise.reject({ isMock: true, data: planesMedicos });
+    if (config.url === '/situacionesTerapeuticas')
       return Promise.reject({
         isMock: true,
         data: SituacionesTerapeuticasMock,
       });
-    }
-
-    if (config.url === '/parentescos') {
+    if (config.url === '/parentescos')
       return Promise.reject({ isMock: true, data: parentescoMock });
-    }
 
     if (config.url.startsWith('/agenda-turnos/1') && config.method === 'get') {
       return Promise.reject({ isMock: true, data: agendaTurnosMock });
     }
+
+    if (
+      /^\/agenda-turnos\/\d+\/especialidades$/.test(config.url) &&
+      config.method === 'put'
+    ) {
+      const body =
+        typeof config.data === 'string' ? JSON.parse(config.data) : config.data;
+      const { especialidadId } = body || {};
+
+      const updatedAgenda = { ...agendaTurnosMock };
+      const nuevaEspecialidad =
+        updatedAgenda.prestador.especialidades.find(
+          (e) => e.id === especialidadId
+        ) || updatedAgenda.especialidad;
+
+      updatedAgenda.especialidad = nuevaEspecialidad;
+      updatedAgenda.updatedAt = new Date().toISOString();
+
+      return Promise.reject({
+        isMock: true,
+        data: updatedAgenda,
+        status: 200,
+      });
+    }
   }
+
   return config;
 });
 
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.isMock) return Promise.resolve({ data: error.data });
+    if (error.isMock) {
+      return Promise.resolve({
+        data: error.data,
+        status: error.status ?? 200,
+      });
+    }
     return Promise.reject(error);
   }
 );

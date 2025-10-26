@@ -139,16 +139,18 @@ export const getAgendaTurnoById = async (id) => {
  */
 export const updateAgendaEspecialidad = async (id, especialidadId) => {
   try {
-    const { data, status } = await api.post(
-      `/agenda-turnos/${id}/especialidades`,
-      { especialidadId }
-    );
+    const response = await api.put(`/agenda-turnos/${id}/especialidades`, {
+      especialidadId,
+    });
 
-    if (status !== 200) {
-      throw new Error(`Error al actualizar la especialidad (status ${status})`);
+    if (response.status !== 200) {
+      throw new Error(
+        `Error al actualizar la especialidad (status ${response.status})`
+      );
     }
 
-    return data;
+    const formatted = formatAgendaTurnosDetalle(response.data);
+    return formatted;
   } catch (error) {
     console.error(
       `Error al actualizar la especialidad de la agenda ${id}:`,

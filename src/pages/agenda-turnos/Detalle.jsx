@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Box, CircularProgress, Typography, Grid } from '@mui/material';
+import { Box, CircularProgress, Grid } from '@mui/material';
 import { useParams, useLocation } from 'react-router-dom';
 import PageHeader from '../../components/common/PageHeader';
 import SuccessSnackbar from '../../components/common/SuccessSnackbar';
@@ -11,7 +11,7 @@ import { usePageTitle } from '../../hooks/usePageTitle';
 import { useState } from 'react';
 
 function DetalleAgendaContent({ onSuccess }) {
-  const { agenda, loading, error } = useAgenda();
+  const { agenda, loading } = useAgenda();
 
   if (loading)
     return (
@@ -19,15 +19,6 @@ function DetalleAgendaContent({ onSuccess }) {
         <CircularProgress />
       </Box>
     );
-
-  if (error)
-    return (
-      <Box sx={{ textAlign: 'center', mt: 4 }}>
-        <Typography color="error">{error}</Typography>
-      </Box>
-    );
-
-  if (!agenda) return null;
 
   return (
     <Box sx={{ mt: 2 }}>

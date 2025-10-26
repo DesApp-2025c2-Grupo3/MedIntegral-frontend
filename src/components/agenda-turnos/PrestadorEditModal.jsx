@@ -45,6 +45,7 @@ export default function PrestadorEditModal({ open, onClose }) {
       return;
     }
     await updateEspecialidad(especialidadLocal);
+
     onClose();
   };
 
