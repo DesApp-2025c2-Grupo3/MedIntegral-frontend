@@ -159,3 +159,28 @@ export const updateAgendaEspecialidad = async (id, especialidadId) => {
     throw error;
   }
 };
+
+/**
+ * Actualizar los horarios de atención de una agenda de turnos existente
+ */
+export const updateAgendaHorarios = async (id, horariosAtencion) => {
+  try {
+    const response = await api.put(`/agenda-turnos/${id}/horarios`, {
+      horariosAtencion,
+    });
+
+    const status = response.status ?? 200;
+    if (status !== 200) {
+      throw new Error(`Error al actualizar los horarios (status ${status})`);
+    }
+
+    const formatted = formatAgendaTurnosDetalle(response.data);
+    return formatted;
+  } catch (error) {
+    console.error(
+      `Error al actualizar los horarios de la agenda ${id}:`,
+      error
+    );
+    throw error;
+  }
+};

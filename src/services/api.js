@@ -214,6 +214,29 @@ api.interceptors.request.use((config) => {
     }
   }
 
+  if (
+    /^\/agenda-turnos\/\d+\/horarios$/.test(config.url) &&
+    config.method === 'put'
+  ) {
+    const body =
+      typeof config.data === 'string' ? JSON.parse(config.data) : config.data;
+    const { horariosAtencion } = body || {};
+
+    const updatedAgenda = { ...agendaTurnosMock };
+
+    updatedAgenda.horariosAtencion = Array.isArray(horariosAtencion)
+      ? horariosAtencion
+      : updatedAgenda.horariosAtencion;
+
+    updatedAgenda.updatedAt = new Date().toISOString();
+
+    return Promise.reject({
+      isMock: true,
+      data: updatedAgenda,
+      status: 200,
+    });
+  }
+
   return config;
 });
 
