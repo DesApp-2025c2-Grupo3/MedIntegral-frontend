@@ -19,6 +19,19 @@ export default function DatosDeContacto({
     };
   };
 
+  const telefonosValues = contactoData.telefonos.map((t) => t.numero || '');
+  const emailsValues = contactoData.emails.map((e) => e.direccion || '');
+
+  const handleTelefonosChange = (_, newValues) => {
+    const nuevosTelefonos = newValues.map((numero) => ({ numero }));
+    handleArray('telefonos', nuevosTelefonos);
+  };
+
+  const handleEmailsChange = (_, newValues) => {
+    const nuevosEmails = newValues.map((direccion) => ({ direccion }));
+    handleArray('emails', nuevosEmails);
+  };
+
   return (
     <Box sx={{ mb: 4 }}>
       <Typography variant="h6" gutterBottom>
@@ -32,8 +45,8 @@ export default function DatosDeContacto({
             multiple
             options={[]}
             freeSolo
-            value={contactoData.telefonos}
-            onChange={(_, newValues) => handleArray('telefonos', newValues)}
+            value={telefonosValues}
+            onChange={handleTelefonosChange}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -52,8 +65,8 @@ export default function DatosDeContacto({
             multiple
             options={[]}
             freeSolo
-            value={contactoData.emails}
-            onChange={(_, newValues) => handleArray('emails', newValues)}
+            value={emailsValues}
+            onChange={handleEmailsChange}
             renderInput={(params) => (
               <TextField
                 {...params}
