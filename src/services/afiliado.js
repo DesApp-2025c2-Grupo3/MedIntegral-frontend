@@ -6,7 +6,12 @@ import {
 
 export const createAfiliado = async (afiliadoData) => {
   const grupoFamiliarFormateado = formatGrupoFamiliar(
-    afiliadoData.grupoFamiliar
+    afiliadoData.grupoFamiliar,
+    {
+      vigenciaInicio: afiliadoData.vigenciaInicio,
+      vigenciaFin: afiliadoData.vigenciaFin,
+      direcciones: afiliadoData.direcciones,
+    }
   );
 
   const payload = {
@@ -32,12 +37,12 @@ export const createAfiliado = async (afiliadoData) => {
   try {
     const { data } = await api.post('/afiliados', payload);
 
-    if (!data?.id) {
+    if (!data) {
       throw new Error(
         'La respuesta del servidor no incluye el ID del afiliado creado'
       );
     }
-    return data;
+    return { id: data };
   } catch (err) {
     console.error('Error al crear el afiliado:', err);
     throw err;

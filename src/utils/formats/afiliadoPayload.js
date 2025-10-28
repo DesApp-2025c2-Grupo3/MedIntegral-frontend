@@ -53,9 +53,27 @@ export const formatAfiliadoData = (afiliadoData) => {
   };
 };
 
-export const formatGrupoFamiliar = (grupoFamiliar) => {
-  return grupoFamiliar?.map((familiar) => ({
-    ...formatAfiliadoData(familiar),
-    parentescoId: familiar.parentesco?.id,
-  }));
+export const formatGrupoFamiliar = (grupoFamiliar, datosTitular = {}) => {
+  return grupoFamiliar?.map((familiar) => {
+    const data = {
+      ...formatAfiliadoData(familiar),
+      parentescoId: familiar.parentesco?.id,
+    };
+
+    if (familiar.usaMismaVigenciaTitular) {
+      data.vigenciaInicio = formatFecha(datosTitular.vigenciaInicio);
+      data.vigenciaFin = formatFecha(datosTitular.vigenciaFin);
+    } else {
+      data.vigenciaInicio = formatFecha(familiar.vigenciaInicio);
+      data.vigenciaFin = formatFecha(familiar.vigenciaFin);
+    }
+
+    if (familiar.usaMismaDireccionTitular) {
+      data.direcciones = formatDirecciones(datosTitular.direcciones);
+    } else {
+      data.direcciones = formatDirecciones(familiar.direcciones);
+    }
+
+    return data;
+  });
 };
