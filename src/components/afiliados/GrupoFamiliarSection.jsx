@@ -20,6 +20,7 @@ import { useEffect, useState } from 'react';
 import { getParentescos } from '../../services/parentesco';
 import { useFormValidationContext } from '../../context/FormValidationContext';
 import { getErrorProps } from '../../utils/formHelper';
+import ConfiguracionMiembroSection from './ConfiguracionMiembroSection';
 
 export default function GrupoFamiliarSection({
   afiliadoData,
@@ -188,6 +189,16 @@ export default function GrupoFamiliarSection({
                     handleActualizarMiembro(miembro.id, field, value)
                   }
                   idPrefix={`grupoFamiliar-${index}`}
+                />
+
+                <Divider sx={{ my: 3 }} />
+
+                <ConfiguracionMiembroSection
+                  miembro={miembro}
+                  onMiembroChange={(field, value) =>
+                    handleActualizarMiembro(miembro.id, field, value)
+                  }
+                  idPrefix={`grupoFamiliar-${index}-`}
                 />
               </Box>
             </FadeSlide>
