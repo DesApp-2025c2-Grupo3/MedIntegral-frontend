@@ -42,8 +42,11 @@ export default function HorariosEditModal({ open, onClose }) {
 
   const toDayjs = (value) => {
     if (!value) return null;
-    const parsed = dayjs(value, ['HH:mm', 'H:mm']);
-    return parsed.isValid() ? parsed : null;
+    const [h, m] = String(value)
+      .split(':')
+      .map((n) => parseInt(n, 10));
+    if (!Number.isFinite(h) || !Number.isFinite(m)) return null;
+    return dayjs().hour(h).minute(m).second(0).millisecond(0);
   };
 
   const fromDayjs = (value) =>
