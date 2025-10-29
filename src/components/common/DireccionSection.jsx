@@ -1,9 +1,9 @@
 import { Box, Grid, TextField } from '@mui/material';
 import ValidatedAutocomplete from '../common/forms/ValidatedAutocomplete';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useFormValidationContext } from '../../context/FormValidationContext';
+import { getProvincias } from '../../services/provincias';
 
 export default function DireccionSection({ direccion, onChange, idPrefix }) {
   const handleFieldChange = (field, value) => {
@@ -22,23 +22,13 @@ export default function DireccionSection({ direccion, onChange, idPrefix }) {
   };
 
   const [listaProvincias, setListaProvincias] = useState([]);
-  const API_PROVINCIAS_URL = 'https://apis.datos.gob.ar/georef/api/provincias';
 
   useEffect(() => {
     const cargarProvincias = async () => {
       try {
-        const response = await axios.get(API_PROVINCIAS_URL, {
-          params: {
-            campos: 'id,nombre',
-          },
-        });
+        const data = await getProvincias();
 
-        const provinciasAdaptadas = response.data.provincias.map((prov) => ({
-          id: prov.id,
-          provincia: prov.nombre,
-        }));
-
-        setListaProvincias(provinciasAdaptadas);
+        setListaProvincias(data);
       } catch (err) {
         console.error('Error al obtener provincias:', err);
       }
@@ -57,13 +47,10 @@ export default function DireccionSection({ direccion, onChange, idPrefix }) {
           <ValidatedAutocomplete
             value={valorProvincia}
             onChange={(_, nuevaProvincia) => {
-              const provinciaGuardar = nuevaProvincia
-                ? { id: nuevaProvincia.id, nombre: nuevaProvincia.provincia }
-                : null;
-              handleFieldChange('provincia', provinciaGuardar);
+              handleFieldChange('provincia', nuevaProvincia);
             }}
             options={listaProvincias}
-            getOptionLabel={(option) => option?.provincia || ''}
+            getOptionLabel={(option) => option?.nombre || ''}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             label="Provincia"
             dataField="provincia"
