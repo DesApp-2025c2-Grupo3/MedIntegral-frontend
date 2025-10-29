@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import {
   Dialog,
@@ -38,49 +38,78 @@ export default function HorariosEditModal({ open, onClose }) {
 
   const [localHorarios, setLocalHorarios] = useState([]);
 
-  const duraciones = Array.from({ length: 24 }, (_, i) => (i + 1) * 5); // 5..120
-  const DIAS_SEMANA = [
-    { id: 1, nombre: 'Lunes' },
-    { id: 2, nombre: 'Martes' },
-    { id: 3, nombre: 'Miércoles' },
-    { id: 4, nombre: 'Jueves' },
-    { id: 5, nombre: 'Viernes' },
-    { id: 6, nombre: 'Sábado' },
-  ];
+  const duraciones = Array.from({ length: 24 }, (_, i) => (i + 1) * 5);
 
-  // Helpers time <-> dayjs
   const toDayjs = (value) => {
     if (!value) return null;
-    const parsed = dayjs(value, 'HH:mm');
+    const parsed = dayjs(value, ['HH:mm', 'H:mm']);
     return parsed.isValid() ? parsed : null;
   };
+
   const fromDayjs = (value) =>
     value?.isValid?.() ? value.format('HH:mm') : '';
 
+  const toMinutes = (hhmm) => {
+    if (!hhmm || typeof hhmm !== 'string') return NaN;
+    const [h, m] = hhmm.trim().split(':');
+    const hh = parseInt(h, 10);
+    const mm = parseInt(m, 10);
+    return Number.isFinite(hh) && Number.isFinite(mm) ? hh * 60 + mm : NaN;
+  };
+
+  const isWithin = (start, end, rangeStart, rangeEnd) => {
+    const s = toMinutes(start);
+    const e = toMinutes(end);
+    const rs = toMinutes(rangeStart);
+    const re = toMinutes(rangeEnd);
+    if ([s, e, rs, re].some(Number.isNaN)) return false;
+    return s >= rs && e <= re;
+  };
+
+  const diasConHorarios = useMemo(() => {
+    const base = agenda?.prestador?.horariosAtencion || [];
+    return base.map((h, idx) => {
+      const diaId = h?.dia?.id ?? idx;
+      const nombreDia = h?.dia?.nombre ?? '';
+      const horaInicio = h?.horaInicio ?? '';
+      const horaFin = h?.horaFin ?? '';
+      return {
+        id: `${diaId}-${horaInicio}-${horaFin}`,
+        diaId,
+        nombre: nombreDia,
+        label: `${nombreDia || `(díaId:${diaId})`} (${horaInicio} - ${horaFin})`,
+        _inicio: horaInicio,
+        _fin: horaFin,
+        _raw: h,
+      };
+    });
+  }, [agenda]);
+
   useEffect(() => {
-    if (open && agenda?.horariosAtencion) {
-      const normalizados = agenda.horariosAtencion.map((h, idx) => ({
-        id: h.id || String(idx + 1),
-        dias: Array.isArray(h.dias) ? h.dias : h.dia ? [h.dia.nombre] : [],
-        horaInicio: h.horaInicio || '',
-        horaFin: h.horaFin || '',
-        duracion: Number(h.duracion) || null,
-      }));
-      setLocalHorarios(
-        normalizados.length
-          ? normalizados
-          : [
-              {
-                id: '1',
-                dias: [],
-                horaInicio: '',
-                horaFin: '',
-                duracion: null,
-              },
-            ]
-      );
-    }
-  }, [agenda, open]);
+    if (!(open && Array.isArray(agenda?.horariosAtencion))) return;
+
+    const normalizados = agenda.horariosAtencion.map((ha, idx) => {
+      const selected = (diasConHorarios || []).filter((d) => {
+        const sameDay = Number(d.diaId) === Number(ha?.dia?.id);
+        if (!sameDay) return false;
+        return isWithin(ha.horaInicio, ha.horaFin, d._inicio, d._fin);
+      });
+
+      return {
+        id: ha.id || String(idx + 1),
+        dias: selected,
+        horaInicio: ha.horaInicio || '',
+        horaFin: ha.horaFin || '',
+        duracion: Number(ha.duracion) || null,
+      };
+    });
+
+    setLocalHorarios(
+      normalizados.length
+        ? normalizados
+        : [{ id: '1', dias: [], horaInicio: '', horaFin: '', duracion: null }]
+    );
+  }, [agenda, open, diasConHorarios]);
 
   const handleHorarioChange = useCallback((index, field, value) => {
     setLocalHorarios((prev) => {
@@ -109,9 +138,7 @@ export default function HorariosEditModal({ open, onClose }) {
 
   const handleSave = async () => {
     const validation = validateHorarios(localHorarios);
-    if (validation) {
-      return;
-    }
+    if (validation) return;
 
     setGlobalLoading(true);
     try {
@@ -162,13 +189,8 @@ export default function HorariosEditModal({ open, onClose }) {
                   Horario {index + 1}
                 </Typography>
 
-                {/* Días de la semana */}
                 <DiasSemanaSelector
-                  dias={DIAS_SEMANA.map((d) => ({
-                    id: d.id,
-                    nombre: d.nombre,
-                    label: d.nombre,
-                  }))}
+                  dias={diasConHorarios}
                   selected={horario.dias}
                   onChange={(newDias) =>
                     handleHorarioChange(index, 'dias', newDias)

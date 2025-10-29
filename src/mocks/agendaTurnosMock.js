@@ -21,7 +21,7 @@ export const agendaTurnosMock = {
       },
       {
         dia: { id: 3, nombre: 'Miércoles' },
-        horaInicio: '9:00',
+        horaInicio: '09:00',
         horaFin: '12:00',
       },
       {

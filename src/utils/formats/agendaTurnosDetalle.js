@@ -6,6 +6,7 @@ export const formatAgendaTurnosDetalle = (data) => {
     if (!data || typeof data !== 'object') {
       throw new Error('La respuesta no tiene el formato esperado');
     }
+
     const prestador = data.prestador
       ? {
           id: data.prestador.id ?? null,
@@ -19,30 +20,28 @@ export const formatAgendaTurnosDetalle = (data) => {
           horariosAtencion: Array.isArray(data.prestador.horariosAtencion)
             ? data.prestador.horariosAtencion.map((h, idx) => ({
                 id: idx + 1,
-                dia: h.dia?.nombre ?? '',
+                dia: h.dia
+                  ? { id: h.dia.id ?? idx + 1, nombre: h.dia.nombre ?? '' }
+                  : { id: idx + 1, nombre: '' },
                 horaInicio: h.horaInicio ?? '',
                 horaFin: h.horaFin ?? '',
               }))
             : [],
         }
       : null;
+
     const horariosAtencion = Array.isArray(data.horariosAtencion)
       ? data.horariosAtencion.map((h, idx) => ({
           id: idx + 1,
-          dias: h.dias
-            ? Array.isArray(h.dias)
-              ? h.dias.map((d) =>
-                  typeof d === 'string' ? d : (d?.nombre ?? '')
-                )
-              : [h.dias?.nombre ?? '']
-            : h.dia
-              ? [h.dia?.nombre ?? '']
-              : [],
+          dia: h.dia
+            ? { id: h.dia.id ?? idx + 1, nombre: h.dia.nombre ?? '' }
+            : { id: idx + 1, nombre: '' },
           horaInicio: h.horaInicio ?? '',
           horaFin: h.horaFin ?? '',
           duracion: Number(h.duracion) || null,
         }))
       : [];
+
     return {
       id: data.id ?? null,
       prestador,
