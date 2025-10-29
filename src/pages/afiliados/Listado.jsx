@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import PageListHeader from '../../components/common/lists/PageListHeader';
 import { usePageTitle } from '../../hooks/usePageTitle';
@@ -15,35 +15,24 @@ export default function AfiliadosListado() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filters, setFilters] = useState({ textInputSearch: '' });
 
-  const fetchAfiliados = useCallback(async () => {
-    setLoading(true);
-    try {
-      const params = Object.fromEntries(
-        Object.entries({
-          ...filters,
-          page: page + 1,
-          limit: rowsPerPage,
-        }).map(([keyframes, val]) => [
-          keyframes,
-          typeof val === 'object' ? val?.value || '' : val,
-        ])
-      );
-
-      const data = await getTitulares(params);
-      setRows(data.items || []);
-      setTotal(data.total || 0);
-    } catch (err) {
-      console.error('Error al obtener afiliados:', err);
-      setRows([]);
-      setTotal(0);
-    } finally {
-      setLoading(false);
-    }
-  }, [filters, page, rowsPerPage]);
-
   useEffect(() => {
+    const fetchAfiliados = async () => {
+      setLoading(true);
+      try {
+        const data = await getTitulares(filters, page, rowsPerPage);
+        setRows(data.items || []);
+        setTotal(data.total || 0);
+      } catch (err) {
+        console.error('Error al obtener afiliados:', err);
+        setRows([]);
+        setTotal(0);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchAfiliados();
-  }, [fetchAfiliados]);
+  }, [filters, page, rowsPerPage]);
 
   const handleSearch = (newFilters) => {
     if (!newFilters || Object.keys(newFilters).length === 0) {

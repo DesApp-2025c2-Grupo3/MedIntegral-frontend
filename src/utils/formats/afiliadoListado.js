@@ -23,20 +23,14 @@ export const formatAfiliadosListado = (data) => {
         ? nAfiliado.toString().padStart(7, '0')
         : '0000000';
 
-      const nroAfiliadoCompleto = `${nAfiliadoFormateado}-'01'`;
+      const nroAfiliadoCompleto = `${nAfiliadoFormateado}-01`;
 
       const direcciones =
         afiliado.domicilios?.map((domicilio) => {
           const dir = domicilio.Direccion;
           if (!dir) return '';
-
           const calleCompleta = `${dir.calle || ''} ${dir.altura || ''}`.trim();
-          const pisoDepto = dir.pisoDepto ? `, ${dir.pisoDepto}` : '';
-          const localidad = dir.localidad || '';
-          const provincia = dir.Provincium?.nombre || '';
-          const codigoPostal = dir.codigoPostal || '';
-
-          return `${calleCompleta}${pisoDepto}, ${localidad}${provincia ? `, ${provincia}` : ''}${codigoPostal ? ` (${codigoPostal})` : ''}`;
+          return `${calleCompleta}, ${dir.localidad}, ${dir.Provincium?.nombre}`;
         }) || [];
 
       const emails = afiliado.emails?.map((e) => e.direccion || '');

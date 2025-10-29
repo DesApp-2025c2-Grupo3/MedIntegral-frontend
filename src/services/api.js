@@ -112,36 +112,37 @@ api.interceptors.request.use((config) => {
       const limit = Number(filters.limit) || 10;
 
       const data = searchAfiliadosMock(filters, page, limit);
-
-      const itemsFormateados = data.items.map((a) => {
-        const nombreCompleto = `${a.nombre} ${a.apellido}`;
-        const tipoYDocumento = `${a.tipoDocumento.tipo} ${a.numeroDocumento}`;
-        const dirs = a.direcciones.map(
-          (d) =>
-            `${d.calle} ${d.altura || ''}, ${d.localidad}, ${d.provincia.nombre}`
-        );
-        const numeros = a.telefonos.map((t) => t.numero);
-        const correos = a.emails.map((t) => t.direccion);
-
-        return {
-          id: a.afiliado,
-          afiliado: nombreCompleto,
-          documento: tipoYDocumento,
-          nroAfiliado: a.nroAfiliado,
-          planMedico: a.cobertura.plan,
-          direcciones: dirs,
-          telefonos: numeros,
-          emails: correos,
-          vigenciaInicio: a.vigenciaInicio,
-        };
-      });
+      const itemsParaFormatear = data.items.map((a) => ({
+        id: a.afiliado,
+        nombre: a.nombre,
+        apellido: a.apellido,
+        numeroDocumento: a.numeroDocumento,
+        tipoDocumento: a.tipoDocumento,
+        Contrato: {
+          nAfiliado: a.nroAfiliado ? parseInt(a.nroAfiliado.split('-')[0]) : 1,
+          plan: {
+            plan: a.cobertura.plan,
+          },
+        },
+        domicilios: a.direcciones.map((d) => ({
+          Direccion: {
+            calle: d.calle,
+            altura: d.altura,
+            pisoDepto: '',
+            localidad: d.localidad,
+            Provincium: {
+              nombre: d.provincia.nombre,
+            },
+            codigoPostal: d.codigoPostal,
+          },
+        })),
+        emails: a.emails,
+        telefonos: a.telefonos,
+      }));
 
       return Promise.reject({
         isMock: true,
-        data: {
-          ...data,
-          items: itemsFormateados,
-        },
+        data: itemsParaFormatear,
       });
     }
 

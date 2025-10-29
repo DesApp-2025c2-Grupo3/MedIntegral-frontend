@@ -53,10 +53,21 @@ export const createAfiliado = async (afiliadoData) => {
 /*
  * Obtener listado de los afiliados titulares con filtros y paginación
  */
-export const getTitulares = async (params = {}) => {
+export const getTitulares = async (filters = {}, page = 0, limit = 10) => {
   try {
-    const response = await api.get('/afiliados', { params });
-    return formatAfiliadosListado(response.data);
+    const params = Object.fromEntries(
+      Object.entries({
+        ...filters,
+        page: page + 1,
+        limit,
+      }).map(([key, val]) => [
+        key,
+        typeof val === 'object' ? val?.value || '' : val,
+      ])
+    );
+
+    const { data } = await api.get('/afiliados', { params });
+    return formatAfiliadosListado(data);
   } catch (err) {
     console.error('Error al obtener listado de afiliados:', err);
     throw err;
