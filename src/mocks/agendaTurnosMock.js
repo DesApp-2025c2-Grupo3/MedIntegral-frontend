@@ -39,9 +39,15 @@ export const agendaTurnosMock = {
   especialidad: { id: 1, nombre: 'Gastroenterología' },
   horariosAtencion: [
     {
-      dias: ['Lunes', 'Miércoles'],
+      dia: { id: 1, nombre: 'Lunes' },
       horaInicio: '09:00',
-      horaFin: '12:00',
+      horaFin: '11:00',
+      duracion: 30,
+    },
+    {
+      dia: { id: 3, nombre: 'Miércoles' },
+      horaInicio: '09:00',
+      horaFin: '11:00',
       duracion: 30,
     },
   ],

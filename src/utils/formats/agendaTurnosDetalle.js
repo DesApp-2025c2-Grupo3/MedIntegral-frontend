@@ -1,6 +1,4 @@
 import { formatDireccion } from './formatDireccion';
-import { formatHorarios } from './formatHorarios';
-import { formatDias } from './formatDias';
 import { formatFecha, formatHora } from './formatFechaHora';
 
 export const formatAgendaTurnosDetalle = (data) => {
@@ -8,24 +6,19 @@ export const formatAgendaTurnosDetalle = (data) => {
     if (!data || typeof data !== 'object') {
       throw new Error('La respuesta no tiene el formato esperado');
     }
-
-    const horariosTexto = formatHorarios(data.horariosAtencion);
-    const horariosAtencion = Array.isArray(data.horariosAtencion)
-      ? data.horariosAtencion.map((h, idx) => ({
-          dias: formatDias(h.dias),
-          horarios: horariosTexto[idx] || '',
-        }))
-      : [];
-
     const prestador = data.prestador
       ? {
           id: data.prestador.id ?? null,
           nombre: data.prestador.nombre ?? '',
           especialidades: Array.isArray(data.prestador.especialidades)
-            ? data.prestador.especialidades
+            ? data.prestador.especialidades.map((e) => ({
+                id: e.id ?? null,
+                nombre: e.nombre ?? '',
+              }))
             : [],
           horariosAtencion: Array.isArray(data.prestador.horariosAtencion)
-            ? data.prestador.horariosAtencion.map((h) => ({
+            ? data.prestador.horariosAtencion.map((h, idx) => ({
+                id: idx + 1,
                 dia: h.dia?.nombre ?? '',
                 horaInicio: h.horaInicio ?? '',
                 horaFin: h.horaFin ?? '',
@@ -33,11 +26,34 @@ export const formatAgendaTurnosDetalle = (data) => {
             : [],
         }
       : null;
-
+    const horariosAtencion = Array.isArray(data.horariosAtencion)
+      ? data.horariosAtencion.map((h, idx) => ({
+          id: idx + 1,
+          dias: h.dias
+            ? Array.isArray(h.dias)
+              ? h.dias.map((d) =>
+                  typeof d === 'string' ? d : (d?.nombre ?? '')
+                )
+              : [h.dias?.nombre ?? '']
+            : h.dia
+              ? [h.dia?.nombre ?? '']
+              : [],
+          horaInicio: h.horaInicio ?? '',
+          horaFin: h.horaFin ?? '',
+          duracion: Number(h.duracion) || null,
+        }))
+      : [];
     return {
       id: data.id ?? null,
       prestador,
-      especialidad: data.especialidad ?? '',
+      especialidad: data.especialidad
+        ? typeof data.especialidad === 'object'
+          ? {
+              id: data.especialidad.id ?? null,
+              nombre: data.especialidad.nombre ?? '',
+            }
+          : { id: null, nombre: String(data.especialidad) }
+        : { id: null, nombre: '' },
       direccion: formatDireccion(data.direccion),
       horariosAtencion,
       createdAtFecha: formatFecha(data.createdAt),
@@ -56,7 +72,7 @@ export const formatAgendaTurnosDetalle = (data) => {
         especialidades: [],
         horariosAtencion: [],
       },
-      especialidad: '',
+      especialidad: { id: null, nombre: '' },
       direccion: '',
       horariosAtencion: [],
       createdAtFecha: '',
