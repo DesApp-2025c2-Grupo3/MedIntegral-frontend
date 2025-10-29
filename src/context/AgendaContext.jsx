@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import {
   getAgendaTurnoById,
   updateAgendaEspecialidad,
+  updateAgendaHorarios,
 } from '../services/agendaTurnos';
 import SuccessSnackbar from '../components/common/SuccessSnackbar';
 import ErrorSnackbar from '../components/common/ErrorSnackbar';
@@ -63,6 +64,29 @@ export function AgendaProvider({ idAgenda, children }) {
     }
   };
 
+  const updateHorarios = async (horarios) => {
+    if (!agenda?.id) return;
+
+    setGlobalLoading(true);
+    setError(null);
+
+    try {
+      const horariosPayload = horarios.map((h) => ({
+        dias: (h.dias || []).map((d) => Number(d.diaId)),
+        horaInicio: h.horaInicio || null,
+        horaFin: h.horaFin || null,
+        duracion: h.duracion ?? null,
+      }));
+      const updated = await updateAgendaHorarios(agenda.id, horariosPayload);
+      setAgenda(updated);
+      setSuccessMessage('Horarios actualizados con éxito');
+    } catch {
+      setError('No se pudieron actualizar los horarios.');
+    } finally {
+      setGlobalLoading(false);
+    }
+  };
+
   return (
     <AgendaContext.Provider
       value={{
@@ -73,6 +97,7 @@ export function AgendaProvider({ idAgenda, children }) {
         successMessage,
         updateAgenda,
         updateEspecialidad,
+        updateHorarios,
         refetchAgenda: fetchAgenda,
         setSuccessMessage,
         setError,

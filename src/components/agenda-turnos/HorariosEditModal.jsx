@@ -25,12 +25,11 @@ import DiasSemanaSelector from '../common/forms/DiasSemanaSelector';
 import EliminarButton from '../common/forms/EliminarButton';
 import FadeSlide from '../common/animations/FadeSlide';
 import { validateHorarios } from '../../utils/validations/validateHorariosEdicion';
-import { updateAgendaHorarios } from '../../services/agendaTurnos';
 
 export default function HorariosEditModal({ open, onClose }) {
   const {
     agenda,
-    updateAgenda,
+    updateHorarios,
     setGlobalLoading,
     setError,
     setSuccessMessage,
@@ -190,10 +189,8 @@ export default function HorariosEditModal({ open, onClose }) {
       return;
     }
 
-    setGlobalLoading(true);
     try {
-      const updated = await updateAgendaHorarios(agenda.id, localHorarios);
-      updateAgenda(updated);
+      await updateHorarios(localHorarios);
       setSuccessMessage('Horarios actualizados con éxito');
       onClose();
     } catch {

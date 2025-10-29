@@ -169,9 +169,10 @@ export const updateAgendaHorarios = async (id, horariosAtencion) => {
       horariosAtencion,
     });
 
-    const status = response.status ?? 200;
-    if (status !== 200) {
-      throw new Error(`Error al actualizar los horarios (status ${status})`);
+    if (response.status !== 200) {
+      throw new Error(
+        `Error al actualizar la especialidad (status ${response.status})`
+      );
     }
 
     const formatted = formatAgendaTurnosDetalle(response.data);
