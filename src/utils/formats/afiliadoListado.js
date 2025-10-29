@@ -1,0 +1,70 @@
+export const formatAfiliadosListado = (data) => {
+  try {
+    if (!data) {
+      return {
+        items: [],
+        total: 0,
+      };
+    }
+    const afiliadosArray = Array.isArray(data) ? data : data.items || [];
+
+    const itemsFormateados = afiliadosArray.map((afiliado) => {
+      const afiliadoNombre =
+        `${afiliado.nombre || ''} ${afiliado.apellido || ''}`.trim();
+
+      const documento =
+        `${afiliado.tipoDocumento?.tipo || ''} ${afiliado.numeroDocumento || ''}`.trim();
+
+      const planMedico = afiliado.Contrato?.plan?.plan;
+
+      const nAfiliado = afiliado.Contrato?.nAfiliado;
+
+      const nAfiliadoFormateado = nAfiliado
+        ? nAfiliado.toString().padStart(7, '0')
+        : '0000000';
+
+      const nroAfiliadoCompleto = `${nAfiliadoFormateado}-'01'`;
+
+      const direcciones =
+        afiliado.domicilios?.map((domicilio) => {
+          const dir = domicilio.Direccion;
+          if (!dir) return '';
+
+          const calleCompleta = `${dir.calle || ''} ${dir.altura || ''}`.trim();
+          const pisoDepto = dir.pisoDepto ? `, ${dir.pisoDepto}` : '';
+          const localidad = dir.localidad || '';
+          const provincia = dir.Provincium?.nombre || '';
+          const codigoPostal = dir.codigoPostal || '';
+
+          return `${calleCompleta}${pisoDepto}, ${localidad}${provincia ? `, ${provincia}` : ''}${codigoPostal ? ` (${codigoPostal})` : ''}`;
+        }) || [];
+
+      const emails = afiliado.emails?.map((e) => e.direccion || '');
+
+      const telefonos = afiliado.telefonos?.map((t) => t.numero || '');
+
+      return {
+        id: afiliado.id,
+        afiliado: afiliadoNombre,
+        nroAfiliado: nroAfiliadoCompleto,
+        documento: documento,
+        planMedico: planMedico,
+        direcciones: direcciones,
+        telefonos: telefonos,
+        emails: emails,
+      };
+    });
+    return {
+      items: itemsFormateados,
+      total: itemsFormateados.length,
+    };
+  } catch (err) {
+    console.error('Error al formatear afiliados:', err);
+    return {
+      ...data,
+      items: data?.items || [],
+      error: true,
+      errorMessage: err.message,
+    };
+  }
+};

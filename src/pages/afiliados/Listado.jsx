@@ -3,9 +3,9 @@ import Box from '@mui/material/Box';
 import PageListHeader from '../../components/common/lists/PageListHeader';
 import { usePageTitle } from '../../hooks/usePageTitle';
 import ListadoAfiliadosTable from '../../components/afiliados/ListadoAfiliadosTable';
-import api from '../../services/api';
+import { getTitulares } from '../../services/afiliado';
 
-export default function PrestadoresListado() {
+export default function AfiliadosListado() {
   usePageTitle('MedIntegral | Listado de afiliados');
 
   const [rows, setRows] = useState([]);
@@ -29,7 +29,7 @@ export default function PrestadoresListado() {
         ])
       );
 
-      const { data } = await api.get('/afiliados', { params });
+      const data = await getTitulares(params);
       setRows(data.items || []);
       setTotal(data.total || 0);
     } catch (err) {

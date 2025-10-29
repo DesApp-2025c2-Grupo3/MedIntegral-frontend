@@ -3,6 +3,7 @@ import {
   formatGrupoFamiliar,
   formatAfiliadoData,
 } from '../utils/formats/afiliadoPayload';
+import { formatAfiliadosListado } from '../utils/formats/afiliadoListado';
 
 export const createAfiliado = async (afiliadoData) => {
   const grupoFamiliarFormateado = formatGrupoFamiliar(
@@ -45,6 +46,19 @@ export const createAfiliado = async (afiliadoData) => {
     return { id: data };
   } catch (err) {
     console.error('Error al crear el afiliado:', err);
+    throw err;
+  }
+};
+
+/*
+ * Obtener listado de los afiliados titulares con filtros y paginación
+ */
+export const getTitulares = async (params = {}) => {
+  try {
+    const response = await api.get('/afiliados', { params });
+    return formatAfiliadosListado(response.data);
+  } catch (err) {
+    console.error('Error al obtener listado de afiliados:', err);
     throw err;
   }
 };
