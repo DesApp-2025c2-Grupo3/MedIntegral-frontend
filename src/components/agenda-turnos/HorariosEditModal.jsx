@@ -37,6 +37,7 @@ export default function HorariosEditModal({ open, onClose }) {
   } = useAgenda();
 
   const [localHorarios, setLocalHorarios] = useState([]);
+  const [errors, setErrors] = useState([]);
 
   const duraciones = Array.from({ length: 24 }, (_, i) => (i + 1) * 5);
 
@@ -123,6 +124,7 @@ export default function HorariosEditModal({ open, onClose }) {
         ? payload
         : [{ id: '1', dias: [], horaInicio: '', horaFin: '', duracion: null }]
     );
+    setErrors(payload.map(() => ({})));
   }, [agenda, open, diasConHorarios]);
 
   const handleHorarioChange = useCallback((index, field, value) => {
@@ -131,10 +133,20 @@ export default function HorariosEditModal({ open, onClose }) {
       updated[index] = { ...updated[index], [field]: value };
       return updated;
     });
+    setErrors((prev) => {
+      const updated = [...prev];
+      updated[index] = {};
+      return updated;
+    });
   }, []);
 
   const handleEliminar = useCallback((index) => {
-    setLocalHorarios((prev) => prev.filter((_, i) => i !== index));
+    setLocalHorarios((prev) =>
+      prev
+        .filter((_, i) => i !== index)
+        .map((h, idx) => ({ ...h, id: String(idx + 1) }))
+    );
+    setErrors((prev) => prev.filter((_, i) => i !== index).map(() => ({})));
   }, []);
 
   const handleAddHorario = () => {
@@ -148,11 +160,35 @@ export default function HorariosEditModal({ open, onClose }) {
         duracion: null,
       },
     ]);
+    setErrors((prev) => [...prev, {}]);
   };
 
-  const handleSave = async () => {
-    const validation = validateHorarios(localHorarios);
-    if (validation) return;
+  const onGuardar = async () => {
+    setErrors(localHorarios.map(() => ({})));
+
+    const validation = validateHorarios(
+      localHorarios,
+      agenda?.prestador?.horariosAtencion || []
+    );
+
+    if (validation) {
+      if (validation.horarioId) {
+        const idx = localHorarios.findIndex(
+          (h) => h.id === validation.horarioId
+        );
+        if (idx !== -1) {
+          setErrors(localHorarios.map(() => ({})));
+          setErrors((prev) => {
+            const updated = [...prev];
+            updated[idx] = { [validation.field]: validation.message };
+            return updated;
+          });
+          return;
+        }
+      }
+      setError(validation);
+      return;
+    }
 
     setGlobalLoading(true);
     try {
@@ -208,6 +244,10 @@ export default function HorariosEditModal({ open, onClose }) {
                   onChange={(newDias) =>
                     handleHorarioChange(index, 'dias', newDias)
                   }
+                  error={Boolean(errors[index]?.[`horario-${horario.id}-dias`])}
+                  helperText={
+                    errors[index]?.[`horario-${horario.id}-dias`] || ''
+                  }
                 />
 
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -231,7 +271,21 @@ export default function HorariosEditModal({ open, onClose }) {
                           getOptionLabel={(opt) => (opt ? `${opt} min` : '')}
                           isOptionEqualToValue={(a, b) => a === b}
                           renderInput={(params) => (
-                            <TextField {...params} label="Duración" fullWidth />
+                            <TextField
+                              {...params}
+                              label="Duración"
+                              fullWidth
+                              error={Boolean(
+                                errors[index]?.[
+                                  `horario-${horario.id}-duracion`
+                                ]
+                              )}
+                              helperText={
+                                errors[index]?.[
+                                  `horario-${horario.id}-duracion`
+                                ] || ''
+                              }
+                            />
                           )}
                         />
                       </Grid>
@@ -248,7 +302,27 @@ export default function HorariosEditModal({ open, onClose }) {
                             )
                           }
                           ampm={false}
-                          slotProps={{ textField: { fullWidth: true } }}
+                          slotProps={{
+                            textField: {
+                              fullWidth: true,
+                              error: Boolean(
+                                errors[index]?.[
+                                  `horario-${horario.id}-inicio`
+                                ] ||
+                                  errors[index]?.[
+                                    `horario-${horario.id}-horario`
+                                  ]
+                              ),
+                              helperText:
+                                errors[index]?.[
+                                  `horario-${horario.id}-inicio`
+                                ] ||
+                                errors[index]?.[
+                                  `horario-${horario.id}-horario`
+                                ] ||
+                                '',
+                            },
+                          }}
                         />
                       </Grid>
 
@@ -260,19 +334,37 @@ export default function HorariosEditModal({ open, onClose }) {
                             handleHorarioChange(index, 'horaFin', fromDayjs(v))
                           }
                           ampm={false}
-                          slotProps={{ textField: { fullWidth: true } }}
+                          slotProps={{
+                            textField: {
+                              fullWidth: true,
+                              error: Boolean(
+                                errors[index]?.[`horario-${horario.id}-fin`] ||
+                                  errors[index]?.[
+                                    `horario-${horario.id}-horario`
+                                  ]
+                              ),
+                              helperText:
+                                errors[index]?.[`horario-${horario.id}-fin`] ||
+                                errors[index]?.[
+                                  `horario-${horario.id}-horario`
+                                ] ||
+                                '',
+                            },
+                          }}
                         />
                       </Grid>
                     </Grid>
                   </Box>
                 </LocalizationProvider>
 
-                <Box sx={{ mt: 3 }}>
-                  <EliminarButton
-                    onEliminar={() => handleEliminar(index)}
-                    label="Eliminar horario"
-                  />
-                </Box>
+                {localHorarios.length > 1 && (
+                  <Box sx={{ mt: 3 }}>
+                    <EliminarButton
+                      onEliminar={() => handleEliminar(index)}
+                      label="Eliminar horario"
+                    />
+                  </Box>
+                )}
               </Box>
             ))}
 
@@ -295,7 +387,14 @@ export default function HorariosEditModal({ open, onClose }) {
       </DialogContent>
 
       <DialogActions>
-        <ButtonsSection onCancel={onClose} onSave={handleSave} />
+        <ButtonsSection
+          handleGuardar={onGuardar}
+          onConfirmCancel={onClose}
+          cancelTitle={`¿Cancelar la edición de los horarios en la agenda #${agenda.id}?`}
+          cancelMessage="Si cancelás ahora, se perderán los cambios realizados."
+          confirmText="Guardar cambios"
+          cancelText="Cancelar"
+        />
       </DialogActions>
     </Dialog>
   );

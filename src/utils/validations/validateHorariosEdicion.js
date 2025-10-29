@@ -1,4 +1,6 @@
 import dayjs from 'dayjs';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import {
   validateHorarioBasico,
   validateHorarioDentroDireccion,
@@ -6,38 +8,55 @@ import {
   validateSolapamiento,
 } from './validateHorarios';
 
-export const validateHorarios = (horarios, direccion) => {
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isSameOrAfter);
+
+export const validateHorarios = (horarios, ventanasPrestador = []) => {
+  let error;
+
   if (!Array.isArray(horarios) || horarios.length === 0) {
-    return 'Debe definir al menos un horario de atención';
+    return {
+      field: 'horarios',
+      message: 'Debe definir al menos un horario de atención',
+    };
   }
 
-  for (const horario of horarios) {
-    const inicio = dayjs(horario.horaInicio, 'HH:mm');
-    const fin = dayjs(horario.horaFin, 'HH:mm');
+  const direccion = {
+    horarios: Array.isArray(ventanasPrestador)
+      ? ventanasPrestador.map((h) => ({
+          diaId: h?.dia?.id ?? null,
+          dia: h?.dia?.nombre ?? '',
+          horaInicio: h?.horaInicio ?? '',
+          horaFin: h?.horaFin ?? '',
+        }))
+      : [],
+  };
 
-    const horarioNormalizado = { ...horario, inicio, fin };
+  for (let i = 0; i < horarios.length; i++) {
+    const h = horarios[i];
+    const inicio = dayjs(h.horaInicio || h.inicio, ['HH:mm', 'H:mm']);
+    const fin = dayjs(h.horaFin || h.fin, ['HH:mm', 'H:mm']);
+    const horario = { ...h, inicio, fin };
 
-    const basico = validateHorarioBasico(horarioNormalizado);
-    if (basico) return basico.message;
+    error = validateHorarioBasico(horario);
+    if (error) return { ...error, horarioId: h.id };
 
-    const duracionVsRango = validateDuracionVsRango(horarioNormalizado);
-    if (duracionVsRango) return duracionVsRango.message;
+    error = validateDuracionVsRango(horario);
+    if (error) return { ...error, horarioId: h.id };
 
-    const dentroDireccion = validateHorarioDentroDireccion(
-      horarioNormalizado,
-      direccion || { horarios: [] }
-    );
-    if (dentroDireccion) return dentroDireccion.message;
+    error = validateHorarioDentroDireccion(horario, direccion);
+    if (error) return { ...error, horarioId: h.id };
 
-    const solapamiento = validateSolapamiento(
-      horarioNormalizado,
-      horarios.map((h) => ({
-        ...h,
-        inicio: dayjs(h.horaInicio, 'HH:mm'),
-        fin: dayjs(h.horaFin, 'HH:mm'),
+    const universo = horarios
+      .map((hor) => ({
+        ...hor,
+        inicio: dayjs(hor.horaInicio || hor.inicio, ['HH:mm', 'H:mm']),
+        fin: dayjs(hor.horaFin || hor.fin, ['HH:mm', 'H:mm']),
       }))
-    );
-    if (solapamiento) return solapamiento.message;
+      .filter((hor) => hor.id !== h.id);
+
+    error = validateSolapamiento(horario, universo);
+    if (error) return { ...error, horarioId: h.id };
   }
 
   return null;

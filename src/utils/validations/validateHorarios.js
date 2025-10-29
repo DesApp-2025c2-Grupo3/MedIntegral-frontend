@@ -12,7 +12,19 @@ const obtenerNombreDia = (diaRaw) => {
   return '';
 };
 
+const normalizarHorarios = (horario) => {
+  const inicioRaw = horario.inicio || horario.horaInicio;
+  const finRaw = horario.fin || horario.horaFin;
+
+  const inicio = dayjs(inicioRaw, ['HH:mm', 'H:mm']);
+  const fin = dayjs(finRaw, ['HH:mm', 'H:mm']);
+
+  return { inicio, fin };
+};
+
 export const validateHorarioBasico = (horario) => {
+  const { inicio, fin } = normalizarHorarios(horario);
+
   if (!horario.dias || horario.dias.length === 0) {
     return {
       field: `horario-${horario.id}-dias`,
@@ -27,28 +39,28 @@ export const validateHorarioBasico = (horario) => {
     };
   }
 
-  if (!horario.inicio) {
+  if (!inicio || !inicio.isValid()) {
     return {
       field: `horario-${horario.id}-inicio`,
       message: 'Debe seleccionar un horario de inicio',
     };
   }
 
-  if (!horario.fin) {
+  if (!fin || !fin.isValid()) {
     return {
       field: `horario-${horario.id}-fin`,
       message: 'Debe seleccionar un horario de fin',
     };
   }
 
-  if (horario.inicio.isSame(horario.fin)) {
+  if (inicio.isSame(fin)) {
     return {
       field: `horario-${horario.id}-horario`,
       message: 'El inicio y el fin no pueden ser iguales',
     };
   }
 
-  if (horario.inicio.isAfter(horario.fin)) {
+  if (inicio.isAfter(fin)) {
     return {
       field: `horario-${horario.id}-horario`,
       message: 'El horario de inicio debe ser anterior al de fin',
@@ -59,18 +71,23 @@ export const validateHorarioBasico = (horario) => {
 };
 
 export const validateHorarioDentroDireccion = (horario, direccion) => {
-  const rangoMin = horario.inicio.format('HH:mm');
-  const rangoMax = horario.fin.format('HH:mm');
+  const rangoMin = horario.inicio;
+  const rangoMax = horario.fin;
 
   for (const diaRaw of horario.dias) {
-    const diaNombre = obtenerNombreDia(diaRaw);
+    const diaNombre =
+      typeof diaRaw === 'object' && diaRaw.nombre ? diaRaw.nombre : diaRaw;
 
-    const match = direccion.horarios?.some(
-      (dh) =>
-        dh.dia.nombre === diaNombre &&
-        dh.horaInicio <= rangoMin &&
-        dh.horaFin >= rangoMax
-    );
+    const match = direccion.horarios?.some((dh) => {
+      const nombre = typeof dh.dia === 'string' ? dh.dia : dh.dia?.nombre;
+      const inicioOK =
+        rangoMin.isSame(dayjs(dh.horaInicio, 'HH:mm')) ||
+        rangoMin.isAfter(dayjs(dh.horaInicio, 'HH:mm'));
+      const finOK =
+        rangoMax.isSame(dayjs(dh.horaFin, 'HH:mm')) ||
+        rangoMax.isBefore(dayjs(dh.horaFin, 'HH:mm'));
+      return nombre === diaNombre && inicioOK && finOK;
+    });
 
     if (!match) {
       return {
@@ -84,41 +101,49 @@ export const validateHorarioDentroDireccion = (horario, direccion) => {
 };
 
 export const validateDuracionVsRango = (horario) => {
-  const rangoMinutos = horario.fin.diff(horario.inicio, 'minute');
-  if (horario.duracion > rangoMinutos) {
+  const { inicio, fin } = normalizarHorarios(horario);
+  if (!inicio.isValid() || !fin.isValid()) return null;
+
+  const rangoMinutos = fin.diff(inicio, 'minute');
+  if (Number(horario.duracion) > rangoMinutos) {
     return {
       field: `horario-${horario.id}-duracion`,
       message: 'La duración del turno no puede ser mayor que el rango horario',
     };
   }
+
   return null;
 };
 
 export const validateSolapamiento = (horario, horarios) => {
+  const { inicio, fin } = normalizarHorarios(horario);
+  if (!inicio.isValid() || !fin.isValid()) return null;
+
   const index = horarios.findIndex((h) => h.id === horario.id);
 
-  for (let j = 0; j < index; j++) {
-    const other = horarios[j];
+  for (let j = 0; j < horarios.length; j++) {
+    if (j === index) continue;
 
-    const compartenDia = horario.dias.some((d) =>
-      other.dias.some((od) => obtenerNombreDia(od) === obtenerNombreDia(d))
+    const other = horarios[j];
+    const { inicio: oInicio, fin: oFin } = normalizarHorarios(other);
+
+    if (!oInicio.isValid() || !oFin.isValid()) continue;
+
+    const compartenDia = (horario.dias || []).some((d) =>
+      (other.dias || []).some(
+        (od) => obtenerNombreDia(od) === obtenerNombreDia(d)
+      )
     );
 
     if (!compartenDia) continue;
 
-    const empiezaDuranteOtro =
-      horario.inicio.isAfter(other.inicio) &&
-      horario.inicio.isBefore(other.fin);
-
-    const terminaDuranteOtro =
-      horario.fin.isAfter(other.inicio) && horario.fin.isBefore(other.fin);
-
+    const empiezaDuranteOtro = inicio.isAfter(oInicio) && inicio.isBefore(oFin);
+    const terminaDuranteOtro = fin.isAfter(oInicio) && fin.isBefore(oFin);
     const cubreTotalmente =
-      horario.inicio.isSameOrBefore(other.inicio) &&
-      horario.fin.isSameOrAfter(other.fin);
+      inicio.isSameOrBefore(oInicio) && fin.isSameOrAfter(oFin);
 
     if (empiezaDuranteOtro || terminaDuranteOtro || cubreTotalmente) {
-      const diasLimpios = horario.dias
+      const diasLimpios = (horario.dias || [])
         .map((d) => obtenerNombreDia(d))
         .join(', ');
       return {
