@@ -83,7 +83,6 @@ export default function HorariosEditModal({ open, onClose }) {
         label: `${nombreDia || `(díaId:${diaId})`} (${horaInicio} - ${horaFin})`,
         _inicio: horaInicio,
         _fin: horaFin,
-        _raw: h,
       };
     });
   }, [agenda]);
@@ -91,25 +90,37 @@ export default function HorariosEditModal({ open, onClose }) {
   useEffect(() => {
     if (!(open && Array.isArray(agenda?.horariosAtencion))) return;
 
-    const normalizados = agenda.horariosAtencion.map((ha, idx) => {
-      const selected = (diasConHorarios || []).filter((d) => {
-        const sameDay = Number(d.diaId) === Number(ha?.dia?.id);
-        if (!sameDay) return false;
-        return isWithin(ha.horaInicio, ha.horaFin, d._inicio, d._fin);
-      });
+    const groups = new Map();
 
-      return {
-        id: ha.id || String(idx + 1),
-        dias: selected,
-        horaInicio: ha.horaInicio || '',
-        horaFin: ha.horaFin || '',
-        duracion: Number(ha.duracion) || null,
-      };
+    agenda.horariosAtencion.forEach((ha) => {
+      const key = `${ha.horaInicio}|${ha.horaFin}|${Number(ha.duracion) || ''}`;
+      if (!groups.has(key)) {
+        groups.set(key, {
+          id: String(groups.size + 1),
+          dias: [],
+          horaInicio: ha.horaInicio || '',
+          horaFin: ha.horaFin || '',
+          duracion: Number(ha.duracion) || null,
+        });
+      }
+
+      const group = groups.get(key);
+
+      const matches = (diasConHorarios || [])
+        .filter((d) => Number(d.diaId) === Number(ha?.dia?.id))
+        .filter((d) => isWithin(ha.horaInicio, ha.horaFin, d._inicio, d._fin));
+
+      matches.forEach((opt) => {
+        if (!group.dias.some((o) => o.id === opt.id)) {
+          group.dias.push(opt);
+        }
+      });
     });
 
+    const payload = Array.from(groups.values());
     setLocalHorarios(
-      normalizados.length
-        ? normalizados
+      payload.length
+        ? payload
         : [{ id: '1', dias: [], horaInicio: '', horaFin: '', duracion: null }]
     );
   }, [agenda, open, diasConHorarios]);
@@ -149,8 +160,7 @@ export default function HorariosEditModal({ open, onClose }) {
       updateAgenda(updated);
       setSuccessMessage('Horarios actualizados con éxito');
       onClose();
-    } catch (err) {
-      console.error('Error al actualizar horarios:', err);
+    } catch {
       setError('No se pudieron actualizar los horarios.');
     } finally {
       setGlobalLoading(false);

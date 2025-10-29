@@ -50,6 +50,12 @@ export const agendaTurnosMock = {
       horaFin: '11:00',
       duracion: 30,
     },
+    {
+      dia: { id: 3, nombre: 'Miércoles' },
+      horaInicio: '14:00',
+      horaFin: '16:00',
+      duracion: 10,
+    },
   ],
   direccion: {
     calle: 'Corrientes',
