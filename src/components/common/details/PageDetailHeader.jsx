@@ -6,37 +6,24 @@ import { useNavigate } from 'react-router-dom';
 
 import ConfirmCancelDialog from '../forms/ConfirmCancelDialog';
 import { detailHeaderConfig } from '../../../utils/detailHeaderConfig';
-import { deleteAgendaTurnos } from '../../../services/agendaTurnos';
-import { deletePrestador } from '../../../services/prestadores';
-import { deleteAfiliado } from '../../../services/afiliado';
+import { useAgenda } from '../../../context/AgendaContext';
 
-const deleteServices = {
-  deleteAgendaTurnos,
-  deletePrestador,
-  deleteAfiliado,
-};
-
-export default function PageDetailHeader({ type, id, onDeleted }) {
+export default function PageDetailHeader({ type, id }) {
   const [openDialog, setOpenDialog] = useState(false);
   const navigate = useNavigate();
+  const { deleteAgenda } = useAgenda();
 
   const config = detailHeaderConfig[type];
   if (!config || !id) return null;
 
   const title = config.title(id);
   const subtitle = config.subtitle?.(id);
-  const deleteFn = deleteServices[config.deleteService];
 
   const handleConfirmDelete = async () => {
-    try {
-      await deleteFn(id);
-      onDeleted?.();
-      navigate(config.redirectTo);
-    } catch (error) {
-      console.error('Error al eliminar', error);
-    } finally {
-      setOpenDialog(false);
-    }
+    const ok = await deleteAgenda();
+    setOpenDialog(false);
+
+    if (ok) navigate(config.redirectTo);
   };
 
   return (
@@ -59,7 +46,7 @@ export default function PageDetailHeader({ type, id, onDeleted }) {
 
         <Grid xs={12} md="auto">
           <Button
-            variant="outlined"
+            variant="contained"
             color="error"
             sx={{ textTransform: 'none' }}
             startIcon={<DeleteOutlineIcon />}
@@ -82,8 +69,6 @@ export default function PageDetailHeader({ type, id, onDeleted }) {
 }
 
 PageDetailHeader.propTypes = {
-  type: PropTypes.oneOf(['agenda-de-turnos', 'prestador', 'afiliado'])
-    .isRequired,
+  type: PropTypes.oneOf(['agenda-de-turnos']).isRequired,
   id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  onDeleted: PropTypes.func,
 };

@@ -10,6 +10,7 @@ import {
   getAgendaTurnoById,
   updateAgendaEspecialidad,
   updateAgendaHorarios,
+  deleteAgendaTurnos,
 } from '../services/agendaTurnos';
 import SuccessSnackbar from '../components/common/SuccessSnackbar';
 import ErrorSnackbar from '../components/common/ErrorSnackbar';
@@ -87,6 +88,25 @@ export function AgendaProvider({ idAgenda, children }) {
     }
   };
 
+  const deleteAgenda = async () => {
+    if (!agenda?.id) return false;
+
+    setGlobalLoading(true);
+    setError(null);
+
+    try {
+      await deleteAgendaTurnos(agenda.id);
+      setSuccessMessage('Agenda eliminada con éxito');
+      return true;
+    } catch (err) {
+      console.error('Error al eliminar agenda:', err);
+      setError('No se pudo eliminar la agenda de turnos.');
+      return false;
+    } finally {
+      setGlobalLoading(false);
+    }
+  };
+
   return (
     <AgendaContext.Provider
       value={{
@@ -98,6 +118,7 @@ export function AgendaProvider({ idAgenda, children }) {
         updateAgenda,
         updateEspecialidad,
         updateHorarios,
+        deleteAgenda,
         refetchAgenda: fetchAgenda,
         setSuccessMessage,
         setError,
