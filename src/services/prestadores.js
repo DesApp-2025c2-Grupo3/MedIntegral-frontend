@@ -66,3 +66,8 @@ export const createPrestador = async (prestadorData) => {
     throw err;
   }
 };
+
+/**
+ * Eliminar un prestador
+ */
+export const deletePrestador = (id) => api.delete(`/prestadores/${id}`);

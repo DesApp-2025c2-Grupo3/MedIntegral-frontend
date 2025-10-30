@@ -62,3 +62,8 @@ export const createAfiliado = async (afiliadoData) => {
     throw err;
   }
 };
+
+/**
+ * Eliminar un afiliado
+ */
+export const deleteAfiliado = (id) => api.delete(`/afiliados/${id}`);

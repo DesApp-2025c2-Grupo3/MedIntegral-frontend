@@ -185,3 +185,8 @@ export const updateAgendaHorarios = async (id, horariosAtencion) => {
     throw error;
   }
 };
+
+/**
+ * Eliminar una agenda de turnos
+ */
+export const deleteAgendaTurnos = (id) => api.delete(`/agenda-turnos/${id}`);

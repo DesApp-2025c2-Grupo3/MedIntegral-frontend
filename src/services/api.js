@@ -22,7 +22,7 @@ import {
 } from '../mocks/afiliadosListadoMock';
 import { agendaTurnosMock } from '../mocks/agendaTurnosMock';
 
-const USE_AGENDA_TURNOS_MOCKS = false;
+const USE_AGENDA_TURNOS_MOCKS = true;
 
 const api = axios.create({
   baseURL: 'http://localhost:3002/api',
@@ -185,13 +185,18 @@ api.interceptors.request.use((config) => {
     if (config.url === '/parentescos')
       return Promise.reject({ isMock: true, data: parentescoMock });
 
-    if (config.url.startsWith('/agenda-turnos/1') && config.method === 'get') {
+    if (
+      config.url.startsWith('/agenda-turnos/1') &&
+      config.method === 'get' &&
+      USE_AGENDA_TURNOS_MOCKS
+    ) {
       return Promise.reject({ isMock: true, data: agendaTurnosMock });
     }
 
     if (
       /^\/agenda-turnos\/\d+\/especialidades$/.test(config.url) &&
-      config.method === 'put'
+      config.method === 'put' &&
+      USE_AGENDA_TURNOS_MOCKS
     ) {
       const body =
         typeof config.data === 'string' ? JSON.parse(config.data) : config.data;
@@ -216,7 +221,8 @@ api.interceptors.request.use((config) => {
 
   if (
     /^\/agenda-turnos\/\d+\/horarios$/.test(config.url) &&
-    config.method === 'put'
+    config.method === 'put' &&
+    USE_AGENDA_TURNOS_MOCKS
   ) {
     const body =
       typeof config.data === 'string' ? JSON.parse(config.data) : config.data;

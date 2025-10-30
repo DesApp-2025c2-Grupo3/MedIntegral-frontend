@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Box, CircularProgress, Grid } from '@mui/material';
 import { useParams, useLocation } from 'react-router-dom';
-import PageHeader from '../../components/common/PageHeader';
+import PageDetailHeader from '../../components/common/details/PageDetailHeader';
 import SuccessSnackbar from '../../components/common/SuccessSnackbar';
 import PrestadorDetailsSection from '../../components/agenda-turnos/PrestadorDetailsSection';
 import HorariosDetailsSection from '../../components/agenda-turnos/HorariosDetailsSection';
@@ -22,10 +22,7 @@ function DetalleAgendaContent({ onSuccess }) {
 
   return (
     <Box sx={{ mt: 2 }}>
-      <PageHeader
-        title={`Agenda de turnos #${agenda.id}`}
-        subtitle="Detalles con opción de edición"
-      />
+      <PageDetailHeader type="agenda-de-turnos" id={agenda.id} />
 
       <Grid container spacing={3} mt={1}>
         <Grid size={{ xs: 12 }}>

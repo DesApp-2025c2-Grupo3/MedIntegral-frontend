@@ -13,6 +13,7 @@ import {
   Autocomplete,
   TextField,
 } from '@mui/material';
+import AgregarButton from '../common/forms/AgregarButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -279,16 +280,10 @@ export default function HorariosEditModal({ open, onClose }) {
               </Box>
             ))}
 
-            <Box textAlign="center">
-              <Typography
-                variant="body2"
-                color="primary"
-                sx={{ mt: 2, cursor: 'pointer', textDecoration: 'underline' }}
-                onClick={handleAddHorario}
-              >
-                + Agregar horario
-              </Typography>
-            </Box>
+            <AgregarButton
+              onAgregar={() => handleAddHorario()}
+              label="Agregar horario"
+            />
           </Stack>
         </FadeSlide>
       </DialogContent>
