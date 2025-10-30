@@ -61,7 +61,7 @@ export default function DetalleAgendaTurnos() {
       {(location.search.includes('creacion=true') || successMessage) && (
         <SuccessSnackbar
           open
-          message={successMessage || 'Agenda de turnos cargada con éxito'}
+          message={successMessage || 'Agenda de turnos creada con éxito'}
           onClose={() => setSuccessMessage('')}
         />
       )}

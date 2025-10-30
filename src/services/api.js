@@ -243,6 +243,15 @@ api.interceptors.request.use((config) => {
     });
   }
 
+  if (/^\/agenda-turnos\/\d+$/.test(config.url) && config.method === 'delete') {
+    console.log('[MOCK] DELETE', config.url);
+    return Promise.reject({
+      isMock: true,
+      data: null,
+      status: 200,
+    });
+  }
+
   return config;
 });
 

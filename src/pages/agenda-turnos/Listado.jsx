@@ -4,6 +4,7 @@ import PageListHeader from '../../components/common/lists/PageListHeader';
 import { usePageTitle } from '../../hooks/usePageTitle';
 import ListadoTurnosTable from '../../components/agenda-turnos/ListadoTurnosTable';
 import { getAgendaTurnosListado } from '../../services/agendaTurnos';
+import SuccessSnackbar from '../../components/common/SuccessSnackbar';
 
 export default function AgendaTurnosListado() {
   usePageTitle('MedIntegral | Listado de agendas de turnos');
@@ -70,6 +71,13 @@ export default function AgendaTurnosListado() {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+      {location.search.includes('deleted=true') && (
+        <SuccessSnackbar
+          open
+          message={'Agenda de turnos eliminada con éxito'}
+          onClose={() => {}}
+        />
+      )}
     </Box>
   );
 }

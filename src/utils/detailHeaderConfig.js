@@ -3,7 +3,7 @@ export const detailHeaderConfig = {
     title: (id) => `Agenda #${id}`,
     subtitle: () => `Detalles con opción de edición`,
     deleteService: 'deleteAgendaTurnos',
-    redirectTo: '/agenda-turnos/listado',
+    redirectTo: '/agenda-turnos/listado?deleted=true',
     deleteModal: {
       title: 'Dar de baja agenda',
       message: (id) =>
@@ -15,7 +15,7 @@ export const detailHeaderConfig = {
     title: (id) => `Prestador #${id}`,
     subtitle: () => `Detalles con opción de edición`,
     deleteService: 'deletePrestador',
-    redirectTo: '/prestadores/listado',
+    redirectTo: '/prestadores/listado?deleted=true',
     deleteModal: {
       title: 'Eliminar prestador',
       message: (id) => `¿Seguro que deseas eliminar el prestador con ID ${id}?`,
@@ -26,7 +26,7 @@ export const detailHeaderConfig = {
     title: (id) => `Afiliado #${id}`,
     subtitle: () => `Detalles con opción de edición`,
     deleteService: 'deleteAfiliado',
-    redirectTo: '/afiliados/listado',
+    redirectTo: '/afiliados/listado?deleted=true',
     deleteModal: {
       title: 'Eliminar afiliado',
       message: (id) => `¿Seguro que deseas eliminar el afiliado con ID ${id}?`,
