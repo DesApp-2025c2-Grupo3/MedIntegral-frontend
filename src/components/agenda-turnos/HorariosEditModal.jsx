@@ -17,7 +17,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
-import dayjs from 'dayjs';
 
 import { useAgenda } from '../../context/AgendaContext';
 import ButtonsSection from '../common/forms/FormActions';
@@ -25,6 +24,12 @@ import DiasSemanaSelector from '../common/forms/DiasSemanaSelector';
 import EliminarButton from '../common/forms/EliminarButton';
 import FadeSlide from '../common/animations/FadeSlide';
 import { validateHorarios } from '../../utils/validations/validateHorariosEdicion';
+
+import { toDayjs, fromDayjs } from '../../utils/formats/dateUtils';
+import {
+  buildDuraciones,
+  groupHorarios,
+} from '../../utils/formats/horarioGrouping';
 
 export default function HorariosEditModal({ open, onClose }) {
   const {
@@ -34,90 +39,26 @@ export default function HorariosEditModal({ open, onClose }) {
     setError,
     setSuccessMessage,
   } = useAgenda();
-
   const [localHorarios, setLocalHorarios] = useState([]);
   const [errors, setErrors] = useState([]);
 
-  const duraciones = Array.from({ length: 24 }, (_, i) => (i + 1) * 5);
-
-  const toDayjs = (value) => {
-    if (!value) return null;
-    const [h, m] = String(value)
-      .split(':')
-      .map((n) => parseInt(n, 10));
-    if (!Number.isFinite(h) || !Number.isFinite(m)) return null;
-    return dayjs().hour(h).minute(m).second(0).millisecond(0);
-  };
-
-  const fromDayjs = (value) =>
-    value?.isValid?.() ? value.format('HH:mm') : '';
-
-  const toMinutes = (hhmm) => {
-    if (!hhmm || typeof hhmm !== 'string') return NaN;
-    const [h, m] = hhmm.trim().split(':');
-    const hh = parseInt(h, 10);
-    const mm = parseInt(m, 10);
-    return Number.isFinite(hh) && Number.isFinite(mm) ? hh * 60 + mm : NaN;
-  };
-
-  const isWithin = (start, end, rangeStart, rangeEnd) => {
-    const s = toMinutes(start);
-    const e = toMinutes(end);
-    const rs = toMinutes(rangeStart);
-    const re = toMinutes(rangeEnd);
-    if ([s, e, rs, re].some(Number.isNaN)) return false;
-    return s >= rs && e <= re;
-  };
+  const duraciones = buildDuraciones();
 
   const diasConHorarios = useMemo(() => {
     const base = agenda?.prestador?.horariosAtencion || [];
-    return base.map((h, idx) => {
-      const diaId = h?.dia?.id ?? idx;
-      const nombreDia = h?.dia?.nombre ?? '';
-      const horaInicio = h?.horaInicio ?? '';
-      const horaFin = h?.horaFin ?? '';
-      return {
-        id: `${diaId}-${horaInicio}-${horaFin}`,
-        diaId,
-        nombre: nombreDia,
-        label: `${nombreDia || `(díaId:${diaId})`} (${horaInicio} - ${horaFin})`,
-        _inicio: horaInicio,
-        _fin: horaFin,
-      };
-    });
+    return base.map((h, idx) => ({
+      id: `${h?.dia?.id ?? idx}-${h?.horaInicio}-${h?.horaFin}`,
+      diaId: h?.dia?.id ?? idx,
+      nombre: h?.dia?.nombre ?? '',
+      label: `${h?.dia?.nombre} (${h?.horaInicio} - ${h?.horaFin})`,
+      _inicio: h?.horaInicio ?? '',
+      _fin: h?.horaFin ?? '',
+    }));
   }, [agenda]);
 
   useEffect(() => {
     if (!(open && Array.isArray(agenda?.horariosAtencion))) return;
-
-    const groups = new Map();
-
-    agenda.horariosAtencion.forEach((ha) => {
-      const key = `${ha.horaInicio}|${ha.horaFin}|${Number(ha.duracion) || ''}`;
-      if (!groups.has(key)) {
-        groups.set(key, {
-          id: String(groups.size + 1),
-          dias: [],
-          horaInicio: ha.horaInicio || '',
-          horaFin: ha.horaFin || '',
-          duracion: Number(ha.duracion) || null,
-        });
-      }
-
-      const group = groups.get(key);
-
-      const matches = (diasConHorarios || [])
-        .filter((d) => Number(d.diaId) === Number(ha?.dia?.id))
-        .filter((d) => isWithin(ha.horaInicio, ha.horaFin, d._inicio, d._fin));
-
-      matches.forEach((opt) => {
-        if (!group.dias.some((o) => o.id === opt.id)) {
-          group.dias.push(opt);
-        }
-      });
-    });
-
-    const payload = Array.from(groups.values());
+    const payload = groupHorarios(agenda.horariosAtencion, diasConHorarios);
     setLocalHorarios(
       payload.length
         ? payload
@@ -171,21 +112,16 @@ export default function HorariosEditModal({ open, onClose }) {
     );
 
     if (validation) {
-      if (validation.horarioId) {
-        const idx = localHorarios.findIndex(
-          (h) => h.id === validation.horarioId
-        );
-        if (idx !== -1) {
-          setErrors(localHorarios.map(() => ({})));
-          setErrors((prev) => {
-            const updated = [...prev];
-            updated[idx] = { [validation.field]: validation.message };
-            return updated;
-          });
-          return;
-        }
+      const idx = localHorarios.findIndex((h) => h.id === validation.horarioId);
+      if (idx !== -1) {
+        setErrors((prev) => {
+          const updated = [...prev];
+          updated[idx] = { [validation.field]: validation.message };
+          return updated;
+        });
+      } else {
+        setError(validation);
       }
-      setError(validation);
       return;
     }
 
@@ -248,110 +184,88 @@ export default function HorariosEditModal({ open, onClose }) {
                 />
 
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <Box sx={{ mt: 3 }}>
-                    <Typography variant="subtitle1" fontWeight="medium">
-                      Especificaciones del turno
-                    </Typography>
-
-                    <Grid container spacing={3} sx={{ mt: 1 }}>
-                      <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                        <Autocomplete
-                          options={duraciones}
-                          value={horario.duracion ?? null}
-                          onChange={(_, newValue) =>
-                            handleHorarioChange(
-                              index,
-                              'duracion',
-                              newValue ?? null
-                            )
-                          }
-                          getOptionLabel={(opt) => (opt ? `${opt} min` : '')}
-                          isOptionEqualToValue={(a, b) => a === b}
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              label="Duración"
-                              fullWidth
-                              error={Boolean(
-                                errors[index]?.[
-                                  `horario-${horario.id}-duracion`
-                                ]
-                              )}
-                              helperText={
-                                errors[index]?.[
-                                  `horario-${horario.id}-duracion`
-                                ] || ''
-                              }
-                            />
-                          )}
-                        />
-                      </Grid>
-
-                      <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                        <MobileTimePicker
-                          label="Horario inicio"
-                          value={toDayjs(horario.horaInicio)}
-                          onChange={(v) =>
-                            handleHorarioChange(
-                              index,
-                              'horaInicio',
-                              fromDayjs(v)
-                            )
-                          }
-                          ampm={false}
-                          slotProps={{
-                            textField: {
-                              fullWidth: true,
-                              error: Boolean(
-                                errors[index]?.[
-                                  `horario-${horario.id}-inicio`
-                                ] ||
-                                  errors[index]?.[
-                                    `horario-${horario.id}-horario`
-                                  ]
-                              ),
-                              helperText:
-                                errors[index]?.[
-                                  `horario-${horario.id}-inicio`
-                                ] ||
-                                errors[index]?.[
-                                  `horario-${horario.id}-horario`
-                                ] ||
-                                '',
-                            },
-                          }}
-                        />
-                      </Grid>
-
-                      <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                        <MobileTimePicker
-                          label="Horario fin"
-                          value={toDayjs(horario.horaFin)}
-                          onChange={(v) =>
-                            handleHorarioChange(index, 'horaFin', fromDayjs(v))
-                          }
-                          ampm={false}
-                          slotProps={{
-                            textField: {
-                              fullWidth: true,
-                              error: Boolean(
-                                errors[index]?.[`horario-${horario.id}-fin`] ||
-                                  errors[index]?.[
-                                    `horario-${horario.id}-horario`
-                                  ]
-                              ),
-                              helperText:
-                                errors[index]?.[`horario-${horario.id}-fin`] ||
-                                errors[index]?.[
-                                  `horario-${horario.id}-horario`
-                                ] ||
-                                '',
-                            },
-                          }}
-                        />
-                      </Grid>
+                  <Grid container spacing={3} sx={{ mt: 2 }}>
+                    <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+                      <Autocomplete
+                        options={duraciones}
+                        value={horario.duracion ?? null}
+                        onChange={(_, newValue) =>
+                          handleHorarioChange(
+                            index,
+                            'duracion',
+                            newValue ?? null
+                          )
+                        }
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Duración"
+                            fullWidth
+                            error={Boolean(
+                              errors[index]?.[`horario-${horario.id}-duracion`]
+                            )}
+                            helperText={
+                              errors[index]?.[
+                                `horario-${horario.id}-duracion`
+                              ] || ''
+                            }
+                          />
+                        )}
+                      />
                     </Grid>
-                  </Box>
+
+                    <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+                      <MobileTimePicker
+                        label="Horario inicio"
+                        value={toDayjs(horario.horaInicio)}
+                        onChange={(v) =>
+                          handleHorarioChange(index, 'horaInicio', fromDayjs(v))
+                        }
+                        ampm={false}
+                        slotProps={{
+                          textField: {
+                            fullWidth: true,
+                            error: Boolean(
+                              errors[index]?.[`horario-${horario.id}-inicio`] ||
+                                errors[index]?.[`horario-${horario.id}-horario`]
+                            ),
+                            helperText:
+                              errors[index]?.[`horario-${horario.id}-inicio`] ||
+                              errors[index]?.[
+                                `horario-${horario.id}-horario`
+                              ] ||
+                              '',
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+                      <MobileTimePicker
+                        label="Horario fin"
+                        value={toDayjs(horario.horaFin)}
+                        onChange={(v) =>
+                          handleHorarioChange(index, 'horaFin', fromDayjs(v))
+                        }
+                        ampm={false}
+                        slotProps={{
+                          textField: {
+                            fullWidth: true,
+                            error: Boolean(
+                              errors[index]?.[`horario-${horario.id}-fin`] ||
+                                errors[index]?.[`horario-${horario.id}-horario`]
+                            ),
+                            helperText:
+                              errors[index]?.[`horario-${horario.id}-fin`] ||
+                              errors[index]?.[
+                                `horario-${horario.id}-horario`
+                              ] ||
+                              '',
+                          },
+                        }}
+                      />
+                    </Grid>
+                  </Grid>
                 </LocalizationProvider>
 
                 {localHorarios.length > 1 && (
@@ -369,11 +283,7 @@ export default function HorariosEditModal({ open, onClose }) {
               <Typography
                 variant="body2"
                 color="primary"
-                sx={{
-                  mt: 2,
-                  cursor: 'pointer',
-                  textDecoration: 'underline',
-                }}
+                sx={{ mt: 2, cursor: 'pointer', textDecoration: 'underline' }}
                 onClick={handleAddHorario}
               >
                 + Agregar horario

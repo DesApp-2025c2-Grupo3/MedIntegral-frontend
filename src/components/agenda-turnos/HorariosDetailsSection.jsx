@@ -27,7 +27,7 @@ export default function HorariosDetailsSection() {
             {horariosAtencion.map((h, index) => (
               <Box key={index}>
                 <Typography variant="body1" fontWeight={500}>
-                  {h.dias}
+                  {h.dia?.nombre}
                 </Typography>
                 <Stack direction="row" alignItems="center" spacing={1} mt={1}>
                   <AccessTimeOutlinedIcon fontSize="small" color="action" />
