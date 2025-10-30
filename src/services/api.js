@@ -22,6 +22,7 @@ import {
 } from '../mocks/afiliadosListadoMock';
 
 const USE_AGENDA_TURNOS_MOCKS = false;
+const USE_AFILIADOS_MOCKS = false;
 
 const api = axios.create({
   baseURL: 'http://localhost:3002/api',
@@ -106,7 +107,11 @@ api.interceptors.request.use((config) => {
       }
     }
 
-    if (config.url == '/afiliados' && config.method === 'get') {
+    if (
+      config.url == '/afiliados' &&
+      config.method === 'get' &&
+      USE_AFILIADOS_MOCKS
+    ) {
       const filters = config.params || {};
       const page = Number(filters.page) || 1;
       const limit = Number(filters.limit) || 10;
@@ -179,28 +184,32 @@ api.interceptors.request.use((config) => {
     if (config.url === '/especialidades')
       return Promise.reject({ isMock: true, data: listaEspecialidadesMock });
 
-    if (config.url === '/tipoDocumento')
+    if (config.url === '/tipoDocumento' && USE_AFILIADOS_MOCKS)
       return Promise.reject({ isMock: true, data: tipoDocumentoMock });
 
-    if (config.url === '/afiliados' && config.method === 'post') {
+    if (
+      config.url === '/afiliados' &&
+      config.method === 'post' &&
+      USE_AFILIADOS_MOCKS
+    ) {
       return Promise.reject({
         isMock: true,
         data: { id: crypto.randomUUID(), ...config.data },
       });
     }
 
-    if (config.url === '/planesMedicos') {
+    if (config.url === '/planesMedicos' && USE_AFILIADOS_MOCKS) {
       return Promise.reject({ isMock: true, data: planesMedicos });
     }
 
-    if (config.url === '/situacionesTerapeuticas') {
+    if (config.url === '/situacionesTerapeuticas' && USE_AFILIADOS_MOCKS) {
       return Promise.reject({
         isMock: true,
         data: SituacionesTerapeuticasMock,
       });
     }
 
-    if (config.url === '/parentescos') {
+    if (config.url === '/parentescos' && USE_AFILIADOS_MOCKS) {
       return Promise.reject({ isMock: true, data: parentescoMock });
     }
   }
