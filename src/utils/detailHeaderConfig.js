@@ -1,6 +1,6 @@
 export const detailHeaderConfig = {
   'agenda-de-turnos': {
-    title: (id) => `Agenda #${id}`,
+    title: (id) => `Agenda de turnos #${id}`,
     subtitle: () => `Detalles con opción de edición`,
     deleteService: 'deleteAgendaTurnos',
     redirectTo: '/agenda-turnos/listado?deleted=true',

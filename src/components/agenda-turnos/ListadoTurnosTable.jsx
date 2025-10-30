@@ -77,11 +77,11 @@ export default function AgendasTable({
                       {row.especialidad}
                     </TableCell>
                     <TableCell sx={{ fontSize: '0.9rem' }}>
-                      {Array.isArray(row.horarios) &&
-                      row.horarios.length > 0 ? (
-                        row.horarios.map((h, i) => (
+                      {Array.isArray(row.horariosAtencion) &&
+                      row.horariosAtencion.length > 0 ? (
+                        row.horariosAtencion.map((h, i) => (
                           <Typography key={i} fontSize="0.9rem">
-                            {h}
+                            • {h.dias}: {h.horarios}
                           </Typography>
                         ))
                       ) : (

@@ -32,7 +32,7 @@ export default function HorariosDetailsSection() {
                 <Stack direction="row" alignItems="center" spacing={1} mt={1}>
                   <AccessTimeOutlinedIcon fontSize="small" color="action" />
                   <Typography variant="body2" color="text.secondary">
-                    {`${h.horaInicio} a ${h.horaFin} (${h.duracion} min)`}
+                    {`${h.horaInicio} a ${h.horaFin}  — Duración por turno: ${h.duracion} mins`}
                   </Typography>
                 </Stack>
                 {index < horariosAtencion.length - 1 && (
