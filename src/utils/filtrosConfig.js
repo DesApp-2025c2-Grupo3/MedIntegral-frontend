@@ -10,14 +10,14 @@ export const filtrosConfig = {
         label: 'Provincia',
         type: 'select',
         options: [],
-        asyncSearchUrl: '/api/agenda-turnos/provincias',
+        asyncSearchUrl: '/agenda-turnos/provincias',
       },
       {
         name: 'localidad',
         label: 'Localidad',
         type: 'select',
         options: [],
-        asyncSearchUrl: '/api/agenda-turnos/localidades',
+        asyncSearchUrl: '/agenda-turnos/localidades',
       },
       {
         name: 'dia',
@@ -28,7 +28,7 @@ export const filtrosConfig = {
           { value: 'Martes', label: 'Martes' },
           { value: 'Miercoles', label: 'Miercoles' },
           { value: 'Jueves', label: 'Jueves' },
-          { value: 'viernes', label: 'Viernes' },
+          { value: 'Viernes', label: 'Viernes' },
         ],
       },
       {
