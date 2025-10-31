@@ -1,5 +1,6 @@
 import { formatDireccion } from './formatDireccion';
 import { formatFecha, formatHora } from './formatFechaHora';
+import { DIA_ENUM } from './diaEnum';
 
 export const formatAgendaTurnosDetalle = (data) => {
   try {
@@ -17,29 +18,39 @@ export const formatAgendaTurnosDetalle = (data) => {
                 nombre: e.nombre ?? '',
               }))
             : [],
-          horariosAtencion: Array.isArray(data.prestador.horariosAtencion)
-            ? data.prestador.horariosAtencion.map((h, idx) => ({
-                id: idx + 1,
-                dia: h.dia
-                  ? { id: h.dia.id ?? idx + 1, nombre: h.dia.nombre ?? '' }
-                  : { id: idx + 1, nombre: '' },
-                horaInicio: h.horaInicio ?? '',
-                horaFin: h.horaFin ?? '',
-              }))
+          horarios: Array.isArray(data.prestador.horarios)
+            ? data.prestador.horarios.map((h) => {
+                const diaNombre = h.dia;
+                const diaId = DIA_ENUM[diaNombre] ?? null;
+                return {
+                  id: h.id,
+                  dia: {
+                    id: diaId,
+                    nombre: diaNombre,
+                  },
+                  horaInicio: h.horaInicio ?? '',
+                  horaFin: h.horaFin ?? '',
+                };
+              })
             : [],
         }
       : null;
 
     const horariosAtencion = Array.isArray(data.horariosAtencion)
-      ? data.horariosAtencion.map((h, idx) => ({
-          id: idx + 1,
-          dia: h.dia
-            ? { id: h.dia.id ?? idx + 1, nombre: h.dia.nombre ?? '' }
-            : { id: idx + 1, nombre: '' },
-          horaInicio: h.horaInicio ?? '',
-          horaFin: h.horaFin ?? '',
-          duracion: Number(h.duracion) || null,
-        }))
+      ? data.horariosAtencion.map((h) => {
+          const diaNombre = h.dia;
+          const diaId = DIA_ENUM[diaNombre] ?? null;
+          return {
+            id: h.id,
+            dia: {
+              id: diaId,
+              nombre: diaNombre,
+            },
+            horaInicio: h.horaInicio ?? '',
+            horaFin: h.horaFin ?? '',
+            duracion: Number(h.duracionTurno) || null,
+          };
+        })
       : [];
 
     return {
@@ -69,7 +80,7 @@ export const formatAgendaTurnosDetalle = (data) => {
         id: null,
         nombre: '',
         especialidades: [],
-        horariosAtencion: [],
+        horarios: [],
       },
       especialidad: { id: null, nombre: '' },
       direccion: '',

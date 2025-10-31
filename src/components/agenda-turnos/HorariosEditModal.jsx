@@ -46,7 +46,7 @@ export default function HorariosEditModal({ open, onClose }) {
   const duraciones = buildDuraciones();
 
   const diasConHorarios = useMemo(() => {
-    const base = agenda?.prestador?.horariosAtencion || [];
+    const base = agenda?.prestador?.horarios || [];
     return base.map((h, idx) => ({
       id: `${h?.dia?.id ?? idx}-${h?.horaInicio}-${h?.horaFin}`,
       diaId: h?.dia?.id ?? idx,
@@ -109,7 +109,7 @@ export default function HorariosEditModal({ open, onClose }) {
 
     const validation = validateHorarios(
       localHorarios,
-      agenda?.prestador?.horariosAtencion || []
+      agenda?.prestador?.horarios || []
     );
 
     if (validation) {
@@ -197,6 +197,10 @@ export default function HorariosEditModal({ open, onClose }) {
                             newValue ?? null
                           )
                         }
+                        getOptionLabel={(opt) =>
+                          opt != null ? `${opt} min` : ''
+                        }
+                        isOptionEqualToValue={(opt, val) => opt === val}
                         renderInput={(params) => (
                           <TextField
                             {...params}
