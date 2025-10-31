@@ -64,13 +64,10 @@ export const validateHorarioDentroDireccion = (horario, direccion) => {
 
   for (const diaRaw of horario.dias) {
     const diaNombre = obtenerNombreDia(diaRaw);
-
-    const match = direccion.horarios?.some(
-      (dh) =>
-        dh.dia.nombre === diaNombre &&
-        dh.horaInicio <= rangoMin &&
-        dh.horaFin >= rangoMax
-    );
+    const match = direccion.horarios?.some((dh) => {
+      const coincideDia = dh.dias.some((d) => d.nombre === diaNombre);
+      return coincideDia && dh.horaInicio <= rangoMin && dh.horaFin >= rangoMax;
+    });
 
     if (!match) {
       return {
@@ -85,6 +82,7 @@ export const validateHorarioDentroDireccion = (horario, direccion) => {
 
 export const validateDuracionVsRango = (horario) => {
   const rangoMinutos = horario.fin.diff(horario.inicio, 'minute');
+
   if (horario.duracion > rangoMinutos) {
     return {
       field: `horario-${horario.id}-duracion`,
@@ -107,15 +105,16 @@ export const validateSolapamiento = (horario, horarios) => {
     if (!compartenDia) continue;
 
     const empiezaDuranteOtro =
-      horario.inicio.isAfter(other.inicio) &&
-      horario.inicio.isBefore(other.fin);
+      horario.horaInicio.isAfter(other.horaInicio) &&
+      horario.horaInicio.isBefore(other.horaFin);
 
     const terminaDuranteOtro =
-      horario.fin.isAfter(other.inicio) && horario.fin.isBefore(other.fin);
+      horario.horaFin.isAfter(other.horaInicio) &&
+      horario.horaFin.isBefore(other.horaFin);
 
     const cubreTotalmente =
-      horario.inicio.isSameOrBefore(other.inicio) &&
-      horario.fin.isSameOrAfter(other.fin);
+      horario.horaInicio.isSameOrBefore(other.horaInicio) &&
+      horario.horaFin.isSameOrAfter(other.horaFin);
 
     if (empiezaDuranteOtro || terminaDuranteOtro || cubreTotalmente) {
       const diasLimpios = horario.dias
