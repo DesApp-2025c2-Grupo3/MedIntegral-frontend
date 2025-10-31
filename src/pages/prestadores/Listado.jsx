@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import PageListHeader from '../../components/common/lists/PageListHeader';
 import { usePageTitle } from '../../hooks/usePageTitle';
 import ListadoPrestadoresTable from '../../components/prestadores/ListadoPrestadoresTable';
-import api from '../../services/api';
+import { getPrestadoresListado } from '../../services/prestadores';
 
 export default function PrestadoresListado() {
   usePageTitle('MedIntegral | Listado de prestadores');
@@ -18,19 +18,7 @@ export default function PrestadoresListado() {
   const fetchPrestadores = useCallback(async () => {
     setLoading(true);
     try {
-      const params = Object.fromEntries(
-        Object.entries({
-          ...filters,
-          page: page + 1,
-          limit: rowsPerPage,
-        }).map(([keyframes, val]) => [
-          keyframes,
-          typeof val === 'object' ? val?.value || '' : val,
-        ])
-      );
-
-      const { data } = await api.get('/prestadores', { params });
-
+      const data = await getPrestadoresListado(filters, page, rowsPerPage);
       setRows(data.items || []);
       setTotal(data.total || 0);
     } catch (err) {

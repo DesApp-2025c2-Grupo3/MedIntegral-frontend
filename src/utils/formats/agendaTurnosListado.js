@@ -1,28 +1,24 @@
-import { formatDireccion } from './formatDireccion';
-import { formatHorarios } from './formatHorarios';
-import { formatDias } from './formatDias';
-
 export const formatAgendaTurnosListado = (data) => {
   try {
-    const rawItems = Array.isArray(data)
-      ? data
-      : Array.isArray(data.items)
-        ? data.items
-        : [];
-
-    if (!rawItems.length) {
+    if (!data.items || !Array.isArray(data.items)) {
       throw new Error('La respuesta no tiene el formato esperado');
     }
 
-    const itemsFormateados = rawItems.map((a) => {
-      const horariosTexto = formatHorarios(a.horariosAtencion);
+    const itemsFormateados = data.items.map((a) => {
+      const dir = a.direccion
+        ? `${a.direccion.calle || ''} ${a.direccion.altura || ''}${
+            a.direccion.pisoDepto ? ', ' + a.direccion.pisoDepto : ''
+          }, ${a.direccion.localidad || ''}, ${a.direccion.provincia || ''}`.trim()
+        : '';
 
-      const horariosAtencion = Array.isArray(a.horariosAtencion)
-        ? a.horariosAtencion.map((h, idx) => ({
-            dias: formatDias(h.dias),
-            horarios: horariosTexto[idx] || '',
-          }))
-        : [];
+      const horarios =
+        a.horariosAtencion?.map((h) => {
+          const dias =
+            h.dias?.map((d) => (typeof d === 'string' ? d : d?.nombre || '')) ||
+            [];
+
+          return `${dias.join(', ')} - ${h.horaInicio || '?'}hs a ${h.horaFin || '?'}hs (${h.duracion} minutos)`;
+        }) || [];
 
       return {
         id: a.id ?? null,
@@ -34,9 +30,9 @@ export const formatAgendaTurnosListado = (data) => {
           typeof a.especialidad === 'object'
             ? (a.especialidad?.nombre ?? '')
             : (a.especialidad ?? ''),
-        direccion: formatDireccion(a.direccion),
-        horariosAtencion,
-        url: a.id ? `/agenda-turnos/${a.id}` : null,
+        horarios,
+        direccion: dir,
+        url: a.id ? `/agenda-turnos/edicion/${a.id}` : null,
       };
     });
 

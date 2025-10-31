@@ -1,17 +1,30 @@
 import api from './api';
+import { formatPrestadoresListado } from '../utils/formats/prestadoresListado';
 
 /**
  * Obtener todos los prestadores
  */
-export const getPrestadores = async () => {
+export const getPrestadoresListado = async (
+  filters = {},
+  page = 0,
+  limit = 10
+) => {
+  const params = Object.fromEntries(
+    Object.entries({
+      ...filters,
+      page: page + 1,
+      limit,
+    }).map(([key, val]) => [
+      key,
+      typeof val === 'object' ? val?.value || '' : val,
+    ])
+  );
+
   try {
-    const { data } = await api.get('/prestadores');
-    if (!Array.isArray(data)) {
-      throw new Error('Formato inesperado en la respuesta de prestadores');
-    }
-    return data;
+    const { data } = await api.get('/prestadores/listado', { params });
+    return formatPrestadoresListado(data);
   } catch (err) {
-    console.error('Error al obtener prestadores:', err);
+    console.error('Error al obtener listado de prestadores:', err);
     throw err;
   }
 };
