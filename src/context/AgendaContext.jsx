@@ -27,14 +27,14 @@ export function AgendaProvider({ idAgenda, children }) {
   const [successMessage, setSuccessMessage] = useState('');
 
   const fetchAgenda = useCallback(async () => {
-    setLoading(true);
     try {
       const data = await getAgendaTurnoById(idAgenda);
       setAgenda(data);
-      setError(null);
+      return data;
     } catch (err) {
       console.error('Error al cargar agenda:', err);
       setError('No se pudo cargar la agenda.');
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -44,8 +44,11 @@ export function AgendaProvider({ idAgenda, children }) {
     fetchAgenda();
   }, [fetchAgenda]);
 
-  const updateAgenda = (newAgenda) => {
-    setAgenda(newAgenda);
+  const finishWithMessage = (opts = {}) => {
+    const { success, error } = opts;
+    if (success) setSuccessMessage(success);
+    if (error) setError(error);
+    setGlobalLoading(false);
   };
 
   const updateEspecialidad = async (especialidad) => {
@@ -53,15 +56,13 @@ export function AgendaProvider({ idAgenda, children }) {
 
     setGlobalLoading(true);
     try {
-      const data = await updateAgendaEspecialidad(agenda.id, especialidad.id);
-      await sleepIfLocal(1500);
-      updateAgenda(data);
-      setSuccessMessage('Especialidad actualizada con éxito');
-    } catch (err) {
-      console.error('Error al actualizar especialidad:', err);
-      setError('No se pudo actualizar la especialidad.');
-    } finally {
-      setGlobalLoading(false);
+      await updateAgendaEspecialidad(agenda.id, especialidad.id);
+      await sleepIfLocal(600);
+      const updated = await fetchAgenda();
+      finishWithMessage({ success: 'Especialidad actualizada con éxito' });
+      return updated;
+    } catch {
+      finishWithMessage({ error: 'No se pudo actualizar la especialidad.' });
     }
   };
 
@@ -69,22 +70,22 @@ export function AgendaProvider({ idAgenda, children }) {
     if (!agenda?.id) return;
 
     setGlobalLoading(true);
-    setError(null);
-
     try {
       const horariosPayload = horarios.map((h) => ({
-        dias: (h.dias || []).map((d) => Number(d.diaId)),
-        horaInicio: h.horaInicio || null,
-        horaFin: h.horaFin || null,
-        duracion: h.duracion ?? null,
+        dias: (h.dias || []).map((d) => d.nombre),
+        horaInicio: h.horaInicio,
+        horaFin: h.horaFin,
+        duracion: h.duracion,
       }));
-      const updated = await updateAgendaHorarios(agenda.id, horariosPayload);
-      setAgenda(updated);
-      setSuccessMessage('Horarios actualizados con éxito');
+
+      console.log(horarios);
+
+      await updateAgendaHorarios(agenda.id, horariosPayload);
+      const updated = await fetchAgenda();
+      finishWithMessage({ success: 'Horarios actualizados con éxito' });
+      return updated;
     } catch {
-      setError('No se pudieron actualizar los horarios.');
-    } finally {
-      setGlobalLoading(false);
+      finishWithMessage({ error: 'No se pudieron actualizar los horarios.' });
     }
   };
 
@@ -92,18 +93,13 @@ export function AgendaProvider({ idAgenda, children }) {
     if (!agenda?.id) return false;
 
     setGlobalLoading(true);
-    setError(null);
-
     try {
       await deleteAgendaTurnos(agenda.id);
-      setSuccessMessage('Agenda eliminada con éxito');
+      finishWithMessage({ success: 'Agenda eliminada con éxito' });
       return true;
-    } catch (err) {
-      console.error('Error al eliminar agenda:', err);
-      setError('No se pudo eliminar la agenda de turnos.');
+    } catch {
+      finishWithMessage({ error: 'No se pudo eliminar la agenda.' });
       return false;
-    } finally {
-      setGlobalLoading(false);
     }
   };
 
@@ -115,13 +111,11 @@ export function AgendaProvider({ idAgenda, children }) {
         error,
         globalLoading,
         successMessage,
-        updateAgenda,
         updateEspecialidad,
         updateHorarios,
         deleteAgenda,
         refetchAgenda: fetchAgenda,
-        setSuccessMessage,
-        setError,
+        clearError: () => setError(null),
       }}
     >
       {children}

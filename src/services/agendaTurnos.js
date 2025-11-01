@@ -21,7 +21,7 @@ export const createAgendaTurnos = async ({
     especialidadId: especialidad.id,
     lugaratencionId: direccion.id,
     horarios: horarios.map((h) => ({
-      dias: h.dias.map((d) => d.id),
+      dias: h.dias.map((d) => d.nombre),
       duracion: h.duracion,
       horaInicio: h.inicio?.format?.('HH:mm') ?? null,
       horaFin: h.fin?.format?.('HH:mm') ?? null,
@@ -77,7 +77,7 @@ export const getAgendaTurnosListado = async (
  */
 export const getPrestadores = async () => {
   try {
-    const { data } = await api.get('/agenda-turnos/prestadores');
+    const { data } = await api.get('/prestadores/sin-agenda');
     if (!Array.isArray(data)) {
       throw new Error('Formato inesperado en la respuesta de prestadores');
     }
@@ -165,10 +165,10 @@ export const updateAgendaEspecialidad = async (id, especialidadId) => {
 /**
  * Actualizar los horarios de atención de una agenda de turnos existente
  */
-export const updateAgendaHorarios = async (id, horariosAtencion) => {
+export const updateAgendaHorarios = async (id, horarios) => {
   try {
     const response = await api.put(`/agenda-turnos/${id}/horarios`, {
-      horariosAtencion,
+      horarios,
     });
 
     if (response.status !== 200) {
