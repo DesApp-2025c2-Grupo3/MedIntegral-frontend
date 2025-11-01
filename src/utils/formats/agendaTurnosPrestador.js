@@ -5,30 +5,19 @@ export const formatAgendaTurnosPrestador = (data) => {
     if (!data || typeof data !== 'object') {
       throw new Error('La respuesta no tiene el formato esperado');
     }
-
-    const especialidades = Array.isArray(data.Especialidad)
-      ? data.Especialidad.map((e) => ({
-          id: e.id ?? null,
-          nombre: e.nombre ?? '',
-        }))
-      : [];
-
-    const rawCentros = data.centrosDeAtencion || data.CentroDeAtencion || [];
-
+    const rawCentros = data.centrosDeAtencion;
+    console.log(rawCentros);
     const centrosDeAtencion = Array.isArray(rawCentros)
       ? rawCentros.map((cda) => ({
           id: cda.id,
-          direccionId: cda.direccionId ?? cda.Direccion?.id ?? null,
-          prestadorId: cda.prestadorId ?? null,
-          direccion: {
-            calle: cda.Direccion?.calle ?? '',
-            altura: String(cda.Direccion?.altura ?? ''),
-            pisoDepto: cda.Direccion?.pisoDepto ?? '',
-            localidad: cda.Direccion?.localidad ?? '',
-            provincia: cda.Direccion?.Provincia?.nombre ?? '',
-          },
-          horarios: Array.isArray(cda.horarios || cda.Horarios)
-            ? (cda.horarios || cda.Horarios).map((h) => {
+          direccionId: cda.id ?? null,
+          calle: cda.calle ?? '',
+          altura: String(cda.altura ?? ''),
+          pisoDepto: cda.pisoDepto ?? '',
+          localidad: cda.localidad ?? '',
+          provincia: cda.provincia ?? '',
+          horarios: Array.isArray(cda.horarios)
+            ? cda.horarios.map((h) => {
                 const diaNombre =
                   typeof h.dia === 'string' ? h.dia : (h.dia?.nombre ?? '');
                 return {
@@ -39,7 +28,6 @@ export const formatAgendaTurnosPrestador = (data) => {
                   },
                   horaInicio: h.horaInicio ?? '',
                   horaFin: h.horaFin ?? '',
-                  duracion: Number(h.duracionTurno ?? h.duracion) || null,
                 };
               })
             : [],
@@ -53,7 +41,7 @@ export const formatAgendaTurnosPrestador = (data) => {
       esCentroMedico: data.esCentroMedico ?? false,
       integraCentroMedico: data.integraCentroMedico ?? false,
       centroMedicoId: data.centroMedicoId ?? null,
-      especialidades,
+      especialidades: data.especialidades ?? [],
       centrosDeAtencion,
       emails: data.Emails ?? [],
       telefonos: data.Telefonos ?? [],

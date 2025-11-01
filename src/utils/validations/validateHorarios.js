@@ -137,13 +137,11 @@ export const validateSolapamiento = (horario, horarios) => {
 
     if (!oInicio.isValid() || !oFin.isValid()) continue;
 
-    const compartenDia = (horario.dias || []).some((d) =>
-      (other.dias || []).some(
-        (od) => obtenerNombreDia(od) === obtenerNombreDia(d)
-      )
-    );
+    const diasSolapados = (horario.dias || [])
+      .map(obtenerNombreDia)
+      .filter((d) => (other.dias || []).map(obtenerNombreDia).includes(d));
 
-    if (!compartenDia) continue;
+    if (diasSolapados.length === 0) continue;
 
     const empiezaDuranteOtro = inicio.isAfter(oInicio) && inicio.isBefore(oFin);
     const terminaDuranteOtro = fin.isAfter(oInicio) && fin.isBefore(oFin);
@@ -151,12 +149,9 @@ export const validateSolapamiento = (horario, horarios) => {
       inicio.isSameOrBefore(oInicio) && fin.isSameOrAfter(oFin);
 
     if (empiezaDuranteOtro || terminaDuranteOtro || cubreTotalmente) {
-      const diasLimpios = (horario.dias || [])
-        .map((d) => obtenerNombreDia(d))
-        .join(', ');
       return {
         field: `horario-${horario.id}-horario`,
-        message: `El rango horario se solapa con otro definido para ${diasLimpios}`,
+        message: `El rango horario se solapa con otro horario para el ${diasSolapados.join(', ')}`,
       };
     }
   }

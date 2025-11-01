@@ -17,6 +17,8 @@ import AfiliadosDetalle from './pages/afiliados/Detalle';
 
 import NotFound from './pages/404/404';
 
+import './App.css';
+
 function App() {
   return (
     <Routes>
