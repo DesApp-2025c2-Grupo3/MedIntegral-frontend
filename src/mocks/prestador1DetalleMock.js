@@ -31,13 +31,13 @@ export const prestador1DetalleMock = {
       horarios: [
         {
           id: 1,
-          dia: { id: 1, nombre: 'Lunes' },
+          dia: 'Lunes',
           horaInicio: '09:00',
           horaFin: '12:00',
         },
         {
           id: 2,
-          dia: { id: 3, nombre: 'Miércoles' },
+          dia: 'Miércoles',
           horaInicio: '14:00',
           horaFin: '18:00',
         },
@@ -54,7 +54,7 @@ export const prestador1DetalleMock = {
       horarios: [
         {
           id: 3,
-          dia: { id: 5, nombre: 'Viernes' },
+          dia: 'Viernes',
           horaInicio: '10:00',
           horaFin: '13:00',
         },

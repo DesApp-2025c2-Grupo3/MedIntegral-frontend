@@ -5,6 +5,14 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
 
+const normalizarHora = (valor) =>
+  dayjs(valor)
+    .set('year', 2000)
+    .set('month', 0)
+    .set('date', 1)
+    .set('second', 0)
+    .set('millisecond', 0);
+
 const obtenerNombreDia = (diaRaw) => {
   if (!diaRaw) return '';
   if (typeof diaRaw === 'object' && diaRaw.nombre) return diaRaw.nombre;
@@ -71,21 +79,21 @@ export const validateHorarioBasico = (horario) => {
 };
 
 export const validateHorarioDentroDireccion = (horario, direccion) => {
-  const rangoMin = horario.inicio;
-  const rangoMax = horario.fin;
-
+  const rangoMin = normalizarHora(horario.inicio);
+  const rangoMax = normalizarHora(horario.fin);
   for (const diaRaw of horario.dias) {
     const diaNombre =
       typeof diaRaw === 'object' && diaRaw.nombre ? diaRaw.nombre : diaRaw;
 
     const match = direccion.horarios?.some((dh) => {
-      const nombre = typeof dh.dia === 'string' ? dh.dia : dh.dia?.nombre;
-      const inicioOK =
-        rangoMin.isSame(dayjs(dh.horaInicio, 'HH:mm')) ||
-        rangoMin.isAfter(dayjs(dh.horaInicio, 'HH:mm'));
-      const finOK =
-        rangoMax.isSame(dayjs(dh.horaFin, 'HH:mm')) ||
-        rangoMax.isBefore(dayjs(dh.horaFin, 'HH:mm'));
+      const nombre = typeof dh.dia === 'object' ? dh.dia.nombre : dh.dia;
+
+      const dhInicio = normalizarHora(dayjs(dh.horaInicio, 'HH:mm'));
+      const dhFin = normalizarHora(dayjs(dh.horaFin, 'HH:mm'));
+
+      const inicioOK = rangoMin.isSame(dhInicio) || rangoMin.isAfter(dhInicio);
+      const finOK = rangoMax.isSame(dhFin) || rangoMax.isBefore(dhFin);
+
       return nombre === diaNombre && inicioOK && finOK;
     });
 

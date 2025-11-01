@@ -25,15 +25,18 @@ export default function HorariosSection({
   const diasConHorarios = React.useMemo(
     () =>
       horarios.flatMap((h) =>
-        (h.dias || []).map((d) => ({
-          id: d.id,
-          nombre: d.nombre,
-          label: `${d.nombre} (${h.horaInicio} - ${h.horaFin})`,
-        }))
+        h.dia
+          ? [
+              {
+                id: h.dia.id,
+                nombre: h.dia.nombre,
+                label: `${h.dia.nombre} (${h.horaInicio} - ${h.horaFin})`,
+              },
+            ]
+          : []
       ),
     [horarios]
   );
-
   const duraciones = React.useMemo(
     () => Array.from({ length: 24 }, (_, i) => (i + 1) * 5),
     []

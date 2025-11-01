@@ -1,6 +1,7 @@
 import api from './api';
 import { formatAgendaTurnosListado } from '../utils/formats/agendaTurnosListado';
 import { formatAgendaTurnosDetalle } from '../utils/formats/agendaTurnosDetalle';
+import { formatAgendaTurnosPrestador } from '../utils/formats/agendaTurnosPrestador';
 
 /**
  * Crear una nueva agenda de turnos
@@ -76,7 +77,7 @@ export const getAgendaTurnosListado = async (
  */
 export const getPrestadores = async () => {
   try {
-    const { data } = await api.get('/prestadores'); //agenda-turnos/prestadores
+    const { data } = await api.get('/agenda-turnos/prestadores');
     if (!Array.isArray(data)) {
       throw new Error('Formato inesperado en la respuesta de prestadores');
     }
@@ -102,7 +103,8 @@ export const getPrestadorById = async (id) => {
         `Prestador con ID ${id} no encontrado o formato inválido`
       );
     }
-    return data;
+    const formatted = formatAgendaTurnosPrestador(data);
+    return formatted;
   } catch (err) {
     console.error(`Error al obtener prestador con ID ${id}:`, err);
     throw err;

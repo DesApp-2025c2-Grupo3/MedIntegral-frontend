@@ -39,8 +39,8 @@ export function PrestadorProvider({ children }) {
     setLoading(true);
     try {
       await sleepIfLocal(1500);
-      const data = await getPrestadorById(prestadorObj.id);
-      setPrestador(data);
+      const formatted = await getPrestadorById(prestadorObj.id);
+      setPrestador(formatted);
     } catch (err) {
       console.error(
         `Error cargando info del prestador ${prestadorObj.id}:`,
