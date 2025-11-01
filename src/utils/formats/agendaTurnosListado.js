@@ -32,7 +32,7 @@ export const formatAgendaTurnosListado = (data) => {
             : (a.especialidad ?? ''),
         horarios,
         direccion: dir,
-        url: a.id ? `/agenda-turnos/edicion/${a.id}` : null,
+        url: a.id ? `/agenda-turnos/detalle/${a.id}` : null,
       };
     });
 
