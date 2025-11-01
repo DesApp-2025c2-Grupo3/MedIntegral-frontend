@@ -118,7 +118,7 @@ export default function AltaAfiliadoForm() {
 
         const data = await createAfiliado(afiliadoData);
 
-        navigateToEdicion(data.id, { creacion: true });
+        navigateToEdicion(data.id, { created: true });
       } catch (err) {
         console.error('Error al guardar el afiliado:', err);
         setShowError(true);

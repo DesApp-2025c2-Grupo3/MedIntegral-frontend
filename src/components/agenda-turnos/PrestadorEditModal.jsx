@@ -63,7 +63,7 @@ export default function PrestadorEditModal({ open, onClose }) {
           pr: 1,
         }}
       >
-        Editar datos del prestador (Agenda #{id})
+        Editar datos del prestador (Agenda de turnos #{id})
         <IconButton onClick={onClose} size="small" color="default">
           <CloseIcon />
         </IconButton>
@@ -74,7 +74,7 @@ export default function PrestadorEditModal({ open, onClose }) {
           <Grid container spacing={3}>
             <Grid size={{ xs: 12 }}>
               <Alert severity="info" sx={{ fontSize: '0.9rem' }}>
-                Si quiere actualizar el prestador o la dirección, deberá{' '}
+                Si querés actualizar el prestador o la dirección, deberás{' '}
                 <Link
                   href="/agenda-turnos/alta"
                   sx={{

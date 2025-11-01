@@ -15,6 +15,8 @@ import AfiliadosListado from './pages/afiliados/Listado';
 import AfiliadosAlta from './pages/afiliados/Alta';
 import AfiliadosDetalle from './pages/afiliados/Detalle';
 
+import NotFound from './pages/404/404';
+
 function App() {
   return (
     <Routes>
@@ -39,8 +41,10 @@ function App() {
           <Route path="detalle/:id" element={<AfiliadosDetalle />} />
         </Route>
 
-        <Route path="*" element={<h1>404 - No encontrado</h1>} />
+        <Route path="404" element={<NotFound />} />
       </Route>
+
+      <Route path="404" element={<NotFound />} />
     </Routes>
   );
 }

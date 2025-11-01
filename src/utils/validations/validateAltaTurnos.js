@@ -26,7 +26,10 @@ export const validateAltaTurnos = ({
   if (error) return error;
 
   if (!horarios || horarios.length === 0) {
-    return { field: 'horarios', message: 'Debe agregar al menos un horario' };
+    return {
+      field: 'horarios',
+      message: 'Tenés que agregar al menos un horario',
+    };
   }
 
   for (let i = 0; i < horarios.length; i++) {

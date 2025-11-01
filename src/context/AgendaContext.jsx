@@ -31,10 +31,9 @@ export function AgendaProvider({ idAgenda, children }) {
       const data = await getAgendaTurnoById(idAgenda);
       setAgenda(data);
       return data;
-    } catch (err) {
-      console.error('Error al cargar agenda:', err);
+    } catch {
       setError('No se pudo cargar la agenda.');
-      throw err;
+      throw new Error();
     } finally {
       setLoading(false);
     }
@@ -44,8 +43,7 @@ export function AgendaProvider({ idAgenda, children }) {
     fetchAgenda();
   }, [fetchAgenda]);
 
-  const finishWithMessage = (opts = {}) => {
-    const { success, error } = opts;
+  const finishWithMessage = ({ success, error }) => {
     if (success) setSuccessMessage(success);
     if (error) setError(error);
     setGlobalLoading(false);
@@ -53,6 +51,12 @@ export function AgendaProvider({ idAgenda, children }) {
 
   const updateEspecialidad = async (especialidad) => {
     if (!agenda?.id || !especialidad?.id) return;
+
+    const currentId = agenda?.especialidad?.id ?? null;
+    if (currentId === especialidad.id) {
+      finishWithMessage({ success: 'La especialidad ya está seleccionada' });
+      return agenda;
+    }
 
     setGlobalLoading(true);
     try {
@@ -67,20 +71,26 @@ export function AgendaProvider({ idAgenda, children }) {
   };
 
   const updateHorarios = async (horarios) => {
-    if (!agenda?.id) return;
+    if (!agenda?.id || !Array.isArray(horarios)) return;
+
+    const normalize = (h) => ({
+      dias: (h.dias || []).map((d) => d.nombre).sort(),
+      horaInicio: h.horaInicio,
+      horaFin: h.horaFin,
+      duracion: h.duracion ?? null,
+    });
+
+    const currentNormalized = (agenda?.horariosAtencion || []).map(normalize);
+    const newNormalized = horarios.map(normalize);
+
+    if (JSON.stringify(currentNormalized) === JSON.stringify(newNormalized)) {
+      finishWithMessage({ success: 'Horarios ya actualizados' });
+      return agenda;
+    }
 
     setGlobalLoading(true);
     try {
-      const horariosPayload = horarios.map((h) => ({
-        dias: (h.dias || []).map((d) => d.nombre),
-        horaInicio: h.horaInicio,
-        horaFin: h.horaFin,
-        duracion: h.duracion,
-      }));
-
-      console.log(horarios);
-
-      await updateAgendaHorarios(agenda.id, horariosPayload);
+      await updateAgendaHorarios(agenda.id, newNormalized);
       const updated = await fetchAgenda();
       finishWithMessage({ success: 'Horarios actualizados con éxito' });
       return updated;
@@ -111,6 +121,7 @@ export function AgendaProvider({ idAgenda, children }) {
         error,
         globalLoading,
         successMessage,
+        setSuccessMessage,
         updateEspecialidad,
         updateHorarios,
         deleteAgenda,

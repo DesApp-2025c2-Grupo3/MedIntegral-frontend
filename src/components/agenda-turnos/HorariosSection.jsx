@@ -59,7 +59,7 @@ export default function HorariosSection({
       <FadeSlide>
         {!direccionSeleccionada ? (
           <Typography variant="body1" color="text.secondary">
-            Seleccione una dirección para configurar los horarios de atención.
+            Seleccioná una dirección para configurar los horarios de atención.
           </Typography>
         ) : (
           <>

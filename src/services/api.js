@@ -233,7 +233,6 @@ api.interceptors.request.use((config) => {
     config.method === 'delete' &&
     USE_AGENDA_TURNOS_MOCKS
   ) {
-    console.log('[MOCK] DELETE', config.url);
     return Promise.reject({
       isMock: true,
       data: null,

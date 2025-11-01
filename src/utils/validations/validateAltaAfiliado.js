@@ -59,7 +59,7 @@ const validateMiembroFamiliar = (miembro, index) => {
   ) {
     return {
       field: `${prefijo}situacionesTerapeuticas`,
-      message: 'Debe agregar al menos una situación terapéutica.',
+      message: 'Tenés que agregar al menos una situación terapéutica.',
     };
   }
 
@@ -141,7 +141,7 @@ export const validateAltaAfiliado = (data) => {
   ) {
     return {
       field: 'situacionesTerapeuticas',
-      message: 'Debe agregar al menos una situación terapéutica.',
+      message: 'Tenés que agregar al menos una situación terapéutica.',
     };
   }
 
@@ -149,7 +149,8 @@ export const validateAltaAfiliado = (data) => {
     if (!data.grupoFamiliar || data.grupoFamiliar.length === 0) {
       return {
         field: 'grupoFamiliar',
-        message: 'Debe agregar al menos un miembro si el switch está activado.',
+        message:
+          'Tenés que agregar al menos un miembro si el switch está activado.',
       };
     }
     for (let i = 0; i < data.grupoFamiliar.length; i++) {

@@ -4,7 +4,7 @@ const REGEX_CALLE_ALPHANUMERIC = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\d]{3,}$/; /
 // para agenda de turnos
 export const validateDireccion = (direccion) => {
   if (!direccion) {
-    return { field: 'direccion', message: 'Debe seleccionar una dirección' };
+    return { field: 'direccion', message: 'Seleccioná una dirección' };
   }
   return null;
 };
@@ -81,7 +81,7 @@ export const validateDireccionesArray = (direcciones) => {
   if (!direcciones || direcciones.length === 0) {
     return {
       field: 'direcciones',
-      message: 'Debe agregar al menos una dirección.',
+      message: 'Tenés que agregar al menos una dirección.',
     };
   }
 

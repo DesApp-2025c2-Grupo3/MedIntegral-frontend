@@ -33,13 +33,7 @@ import {
 } from '../../utils/formats/horarioGrouping';
 
 export default function HorariosEditModal({ open, onClose }) {
-  const {
-    agenda,
-    updateHorarios,
-    setGlobalLoading,
-    setError,
-    setSuccessMessage,
-  } = useAgenda();
+  const { agenda, updateHorarios } = useAgenda();
   const [localHorarios, setLocalHorarios] = useState([]);
   const [errors, setErrors] = useState([]);
 
@@ -121,20 +115,14 @@ export default function HorariosEditModal({ open, onClose }) {
           return updated;
         });
       } else {
-        setError(validation);
+        setErrors(validation);
       }
       return;
     }
 
-    try {
-      await updateHorarios(localHorarios);
-      setSuccessMessage('Horarios actualizados con éxito');
-      onClose();
-    } catch {
-      setError('No se pudieron actualizar los horarios.');
-    } finally {
-      setGlobalLoading(false);
-    }
+    await updateHorarios(localHorarios);
+
+    onClose();
   };
 
   return (

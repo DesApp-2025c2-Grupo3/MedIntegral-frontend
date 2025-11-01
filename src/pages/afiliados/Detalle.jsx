@@ -10,7 +10,7 @@ export default function AfiliadosEdicion() {
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    if (params.get('creacion') === 'true') {
+    if (params.get('created') === 'true') {
       setOpen(true);
     }
   }, [location]);

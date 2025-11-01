@@ -7,7 +7,6 @@ export const formatAgendaTurnosDetalle = (data) => {
     if (!data || typeof data !== 'object') {
       throw new Error('La respuesta no tiene el formato esperado');
     }
-
     const prestador = data.prestador
       ? {
           id: data.prestador.id ?? null,

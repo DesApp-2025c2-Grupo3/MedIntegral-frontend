@@ -17,7 +17,7 @@ export const validateHorarios = (horarios, ventanasPrestador = []) => {
   if (!Array.isArray(horarios) || horarios.length === 0) {
     return {
       field: 'horarios',
-      message: 'Debe definir al menos un horario de atención',
+      message: 'Tenés que definir al menos un horario de atención',
     };
   }
 

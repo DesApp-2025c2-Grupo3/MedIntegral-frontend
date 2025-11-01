@@ -45,21 +45,22 @@ export default function validateFiltrosAgendaTurnos(filtros) {
   if (!algunoCargado) {
     return {
       field: null,
-      message: 'Debe completar al menos un filtro para realizar la búsqueda.',
+      message:
+        'Tenés que completar al menos un filtro para realizar la búsqueda.',
     };
   }
 
   if (nombre && nombre.length < 2) {
     return {
       field: 'nombre',
-      message: 'Debe ingresar al menos 2 carácteres.',
+      message: 'Tenés que ingresar al menos 2 carácteres.',
     };
   }
 
   if (apellido && apellido.length < 2) {
     return {
       field: 'apellido',
-      message: 'Debe ingresar al menos 2 carácteres.',
+      message: 'Tenés que ingresar al menos 2 carácteres.',
     };
   }
 
@@ -92,7 +93,7 @@ export default function validateFiltrosAgendaTurnos(filtros) {
   if (provincia && typeof provincia === 'string') {
     return {
       field: 'provincia',
-      message: 'Debe seleccionar una provincia válida de la lista.',
+      message: 'Seleccioná una provincia válida de la lista.',
     };
   }
 
@@ -118,7 +119,7 @@ export default function validateFiltrosAgendaTurnos(filtros) {
   if (email && !REGEX_EMAIL.test(email)) {
     return {
       field: 'email',
-      message: 'Debe ingresar un correo electrónico válido.',
+      message: 'Tenés que ingresar un correo electrónico válido.',
     };
   }
 

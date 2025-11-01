@@ -36,28 +36,28 @@ export const validateHorarioBasico = (horario) => {
   if (!horario.dias || horario.dias.length === 0) {
     return {
       field: `horario-${horario.id}-dias`,
-      message: 'Seleccione al menos un día de la semana',
+      message: 'Seleccioná al menos un día de la semana',
     };
   }
 
   if (!horario.duracion) {
     return {
       field: `horario-${horario.id}-duracion`,
-      message: 'Debe indicar la duración del turno',
+      message: 'Tenés que indicar la duración del turno',
     };
   }
 
   if (!inicio || !inicio.isValid()) {
     return {
       field: `horario-${horario.id}-inicio`,
-      message: 'Debe seleccionar un horario de inicio',
+      message: 'Seleccioná un horario de inicio',
     };
   }
 
   if (!fin || !fin.isValid()) {
     return {
       field: `horario-${horario.id}-fin`,
-      message: 'Debe seleccionar un horario de fin',
+      message: 'Seleccioná un horario de fin',
     };
   }
 

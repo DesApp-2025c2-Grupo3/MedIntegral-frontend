@@ -105,7 +105,7 @@ function AltaPrestadorForm() {
 
         const data = await createPrestador(finalData);
 
-        navigateToEdicion(data.id, { creacion: true });
+        navigateToEdicion(data.id, { created: true });
       } catch (err) {
         console.error('Error al guardar el prestador:', err);
         setShowError(true);
