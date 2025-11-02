@@ -10,7 +10,7 @@ export const filtrosConfig = {
         label: 'Provincia',
         type: 'select',
         options: [],
-        asyncSearchUrl: '/agenda-turnos/provincias',
+        asyncSearchUrl: '/provincias',
       },
       {
         name: 'localidad',
