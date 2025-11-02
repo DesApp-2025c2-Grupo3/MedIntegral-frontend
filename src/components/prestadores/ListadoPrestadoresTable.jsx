@@ -73,7 +73,7 @@ export default function ListadoPrestadoresTable({
                   <TableRow hover key={row.id}>
                     <TableCell sx={{ fontSize: '0.9rem' }}>
                       <Link
-                        href="#"
+                        href={row.url}
                         underline="always"
                         color="text.primary"
                         sx={{ fontSize: '0.9rem', fontWeight: 500 }}
@@ -86,7 +86,18 @@ export default function ListadoPrestadoresTable({
                       {row.esCentroMedico ? 'Centro médico' : 'Médico'}
                     </TableCell>
                     <TableCell sx={{ fontSize: '0.9rem' }}>
-                      {row.especialidades.map((e) => e).join(', ')}
+                      {Array.isArray(row.especialidades) &&
+                      row.especialidades.length > 0 ? (
+                        row.especialidades.map((e, i) => (
+                          <Typography key={i} fontSize="0.9rem">
+                            • {e}
+                          </Typography>
+                        ))
+                      ) : (
+                        <Typography fontSize="0.9rem" color="text.secondary">
+                          Sin horarios
+                        </Typography>
+                      )}
                     </TableCell>
                     <TableCell sx={{ fontSize: '0.9rem' }}>
                       <Box
@@ -117,7 +128,13 @@ export default function ListadoPrestadoresTable({
                         ))}
                       </Box>
                     </TableCell>
-                    <TableCell sx={{ fontSize: '0.9rem', padding: 'inherit' }}>
+                    <TableCell
+                      sx={{
+                        fontSize: '0.9rem',
+                        padding: 'inherit',
+                        minWidth: 140,
+                      }}
+                    >
                       <Box
                         sx={{
                           display: 'flex',

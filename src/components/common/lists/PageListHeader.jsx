@@ -101,7 +101,7 @@ export default function PageListHeader({ type, onSearch }) {
             sx={{
               display: 'flex',
               alignItems: 'center',
-              width: { xs: '100%', sm: 350 },
+              width: { xs: '100%', sm: 400 },
               px: 1,
             }}
           >

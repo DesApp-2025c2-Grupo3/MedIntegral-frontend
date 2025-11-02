@@ -8,7 +8,11 @@ import {
   Paper,
   Grid,
   Autocomplete,
+  IconButton,
+  InputAdornment,
+  Tooltip,
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import ErrorSnackbar from '../ErrorSnackbar';
@@ -25,9 +29,16 @@ export default function FiltrosModalBase({
   const [toastOpen, setToastOpen] = useState(false);
   const [optionsMap, setOptionsMap] = useState({});
 
+  const isFieldError = (name) => error?.field === name;
+  const getHelperText = (name) => (isFieldError(name) ? error.message : '');
+
   const handleChange = (name, value) => {
     setValues((prev) => ({ ...prev, [name]: value }));
     setError(null);
+  };
+
+  const handleClear = (name) => {
+    handleChange(name, null);
   };
 
   const handleBuscar = () => {
@@ -94,12 +105,32 @@ export default function FiltrosModalBase({
                     size="medium"
                     type={field.type}
                     value={values[field.name] ?? ''}
-                    onChange={(e) => handleChange(field.name, e.target.value)}
-                    error={error?.field === field.name}
-                    helperText={
-                      error?.field === field.name ? error.message : ''
+                    onChange={(e) =>
+                      handleChange(
+                        field.name,
+                        e.target.value === '' ? null : e.target.value
+                      )
                     }
+                    error={isFieldError(field.name)}
+                    helperText={getHelperText(field.name)}
                     InputLabelProps={{ shrink: true }}
+                    InputProps={{
+                      endAdornment:
+                        values[field.name] !== undefined &&
+                        values[field.name] !== null &&
+                        values[field.name] !== '' ? (
+                          <InputAdornment position="end">
+                            <Tooltip title="Eliminar">
+                              <IconButton
+                                size="small"
+                                onClick={() => handleClear(field.name)}
+                              >
+                                <CloseIcon fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                          </InputAdornment>
+                        ) : null,
+                    }}
                   />
                 ) : field.type === 'select' ? (
                   <Autocomplete
@@ -129,10 +160,8 @@ export default function FiltrosModalBase({
                         {...params}
                         label={field.label}
                         variant="outlined"
-                        error={error?.field === field.name}
-                        helperText={
-                          error?.field === field.name ? error.message : ''
-                        }
+                        error={isFieldError(field.name)}
+                        helperText={getHelperText(field.name)}
                       />
                     )}
                   />
@@ -143,10 +172,22 @@ export default function FiltrosModalBase({
                     size="medium"
                     value={values[field.name] ?? ''}
                     onChange={(e) => handleChange(field.name, e.target.value)}
-                    error={error?.field === field.name}
-                    helperText={
-                      error?.field === field.name ? error.message : ''
-                    }
+                    error={isFieldError(field.name)}
+                    helperText={getHelperText(field.name)}
+                    InputProps={{
+                      endAdornment: values[field.name] ? (
+                        <InputAdornment position="end">
+                          <Tooltip title="Eliminar">
+                            <IconButton
+                              size="small"
+                              onClick={() => handleClear(field.name)}
+                            >
+                              <CloseIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                        </InputAdornment>
+                      ) : null,
+                    }}
                   />
                 )}
               </Grid>
