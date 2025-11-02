@@ -11,6 +11,7 @@ export const formatPrestadoresListado = (data) => {
             d.calle || '',
             d.altura || '',
             d.pisoDepto ? `, ${d.pisoDepto}` : '',
+            d.codigoPostal ? `, ${d.codigoPostal}` : '',
             d.localidad ? `, ${d.localidad}` : '',
             d.provincia ? `, ${d.provincia}` : '',
           ]
