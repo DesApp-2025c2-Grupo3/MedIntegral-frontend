@@ -6,10 +6,17 @@ dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
 
 export default function validateFiltrosAgendaTurnos(filtros) {
-  const { especialidad, localidad, provincia, creacionDesde, creacionHasta } =
-    filtros;
+  const {
+    tipoPrestador,
+    especialidad,
+    localidad,
+    provincia,
+    creacionDesde,
+    creacionHasta,
+  } = filtros;
 
   const algunoCargado = [
+    tipoPrestador,
     especialidad,
     localidad,
     provincia,

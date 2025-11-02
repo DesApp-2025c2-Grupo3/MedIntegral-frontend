@@ -24,6 +24,7 @@ import { agendaTurnosMock } from '../mocks/agendaTurnosMock';
 
 const USE_AGENDA_TURNOS_MOCKS = false;
 const USE_PRESTADORES_MOCKS = true;
+const USE_AFILIADOS_MOCKS = false;
 
 const api = axios.create({
   baseURL: 'http://localhost:3002/api',
@@ -86,38 +87,46 @@ api.interceptors.request.use((config) => {
       }
     }
 
-    if (config.url === '/afiliados' && config.method === 'get') {
+    if (
+      config.url == '/afiliados' &&
+      config.method === 'get' &&
+      USE_AFILIADOS_MOCKS
+    ) {
       const filters = config.params || {};
       const page = Number(filters.page) || 1;
       const limit = Number(filters.limit) || 10;
       const data = searchAfiliadosMock(filters, page, limit);
-
-      const itemsFormateados = data.items.map((a) => {
-        const nombreCompleto = `${a.nombre} ${a.apellido}`;
-        const tipoYDocumento = `${a.tipoDocumento.tipo} ${a.numeroDocumento}`;
-        const dirs = a.direcciones.map(
-          (d) =>
-            `${d.calle} ${d.altura || ''}, ${d.localidad}, ${d.provincia.nombre}`
-        );
-        const numeros = a.telefonos.map((t) => t.numero);
-        const correos = a.emails.map((t) => t.direccion);
-
-        return {
-          id: a.afiliado,
-          afiliado: nombreCompleto,
-          documento: tipoYDocumento,
-          nroAfiliado: a.nroAfiliado,
-          planMedico: a.cobertura.plan,
-          direcciones: dirs,
-          telefonos: numeros,
-          emails: correos,
-          vigenciaInicio: a.vigenciaInicio,
-        };
-      });
+      const itemsParaFormatear = data.items.map((a) => ({
+        id: a.afiliado,
+        nombre: a.nombre,
+        apellido: a.apellido,
+        numeroDocumento: a.numeroDocumento,
+        tipoDocumento: a.tipoDocumento,
+        Contrato: {
+          nAfiliado: a.nroAfiliado ? parseInt(a.nroAfiliado.split('-')[0]) : 1,
+          plan: {
+            plan: a.cobertura.plan,
+          },
+        },
+        domicilios: a.direcciones.map((d) => ({
+          Direccion: {
+            calle: d.calle,
+            altura: d.altura,
+            pisoDepto: '',
+            localidad: d.localidad,
+            Provincium: {
+              nombre: d.provincia.nombre,
+            },
+            codigoPostal: d.codigoPostal,
+          },
+        })),
+        emails: a.emails,
+        telefonos: a.telefonos,
+      }));
 
       return Promise.reject({
         isMock: true,
-        data: { ...data, items: itemsFormateados },
+        data: itemsParaFormatear,
       });
     }
 
@@ -156,19 +165,37 @@ api.interceptors.request.use((config) => {
     if (config.url === '/prestadores/3' && USE_AGENDA_TURNOS_MOCKS)
       return Promise.reject({ isMock: true, data: prestador3DetalleMock });
 
-    if (config.url === '/especialidades')
+    if (USE_AGENDA_TURNOS_MOCKS && config.url === '/especialidades')
       return Promise.reject({ isMock: true, data: listaEspecialidadesMock });
-    if (config.url === '/tipoDocumento')
+
+    if (config.url === '/tipoDocumento' && USE_AFILIADOS_MOCKS)
       return Promise.reject({ isMock: true, data: tipoDocumentoMock });
-    if (config.url === '/planesMedicos')
+
+    if (
+      config.url === '/afiliados' &&
+      config.method === 'post' &&
+      USE_AFILIADOS_MOCKS
+    ) {
+      return Promise.reject({
+        isMock: true,
+        data: { id: crypto.randomUUID(), ...config.data },
+      });
+    }
+
+    if (config.url === '/planesMedicos' && USE_AFILIADOS_MOCKS) {
       return Promise.reject({ isMock: true, data: planesMedicos });
-    if (config.url === '/situacionesTerapeuticas')
+    }
+
+    if (config.url === '/situacionesTerapeuticas' && USE_AFILIADOS_MOCKS) {
       return Promise.reject({
         isMock: true,
         data: SituacionesTerapeuticasMock,
       });
-    if (config.url === '/parentescos')
+    }
+
+    if (config.url === '/parentescos' && USE_AFILIADOS_MOCKS) {
       return Promise.reject({ isMock: true, data: parentescoMock });
+    }
 
     if (
       config.url.startsWith('/agenda-turnos/1') &&
@@ -202,44 +229,43 @@ api.interceptors.request.use((config) => {
         status: 200,
       });
     }
+
+    if (
+      /^\/agenda-turnos\/\d+\/horarios$/.test(config.url) &&
+      config.method === 'put' &&
+      USE_AGENDA_TURNOS_MOCKS
+    ) {
+      const body =
+        typeof config.data === 'string' ? JSON.parse(config.data) : config.data;
+      const { horariosAtencion } = body || {};
+
+      const updatedAgenda = { ...agendaTurnosMock };
+
+      updatedAgenda.horariosAtencion = Array.isArray(horariosAtencion)
+        ? horariosAtencion
+        : updatedAgenda.horariosAtencion;
+
+      updatedAgenda.updatedAt = new Date().toISOString();
+
+      return Promise.reject({
+        isMock: true,
+        data: updatedAgenda,
+        status: 200,
+      });
+    }
+
+    if (
+      /^\/agenda-turnos\/\d+$/.test(config.url) &&
+      config.method === 'delete' &&
+      USE_AGENDA_TURNOS_MOCKS
+    ) {
+      return Promise.reject({
+        isMock: true,
+        data: null,
+        status: 200,
+      });
+    }
   }
-
-  if (
-    /^\/agenda-turnos\/\d+\/horarios$/.test(config.url) &&
-    config.method === 'put' &&
-    USE_AGENDA_TURNOS_MOCKS
-  ) {
-    const body =
-      typeof config.data === 'string' ? JSON.parse(config.data) : config.data;
-    const { horariosAtencion } = body || {};
-
-    const updatedAgenda = { ...agendaTurnosMock };
-
-    updatedAgenda.horariosAtencion = Array.isArray(horariosAtencion)
-      ? horariosAtencion
-      : updatedAgenda.horariosAtencion;
-
-    updatedAgenda.updatedAt = new Date().toISOString();
-
-    return Promise.reject({
-      isMock: true,
-      data: updatedAgenda,
-      status: 200,
-    });
-  }
-
-  if (
-    /^\/agenda-turnos\/\d+$/.test(config.url) &&
-    config.method === 'delete' &&
-    USE_AGENDA_TURNOS_MOCKS
-  ) {
-    return Promise.reject({
-      isMock: true,
-      data: null,
-      status: 200,
-    });
-  }
-
   return config;
 });
 

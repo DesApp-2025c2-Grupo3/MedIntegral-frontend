@@ -5,6 +5,7 @@ import {
   validateNumeroDocumento,
 } from './validateContacto';
 import { validateDireccionesArray } from './validateDireccion';
+import { validateSituacionesTerapeuticasArray } from './validateSituacionesTerapeuticas';
 
 const validateMiembroFamiliar = (miembro, index) => {
   let error;
@@ -46,11 +47,56 @@ const validateMiembroFamiliar = (miembro, index) => {
   error = validateNombre(miembro.apellido, `${prefijo}apellido`);
   if (error) return error;
 
+  if (!miembro.usaMismaVigenciaTitular) {
+    if (!miembro.vigenciaInicio) {
+      return {
+        field: `${prefijo}vigenciaInicio`,
+        message:
+          'La fecha de inicio de vigencia es obligatoria para el miembro.',
+      };
+    }
+
+    if (miembro.tieneFechaBaja && !miembro.vigenciaFin) {
+      return {
+        field: `${prefijo}vigenciaFin`,
+        message:
+          'La fecha de fin de vigencia es obligatoria si se marca la opción.',
+      };
+    }
+
+    if (
+      miembro.tieneFechaBaja &&
+      miembro.vigenciaFin < miembro.vigenciaInicio
+    ) {
+      return {
+        field: `${prefijo}vigenciaFin`,
+        message:
+          'La fecha de fin de vigencia no puede ser anterior a la de inicio.',
+      };
+    }
+  }
+
+  if (miembro.tieneSituacionTerapeutica) {
+    error = validateSituacionesTerapeuticasArray(
+      miembro.situacionesTerapeuticas,
+      prefijo
+    );
+    if (error) return error;
+  }
+
   error = validateTelefonos(miembro.telefonos, `${prefijo}telefonos`);
   if (error) return error;
 
   error = validateEmails(miembro.emails, `${prefijo}emails`);
   if (error) return error;
+
+  if (!miembro.usaMismaDireccionTitular) {
+    error = validateDireccionesArray(
+      miembro.direcciones,
+      `${prefijo}direcciones`
+    );
+    if (error) return error;
+  }
 
   if (
     miembro.tieneSituacionTerapeutica &&
@@ -126,6 +172,11 @@ export const validateAltaAfiliado = (data) => {
     }
   }
 
+  if (data.tieneSituacionTerapeutica) {
+    error = validateSituacionesTerapeuticasArray(data.situacionesTerapeuticas);
+    if (error) return error;
+  }
+
   error = validateTelefonos(data.telefonos);
   if (error) return error;
 
@@ -154,7 +205,11 @@ export const validateAltaAfiliado = (data) => {
       };
     }
     for (let i = 0; i < data.grupoFamiliar.length; i++) {
-      error = validateMiembroFamiliar(data.grupoFamiliar[i], i);
+      error = validateMiembroFamiliar(data.grupoFamiliar[i], i, {
+        vigenciaInicio: data.vigenciaInicio,
+        vigenciaFin: data.vigenciaFin,
+        direcciones: data.direcciones,
+      });
       if (error) return error;
     }
   }

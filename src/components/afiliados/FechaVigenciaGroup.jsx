@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { Box, Grid, FormControlLabel, Switch } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useFormValidationContext } from '../../context/FormValidationContext';
+import { getErrorProps } from '../../utils/formHelper';
 
 const DEFAULT_LABEL_DESDE = 'Vigencia desde';
 const DEFAULT_LABEL_HASTA = 'Vigencia hasta';
@@ -17,6 +18,7 @@ export default function FechaVigenciaGroup({
   labelDesde,
   labelHasta,
   labelSwitch,
+  idPrefix,
 }) {
   const safeData = data || {};
 
@@ -30,11 +32,6 @@ export default function FechaVigenciaGroup({
 
   const { error } = useFormValidationContext();
 
-  const getErrorProps = (fieldName) => ({
-    error: error?.field === fieldName,
-    helperText: error?.field === fieldName ? error?.message : '',
-  });
-
   return (
     <Box>
       <Grid container spacing={3}>
@@ -47,7 +44,7 @@ export default function FechaVigenciaGroup({
               textField: {
                 fullWidth: true,
                 required: true,
-                ...getErrorProps(FIELD_DESDE),
+                ...getErrorProps(error, `${FIELD_DESDE}`, idPrefix),
               },
             }}
           />
@@ -73,7 +70,7 @@ export default function FechaVigenciaGroup({
               slotProps={{
                 textField: {
                   fullWidth: true,
-                  ...getErrorProps(FIELD_HASTA),
+                  ...getErrorProps(error, `${FIELD_HASTA}`, idPrefix),
                 },
               }}
             />
@@ -94,6 +91,7 @@ FechaVigenciaGroup.propTypes = {
   labelDesde: PropTypes.string,
   labelHasta: PropTypes.string,
   labelSwitch: PropTypes.string,
+  idPrefix: PropTypes.string,
 };
 
 FechaVigenciaGroup.defaultProps = {};

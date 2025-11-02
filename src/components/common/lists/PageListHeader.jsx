@@ -17,7 +17,7 @@ const headerConfig = {
   },
   prestador: {
     title: 'Prestadores',
-    placeholder: 'Buscar por nombre, especialidad, CUIT/CUIL...',
+    placeholder: 'Buscar por nombre, código postal, CUIT/CUIL...',
     addLink: '/prestadores/alta',
   },
   afiliado: {

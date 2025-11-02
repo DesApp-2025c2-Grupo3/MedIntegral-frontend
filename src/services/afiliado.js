@@ -1,48 +1,35 @@
 import api from './api';
+import {
+  formatGrupoFamiliar,
+  formatAfiliadoData,
+} from '../utils/formats/afiliadoPayload';
+import { formatAfiliadosListado } from '../utils/formats/afiliadoListado';
 
 export const createAfiliado = async (afiliadoData) => {
-  const situacionesFormateadas = afiliadoData.situacionesTerapeuticas.map(
-    (item) => ({
-      situacionId: item.situacion?.id,
-
-      fechaInicio: item.fechaInicio
-        ? item.fechaInicio.format('YYYY-MM-DD')
-        : null,
-
-      fechaFin:
-        item.finaliza && item.fechaFin
-          ? item.fechaFin.format('YYYY-MM-DD')
-          : null,
-    })
+  const grupoFamiliarFormateado = formatGrupoFamiliar(
+    afiliadoData.grupoFamiliar,
+    {
+      vigenciaInicio: afiliadoData.vigenciaInicio,
+      vigenciaFin: afiliadoData.vigenciaFin,
+      direcciones: afiliadoData.direcciones,
+    }
   );
 
   const payload = {
-    ...afiliadoData,
-    tipoDocumentoId: afiliadoData.tipoDocumento?.id,
-    fechaNacimiento: afiliadoData.fechaNacimiento
-      ? afiliadoData.fechaNacimiento.format('YYYY-MM-DD')
-      : null,
-    vigenciaInicio: afiliadoData.vigenciaInicio
-      ? afiliadoData.vigenciaInicio.format('YYYY-MM-DD')
-      : null,
-
-    vigenciaFin: afiliadoData.vigenciaFin
-      ? afiliadoData.vigenciaFin.format('YYYY-MM-DD')
-      : null,
-    coberturaId: afiliadoData.cobertura?.id,
-
-    tieneSituacionTerapeutica: afiliadoData.tieneSituacionTerapeutica,
-
-    situacionesTerapeuticas: situacionesFormateadas,
+    ...formatAfiliadoData(afiliadoData),
+    planId: afiliadoData.cobertura?.id,
+    tieneGrupoFamiliar:
+      afiliadoData.tieneGrupoFamiliar || grupoFamiliarFormateado.length > 0,
+    grupoFamiliar: grupoFamiliarFormateado,
   };
 
   if (
     !payload.tipoDocumentoId ||
-    !afiliadoData?.numeroDocumento ||
-    !afiliadoData?.nombre ||
-    !afiliadoData?.apellido ||
+    !payload.numeroDocumento ||
+    !payload.nombre ||
+    !payload.apellido ||
     !payload?.fechaNacimiento ||
-    !payload?.coberturaId ||
+    !payload?.planId ||
     !payload?.vigenciaInicio
   ) {
     throw new Error('Faltan datos obligatorios para crear el afiliado');
@@ -51,12 +38,12 @@ export const createAfiliado = async (afiliadoData) => {
   try {
     const { data } = await api.post('/afiliados', payload);
 
-    if (!data?.id) {
+    if (!data) {
       throw new Error(
         'La respuesta del servidor no incluye el ID del afiliado creado'
       );
     }
-    return data;
+    return { id: data };
   } catch (err) {
     console.error('Error al crear el afiliado:', err);
     throw err;
@@ -67,3 +54,27 @@ export const createAfiliado = async (afiliadoData) => {
  * Eliminar un afiliado
  */
 export const deleteAfiliado = (id) => api.delete(`/afiliados/${id}`);
+
+/*
+ * Obtener listado de los afiliados titulares con filtros y paginación
+ */
+export const getTitulares = async (filters = {}, page = 0, limit = 10) => {
+  try {
+    const params = Object.fromEntries(
+      Object.entries({
+        ...filters,
+        page: page + 1,
+        limit,
+      }).map(([key, val]) => [
+        key,
+        typeof val === 'object' ? val?.value || '' : val,
+      ])
+    );
+
+    const { data } = await api.get('/afiliados', { params });
+    return formatAfiliadosListado(data);
+  } catch (err) {
+    console.error('Error al obtener listado de afiliados:', err);
+    throw err;
+  }
+};
