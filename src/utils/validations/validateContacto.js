@@ -101,7 +101,7 @@ export const validateEmails = (emails, fieldBase = 'emails') => {
   }
 
   for (const e of emails) {
-    const valor = e.valor || e;
+    const valor = e.direccion;
     if (!REGEX_EMAIL.test(valor)) {
       return {
         field: fieldBase,

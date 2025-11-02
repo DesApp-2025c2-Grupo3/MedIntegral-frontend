@@ -1,5 +1,5 @@
 const REGEX_NUMERIC_MIN_2 = /^\d{2,}$/; //mínimo 2 dígitos
-const REGEX_CALLE_ALPHANUMERIC = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\d]{3,}$/; //letras, números. Mínimo 3 caracteres.
+const REGEX_ALPHANUMERIC = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\d]{4,}$/; //letras, números. Mínimo 4 caracteres.
 
 // para agenda de turnos
 export const validateDireccion = (direccion) => {
@@ -23,11 +23,11 @@ export const validateSingleDireccion = (direccion, id) => {
     };
   }
 
-  if (!REGEX_CALLE_ALPHANUMERIC.test(direccion.calle)) {
+  if (!REGEX_ALPHANUMERIC.test(direccion.calle)) {
     return {
       field: `${prefijo}calle`,
       message:
-        'La calle debe tener al menos 3 caracteres y puede contener números.',
+        'La calle no puede contener caracteres espciales (Mín. 4 caracteres).',
     };
   }
 
@@ -50,10 +50,11 @@ export const validateSingleDireccion = (direccion, id) => {
       message: 'El código postal es obligatorio.',
     };
   }
-  if (!/^\d{4,}$/.test(String(direccion.codigoPostal))) {
+  if (!REGEX_ALPHANUMERIC.test(String(direccion.codigoPostal))) {
     return {
       field: `${prefijo}codigoPostal`,
-      message: 'El código postal debe ser numérico (Mín. 4 dígitos).',
+      message:
+        'El código postal no puede contener caracteres especiales (Mín. 4 caracteres).',
     };
   }
 
@@ -61,6 +62,13 @@ export const validateSingleDireccion = (direccion, id) => {
     return {
       field: `${prefijo}localidad`,
       message: 'La localidad es obligatoria.',
+    };
+  }
+  if (!REGEX_ALPHANUMERIC.test(String(direccion.localidad))) {
+    return {
+      field: `${prefijo}localidad`,
+      message:
+        'La localidad no puede contener caracteres especiales (Mín. 4 caracteres).',
     };
   }
 

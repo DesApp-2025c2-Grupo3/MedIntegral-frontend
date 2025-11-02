@@ -27,6 +27,7 @@ import DatosDeContacto from '../common/DatosDeContacto';
 import { newDireccion } from '../../utils/afiliados';
 import DireccionAfiliadoSection from './DireccionAfiliadoSection';
 import GrupoFamiliarSection from './GrupoFamiliarSection';
+import { useFormValidationContext } from '../../context/FormValidationContext';
 
 const initialAfiliadoData = {
   tipoDocumento: null,
@@ -69,6 +70,7 @@ export default function AltaAfiliadoForm() {
   const [showSuccess, setShowSuccess] = useState(false);
 
   const { validateBeforeSave } = useFormValidation(validateAltaAfiliado);
+  const { clearErrors } = useFormValidationContext();
 
   useEffect(() => {
     const cargarListasIniciales = async () => {
@@ -91,16 +93,21 @@ export default function AltaAfiliadoForm() {
     cargarListasIniciales();
   }, []);
 
-  const handleChange = useCallback((event) => {
-    const { name, value, type, checked } = event.target;
+  const handleChange = useCallback(
+    (event) => {
+      const { name, value, type, checked } = event.target;
 
-    const newValue = type === 'checkbox' ? checked : value;
+      const newValue = type === 'checkbox' ? checked : value;
 
-    setAfiliadoData((prevData) => ({
-      ...prevData,
-      [name]: newValue,
-    }));
-  }, []);
+      setAfiliadoData((prevData) => ({
+        ...prevData,
+        [name]: newValue,
+      }));
+
+      clearErrors(name);
+    },
+    [clearErrors]
+  );
 
   const handleGeneralChange = handleArrayChange(setAfiliadoData);
 
