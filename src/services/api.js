@@ -21,8 +21,8 @@ import {
   searchAfiliadosMock,
 } from '../mocks/afiliadosListadoMock';
 
-const USE_AGENDA_TURNOS_MOCKS = true;
-const USE_PRESTADORES_MOCKS = true;
+const USE_AGENDA_TURNOS_MOCKS = false;
+const USE_PRESTADORES_MOCKS = false;
 
 const api = axios.create({
   baseURL: 'http://localhost:3002/api',
