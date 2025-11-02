@@ -75,7 +75,7 @@ export const getAgendaTurnosListado = async (
  */
 export const getPrestadores = async () => {
   try {
-    const { data } = await api.get('/prestadores'); //agenda-turnos/prestadores
+    const { data } = await api.get('/agenda-turnos/prestadores');
     if (!Array.isArray(data)) {
       throw new Error('Formato inesperado en la respuesta de prestadores');
     }

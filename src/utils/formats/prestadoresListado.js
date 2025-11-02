@@ -1,16 +1,17 @@
 export const formatPrestadoresListado = (data) => {
   try {
-    if (!data || !Array.isArray(data)) {
+    if (!data || !Array.isArray(data.items)) {
       throw new Error('La respuesta no tiene el formato esperado');
     }
 
-    const itemsFormateados = data.map((p) => {
+    const itemsFormateados = data.items.map((p) => {
       const direcciones =
         p.centrosDeAtencion?.map((d) =>
           [
             d.calle || '',
             d.altura || '',
             d.pisoDepto ? `, ${d.pisoDepto}` : '',
+            d.codigoPostal ? `, ${d.codigoPostal}` : '',
             d.localidad ? `, ${d.localidad}` : '',
             d.provincia ? `, ${d.provincia}` : '',
           ]

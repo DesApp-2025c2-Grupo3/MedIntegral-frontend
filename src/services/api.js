@@ -164,7 +164,7 @@ api.interceptors.request.use((config) => {
     if (config.url === '/prestadores/3')
       return Promise.reject({ isMock: true, data: prestador3DetalleMock });
 
-    if (config.url === '/especialidades')
+    if (USE_AGENDA_TURNOS_MOCKS && config.url === '/especialidades')
       return Promise.reject({ isMock: true, data: listaEspecialidadesMock });
 
     if (config.url === '/tipoDocumento' && USE_AFILIADOS_MOCKS)

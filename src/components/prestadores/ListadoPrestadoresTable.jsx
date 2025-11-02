@@ -86,7 +86,7 @@ export default function ListadoPrestadoresTable({
                       {row.esCentroMedico ? 'Centro médico' : 'Médico'}
                     </TableCell>
                     <TableCell sx={{ fontSize: '0.9rem' }}>
-                      {row.especialidades.map((e) => e.nombre).join(', ')}
+                      {row.especialidades.map((e) => e).join(', ')}
                     </TableCell>
                     <TableCell sx={{ fontSize: '0.9rem' }}>
                       <Box
@@ -112,10 +112,7 @@ export default function ListadoPrestadoresTable({
                                 mt: 0.3,
                               }}
                             />
-                            <Typography fontSize="0.9rem">
-                              {d}
-                              {/*`${d.calle} ${d.altura || ''}, ${d.localidad}, ${d.provincia}`*/}
-                            </Typography>
+                            <Typography fontSize="0.9rem">{d}</Typography>
                           </Box>
                         ))}
                       </Box>
