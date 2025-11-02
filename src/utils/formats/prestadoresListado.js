@@ -7,16 +7,9 @@ export const formatPrestadoresListado = (data) => {
     const itemsFormateados = data.items.map((p) => {
       const direcciones =
         p.centrosDeAtencion?.map((d) =>
-          [
-            d.calle || '',
-            d.altura || '',
-            d.pisoDepto ? `, ${d.pisoDepto}` : '',
-            d.codigoPostal ? `, ${d.codigoPostal}` : '',
-            d.localidad ? `, ${d.localidad}` : '',
-            d.provincia ? `, ${d.provincia}` : '',
-          ]
-            .join(' ')
-            .trim()
+          `${d.calle || ''} ${d.altura || ''}${
+            d.pisoDepto ? ', ' + d.pisoDepto : ''
+          }, ${d.localidad || ''}, ${d.provincia || ''}`.trim()
         ) || [];
 
       const telefonos = p.telefonos?.map((t) => t.numero || '') || [];
@@ -37,6 +30,7 @@ export const formatPrestadoresListado = (data) => {
         telefonos,
         emails,
         createdAt: p.createdAt || null,
+        url: p.id ? `/prestadores/detalle/${p.id}` : null,
       };
     });
 

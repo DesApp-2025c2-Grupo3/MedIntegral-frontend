@@ -61,6 +61,20 @@ export default function validateFiltrosAgendaTurnos(filtros) {
     };
   }
 
+  if (dia && typeof provincia === 'string') {
+    return {
+      field: 'dia',
+      message: 'Seleccioná un día válido.',
+    };
+  }
+
+  if (duracion && typeof provincia === 'string') {
+    return {
+      field: 'duracion',
+      message: 'Seleccioná una duracion válida.',
+    };
+  }
+
   if (localidad && localidad.length < 3) {
     return {
       field: 'localidad',
@@ -68,9 +82,32 @@ export default function validateFiltrosAgendaTurnos(filtros) {
     };
   }
 
+  const hoy = dayjs();
+
+  if (creacionDesde && dayjs(creacionDesde).isAfter(hoy)) {
+    return {
+      field: 'creacionDesde',
+      message: 'La fecha no puede ser posterior a hoy.',
+    };
+  }
+
+  if (creacionHasta && dayjs(creacionHasta).isAfter(hoy)) {
+    return {
+      field: 'creacionHasta',
+      message: 'La fecha no puede ser posterior a hoy.',
+    };
+  }
+
   if (creacionDesde && creacionHasta) {
     const desde = dayjs(creacionDesde);
     const hasta = dayjs(creacionHasta);
+
+    if (desde.isSame(hasta)) {
+      return {
+        field: 'creacionHasta',
+        message: 'Las fechas no pueden ser iguales.',
+      };
+    }
 
     if (desde.isAfter(hasta)) {
       return {

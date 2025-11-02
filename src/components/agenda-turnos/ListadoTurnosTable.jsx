@@ -37,7 +37,7 @@ export default function AgendasTable({
           <Table sx={{ minWidth: 750 }}>
             <TableHeader
               headCells={[
-                { id: 'prestador', label: 'Nombre del prestador' },
+                { id: 'prestador', label: 'Agenda de turnos' },
                 { id: 'especialidad', label: 'Especialidad' },
                 { id: 'horarios', label: 'Horarios - Duración' },
                 { id: 'direccion', label: 'Dirección' },
@@ -70,7 +70,7 @@ export default function AgendasTable({
                         color="text.primary"
                         sx={{ fontSize: '0.9rem', fontWeight: 500 }}
                       >
-                        {row.prestador}
+                        #{row.id} - {row.prestador}
                       </Link>
                     </TableCell>
                     <TableCell sx={{ fontSize: '0.9rem' }}>

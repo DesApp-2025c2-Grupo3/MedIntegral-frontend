@@ -115,18 +115,21 @@ export default function FiltrosModalBase({
                     helperText={getHelperText(field.name)}
                     InputLabelProps={{ shrink: true }}
                     InputProps={{
-                      endAdornment: values[field.name] ? (
-                        <InputAdornment position="end">
-                          <Tooltip title="Eliminar">
-                            <IconButton
-                              size="small"
-                              onClick={() => handleClear(field.name)}
-                            >
-                              <CloseIcon fontSize="small" />
-                            </IconButton>
-                          </Tooltip>
-                        </InputAdornment>
-                      ) : null,
+                      endAdornment:
+                        values[field.name] !== undefined &&
+                        values[field.name] !== null &&
+                        values[field.name] !== '' ? (
+                          <InputAdornment position="end">
+                            <Tooltip title="Eliminar">
+                              <IconButton
+                                size="small"
+                                onClick={() => handleClear(field.name)}
+                              >
+                                <CloseIcon fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                          </InputAdornment>
+                        ) : null,
                     }}
                   />
                 ) : field.type === 'select' ? (
@@ -159,26 +162,6 @@ export default function FiltrosModalBase({
                         variant="outlined"
                         error={isFieldError(field.name)}
                         helperText={getHelperText(field.name)}
-                        InputProps={{
-                          ...params.InputProps,
-                          endAdornment: (
-                            <>
-                              {values[field.name] ? (
-                                <InputAdornment position="end">
-                                  <Tooltip title="Eliminar">
-                                    <IconButton
-                                      size="small"
-                                      onClick={() => handleClear(field.name)}
-                                    >
-                                      <CloseIcon fontSize="small" />
-                                    </IconButton>
-                                  </Tooltip>
-                                </InputAdornment>
-                              ) : null}
-                              {params.InputProps.endAdornment}
-                            </>
-                          ),
-                        }}
                       />
                     )}
                   />
