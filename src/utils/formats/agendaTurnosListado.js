@@ -1,3 +1,6 @@
+import { groupHorariosSimple } from './horarioGrouping';
+import { formatDias } from './formatDias';
+
 export const formatAgendaTurnosListado = (data) => {
   try {
     if (!data.items || !Array.isArray(data.items)) {
@@ -11,14 +14,12 @@ export const formatAgendaTurnosListado = (data) => {
           }, ${a.direccion.localidad || ''}, ${a.direccion.provincia || ''}`.trim()
         : '';
 
-      const horarios =
-        a.horariosAtencion?.map((h) => {
-          const dias =
-            h.dias?.map((d) => (typeof d === 'string' ? d : d?.nombre || '')) ||
-            [];
+      const horariosAgrupados = groupHorariosSimple(a.horariosAtencion);
 
-          return `${dias.join(', ')} - ${h.horaInicio || '?'}hs a ${h.horaFin || '?'}hs (${h.duracion} minutos)`;
-        }) || [];
+      const horarios = horariosAgrupados.map((g) => {
+        const diasTexto = formatDias(g.dias);
+        return `${diasTexto} - ${g.horaInicio}hs a ${g.horaFin}hs (${g.duracion} minutos)`;
+      });
 
       return {
         id: a.id ?? null,

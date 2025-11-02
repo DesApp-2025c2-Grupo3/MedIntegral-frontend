@@ -38,3 +38,28 @@ export const groupHorarios = (rawHorarios, diasConHorarios) => {
 
   return Array.from(groups.values());
 };
+
+export const groupHorariosSimple = (horarios = []) => {
+  const groups = new Map();
+
+  horarios.forEach((h) => {
+    const key = `${h.horaInicio}|${h.horaFin}|${h.duracionTurno}`;
+    if (!groups.has(key)) {
+      groups.set(key, {
+        dias: [],
+        horaInicio: h.horaInicio,
+        horaFin: h.horaFin,
+        duracion: Number(h.duracionTurno),
+      });
+    }
+
+    const group = groups.get(key);
+    const dia = h.dia || h.dia?.nombre;
+
+    if (dia && !group.dias.includes(dia)) {
+      group.dias.push(dia);
+    }
+  });
+
+  return Array.from(groups.values());
+};
