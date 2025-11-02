@@ -1,66 +1,105 @@
 export const prestador1DetalleMock = {
   id: 1,
-  nombre: 'Dra. Tita Merello',
-  cuilCuit: '27-12345678-9',
+  nombre: 'Dr. Pepe Grillo',
+  cuilCuit: '12345678901',
   esCentroMedico: false,
-
-  especialidades: [
-    { id: 1, nombre: 'Cardiología' },
-    { id: 2, nombre: 'Clínica Médica' },
+  integraCentroMedico: false,
+  centroMedicoId: null,
+  Emails: [
+    {
+      direccion: 'pepeg@gmail.com',
+    },
+    {
+      direccion: 'drgrillo@gmail.com',
+    },
   ],
-
-  emails: [
-    { id: 1, direccion: 'tita.merello@hospital.com' },
-    { id: 2, direccion: 'consultas@clinicamerello.com' },
+  Telefonos: [
+    {
+      numero: '1234567890',
+    },
+    {
+      numero: '0123456789',
+    },
   ],
-
-  telefonos: [
-    { id: 1, numero: '+54 11 4444-5555' },
-    { id: 2, numero: '+54 11 6666-7777' },
+  Especialidad: [
+    {
+      nombre: 'Cardiología',
+    },
+    {
+      nombre: 'Dermatología',
+    },
   ],
-
-  centrosDeAtencion: [
+  CentroDeAtencion: [
     {
       id: 1,
-      calle: 'Av. Corrientes',
-      altura: '1234',
-      pisoDepto: '3B',
-      codigoPostal: '1043',
-      localidad: 'CABA',
-      provincia: { id: 1, nombre: 'Buenos Aires' },
-      horarios: [
+      direccionId: 1,
+      prestadorId: 1,
+      Direccion: {
+        calle: 'Avenida Siempre Viva',
+        altura: 123,
+        pisoDepto: null,
+        localidad: 'Tigre',
+        Provincia: {
+          nombre: 'Buenos Aires',
+        },
+      },
+      Horarios: [
         {
-          id: 1,
-          dia: { id: 1, nombre: 'Lunes' },
-          horaInicio: '09:00',
+          id: 5,
+          horaInicio: '08:00',
+          horaFin: '18:00',
+          duracionTurno: null,
+          dia: 'Jueves',
+          createdAt: '2025-11-01T00:40:33.682Z',
+          updatedAt: '2025-11-01T00:40:33.682Z',
+          agendaTurnosId: null,
+          lugarAtencionId: 1,
+        },
+        {
+          id: 4,
+          horaInicio: '08:00',
+          horaFin: '18:00',
+          duracionTurno: null,
+          dia: 'Martes',
+          createdAt: '2025-11-01T00:40:33.680Z',
+          updatedAt: '2025-11-01T00:40:33.680Z',
+          agendaTurnosId: null,
+          lugarAtencionId: 1,
+        },
+        {
+          id: 3,
+          horaInicio: '08:00',
           horaFin: '12:00',
+          duracionTurno: null,
+          dia: 'Viernes',
+          createdAt: '2025-11-01T00:40:33.678Z',
+          updatedAt: '2025-11-01T00:40:33.678Z',
+          agendaTurnosId: null,
+          lugarAtencionId: 1,
         },
         {
           id: 2,
-          dia: { id: 3, nombre: 'Miércoles' },
-          horaInicio: '14:00',
-          horaFin: '18:00',
+          horaInicio: '08:00',
+          horaFin: '12:00',
+          duracionTurno: null,
+          dia: 'Miércoles',
+          createdAt: '2025-11-01T00:40:33.676Z',
+          updatedAt: '2025-11-01T00:40:33.676Z',
+          agendaTurnosId: null,
+          lugarAtencionId: 1,
         },
-      ],
-    },
-    {
-      id: 2,
-      calle: 'Avenida Vergara',
-      altura: '1908',
-      pisoDepto: null,
-      codigoPostal: '1708',
-      localidad: 'Morón',
-      provincia: { id: 1, nombre: 'Buenos Aires' },
-      horarios: [
         {
-          id: 3,
-          dia: { id: 5, nombre: 'Viernes' },
-          horaInicio: '10:00',
-          horaFin: '13:00',
+          id: 1,
+          horaInicio: '08:00',
+          horaFin: '12:00',
+          duracionTurno: null,
+          dia: 'Lunes',
+          createdAt: '2025-11-01T00:40:33.673Z',
+          updatedAt: '2025-11-01T00:40:33.673Z',
+          agendaTurnosId: null,
+          lugarAtencionId: 1,
         },
       ],
     },
   ],
-
-  agendaTurnos: [],
 };

@@ -81,7 +81,7 @@ export default function PrestadorSection() {
             onChange={handleDireccionChange}
             options={prestador?.centrosDeAtencion || []}
             getOptionLabel={(option) =>
-              option?.calle ? `${option.calle} ${option.altura || ''}` : option
+              option?.calle ? `${option.calle} ${option.altura || ''}` : ''
             }
             isOptionEqualToValue={(option, value) => option.id === value.id}
             label="Dirección"

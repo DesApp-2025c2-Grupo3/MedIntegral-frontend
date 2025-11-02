@@ -5,6 +5,14 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
 
+const normalizarHora = (valor) =>
+  dayjs(valor)
+    .set('year', 2000)
+    .set('month', 0)
+    .set('date', 1)
+    .set('second', 0)
+    .set('millisecond', 0);
+
 const obtenerNombreDia = (diaRaw) => {
   if (!diaRaw) return '';
   if (typeof diaRaw === 'object' && diaRaw.nombre) return diaRaw.nombre;
@@ -12,43 +20,55 @@ const obtenerNombreDia = (diaRaw) => {
   return '';
 };
 
+const normalizarHorarios = (horario) => {
+  const inicioRaw = horario.inicio || horario.horaInicio;
+  const finRaw = horario.fin || horario.horaFin;
+
+  const inicio = dayjs(inicioRaw, ['HH:mm', 'H:mm']);
+  const fin = dayjs(finRaw, ['HH:mm', 'H:mm']);
+
+  return { inicio, fin };
+};
+
 export const validateHorarioBasico = (horario) => {
+  const { inicio, fin } = normalizarHorarios(horario);
+
   if (!horario.dias || horario.dias.length === 0) {
     return {
       field: `horario-${horario.id}-dias`,
-      message: 'Seleccione al menos un día de la semana',
+      message: 'Seleccioná al menos un día de la semana',
     };
   }
 
   if (!horario.duracion) {
     return {
       field: `horario-${horario.id}-duracion`,
-      message: 'Debe indicar la duración del turno',
+      message: 'Tenés que indicar la duración del turno',
     };
   }
 
-  if (!horario.inicio) {
+  if (!inicio || !inicio.isValid()) {
     return {
       field: `horario-${horario.id}-inicio`,
-      message: 'Debe seleccionar un horario de inicio',
+      message: 'Seleccioná un horario de inicio',
     };
   }
 
-  if (!horario.fin) {
+  if (!fin || !fin.isValid()) {
     return {
       field: `horario-${horario.id}-fin`,
-      message: 'Debe seleccionar un horario de fin',
+      message: 'Seleccioná un horario de fin',
     };
   }
 
-  if (horario.inicio.isSame(horario.fin)) {
+  if (inicio.isSame(fin)) {
     return {
       field: `horario-${horario.id}-horario`,
       message: 'El inicio y el fin no pueden ser iguales',
     };
   }
 
-  if (horario.inicio.isAfter(horario.fin)) {
+  if (inicio.isAfter(fin)) {
     return {
       field: `horario-${horario.id}-horario`,
       message: 'El horario de inicio debe ser anterior al de fin',
@@ -59,14 +79,22 @@ export const validateHorarioBasico = (horario) => {
 };
 
 export const validateHorarioDentroDireccion = (horario, direccion) => {
-  const rangoMin = horario.inicio.format('HH:mm');
-  const rangoMax = horario.fin.format('HH:mm');
-
+  const rangoMin = normalizarHora(horario.inicio);
+  const rangoMax = normalizarHora(horario.fin);
   for (const diaRaw of horario.dias) {
-    const diaNombre = obtenerNombreDia(diaRaw);
+    const diaNombre =
+      typeof diaRaw === 'object' && diaRaw.nombre ? diaRaw.nombre : diaRaw;
+
     const match = direccion.horarios?.some((dh) => {
-      const coincideDia = dh.dias.some((d) => d.nombre === diaNombre);
-      return coincideDia && dh.horaInicio <= rangoMin && dh.horaFin >= rangoMax;
+      const nombre = typeof dh.dia === 'object' ? dh.dia.nombre : dh.dia;
+
+      const dhInicio = normalizarHora(dayjs(dh.horaInicio, 'HH:mm'));
+      const dhFin = normalizarHora(dayjs(dh.horaFin, 'HH:mm'));
+
+      const inicioOK = rangoMin.isSame(dhInicio) || rangoMin.isAfter(dhInicio);
+      const finOK = rangoMax.isSame(dhFin) || rangoMax.isBefore(dhFin);
+
+      return nombre === diaNombre && inicioOK && finOK;
     });
 
     if (!match) {
@@ -81,48 +109,49 @@ export const validateHorarioDentroDireccion = (horario, direccion) => {
 };
 
 export const validateDuracionVsRango = (horario) => {
-  const rangoMinutos = horario.fin.diff(horario.inicio, 'minute');
+  const { inicio, fin } = normalizarHorarios(horario);
+  if (!inicio.isValid() || !fin.isValid()) return null;
 
-  if (horario.duracion > rangoMinutos) {
+  const rangoMinutos = fin.diff(inicio, 'minute');
+  if (Number(horario.duracion) > rangoMinutos) {
     return {
       field: `horario-${horario.id}-duracion`,
       message: 'La duración del turno no puede ser mayor que el rango horario',
     };
   }
+
   return null;
 };
 
 export const validateSolapamiento = (horario, horarios) => {
+  const { inicio, fin } = normalizarHorarios(horario);
+  if (!inicio.isValid() || !fin.isValid()) return null;
+
   const index = horarios.findIndex((h) => h.id === horario.id);
 
-  for (let j = 0; j < index; j++) {
+  for (let j = 0; j < horarios.length; j++) {
+    if (j === index) continue;
+
     const other = horarios[j];
+    const { inicio: oInicio, fin: oFin } = normalizarHorarios(other);
 
-    const compartenDia = horario.dias.some((d) =>
-      other.dias.some((od) => obtenerNombreDia(od) === obtenerNombreDia(d))
-    );
+    if (!oInicio.isValid() || !oFin.isValid()) continue;
 
-    if (!compartenDia) continue;
+    const diasSolapados = (horario.dias || [])
+      .map(obtenerNombreDia)
+      .filter((d) => (other.dias || []).map(obtenerNombreDia).includes(d));
 
-    const empiezaDuranteOtro =
-      horario.horaInicio.isAfter(other.horaInicio) &&
-      horario.horaInicio.isBefore(other.horaFin);
+    if (diasSolapados.length === 0) continue;
 
-    const terminaDuranteOtro =
-      horario.horaFin.isAfter(other.horaInicio) &&
-      horario.horaFin.isBefore(other.horaFin);
-
+    const empiezaDuranteOtro = inicio.isAfter(oInicio) && inicio.isBefore(oFin);
+    const terminaDuranteOtro = fin.isAfter(oInicio) && fin.isBefore(oFin);
     const cubreTotalmente =
-      horario.horaInicio.isSameOrBefore(other.horaInicio) &&
-      horario.horaFin.isSameOrAfter(other.horaFin);
+      inicio.isSameOrBefore(oInicio) && fin.isSameOrAfter(oFin);
 
     if (empiezaDuranteOtro || terminaDuranteOtro || cubreTotalmente) {
-      const diasLimpios = horario.dias
-        .map((d) => obtenerNombreDia(d))
-        .join(', ');
       return {
         field: `horario-${horario.id}-horario`,
-        message: `El rango horario se solapa con otro definido para ${diasLimpios}`,
+        message: `El rango horario se solapa con otro horario para el ${diasSolapados.join(', ')}`,
       };
     }
   }

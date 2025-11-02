@@ -20,8 +20,9 @@ import {
   afiliadosFiltrosMock,
   searchAfiliadosMock,
 } from '../mocks/afiliadosListadoMock';
+import { agendaTurnosMock } from '../mocks/agendaTurnosMock';
 
-const USE_AGENDA_TURNOS_MOCKS = true;
+const USE_AGENDA_TURNOS_MOCKS = false;
 const USE_PRESTADORES_MOCKS = true;
 const USE_AFILIADOS_MOCKS = false;
 
@@ -51,10 +52,7 @@ api.interceptors.request.use((config) => {
 
       const data = searchAgendaTurnosMock(filters, page, limit);
 
-      return Promise.reject({
-        isMock: true,
-        data: data,
-      });
+      return Promise.reject({ isMock: true, data });
     }
 
     for (const [url, fn] of Object.entries(prestadoresFiltrosMock)) {
@@ -73,7 +71,6 @@ api.interceptors.request.use((config) => {
       const filters = config.params || {};
       const page = Number(filters.page) || 1;
       const limit = Number(filters.limit) || 10;
-
       const data = searchPrestadoresListadoMock(filters, page, limit);
 
       return Promise.reject({
@@ -98,7 +95,6 @@ api.interceptors.request.use((config) => {
       const filters = config.params || {};
       const page = Number(filters.page) || 1;
       const limit = Number(filters.limit) || 10;
-
       const data = searchAfiliadosMock(filters, page, limit);
       const itemsParaFormatear = data.items.map((a) => ({
         id: a.afiliado,
@@ -152,16 +148,21 @@ api.interceptors.request.use((config) => {
       });
     }
 
+    if (config.url === '/afiliados' && config.method === 'post') {
+      return Promise.reject({
+        isMock: true,
+        data: { id: crypto.randomUUID(), ...config.data },
+      });
+    }
+
     if (config.url === '/agenda-turnos/prestadores')
       return Promise.reject({ isMock: true, data: prestadoresMock });
 
-    if (config.url === '/prestadores/1')
+    if (config.url === '/prestadores/1' && USE_AGENDA_TURNOS_MOCKS)
       return Promise.reject({ isMock: true, data: prestador1DetalleMock });
-
-    if (config.url === '/prestadores/2')
+    if (config.url === '/prestadores/2' && USE_AGENDA_TURNOS_MOCKS)
       return Promise.reject({ isMock: true, data: prestador2DetalleMock });
-
-    if (config.url === '/prestadores/3')
+    if (config.url === '/prestadores/3' && USE_AGENDA_TURNOS_MOCKS)
       return Promise.reject({ isMock: true, data: prestador3DetalleMock });
 
     if (USE_AGENDA_TURNOS_MOCKS && config.url === '/especialidades')
@@ -195,6 +196,75 @@ api.interceptors.request.use((config) => {
     if (config.url === '/parentescos' && USE_AFILIADOS_MOCKS) {
       return Promise.reject({ isMock: true, data: parentescoMock });
     }
+
+    if (
+      config.url.startsWith('/agenda-turnos/1') &&
+      config.method === 'get' &&
+      USE_AGENDA_TURNOS_MOCKS
+    ) {
+      return Promise.reject({ isMock: true, data: agendaTurnosMock });
+    }
+
+    if (
+      /^\/agenda-turnos\/\d+\/especialidades$/.test(config.url) &&
+      config.method === 'put' &&
+      USE_AGENDA_TURNOS_MOCKS
+    ) {
+      const body =
+        typeof config.data === 'string' ? JSON.parse(config.data) : config.data;
+      const { especialidadId } = body || {};
+
+      const updatedAgenda = { ...agendaTurnosMock };
+      const nuevaEspecialidad =
+        updatedAgenda.prestador.especialidades.find(
+          (e) => e.id === especialidadId
+        ) || updatedAgenda.especialidad;
+
+      updatedAgenda.especialidad = nuevaEspecialidad;
+      updatedAgenda.updatedAt = new Date().toISOString();
+
+      return Promise.reject({
+        isMock: true,
+        data: updatedAgenda,
+        status: 200,
+      });
+    }
+
+    if (
+      /^\/agenda-turnos\/\d+\/horarios$/.test(config.url) &&
+      config.method === 'put' &&
+      USE_AGENDA_TURNOS_MOCKS
+    ) {
+      const body =
+        typeof config.data === 'string' ? JSON.parse(config.data) : config.data;
+      const { horariosAtencion } = body || {};
+
+      const updatedAgenda = { ...agendaTurnosMock };
+
+      updatedAgenda.horariosAtencion = Array.isArray(horariosAtencion)
+        ? horariosAtencion
+        : updatedAgenda.horariosAtencion;
+
+      updatedAgenda.updatedAt = new Date().toISOString();
+
+      return Promise.reject({
+        isMock: true,
+        data: updatedAgenda,
+        status: 200,
+      });
+    }
+
+    if (
+      /^\/agenda-turnos\/\d+$/.test(config.url) &&
+      config.method === 'delete' &&
+      USE_AGENDA_TURNOS_MOCKS
+    ) {
+      return Promise.reject({
+        isMock: true,
+        data: null,
+        status: 200,
+      });
+    }
   }
   return config;
 });
@@ -202,7 +272,12 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.isMock) return Promise.resolve({ data: error.data });
+    if (error.isMock) {
+      return Promise.resolve({
+        data: error.data,
+        status: error.status ?? 200,
+      });
+    }
     return Promise.reject(error);
   }
 );

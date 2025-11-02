@@ -2,7 +2,7 @@ export const validateEspecialidad = (especialidad) => {
   if (!especialidad) {
     return {
       field: 'especialidad',
-      message: 'Debe seleccionar una especialidad',
+      message: 'Seleccioná una especialidad',
     };
   }
   return null;

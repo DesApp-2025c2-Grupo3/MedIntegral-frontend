@@ -98,6 +98,17 @@ const validateMiembroFamiliar = (miembro, index) => {
     if (error) return error;
   }
 
+  if (
+    miembro.tieneSituacionTerapeutica &&
+    (!miembro.situacionesTerapeuticas ||
+      miembro.situacionesTerapeuticas.length === 0)
+  ) {
+    return {
+      field: `${prefijo}situacionesTerapeuticas`,
+      message: 'Tenés que agregar al menos una situación terapéutica.',
+    };
+  }
+
   return null;
 };
 
@@ -175,11 +186,22 @@ export const validateAltaAfiliado = (data) => {
   error = validateDireccionesArray(data.direcciones);
   if (error) return error;
 
+  if (
+    data.tieneSituacionTerapeutica &&
+    (!data.situacionesTerapeuticas || data.situacionesTerapeuticas.length === 0)
+  ) {
+    return {
+      field: 'situacionesTerapeuticas',
+      message: 'Tenés que agregar al menos una situación terapéutica.',
+    };
+  }
+
   if (data.tieneGrupoFamiliar) {
     if (!data.grupoFamiliar || data.grupoFamiliar.length === 0) {
       return {
         field: 'grupoFamiliar',
-        message: 'Debe agregar al menos un miembro si el switch está activado.',
+        message:
+          'Tenés que agregar al menos un miembro si el switch está activado.',
       };
     }
     for (let i = 0; i < data.grupoFamiliar.length; i++) {

@@ -50,6 +50,11 @@ export const createAfiliado = async (afiliadoData) => {
   }
 };
 
+/**
+ * Eliminar un afiliado
+ */
+export const deleteAfiliado = (id) => api.delete(`/afiliados/${id}`);
+
 /*
  * Obtener listado de los afiliados titulares con filtros y paginación
  */

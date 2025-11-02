@@ -12,7 +12,7 @@ export default function AltaTurnos() {
     <Box sx={{ mt: 2 }}>
       <PageHeader
         title="Alta de agenda de turnos"
-        subtitle="Ingrese los datos para crear una nueva agenda de turnos"
+        subtitle="Ingresá los datos para crear una nueva agenda de turnos"
       />
       <Paper
         elevation={3}

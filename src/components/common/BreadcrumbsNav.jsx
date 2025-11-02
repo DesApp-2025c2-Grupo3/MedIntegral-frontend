@@ -8,8 +8,7 @@ const routeNameMap = {
 };
 
 export default function BreadcrumbsNav() {
-  const location = useLocation();
-  const { pathname } = location;
+  const { pathname } = useLocation();
 
   const isHome = pathname === '/';
   if (isHome) {
@@ -25,22 +24,26 @@ export default function BreadcrumbsNav() {
   const segments = pathname.split('/').filter(Boolean);
   const mainSection = segments[0];
   const subSection = segments[1];
-  const isDetalle = /^\d+$/.test(subSection);
+  const idSection = segments[2];
+
+  const isDetalle = subSection === 'detalle' && /^\d+$/.test(idSection);
 
   const crumbs = [
     { label: 'Home', to: '/' },
     {
       label: routeNameMap[mainSection] || mainSection,
       to:
-        subSection && subSection !== 'listado' && !isDetalle
+        subSection && !isDetalle && subSection !== 'listado'
           ? `/${mainSection}/listado`
-          : null,
+          : `/${mainSection}/listado`,
     },
   ];
 
-  if (subSection === 'alta') crumbs.push({ label: 'Alta' });
-  else if (subSection === 'edicion') crumbs.push({ label: 'Edición' });
-  else if (isDetalle) crumbs.push({ label: 'Detalle' });
+  if (subSection === 'alta') {
+    crumbs.push({ label: 'Alta' });
+  } else if (isDetalle) {
+    crumbs.push({ label: `Detalle #${idSection}` });
+  }
 
   return (
     <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }} separator=">">

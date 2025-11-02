@@ -27,14 +27,15 @@ export default function validateFiltrosAgendaTurnos(filtros) {
   if (!algunoCargado) {
     return {
       field: null,
-      message: 'Debe completar al menos un filtro para realizar la búsqueda.',
+      message:
+        'Tenés que completar al menos un filtro para realizar la búsqueda.',
     };
   }
 
   if (especialidad && typeof especialidad === 'string') {
     return {
       field: 'especialidad',
-      message: 'Debe seleccionar una especialidad válida de la lista.',
+      message: 'Seleccioná una especialidad válida de la lista.',
     };
   }
 
@@ -48,7 +49,7 @@ export default function validateFiltrosAgendaTurnos(filtros) {
   if (provincia && typeof provincia === 'string') {
     return {
       field: 'provincia',
-      message: 'Debe seleccionar una provincia válida de la lista.',
+      message: 'Seleccioná una provincia válida de la lista.',
     };
   }
 

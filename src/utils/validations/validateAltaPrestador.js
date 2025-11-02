@@ -24,14 +24,14 @@ export const validateAltaPrestador = (data) => {
   if (data.especialidades.length === 0) {
     return {
       field: 'especialidades',
-      message: 'Se debe seleccionar al menos una especialidad.',
+      message: 'Seleccioná al menos una especialidad.',
     };
   }
 
   if (!data.centrosDeAtencion || data.centrosDeAtencion.length === 0) {
     return {
       field: 'centrosDeAtencion',
-      message: 'Debe agregar al menos un centro de atención.',
+      message: 'Tenés que agregar al menos un centro de atención.',
     };
   }
 
@@ -44,7 +44,7 @@ export const validateAltaPrestador = (data) => {
     if (!centro.horarios || centro.horarios.length === 0) {
       return {
         field: `centro-${centro.id}-horarios`,
-        message: 'Debe agregar al menos un horario al centro.',
+        message: 'Tenés que agregar al menos un horario al centro.',
       };
     }
 
@@ -52,21 +52,21 @@ export const validateAltaPrestador = (data) => {
       if (!horario.dias || horario.dias.length === 0) {
         return {
           field: `horario-${horario.id}-dias`,
-          message: 'Debe seleccionar un día.',
+          message: 'Seleccioná un día.',
         };
       }
 
       if (!horario.inicio) {
         return {
           field: `horario-${horario.id}-inicio`,
-          message: 'Debe indicar un horario de inicio.',
+          message: 'Tenés que indicar un horario de inicio.',
         };
       }
 
       if (!horario.fin) {
         return {
           field: `horario-${horario.id}-fin`,
-          message: 'Debe indicar un horario de fin.',
+          message: 'Tenés que indicar un horario de fin.',
         };
       }
 

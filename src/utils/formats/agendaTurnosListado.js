@@ -32,19 +32,16 @@ export const formatAgendaTurnosListado = (data) => {
             : (a.especialidad ?? ''),
         horarios,
         direccion: dir,
-        url: a.id ? `/agenda-turnos/edicion/${a.id}` : null,
+        url: a.id ? `/agenda-turnos/detalle/${a.id}` : null,
       };
     });
 
-    return {
-      ...data,
-      items: itemsFormateados,
-    };
+    return { ...data, items: itemsFormateados };
   } catch (err) {
     console.error('Error al formatear agendas:', err);
     return {
       ...data,
-      items: data?.items || [],
+      items: [],
       error: true,
       errorMessage: err.message,
     };

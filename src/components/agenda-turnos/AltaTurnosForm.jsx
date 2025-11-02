@@ -68,7 +68,7 @@ export default function AltaTurnosForm() {
             horarios,
           });
 
-          navigateToEdicion(data.id, { creacion: true });
+          navigateToEdicion(data.id, { created: true });
         } catch (err) {
           console.error('Error al guardar el alta de agenda de turnos:', err);
           setShowError(true);
