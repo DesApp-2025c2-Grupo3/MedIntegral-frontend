@@ -1,5 +1,6 @@
 import api from './api';
 import { formatPrestadoresListado } from '../utils/formats/prestadoresListado';
+import { formatPrestadorDetalle } from '../utils/formats/prestadoresDetalle';
 
 /**
  * Obtener todos los prestadores
@@ -39,12 +40,15 @@ export const getPrestadorById = async (id) => {
 
   try {
     const { data } = await api.get(`/prestadores/${id}`);
+
     if (!data || typeof data !== 'object') {
       throw new Error(
         `Prestador con ID ${id} no encontrado o formato inválido`
       );
     }
-    return data;
+
+    const formatted = formatPrestadorDetalle(data);
+    return formatted;
   } catch (err) {
     console.error(`Error al obtener prestador con ID ${id}:`, err);
     throw err;
@@ -83,4 +87,4 @@ export const createPrestador = async (prestadorData) => {
 /**
  * Eliminar un prestador
  */
-export const deletePrestador = (id) => api.delete(`/prestadores/${id}`);
+export const deletePrestadorById = (id) => api.delete(`/prestadores/${id}`);

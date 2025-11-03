@@ -3,15 +3,12 @@ import PropTypes from 'prop-types';
 import { Box, Grid, Typography, Button } from '@mui/material';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { useNavigate } from 'react-router-dom';
-
 import ConfirmCancelDialog from '../forms/ConfirmCancelDialog';
 import { detailHeaderConfig } from '../../../utils/detailHeaderConfig';
-import { useAgenda } from '../../../context/AgendaContext';
 
-export default function PageDetailHeader({ type, id }) {
+export default function PageDetailHeader({ type, id, onDelete }) {
   const [openDialog, setOpenDialog] = useState(false);
   const navigate = useNavigate();
-  const { deleteAgenda } = useAgenda();
 
   const config = detailHeaderConfig[type];
   if (!config || !id) return null;
@@ -20,9 +17,8 @@ export default function PageDetailHeader({ type, id }) {
   const subtitle = config.subtitle?.(id);
 
   const handleConfirmDelete = async () => {
-    const ok = await deleteAgenda();
+    const ok = await onDelete?.(id);
     setOpenDialog(false);
-
     if (ok) navigate(config.redirectTo);
   };
 
@@ -44,17 +40,19 @@ export default function PageDetailHeader({ type, id }) {
           )}
         </Grid>
 
-        <Grid xs={12} md="auto">
-          <Button
-            variant="contained"
-            color="error"
-            sx={{ textTransform: 'none' }}
-            startIcon={<DeleteOutlineIcon />}
-            onClick={() => setOpenDialog(true)}
-          >
-            Dar de baja
-          </Button>
-        </Grid>
+        {onDelete && (
+          <Grid xs={12} md="auto">
+            <Button
+              variant="contained"
+              color="error"
+              startIcon={<DeleteOutlineIcon />}
+              sx={{ textTransform: 'none' }}
+              onClick={() => setOpenDialog(true)}
+            >
+              Dar de baja
+            </Button>
+          </Grid>
+        )}
       </Grid>
 
       <ConfirmCancelDialog
@@ -69,6 +67,8 @@ export default function PageDetailHeader({ type, id }) {
 }
 
 PageDetailHeader.propTypes = {
-  type: PropTypes.oneOf(['agenda-de-turnos']).isRequired,
+  type: PropTypes.oneOf(['agenda-de-turnos', 'prestador', 'afiliado'])
+    .isRequired,
   id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  onDelete: PropTypes.func,
 };

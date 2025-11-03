@@ -13,7 +13,7 @@ import {
   useNavigateToEdicion,
 } from '../../hooks/navigation';
 
-import DatosPrincipales from './DatosPrincipales';
+import DatosPersonalesSection from './DatosPersonalesSection';
 import DatosDeContacto from '../common/DatosDeContacto';
 import { validateAltaPrestador } from '../../utils/validations/validateAltaPrestador';
 import { handleArrayChange } from '../../utils/handleArrayChanges';
@@ -121,7 +121,10 @@ function AltaPrestadorForm() {
     <Box component="form" noValidate>
       <LoadingOverlay open={saving} />
 
-      <DatosPrincipales prestadorData={prestadorData} onChange={handleChange} />
+      <DatosPersonalesSection
+        prestadorData={prestadorData}
+        onChange={handleChange}
+      />
 
       <DatosDeContacto contactoData={prestadorData} handleArray={handleArray} />
 

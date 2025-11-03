@@ -22,7 +22,7 @@ import {
 } from '../mocks/afiliadosListadoMock';
 import { agendaTurnosMock } from '../mocks/agendaTurnosMock';
 
-const USE_AGENDA_TURNOS_MOCKS = false;
+const USE_AGENDA_TURNOS_MOCKS = true;
 const USE_PRESTADORES_MOCKS = true;
 const USE_AFILIADOS_MOCKS = false;
 
@@ -155,7 +155,7 @@ api.interceptors.request.use((config) => {
       });
     }
 
-    if (config.url === '/agenda-turnos/prestadores')
+    if (config.url === '/prestadores/sin-agenda' && USE_AGENDA_TURNOS_MOCKS)
       return Promise.reject({ isMock: true, data: prestadoresMock });
 
     if (config.url === '/prestadores/1' && USE_AGENDA_TURNOS_MOCKS)

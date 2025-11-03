@@ -1,7 +1,7 @@
 import { Paper, Box } from '@mui/material';
 import PageHeader from '../../components/common/PageHeader';
 import AltaTurnosForm from '../../components/agenda-turnos/AltaTurnosForm';
-import { PrestadorProvider } from '../../context/PrestadorContext';
+import { PrestadorProvider } from '../../context/PrestadorAgendaTurnosContext';
 import { HorariosProvider } from '../../context/HorariosContext';
 import { FormValidationProvider } from '../../context/FormValidationContext';
 import { usePageTitle } from '../../hooks/usePageTitle';

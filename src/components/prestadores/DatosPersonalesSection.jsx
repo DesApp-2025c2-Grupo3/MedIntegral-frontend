@@ -2,7 +2,7 @@ import { Box, Typography, Grid, TextField } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useFormValidationContext } from '../../context/FormValidationContext';
 
-export default function DatosPrincipales({ prestadorData, onChange }) {
+export default function DatosPersonalesSection({ prestadorData, onChange }) {
   const { error } = useFormValidationContext();
 
   const getErrorProps = (fieldName) => {
@@ -24,7 +24,6 @@ export default function DatosPrincipales({ prestadorData, onChange }) {
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <TextField
             fullWidth
-            required
             label="CUIL / CUIT"
             name="cuilCuit"
             value={prestadorData.cuilCuit}
@@ -38,8 +37,7 @@ export default function DatosPrincipales({ prestadorData, onChange }) {
         <Grid size={{ xs: 12, sm: 6, md: 8 }}>
           <TextField
             fullWidth
-            required
-            label="Nombre"
+            label="Nombre completo"
             name="nombre"
             value={prestadorData.nombre}
             onChange={onChange}
@@ -52,7 +50,7 @@ export default function DatosPrincipales({ prestadorData, onChange }) {
   );
 }
 
-DatosPrincipales.propTypes = {
+DatosPersonalesSection.propTypes = {
   prestadorData: PropTypes.shape({
     nombre: PropTypes.string.isRequired,
     cuilCuit: PropTypes.string.isRequired,

@@ -5,44 +5,44 @@ export const prestador1DetalleMock = {
   esCentroMedico: false,
   integraCentroMedico: false,
   centroMedicoId: null,
-  Emails: [
+  emails: [
     {
+      id: 1,
       direccion: 'pepeg@gmail.com',
     },
     {
+      id: 2,
       direccion: 'drgrillo@gmail.com',
     },
   ],
-  Telefonos: [
+  telefonos: [
     {
+      id: 1,
       numero: '1234567890',
     },
     {
+      id: 2,
       numero: '0123456789',
     },
   ],
-  Especialidad: [
+  especialidad: [
     {
+      id: 1,
       nombre: 'Cardiología',
     },
     {
+      id: 2,
       nombre: 'Dermatología',
     },
   ],
   CentroDeAtencion: [
     {
       id: 1,
-      direccionId: 1,
-      prestadorId: 1,
-      Direccion: {
-        calle: 'Avenida Siempre Viva',
-        altura: 123,
-        pisoDepto: null,
-        localidad: 'Tigre',
-        Provincia: {
-          nombre: 'Buenos Aires',
-        },
-      },
+      calle: 'Avenida Siempre Viva',
+      altura: 123,
+      pisoDepto: null,
+      localidad: 'Tigre',
+      provincia: { id: 1, nombre: 'Buenos Aires' },
       Horarios: [
         {
           id: 5,
@@ -102,4 +102,8 @@ export const prestador1DetalleMock = {
       ],
     },
   ],
+  createdAtFecha: '01/11/2025',
+  createdAtHora: '00:40',
+  updatedAtFecha: '01/11/2025',
+  updatedAtHora: '00:40',
 };
