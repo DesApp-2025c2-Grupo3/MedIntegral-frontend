@@ -11,7 +11,7 @@ import { usePageTitle } from '../../hooks/usePageTitle';
 import { useEffect } from 'react';
 
 function DetalleAgendaContent() {
-  const { agenda, loading } = useAgenda();
+  const { agenda, loading, deleteAgenda } = useAgenda();
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -32,7 +32,11 @@ function DetalleAgendaContent() {
 
   return (
     <Box sx={{ mt: 2 }}>
-      <PageDetailHeader type="agenda-de-turnos" id={id} />
+      <PageDetailHeader
+        type="agenda-de-turnos"
+        id={id}
+        onDelete={deleteAgenda}
+      />
 
       <Grid container spacing={3} mt={1}>
         <Grid size={{ xs: 12 }}>

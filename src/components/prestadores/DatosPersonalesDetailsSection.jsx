@@ -5,6 +5,7 @@ import DetailsSection from '../common/details/DetailsSection';
 import CopyItem from '../common/details/CopyItem';
 import { usePrestador } from '../../context/PrestadorContext';
 import DatosPersonalesEditModal from './modals/DatosPersonalesEditModal';
+import CheckIcon from '@mui/icons-material/Check';
 
 export default function DatosPersonalesDetailsSection() {
   const { prestador } = usePrestador();
@@ -36,16 +37,14 @@ export default function DatosPersonalesDetailsSection() {
           <strong>Nombre: </strong> {nombre}
         </Typography>
 
-        <Typography sx={{ mb: 2 }}>
+        <Typography>
           <strong>CUIL/CUIT: </strong> {cuilCuit || '—'}
         </Typography>
 
         <Divider sx={{ my: 1.5 }} />
 
-        <Typography fontWeight={600} mb={1}>
-          Emails
-        </Typography>
-        <Stack component="ul" spacing={1} sx={{ pl: 2, m: 0 }}>
+        <Typography fontWeight={600}>Emails</Typography>
+        <Stack component="ul" spacing={1} sx={{ pl: 0, m: 0 }}>
           {emails?.length > 0 ? (
             emails.map((e) => (
               <CopyItem
@@ -63,10 +62,8 @@ export default function DatosPersonalesDetailsSection() {
 
         <Divider sx={{ my: 1.5 }} />
 
-        <Typography fontWeight={600} mb={1}>
-          Teléfonos
-        </Typography>
-        <Stack component="ul" spacing={1} sx={{ pl: 2, m: 0 }}>
+        <Typography fontWeight={600}>Teléfonos</Typography>
+        <Stack component="ul" spacing={1} sx={{ pl: 0, m: 0 }}>
           {telefonos?.length > 0 ? (
             telefonos.map((t) => (
               <CopyItem
@@ -93,7 +90,13 @@ export default function DatosPersonalesDetailsSection() {
           onClose={handleToastClose}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
-          <Alert onClose={handleToastClose} severity="success" variant="filled">
+          <Alert
+            onClose={handleToastClose}
+            icon={<CheckIcon fontSize="inherit" />}
+            severity="success"
+            variant="filled"
+            sx={{ color: 'white', fontWeight: 200 }}
+          >
             {toast.message}
           </Alert>
         </Snackbar>

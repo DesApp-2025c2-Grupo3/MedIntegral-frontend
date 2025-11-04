@@ -17,7 +17,6 @@ export default function DetailsSection({
       sx={{
         p: 3,
         borderRadius: 3,
-        position: 'relative',
         display: 'flex',
         flexDirection: 'column',
         gap: 1.5,
@@ -32,30 +31,32 @@ export default function DetailsSection({
         ...sx,
       }}
     >
-      {(onEdit || action) && (
-        <Stack
-          direction="row"
-          sx={{ position: 'absolute', top: 10, right: 10 }}
-          spacing={1}
-          alignItems="center"
-        >
-          {action}
-          {onEdit && (
-            <Tooltip title={editTooltip}>
-              <IconButton size="small" color="primary" onClick={onEdit}>
-                <EditOutlinedIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
+      <Stack
+        direction="row"
+        alignItems="flex-start"
+        justifyContent="space-between"
+        width="100%"
+      >
+        <Stack direction="row" alignItems="center" spacing={1}>
+          {TitleIcon && <TitleIcon color="primary" />}
+          {title && (
+            <Typography variant="h6" fontWeight={600}>
+              {title}
+            </Typography>
           )}
         </Stack>
-      )}
 
-      <Stack direction="row" alignItems="center" spacing={1}>
-        {TitleIcon && <TitleIcon color="primary" />}
-        {title && (
-          <Typography variant="h6" fontWeight={600}>
-            {title}
-          </Typography>
+        {(onEdit || action) && (
+          <Stack direction="row" alignItems="flex-start" spacing={1}>
+            {action}
+            {onEdit && (
+              <Tooltip title={editTooltip}>
+                <IconButton size="small" color="primary" onClick={onEdit}>
+                  <EditOutlinedIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+            )}
+          </Stack>
         )}
       </Stack>
 

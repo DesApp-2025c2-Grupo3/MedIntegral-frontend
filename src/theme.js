@@ -21,8 +21,6 @@ const theme = createTheme({
     },
     divider: '#B0BEC5',
     info: { main: '#29B6F6' },
-    success: { main: '#4CAF50' },
-    warning: { main: '#FFEB3B' },
     error: { main: '#F44336', dark: '#C62828' },
   },
   shape: { borderRadius: 8 },

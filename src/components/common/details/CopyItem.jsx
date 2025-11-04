@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Stack, IconButton, Link, Tooltip } from '@mui/material';
+import { Stack, IconButton, Link, Tooltip, Typography } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 export default function CopyItem({ text, link, label, onCopy }) {
@@ -11,6 +11,7 @@ export default function CopyItem({ text, link, label, onCopy }) {
       spacing={1}
       sx={{ color: 'black' }}
     >
+      <Typography sx={{ mr: 1 }}>•</Typography>
       <Link
         href={link}
         underline="always"
@@ -19,7 +20,6 @@ export default function CopyItem({ text, link, label, onCopy }) {
       >
         {text}
       </Link>
-
       <Tooltip title="Copiar">
         <IconButton
           size="small"
