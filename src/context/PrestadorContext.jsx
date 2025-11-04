@@ -8,11 +8,11 @@ import {
 import PropTypes from 'prop-types';
 import {
   getPrestadorById,
-  /*updatePrestadorDatosPersonales,
-  updatePrestadorDatosContacto,
+  /*
+  updatePrestadorDatosPersonales,
   updatePrestadorEspecialidades,
   updatePrestadorCentroMedico,
-  updatePrestadorCentrosDeAtencion,*/
+  updatePrestadorLugaresAtencion,*/
   deletePrestadorById,
 } from '../services/prestadores';
 import SuccessSnackbar from '../components/common/SuccessSnackbar';

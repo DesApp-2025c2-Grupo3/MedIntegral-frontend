@@ -7,12 +7,19 @@ export const formatPrestadorDetalle = (data) => {
     if (!data || typeof data !== 'object') {
       throw new Error('La respuesta no tiene el formato esperado');
     }
+
     const emails = Array.isArray(data.emails)
-      ? data.emails.map((e) => e.direccion ?? '')
+      ? data.emails.map((e) => ({
+          id: e.id ?? null,
+          direccion: e.direccion ?? '',
+        }))
       : [];
 
     const telefonos = Array.isArray(data.telefonos)
-      ? data.telefonos.map((t) => t.numero ?? '')
+      ? data.telefonos.map((t) => ({
+          id: t.id ?? null,
+          numero: t.numero ?? '',
+        }))
       : [];
 
     const especialidades = Array.isArray(data.especialidad)

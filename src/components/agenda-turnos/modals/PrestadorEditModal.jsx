@@ -16,9 +16,9 @@ import {
   Link,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import ButtonsSection from '../common/forms/FormActions';
-import { validateEspecialidad } from '../../utils/validations/validateEspecialidad';
-import { useAgenda } from '../../context/AgendaContext';
+import ButtonsSection from '../../common/forms/FormActions';
+import { validateEspecialidad } from '../../../utils/validations/validateEspecialidad';
+import { useAgenda } from '../../../context/AgendaContext';
 
 export default function PrestadorEditModal({ open, onClose }) {
   const { agenda, updateEspecialidad } = useAgenda();

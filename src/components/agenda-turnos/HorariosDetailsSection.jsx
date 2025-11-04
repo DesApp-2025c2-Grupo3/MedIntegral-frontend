@@ -3,7 +3,7 @@ import { Stack, Typography, Divider, Box } from '@mui/material';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import DetailsSection from '../common/details/DetailsSection';
-import HorariosEditModal from './HorariosEditModal';
+import HorariosEditModal from './modals/HorariosEditModal';
 import { useAgenda } from '../../context/AgendaContext';
 
 export default function HorariosDetailsSection() {

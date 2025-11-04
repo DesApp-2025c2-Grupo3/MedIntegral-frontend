@@ -3,6 +3,7 @@ import { Box, CircularProgress, Grid } from '@mui/material';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import PageDetailHeader from '../../components/common/details/PageDetailHeader';
 import AuditInfoSection from '../../components/common/details/AuditInfoSection';
+import DatosPersonalesDetailsSection from '../../components/prestadores/DatosPersonalesDetailsSection';
 import SuccessSnackbar from '../../components/common/SuccessSnackbar';
 import {
   PrestadorProvider,
@@ -36,8 +37,18 @@ function DetallePrestadorContent() {
       <PageDetailHeader type="prestador" id={id} />
 
       <Grid container spacing={3} mt={1}>
-        <Grid size={{ xs: 12 }}></Grid>
-        <Grid size={{ xs: 12 }}></Grid>
+        <Grid size={{ xs: 12 }}>
+          <DatosPersonalesDetailsSection />
+        </Grid>
+        {/*<Grid size={{ xs: 12 }}>
+          <EspecialidadesDetailsSection />
+        </Grid>
+        <Grid size={{ xs: 12 }}>
+          <CentroMedicoDetailsSection />
+        </Grid>
+        <Grid size={{ xs: 12 }}>
+          <LugarAtencionDetailsSection />
+        </Grid>*/}
       </Grid>
 
       <AuditInfoSection

@@ -53,7 +53,7 @@ export default function DetailsSection({
       <Stack direction="row" alignItems="center" spacing={1}>
         {TitleIcon && <TitleIcon color="primary" />}
         {title && (
-          <Typography variant="subtitle1" fontWeight={600}>
+          <Typography variant="h6" fontWeight={600}>
             {title}
           </Typography>
         )}

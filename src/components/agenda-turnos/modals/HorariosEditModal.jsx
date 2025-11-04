@@ -13,24 +13,24 @@ import {
   Autocomplete,
   TextField,
 } from '@mui/material';
-import AgregarButton from '../common/forms/AgregarButton';
+import AgregarButton from '../../common/forms/AgregarButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 
-import { useAgenda } from '../../context/AgendaContext';
-import ButtonsSection from '../common/forms/FormActions';
-import DiasSemanaSelector from '../common/forms/DiasSemanaSelector';
-import EliminarButton from '../common/forms/EliminarButton';
-import FadeSlide from '../common/animations/FadeSlide';
-import { validateHorarios } from '../../utils/validations/validateHorariosEdicion';
+import { useAgenda } from '../../../context/AgendaContext';
+import ButtonsSection from '../../common/forms/FormActions';
+import DiasSemanaSelector from '../../common/forms/DiasSemanaSelector';
+import EliminarButton from '../../common/forms/EliminarButton';
+import FadeSlide from '../../common/animations/FadeSlide';
+import { validateHorarios } from '../../../utils/validations/validateHorariosEdicion';
 
-import { toDayjs, fromDayjs } from '../../utils/formats/dateUtils';
+import { toDayjs, fromDayjs } from '../../../utils/formats/dateUtils';
 import {
   buildDuraciones,
   groupHorarios,
-} from '../../utils/formats/horarioGrouping';
+} from '../../../utils/formats/horarioGrouping';
 
 export default function HorariosEditModal({ open, onClose }) {
   const { agenda, updateHorarios } = useAgenda();
