@@ -51,7 +51,6 @@ export const formatPrestadorDetalle = (data) => {
                   },
                   horaInicio: h.horaInicio ?? '',
                   horaFin: h.horaFin ?? '',
-                  duracion: Number(h.duracionTurno) || null,
                   createdAtFecha: formatFecha(h.createdAt),
                   createdAtHora: formatHora(h.createdAt),
                   updatedAtFecha: formatFecha(h.updatedAt),
@@ -69,6 +68,7 @@ export const formatPrestadorDetalle = (data) => {
       esCentroMedico: Boolean(data.esCentroMedico),
       integraCentroMedico: Boolean(data.integraCentroMedico),
       centroMedicoId: data.centroMedicoId ?? null,
+      centroMedicoNombre: data.centroMedicoNombre ?? null,
 
       emails,
       telefonos,

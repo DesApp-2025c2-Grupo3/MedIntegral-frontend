@@ -4,6 +4,9 @@ import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import PageDetailHeader from '../../components/common/details/PageDetailHeader';
 import AuditInfoSection from '../../components/common/details/AuditInfoSection';
 import DatosPersonalesDetailsSection from '../../components/prestadores/DatosPersonalesDetailsSection';
+import EspecialidadesDetailsSection from '../../components/prestadores/EspecialidadesDetailsSection';
+import CentroMedicoDetailsSection from '../../components/prestadores/CentroMedicoDetailsSection';
+import LugarAtencionDetailsSection from '../../components/prestadores/LugarAtencionDetailsSection';
 import SuccessSnackbar from '../../components/common/SuccessSnackbar';
 import {
   PrestadorProvider,
@@ -40,7 +43,7 @@ function DetallePrestadorContent() {
         <Grid size={{ xs: 12 }}>
           <DatosPersonalesDetailsSection />
         </Grid>
-        {/*<Grid size={{ xs: 12 }}>
+        <Grid size={{ xs: 12 }}>
           <EspecialidadesDetailsSection />
         </Grid>
         <Grid size={{ xs: 12 }}>
@@ -48,7 +51,7 @@ function DetallePrestadorContent() {
         </Grid>
         <Grid size={{ xs: 12 }}>
           <LugarAtencionDetailsSection />
-        </Grid>*/}
+        </Grid>
       </Grid>
 
       <AuditInfoSection

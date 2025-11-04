@@ -3,37 +3,20 @@ export const prestador1DetalleMock = {
   nombre: 'Dr. Pepe Grillo',
   cuilCuit: '12345678901',
   esCentroMedico: false,
-  integraCentroMedico: false,
-  centroMedicoId: null,
+  integraCentroMedico: true,
+  centroMedicoId: 1,
+  centroMedicoNombre: 'Hospital Chancho',
   emails: [
-    {
-      id: 1,
-      direccion: 'pepeg@gmail.com',
-    },
-    {
-      id: 2,
-      direccion: 'drgrillo@gmail.com',
-    },
+    { id: 1, direccion: 'pepeg@gmail.com' },
+    { id: 2, direccion: 'drgrillo@gmail.com' },
   ],
   telefonos: [
-    {
-      id: 1,
-      numero: '1234567890',
-    },
-    {
-      id: 2,
-      numero: '0123456789',
-    },
+    { id: 1, numero: '1234567890' },
+    { id: 2, numero: '0123456789' },
   ],
   especialidad: [
-    {
-      id: 1,
-      nombre: 'Cardiología',
-    },
-    {
-      id: 2,
-      nombre: 'Dermatología',
-    },
+    { id: 1, nombre: 'Cardiología' },
+    { id: 2, nombre: 'Dermatología' },
   ],
   CentroDeAtencion: [
     {
@@ -50,10 +33,6 @@ export const prestador1DetalleMock = {
           horaFin: '18:00',
           duracionTurno: null,
           dia: 'Jueves',
-          createdAt: '2025-11-01T00:40:33.682Z',
-          updatedAt: '2025-11-01T00:40:33.682Z',
-          agendaTurnosId: null,
-          lugarAtencionId: 1,
         },
         {
           id: 4,
@@ -61,10 +40,6 @@ export const prestador1DetalleMock = {
           horaFin: '18:00',
           duracionTurno: null,
           dia: 'Martes',
-          createdAt: '2025-11-01T00:40:33.680Z',
-          updatedAt: '2025-11-01T00:40:33.680Z',
-          agendaTurnosId: null,
-          lugarAtencionId: 1,
         },
         {
           id: 3,
@@ -72,10 +47,6 @@ export const prestador1DetalleMock = {
           horaFin: '12:00',
           duracionTurno: null,
           dia: 'Viernes',
-          createdAt: '2025-11-01T00:40:33.678Z',
-          updatedAt: '2025-11-01T00:40:33.678Z',
-          agendaTurnosId: null,
-          lugarAtencionId: 1,
         },
         {
           id: 2,
@@ -83,10 +54,6 @@ export const prestador1DetalleMock = {
           horaFin: '12:00',
           duracionTurno: null,
           dia: 'Miércoles',
-          createdAt: '2025-11-01T00:40:33.676Z',
-          updatedAt: '2025-11-01T00:40:33.676Z',
-          agendaTurnosId: null,
-          lugarAtencionId: 1,
         },
         {
           id: 1,
@@ -94,10 +61,30 @@ export const prestador1DetalleMock = {
           horaFin: '12:00',
           duracionTurno: null,
           dia: 'Lunes',
-          createdAt: '2025-11-01T00:40:33.673Z',
-          updatedAt: '2025-11-01T00:40:33.673Z',
-          agendaTurnosId: null,
-          lugarAtencionId: 1,
+        },
+      ],
+    },
+    {
+      id: 2,
+      calle: 'Calle Falsa',
+      altura: 742,
+      pisoDepto: '2B',
+      localidad: 'San Justo',
+      provincia: { id: 1, nombre: 'Buenos Aires' },
+      Horarios: [
+        {
+          id: 6,
+          horaInicio: '09:00',
+          horaFin: '13:00',
+          duracionTurno: 30,
+          dia: 'Martes',
+        },
+        {
+          id: 7,
+          horaInicio: '14:00',
+          horaFin: '18:00',
+          duracionTurno: 30,
+          dia: 'Miércoles',
         },
       ],
     },
