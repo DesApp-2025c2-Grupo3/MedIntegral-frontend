@@ -22,13 +22,14 @@ export default function CentroAtencionHorarioItem({
     <Box sx={{ mb: 2 }}>
       <DiasSemanaSelector
         dias={DIAS_SEMANA}
-        selected={horario.dias || []}
-        onChange={(v) => updateField('dias', v)}
+        selected={Array.isArray(horario.dias) ? horario.dias : []}
+        onChange={(newValue) => updateField('dias', newValue)}
+        multiple
       />
 
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Grid container spacing={2} sx={{ mt: 1 }}>
-          <Grid item xs={12} sm={6}>
+          <Grid xs={12} sm={6}>
             <MobileTimePicker
               label="Hora Inicio"
               ampm={false}
@@ -42,7 +43,7 @@ export default function CentroAtencionHorarioItem({
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid xs={12} sm={6}>
             <MobileTimePicker
               label="Hora Fin"
               ampm={false}
@@ -53,7 +54,7 @@ export default function CentroAtencionHorarioItem({
           </Grid>
 
           {puedeEliminar && (
-            <Grid item xs={12}>
+            <Grid xs={12}>
               <EliminarButton
                 onEliminar={onEliminar}
                 label="Eliminar horario"

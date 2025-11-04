@@ -25,7 +25,7 @@ export default function PageDetailHeader({ type, id, onDelete }) {
   return (
     <Box sx={{ mb: 4 }}>
       <Grid container alignItems="center" justifyContent="space-between">
-        <Grid xs={12} md="auto">
+        <Grid size={{ xs: 12, md: 'auto' }}>
           <Typography variant="h4" fontWeight="bold">
             {title}
           </Typography>
@@ -41,7 +41,7 @@ export default function PageDetailHeader({ type, id, onDelete }) {
         </Grid>
 
         {onDelete && (
-          <Grid xs={12} md="auto">
+          <Grid size={{ xs: 12, md: 'auto' }}>
             <Button
               variant="contained"
               color="error"

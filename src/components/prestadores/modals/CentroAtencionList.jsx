@@ -3,7 +3,12 @@ import { Button } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import CentroAtencionItem from './CentroAtencionItem';
 
-export default function CentroAtencionList({ centros, provincias, onChange }) {
+export default function CentroAtencionList({
+  centros,
+  provincias,
+  onChange,
+  diasDisponibles,
+}) {
   const updateOne = (id, nuevo) => {
     onChange(centros.map((c) => (c.id === id ? nuevo : c)));
   };
@@ -25,7 +30,12 @@ export default function CentroAtencionList({ centros, provincias, onChange }) {
           provincia: null,
         },
         horarios: [
-          { id: crypto.randomUUID(), dias: [], horaInicio: '', horaFin: '' },
+          {
+            id: crypto.randomUUID(),
+            dias: [],
+            horaInicio: '',
+            horaFin: '',
+          },
         ],
       },
     ]);
@@ -38,6 +48,7 @@ export default function CentroAtencionList({ centros, provincias, onChange }) {
           key={c.id}
           centro={c}
           provincias={provincias}
+          diasDisponibles={diasDisponibles}
           index={i}
           total={centros.length}
           onUpdate={(nuevo) => updateOne(c.id, nuevo)}
@@ -55,5 +66,6 @@ export default function CentroAtencionList({ centros, provincias, onChange }) {
 CentroAtencionList.propTypes = {
   centros: PropTypes.array.isRequired,
   provincias: PropTypes.array.isRequired,
+  diasDisponibles: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
 };

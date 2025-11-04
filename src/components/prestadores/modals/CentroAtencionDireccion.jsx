@@ -18,7 +18,7 @@ export default function CentroAtencionDireccion({
 
   return (
     <Grid container spacing={2} sx={{ mt: 1 }}>
-      <Grid item xs={12} sm={6}>
+      <Grid size={{ xs: 12, sm: 6 }}>
         <TextField
           label="Calle"
           fullWidth
@@ -27,7 +27,7 @@ export default function CentroAtencionDireccion({
         />
       </Grid>
 
-      <Grid item xs={6} sm={3}>
+      <Grid size={{ xs: 6, sm: 3 }}>
         <TextField
           label="Altura"
           fullWidth
@@ -36,7 +36,7 @@ export default function CentroAtencionDireccion({
         />
       </Grid>
 
-      <Grid item xs={6} sm={3}>
+      <Grid size={{ xs: 6, sm: 3 }}>
         <TextField
           label="Piso/Depto"
           fullWidth
@@ -45,7 +45,7 @@ export default function CentroAtencionDireccion({
         />
       </Grid>
 
-      <Grid item xs={12} sm={6}>
+      <Grid size={{ xs: 12, sm: 6 }}>
         <TextField
           label="Localidad"
           fullWidth
@@ -54,7 +54,7 @@ export default function CentroAtencionDireccion({
         />
       </Grid>
 
-      <Grid item xs={12} sm={6}>
+      <Grid size={{ xs: 12, sm: 6 }}>
         <TextField
           select
           SelectProps={{ native: true }}
