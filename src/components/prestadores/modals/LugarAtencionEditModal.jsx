@@ -13,8 +13,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import ButtonsSection from '../../common/forms/FormActions';
 import { getProvincias } from '../../../services/provincias';
 import { usePrestador } from '../../../context/PrestadorContext';
+import { groupHorariosCentros } from '../../../utils/formats/horarioGrouping';
+
 import CentroAtencionList from './CentroAtencionList';
-import { DIAS_SEMANA } from '../../../utils/prestadores';
 
 export default function LugarAtencionEditModal({ open, onClose }) {
   const { prestador, updateCentrosAtencion } = usePrestador();
@@ -26,9 +27,8 @@ export default function LugarAtencionEditModal({ open, onClose }) {
   useEffect(() => {
     if (!open || !prestador) return;
 
-    setModalLoading(true);
-
     const loadData = async () => {
+      setModalLoading(true);
       try {
         const provs = await getProvincias();
         setProvincias(provs);
@@ -42,17 +42,11 @@ export default function LugarAtencionEditModal({ open, onClose }) {
               ? provs.find((p) => p.id === c.direccion.provincia.id) || null
               : null,
           },
-          horarios: c.horarios.map((h) => ({
-            id: crypto.randomUUID(),
-            dias: h.dia ? [{ id: h.dia.id, nombre: h.dia.nombre }] : [],
-            horaInicio: h.horaInicio ?? '',
-            horaFin: h.horaFin ?? '',
-          })),
+          horarios: groupHorariosCentros(c.horarios),
         }));
-
         setCentros(normalizados);
       } catch (err) {
-        console.error('Error de carga:', err);
+        console.error('Error cargando centros:', err);
       } finally {
         setModalLoading(false);
       }
@@ -65,10 +59,13 @@ export default function LugarAtencionEditModal({ open, onClose }) {
     const payload = centros.map((c) => ({
       ...c,
       horarios: c.horarios.flatMap((h) =>
-        h.dias.map((diaObj) => ({
-          dia: diaObj,
-          horaInicio: h.horaInicio || '',
-          horaFin: h.horaFin || '',
+        h.dias.map((d) => ({
+          dia: {
+            id: d.id,
+            nombre: d.nombre,
+          },
+          horaInicio: h.horaInicio,
+          horaFin: h.horaFin,
         }))
       ),
     }));
@@ -102,7 +99,6 @@ export default function LugarAtencionEditModal({ open, onClose }) {
             centros={centros}
             provincias={provincias}
             onChange={setCentros}
-            diasDisponibles={DIAS_SEMANA}
           />
         )}
       </DialogContent>

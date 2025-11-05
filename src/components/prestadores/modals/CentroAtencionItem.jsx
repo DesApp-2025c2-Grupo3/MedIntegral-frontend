@@ -1,17 +1,19 @@
 import PropTypes from 'prop-types';
 import { Box, Typography, Divider } from '@mui/material';
 import CentroAtencionDireccion from './CentroAtencionDireccion';
-import CentroAtencionHorarios from './CentroAtencionHorarios';
+import CentroAtencionHorarioGroup from './CentroAtencionHorarioGroup';
 import EliminarButton from '../../common/forms/EliminarButton';
 
 export default function CentroAtencionItem({
   centro,
   provincias,
-  onUpdate,
-  onDelete,
   index,
   total,
+  onUpdate,
+  onDelete,
 }) {
+  const updateCentro = (nuevo) => onUpdate(nuevo);
+
   return (
     <Box sx={{ mb: 5 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -27,16 +29,12 @@ export default function CentroAtencionItem({
       <CentroAtencionDireccion
         centro={centro}
         provincias={provincias}
-        onChange={onUpdate}
+        onChange={updateCentro}
       />
 
       <Divider sx={{ my: 3 }} />
 
-      <Typography variant="subtitle1" sx={{ mb: 2 }}>
-        Horarios de Atención
-      </Typography>
-
-      <CentroAtencionHorarios centro={centro} onChange={onUpdate} />
+      <CentroAtencionHorarioGroup centro={centro} onChange={updateCentro} />
     </Box>
   );
 }
@@ -44,8 +42,8 @@ export default function CentroAtencionItem({
 CentroAtencionItem.propTypes = {
   centro: PropTypes.object.isRequired,
   provincias: PropTypes.array.isRequired,
-  onUpdate: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
   total: PropTypes.number.isRequired,
+  onUpdate: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
