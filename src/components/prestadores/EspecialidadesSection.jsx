@@ -28,7 +28,7 @@ export default function EspecialidadesSection({
               value={especialidades}
               onChange={(_, val) => onChange('especialidades', val)}
               options={listaEspecialidades}
-              getOptionLabel={(o) => o?.especialidad || ''}
+              getOptionLabel={(o) => o?.nombre || ''}
               isOptionEqualToValue={(o, v) => o.id === v.id}
               renderInput={(params) => (
                 <TextField {...params} label="Especialidades" />
@@ -46,7 +46,6 @@ export default function EspecialidadesSection({
           listaCentrosMedicos={listaCentrosMedicos}
           onSwitchChange={onSwitchChange}
           onCentroMedicoChange={onCentroMedicoChange}
-          hideTitles
         />
       </Box>
     </>

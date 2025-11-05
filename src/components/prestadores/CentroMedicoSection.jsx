@@ -6,6 +6,7 @@ import {
   TextField,
   Autocomplete,
   Typography,
+  Collapse,
 } from '@mui/material';
 
 export default function CentroMedicoSection({
@@ -18,20 +19,16 @@ export default function CentroMedicoSection({
   error,
   helperText,
   disabled = false,
-  hideTitles = false,
+  useFullWidth = false,
 }) {
   const centrosOptions = Array.isArray(listaCentrosMedicos)
     ? listaCentrosMedicos
     : [];
 
   return (
-    <Box>
-      {!hideTitles && (
-        <Typography variant="h6" fontWeight="medium" sx={{ mb: 2 }}>
-          Centro Médico
-        </Typography>
-      )}
-
+    <Box
+      sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}
+    >
       <Stack direction="row" alignItems="center" spacing={1}>
         <Typography variant="body1" fontWeight="600">
           Es Centro Médico
@@ -44,7 +41,7 @@ export default function CentroMedicoSection({
       </Stack>
 
       {!isCentroMedico && (
-        <Stack direction="row" alignItems="center" spacing={1} sx={{ mt: 2 }}>
+        <Stack direction="row" alignItems="center" spacing={1}>
           <Typography variant="body1" fontWeight="600">
             Integra Centro Médico
           </Typography>
@@ -57,24 +54,45 @@ export default function CentroMedicoSection({
       )}
 
       {integraCentroMedico && !isCentroMedico && (
-        <Autocomplete
-          sx={{ mt: 2 }}
-          fullWidth
-          disabled={disabled}
-          options={centrosOptions}
-          value={centrosOptions.find((c) => c.id === centroMedicoId) || null}
-          onChange={(_, newValue) => onCentroMedicoChange(newValue?.id ?? null)}
-          getOptionLabel={(opt) => opt?.nombre || opt?.centro || ''}
-          isOptionEqualToValue={(o, v) => o.id === v.id}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Centro Médico que integra"
-              error={error}
-              helperText={helperText}
-            />
-          )}
-        />
+        <Collapse
+          in={integraCentroMedico}
+          orientation="horizontal"
+          sx={{
+            width: useFullWidth ? '100%' : 'auto',
+            '& .MuiCollapse-wrapper': {
+              width: '100%',
+              paddingLeft: '0 !important',
+            },
+            '& .MuiCollapse-wrapperInner': {
+              width: '100%',
+              paddingLeft: '0 !important',
+            },
+          }}
+        >
+          <Autocomplete
+            sx={{
+              width: useFullWidth ? '100% !important' : 300,
+              flexGrow: useFullWidth ? 1 : 0,
+              minWidth: useFullWidth ? '100% !important' : 'auto',
+            }}
+            disabled={disabled}
+            options={centrosOptions}
+            value={centrosOptions.find((c) => c.id === centroMedicoId) || null}
+            onChange={(_, newValue) =>
+              onCentroMedicoChange(newValue?.id ?? null)
+            }
+            getOptionLabel={(opt) => opt?.nombre || opt?.centro || ''}
+            isOptionEqualToValue={(o, v) => o.id === v.id}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Centro Médico que integra"
+                error={error}
+                helperText={helperText}
+              />
+            )}
+          />
+        </Collapse>
       )}
     </Box>
   );
@@ -90,5 +108,5 @@ CentroMedicoSection.propTypes = {
   error: PropTypes.bool,
   helperText: PropTypes.string,
   disabled: PropTypes.bool,
-  hideTitles: PropTypes.bool,
+  useFullWidth: PropTypes.bool,
 };

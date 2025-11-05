@@ -119,6 +119,7 @@ export default function CentroMedicoEditModal({ open, onClose, onSuccess }) {
             onCentroMedicoChange={handleCentroChange}
             error={error?.field === 'centroMedicoId'}
             helperText={error?.message}
+            useFullWidth={true}
           />
         </Box>
       </DialogContent>
