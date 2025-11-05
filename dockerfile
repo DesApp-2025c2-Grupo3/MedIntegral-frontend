@@ -8,9 +8,9 @@ RUN npm install
 
 COPY . .
 
-ARG REACT_APP_API_URL=https://medintegral.vmdigitai.com
-ENV REACT_APP_API_URL=${REACT_APP_API_URL}
-ENV REACT_APP_ENVIRONMENT=production
+ARG VITE_API_URL=https://api.medintegral.vmdigitai.com/api
+ENV VITE_API_URL=${VITE_API_URL}
+ENV VITE_ENVIRONMENT=production
 
 RUN npm run build
 

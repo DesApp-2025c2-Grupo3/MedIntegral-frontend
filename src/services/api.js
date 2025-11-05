@@ -27,7 +27,7 @@ const USE_PRESTADORES_MOCKS = false;
 const USE_AFILIADOS_MOCKS = false;
 
 const api = axios.create({
-  baseURL: 'http://localhost:3002/api',
+  baseURL: import.meta.env.VITE_API_URL,
   headers: { 'Content-Type': 'application/json' },
 });
 
