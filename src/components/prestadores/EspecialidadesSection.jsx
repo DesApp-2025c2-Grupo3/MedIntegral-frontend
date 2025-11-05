@@ -46,6 +46,7 @@ export default function EspecialidadesSection({
           listaCentrosMedicos={listaCentrosMedicos}
           onSwitchChange={onSwitchChange}
           onCentroMedicoChange={onCentroMedicoChange}
+          hideTitles
         />
       </Box>
     </>

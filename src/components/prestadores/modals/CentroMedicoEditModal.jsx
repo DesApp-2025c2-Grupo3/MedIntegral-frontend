@@ -23,6 +23,9 @@ export default function CentroMedicoEditModal({ open, onClose, onSuccess }) {
 
   useEffect(() => {
     if (!open) return;
+
+    setError(null);
+
     (async () => {
       const centros = await getCentrosMedicos();
       setListaCentros(centros);
@@ -30,10 +33,17 @@ export default function CentroMedicoEditModal({ open, onClose, onSuccess }) {
       setLocalData({
         esCentroMedico: prestador.esCentroMedico ?? false,
         integraCentroMedico: prestador.integraCentroMedico ?? false,
-        centroMedicoId: prestador.centroMedicoQueIntegra ?? null,
+        centroMedicoId: prestador.centroMedicoId ?? null,
       });
     })();
   }, [open, prestador]);
+
+  useEffect(() => {
+    if (!open) {
+      setLocalData(null);
+      setError(null);
+    }
+  }, [open]);
 
   if (!localData) return null;
 
@@ -79,11 +89,21 @@ export default function CentroMedicoEditModal({ open, onClose, onSuccess }) {
     onClose();
   };
 
+  const handleCancel = () => {
+    setLocalData({
+      esCentroMedico: prestador.esCentroMedico ?? false,
+      integraCentroMedico: prestador.integraCentroMedico ?? false,
+      centroMedicoId: prestador.centroMedicoId ?? null,
+    });
+    setError(null);
+    onClose();
+  };
+
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+    <Dialog open={open} onClose={handleCancel} maxWidth="sm" fullWidth>
       <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between' }}>
         Editar centro médico de {prestador.nombre}
-        <IconButton onClick={onClose} size="small">
+        <IconButton onClick={handleCancel} size="small">
           <CloseIcon />
         </IconButton>
       </DialogTitle>
@@ -106,7 +126,11 @@ export default function CentroMedicoEditModal({ open, onClose, onSuccess }) {
       <DialogActions sx={{ px: 3, pb: 2 }}>
         <ButtonsSection
           handleGuardar={handleGuardar}
-          onConfirmCancel={onClose}
+          onConfirmCancel={handleCancel}
+          cancelTitle="¿Cancelar la edición del centro médico?"
+          cancelMessage="Si cancelás ahora, se perderán los cambios realizados."
+          confirmText="Guardar cambios"
+          cancelText="Cancelar"
         />
       </DialogActions>
     </Dialog>
