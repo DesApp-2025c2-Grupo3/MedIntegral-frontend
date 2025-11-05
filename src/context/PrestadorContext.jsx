@@ -9,7 +9,8 @@ import PropTypes from 'prop-types';
 import {
   getPrestadorById,
   updatePrestadorDatosPersonales,
-  /*updatePrestadorEspecialidades,
+  updatePrestadorEspecialidades,
+  /*
   updatePrestadorCentroMedico,
   updatePrestadorLugaresAtencion,*/
   deletePrestadorById,
@@ -79,6 +80,26 @@ export function PrestadorProvider({ idPrestador, children }) {
     }
   };
 
+  const updateEspecialidades = async (lista) => {
+    if (!prestador?.id) return;
+
+    setGlobalLoading(true);
+
+    const ids = lista.map((e) => e.id);
+
+    try {
+      await updatePrestadorEspecialidades(prestador.id, ids);
+      const updated = await fetchPrestador();
+
+      finishWithMessage({ success: 'Especialidades actualizadas con éxito' });
+      return updated;
+    } catch {
+      finishWithMessage({
+        error: 'No se pudieron actualizar las especialidades.',
+      });
+    }
+  };
+
   const deletePrestador = async () => {
     if (!prestador?.id) return false;
 
@@ -104,6 +125,7 @@ export function PrestadorProvider({ idPrestador, children }) {
         setSuccessMessage,
         deletePrestador,
         updateDatosPersonales,
+        updateEspecialidades,
         refetchPrestador: fetchPrestador,
         clearError: () => setError(null),
       }}

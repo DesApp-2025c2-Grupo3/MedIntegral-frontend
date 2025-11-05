@@ -111,6 +111,31 @@ export const updatePrestadorDatosPersonales = async (id, payload) => {
 };
 
 /**
+ * Actualizar las especialidades de un prestador
+ */
+export const updatePrestadorEspecialidades = async (id, especialidadesIds) => {
+  try {
+    const response = await api.put(`/prestadores/${id}/especialidades`, {
+      especialidades: especialidadesIds,
+    });
+
+    if (response.status !== 200) {
+      throw new Error(
+        `Error al actualizar especialidades (status ${response.status})`
+      );
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error al actualizar especialidades del prestador ${id}:`,
+      error
+    );
+    throw error;
+  }
+};
+
+/**
  * Eliminar un prestador
  */
 export const deletePrestadorById = (id) => api.delete(`/prestadores/${id}`);

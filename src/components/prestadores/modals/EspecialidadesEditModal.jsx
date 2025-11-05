@@ -51,9 +51,15 @@ export default function EspecialidadesEditModal({ open, onClose }) {
   };
 
   const onGuardar = async () => {
-    const validation = validateEspecialidad(localValue[0]);
-    if (validation) {
-      setError(validation.message);
+    if (!localValue.length) {
+      setError('Seleccioná al menos una especialidad.');
+      return;
+    }
+
+    const invalid = localValue.find((e) => validateEspecialidad(e));
+    if (invalid) {
+      const validation = validateEspecialidad(invalid);
+      setError(validation?.message || 'Especialidad inválida');
       return;
     }
 
