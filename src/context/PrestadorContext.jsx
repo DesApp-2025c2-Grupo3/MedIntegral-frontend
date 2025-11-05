@@ -8,9 +8,8 @@ import {
 import PropTypes from 'prop-types';
 import {
   getPrestadorById,
-  /*
   updatePrestadorDatosPersonales,
-  updatePrestadorEspecialidades,
+  /*updatePrestadorEspecialidades,
   updatePrestadorCentroMedico,
   updatePrestadorLugaresAtencion,*/
   deletePrestadorById,
@@ -51,6 +50,35 @@ export function PrestadorProvider({ idPrestador, children }) {
     setGlobalLoading(false);
   };
 
+  const updateDatosPersonales = async (data) => {
+    if (!prestador?.id) return;
+
+    setGlobalLoading(true);
+
+    const payload = {
+      nombre: data.nombre,
+      cuilCuit: data.cuilCuit,
+      emails: (data.emails || []).map((e) => ({
+        direccion: e.direccion || e,
+      })),
+      telefonos: (data.telefonos || []).map((t) => ({
+        numero: t.numero || t,
+      })),
+    };
+
+    try {
+      await updatePrestadorDatosPersonales(prestador.id, payload);
+      const updated = await fetchPrestador();
+
+      finishWithMessage({ success: 'Datos personales actualizados con éxito' });
+      return updated;
+    } catch {
+      finishWithMessage({
+        error: 'No se pudieron actualizar los datos personales.',
+      });
+    }
+  };
+
   const deletePrestador = async () => {
     if (!prestador?.id) return false;
 
@@ -75,6 +103,7 @@ export function PrestadorProvider({ idPrestador, children }) {
         successMessage,
         setSuccessMessage,
         deletePrestador,
+        updateDatosPersonales,
         refetchPrestador: fetchPrestador,
         clearError: () => setError(null),
       }}

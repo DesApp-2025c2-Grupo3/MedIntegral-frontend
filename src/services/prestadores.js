@@ -85,6 +85,32 @@ export const createPrestador = async (prestadorData) => {
 };
 
 /**
+ * Actualizar datos personales del prestador
+ */
+export const updatePrestadorDatosPersonales = async (id, payload) => {
+  try {
+    const response = await api.put(
+      `/prestadores/${id}/datos-personales`,
+      payload
+    );
+
+    if (response.status !== 200) {
+      throw new Error(
+        `Error al actualizar datos personales (status ${response.status})`
+      );
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error al actualizar datos personales del prestador ${id}:`,
+      error
+    );
+    throw error;
+  }
+};
+
+/**
  * Eliminar un prestador
  */
 export const deletePrestadorById = (id) => api.delete(`/prestadores/${id}`);
