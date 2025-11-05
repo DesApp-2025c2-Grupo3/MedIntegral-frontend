@@ -3,14 +3,6 @@ export const validateCentroMedico = ({
   integraCentroMedico,
   centroMedicoId,
 }) => {
-  if (!esCentroMedico && !integraCentroMedico) {
-    return {
-      field: 'form',
-      message:
-        'Un prestador NO puede ser Centro Médico e integrar otro centro a la vez.',
-    };
-  }
-
   if (esCentroMedico && integraCentroMedico) {
     return {
       field: 'form',

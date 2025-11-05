@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Typography } from '@mui/material';
+import { Typography, Box } from '@mui/material';
 import BusinessIcon from '@mui/icons-material/Business';
 import DetailsSection from '../common/details/DetailsSection';
 import CentroMedicoEditModal from './modals/CentroMedicoEditModal';
 import { usePrestador } from '../../context/PrestadorContext';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 export default function CentroMedicoDetailsSection() {
   const { prestador } = usePrestador();
@@ -13,11 +14,8 @@ export default function CentroMedicoDetailsSection() {
 
   const { esCentroMedico, integraCentroMedico, centroMedicoNombre } = prestador;
 
-  if (!esCentroMedico && !integraCentroMedico) return null;
-
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
-
   return (
     <>
       <DetailsSection
@@ -27,10 +25,20 @@ export default function CentroMedicoDetailsSection() {
       >
         {esCentroMedico ? (
           <Typography>Es un centro médico</Typography>
-        ) : (
+        ) : integraCentroMedico ? (
           <Typography>
             Integra centro médico: <strong>{centroMedicoNombre}</strong>
           </Typography>
+        ) : (
+          <Box>
+            <Typography
+              color="text.secondary"
+              sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+            >
+              <InfoOutlinedIcon fontSize="small" />
+              Este profesional no es centro médico ni integra otro actualmente.
+            </Typography>
+          </Box>
         )}
       </DetailsSection>
 

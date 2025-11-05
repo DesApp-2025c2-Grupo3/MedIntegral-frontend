@@ -7,6 +7,7 @@ import {
   DialogActions,
   IconButton,
   Box,
+  Alert,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ButtonsSection from '../../common/forms/FormActions';
@@ -49,15 +50,34 @@ export default function CentroMedicoEditModal({ open, onClose }) {
 
   const updateField = (field) => (e) => {
     const checked = e.target.checked;
-    setLocalData((prev) => ({
-      ...prev,
-      esCentroMedico:
-        field === 'esCentroMedico' ? checked : prev.esCentroMedico,
-      integraCentroMedico:
-        field === 'integraCentroMedico' ? checked : prev.integraCentroMedico,
-      centroMedicoId:
-        field === 'esCentroMedico' || !checked ? null : prev.centroMedicoId,
-    }));
+
+    setLocalData((prev) => {
+      let updated = { ...prev };
+
+      if (field === 'esCentroMedico') {
+        updated.esCentroMedico = checked;
+
+        if (checked) {
+          updated.integraCentroMedico = false;
+          updated.centroMedicoId = null;
+        }
+      }
+
+      if (field === 'integraCentroMedico') {
+        updated.integraCentroMedico = checked;
+
+        if (checked) {
+          updated.esCentroMedico = false;
+        }
+
+        if (!checked) {
+          updated.centroMedicoId = null;
+        }
+      }
+
+      return updated;
+    });
+
     setError(null);
   };
 
@@ -110,6 +130,11 @@ export default function CentroMedicoEditModal({ open, onClose }) {
 
       <DialogContent dividers>
         <Box>
+          {error?.field === 'form' && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error.message}
+            </Alert>
+          )}
           <CentroMedicoSection
             isCentroMedico={localData.esCentroMedico}
             integraCentroMedico={localData.integraCentroMedico}

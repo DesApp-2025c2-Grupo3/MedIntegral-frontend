@@ -39,7 +39,7 @@ export const formatPrestadorDetalle = (data) => {
             localidad: ca.Direccion.localidad ?? '',
             provincia: ca.Direccion.Provincia ?? null,
           },
-          direccionTexto: formatDireccion(ca),
+          direccionTexto: formatDireccion(ca.Direccion),
           horarios: Array.isArray(ca.Horarios)
             ? ca.Horarios.map((h) => {
                 const diaNombre = h.dia;
