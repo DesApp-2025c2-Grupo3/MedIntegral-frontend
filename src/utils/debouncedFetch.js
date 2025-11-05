@@ -14,15 +14,14 @@ export const debouncedFetch = (
 
   const timer = setTimeout(async () => {
     const trimmed = query.trim();
-    if (trimmed.length < 3) {
-      setOptions([]);
-      return;
-    }
 
     try {
-      const { data } = await api.get(baseUrl, {
-        params: { textInputSearch: trimmed, ...extraParams },
-      });
+      const params =
+        trimmed.length === 0
+          ? { ...extraParams }
+          : { textInputSearch: trimmed, ...extraParams };
+
+      const { data } = await api.get(baseUrl, { params });
 
       const formatted =
         formatter?.(data) ||

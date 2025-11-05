@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ErrorSnackbar from '../ErrorSnackbar';
 import { debouncedFetch } from '../../../utils/debouncedFetch';
 
@@ -28,6 +28,14 @@ export default function FiltrosModalBase({
   const [error, setError] = useState(null);
   const [toastOpen, setToastOpen] = useState(false);
   const [optionsMap, setOptionsMap] = useState({});
+
+  useEffect(() => {
+    fields?.forEach((field) => {
+      if (field.asyncSearchUrl && !optionsMap[field.name]) {
+        handleAsyncSearch(field, '');
+      }
+    });
+  }, [fields, optionsMap]);
 
   const isFieldError = (name) => error?.field === name;
   const getHelperText = (name) => (isFieldError(name) ? error.message : '');
