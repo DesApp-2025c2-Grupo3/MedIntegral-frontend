@@ -8,110 +8,188 @@ import {
   Grid,
   Box,
   TextField,
+  Autocomplete,
   IconButton,
+  Stack,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ButtonsSection from '../../common/forms/FormActions';
+import {
+  validateNombre,
+  validateCuilCuit,
+  validateEmails,
+  validateTelefonos,
+} from '../../../utils/validations/validateContacto';
 import { usePrestador } from '../../../context/PrestadorContext';
 
 export default function DatosPersonalesEditModal({ open, onClose }) {
   const { prestador, updateDatosPersonales } = usePrestador();
-  const [formData, setFormData] = useState({ nombre: '', cuilCuit: '' });
-  const [errors, setErrors] = useState({});
-  const nombreRef = useRef(null);
+
+  const [localData, setLocalData] = useState(null);
+  const [error, setError] = useState(null);
+
+  const emailRef = useRef(null);
+  const telRef = useRef(null);
 
   useEffect(() => {
     if (open && prestador) {
-      setFormData({
+      setLocalData({
         nombre: prestador.nombre || '',
         cuilCuit: prestador.cuilCuit || '',
+        emails: (prestador.emails || []).map((e) =>
+          typeof e === 'string' ? { direccion: e } : e
+        ),
+        telefonos: (prestador.telefonos || []).map((t) =>
+          typeof t === 'string' ? { numero: t } : t
+        ),
       });
-      setErrors({});
+      setError(null);
     }
-  }, [prestador, open]);
+  }, [open, prestador]);
 
-  const handleChange = (e) => {
+  if (!localData) return null;
+
+  const handleField = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: null }));
+    setLocalData((prev) => ({ ...prev, [name]: value }));
+    setError(null);
   };
 
-  const validate = () => {
-    let newErrors = {};
+  const handleEmailsChange = (_, values) => {
+    setLocalData((prev) => ({
+      ...prev,
+      emails: values.map((v) => (typeof v === 'string' ? { direccion: v } : v)),
+    }));
+    setError(null);
+  };
 
-    if (!formData.nombre?.trim()) {
-      newErrors.nombre = 'El nombre es requerido';
-    }
-    if (!formData.cuilCuit?.trim()) {
-      newErrors.cuilCuit = 'El CUIL/CUIT es requerido';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const handleTelefonosChange = (_, values) => {
+    setLocalData((prev) => ({
+      ...prev,
+      telefonos: values.map((v) => (typeof v === 'string' ? { numero: v } : v)),
+    }));
+    setError(null);
   };
 
   const onGuardar = async () => {
-    if (!validate()) return;
-    await updateDatosPersonales(formData);
+    let v;
+
+    v = validateNombre(localData.nombre, 'nombre');
+    if (v) return setError(v);
+
+    v = validateCuilCuit(localData.cuilCuit);
+    if (v) return setError(v);
+
+    v = validateEmails(localData.emails);
+    if (v) return setError(v);
+
+    v = validateTelefonos(localData.telefonos);
+    if (v) return setError(v);
+
+    await updateDatosPersonales(localData);
     onClose();
   };
 
-  if (!prestador) return null;
-
-  const { nombre } = prestador;
-
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle
         sx={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          pr: 1,
         }}
       >
-        Editar datos personales de {nombre}
-        <IconButton onClick={onClose} size="small" color="default">
+        Editar datos personales de {prestador.nombre}
+        <IconButton onClick={onClose} size="small">
           <CloseIcon />
         </IconButton>
       </DialogTitle>
 
       <DialogContent dividers>
-        <Box>
-          <Grid container spacing={3}>
-            <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+        <Stack spacing={3}>
+          <Grid container spacing={2}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
                 label="CUIL / CUIT"
                 name="cuilCuit"
-                value={formData.cuilCuit}
-                onChange={handleChange}
-                error={!!errors.cuilCuit}
-                helperText={errors.cuilCuit}
+                value={localData.cuilCuit}
+                onChange={handleField}
+                error={error?.field === 'cuilCuit'}
+                helperText={error?.field === 'cuilCuit' ? error.message : ''}
               />
             </Grid>
 
-            <Grid size={{ xs: 12, sm: 6, md: 8 }}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
                 label="Nombre completo"
                 name="nombre"
-                value={formData.nombre}
-                onChange={handleChange}
-                inputRef={nombreRef}
-                error={!!errors.nombre}
-                helperText={errors.nombre}
+                value={localData.nombre}
+                onChange={handleField}
+                error={error?.field === 'nombre'}
+                helperText={error?.field === 'nombre' ? error.message : ''}
               />
             </Grid>
           </Grid>
-        </Box>
+
+          <Box>
+            <Autocomplete
+              multiple
+              freeSolo
+              filterSelectedOptions
+              value={localData.emails.map((e) => e.direccion)}
+              onChange={(_, values) =>
+                handleEmailsChange(
+                  _,
+                  values.map((v) => ({ direccion: v }))
+                )
+              }
+              options={[]}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Emails"
+                  inputRef={emailRef}
+                  error={error?.field === 'emails'}
+                  helperText={error?.field === 'emails' ? error.message : ''}
+                />
+              )}
+            />
+          </Box>
+
+          <Box>
+            <Autocomplete
+              multiple
+              freeSolo
+              filterSelectedOptions
+              value={localData.telefonos.map((t) => t.numero)}
+              onChange={(_, values) =>
+                handleTelefonosChange(
+                  _,
+                  values.map((v) => ({ numero: v }))
+                )
+              }
+              options={[]}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Teléfonos"
+                  inputRef={telRef}
+                  error={error?.field === 'telefonos'}
+                  helperText={error?.field === 'telefonos' ? error.message : ''}
+                />
+              )}
+            />
+          </Box>
+        </Stack>
       </DialogContent>
 
       <DialogActions sx={{ px: 3, pb: 2 }}>
         <ButtonsSection
           handleGuardar={onGuardar}
           onConfirmCancel={onClose}
-          cancelTitle={`¿Cancelar la edición de los datos personales del prestador ${nombre}?`}
+          cancelTitle={`¿Cancelar la edición de los datos personales del prestador ${prestador.nombre}?`}
           cancelMessage="Si cancelás ahora, se perderán los cambios realizados."
           confirmText="Guardar cambios"
           cancelText="Cancelar"

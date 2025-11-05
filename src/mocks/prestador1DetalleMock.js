@@ -1,6 +1,6 @@
 export const prestador1DetalleMock = {
   id: 1,
-  nombre: 'Dr. Pepe Grillo',
+  nombre: 'Dr Pepe Grillo',
   cuilCuit: '12345678901',
   esCentroMedico: false,
   integraCentroMedico: true,

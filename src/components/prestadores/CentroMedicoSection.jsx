@@ -1,63 +1,68 @@
-import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
   Box,
-  FormControlLabel,
+  Stack,
   Switch,
   TextField,
-  Collapse,
+  Autocomplete,
+  Typography,
 } from '@mui/material';
 
 export default function CentroMedicoSection({
   isCentroMedico,
   integraCentroMedico,
-  centroMedicoQueIntegra,
+  centroMedicoId,
+  listaCentrosMedicos = [],
   onSwitchChange,
   onCentroMedicoChange,
+  error,
+  helperText,
 }) {
-  return (
-    <Box
-      sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}
-    >
-      {/* Switch para "¿Es centro médico?" */}
-      <FormControlLabel
-        control={
-          <Switch
-            checked={isCentroMedico}
-            onChange={onSwitchChange('isCentroMedico')}
-            name="isCentroMedico"
-          />
-        }
-        label="¿Es centro médico?"
-      />
+  const centrosOptions = Array.isArray(listaCentrosMedicos)
+    ? listaCentrosMedicos
+    : [];
 
-      {/* Renderizado condicional del segundo Switch */}
+  return (
+    <Box>
+      <Stack direction="row" alignItems="center" spacing={1}>
+        <Typography variant="body1" fontWeight="600">
+          Es Centro Médico
+        </Typography>
+        <Switch
+          checked={isCentroMedico}
+          onChange={onSwitchChange('esCentroMedico')}
+        />
+      </Stack>
+
       {!isCentroMedico && (
-        <Collapse in={!isCentroMedico} orientation="horizontal">
-          <FormControlLabel
-            control={
-              <Switch
-                checked={integraCentroMedico}
-                onChange={onSwitchChange('integraCentroMedico')}
-                name="integraCentroMedico"
-              />
-            }
-            label="¿Integra con un centro médico?"
+        <Stack direction="row" alignItems="center" spacing={1} sx={{ mt: 2 }}>
+          <Typography variant="body1" fontWeight="600">
+            Integra Centro Médico
+          </Typography>
+          <Switch
+            checked={integraCentroMedico}
+            onChange={onSwitchChange('integraCentroMedico')}
           />
-        </Collapse>
+        </Stack>
       )}
 
-      {/* Renderizado condicional del TextField */}
-      {integraCentroMedico && (
-        <Collapse in={integraCentroMedico} orientation="horizontal">
-          <TextField
-            fullWidth
-            label="Centro médico que integra"
-            value={centroMedicoQueIntegra}
-            onChange={onCentroMedicoChange}
-            sx={{ width: { xs: '100%', sm: 'auto' } }}
-          />
-        </Collapse>
+      {integraCentroMedico && !isCentroMedico && (
+        <Autocomplete
+          sx={{ mt: 2 }}
+          fullWidth
+          options={centrosOptions}
+          value={centrosOptions.find((c) => c.id === centroMedicoId) || null}
+          onChange={(_, newValue) => onCentroMedicoChange(newValue?.id ?? null)}
+          getOptionLabel={(opt) => opt?.nombre || opt?.centro || ''}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Centro Médico"
+              error={error}
+              helperText={helperText}
+            />
+          )}
+        />
       )}
     </Box>
   );
@@ -66,7 +71,10 @@ export default function CentroMedicoSection({
 CentroMedicoSection.propTypes = {
   isCentroMedico: PropTypes.bool.isRequired,
   integraCentroMedico: PropTypes.bool.isRequired,
-  centroMedicoQueIntegra: PropTypes.string.isRequired,
+  centroMedicoId: PropTypes.number,
+  listaCentrosMedicos: PropTypes.array,
   onSwitchChange: PropTypes.func.isRequired,
   onCentroMedicoChange: PropTypes.func.isRequired,
+  error: PropTypes.bool,
+  helperText: PropTypes.string,
 };

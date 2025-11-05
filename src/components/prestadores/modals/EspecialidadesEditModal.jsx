@@ -13,43 +13,53 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ButtonsSection from '../../common/forms/FormActions';
+import { validateEspecialidad } from '../../../utils/validations/validateEspecialidad';
+import { getEspecialidades } from '../../../services/especialidades';
 import { usePrestador } from '../../../context/PrestadorContext';
 
-export default function EspecialidadesEditModal({ open, onClose, onSuccess }) {
-  const { prestador, listaEspecialidades, updateEspecialidades } =
-    usePrestador();
-  const [value, setValue] = useState([]);
+export default function EspecialidadesEditModal({ open, onClose }) {
+  const { prestador, updateEspecialidades } = usePrestador();
+
+  const [localValue, setLocalValue] = useState([]);
+  const [especialidades, setEspecialidades] = useState([]);
   const [error, setError] = useState(null);
+
   const autoRef = useRef(null);
 
   useEffect(() => {
-    if (open && prestador) {
-      setValue(prestador.especialidades || []);
-      setError(null);
-    }
+    if (!open || !prestador) return;
+
+    const loadData = async () => {
+      try {
+        const lista = await getEspecialidades();
+        setEspecialidades(lista || []);
+        setLocalValue(prestador.especialidades || []);
+        setError(null);
+      } catch (err) {
+        console.error('Error cargando especialidades:', err);
+      }
+    };
+
+    loadData();
   }, [open, prestador]);
 
+  if (!prestador) return null;
+
   const handleChange = (_, newValue) => {
-    setValue(newValue);
+    setLocalValue(newValue);
     setError(null);
   };
 
-  const validate = () => {
-    if (!value.length) {
-      setError('Debe seleccionar al menos una especialidad');
-      return false;
+  const onGuardar = async () => {
+    const validation = validateEspecialidad(localValue[0]);
+    if (validation) {
+      setError(validation.message);
+      return;
     }
-    return true;
-  };
 
-  const handleGuardar = async () => {
-    if (!validate()) return;
-    await updateEspecialidades(value);
-    onSuccess();
+    await updateEspecialidades(localValue);
     onClose();
   };
-
-  if (!prestador) return null;
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
@@ -73,16 +83,16 @@ export default function EspecialidadesEditModal({ open, onClose, onSuccess }) {
             <Grid size={{ xs: 12 }}>
               <Autocomplete
                 multiple
-                value={value}
+                value={localValue}
                 onChange={handleChange}
-                options={listaEspecialidades || []}
+                options={especialidades}
                 getOptionLabel={(o) => o?.nombre || ''}
                 isOptionEqualToValue={(o, v) => o.id === v.id}
                 renderInput={(params) => (
                   <TextField
                     {...params}
                     label="Especialidades"
-                    placeholder="Selecciona especialidades"
+                    placeholder="Selecciona una o más"
                     inputRef={autoRef}
                     error={!!error}
                     helperText={error}
@@ -96,7 +106,7 @@ export default function EspecialidadesEditModal({ open, onClose, onSuccess }) {
 
       <DialogActions sx={{ px: 3, pb: 2 }}>
         <ButtonsSection
-          handleGuardar={handleGuardar}
+          handleGuardar={onGuardar}
           onConfirmCancel={onClose}
           cancelTitle="¿Cancelar la edición de especialidades?"
           cancelMessage="Si cancelás ahora, se perderán los cambios realizados."
@@ -111,5 +121,4 @@ export default function EspecialidadesEditModal({ open, onClose, onSuccess }) {
 EspecialidadesEditModal.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  onSuccess: PropTypes.func.isRequired,
 };
