@@ -8,22 +8,22 @@ export const formatPrestadorDetalle = (data) => {
       throw new Error('La respuesta no tiene el formato esperado');
     }
 
-    const emails = Array.isArray(data.emails)
-      ? data.emails.map((e) => ({
+    const emails = Array.isArray(data.Emails)
+      ? data.Emails.map((e) => ({
           id: e.id ?? null,
           direccion: e.direccion ?? '',
         }))
       : [];
 
-    const telefonos = Array.isArray(data.telefonos)
-      ? data.telefonos.map((t) => ({
+    const telefonos = Array.isArray(data.Telefonos)
+      ? data.Telefonos.map((t) => ({
           id: t.id ?? null,
           numero: t.numero ?? '',
         }))
       : [];
 
-    const especialidades = Array.isArray(data.especialidad)
-      ? data.especialidad.map((e) => ({
+    const especialidades = Array.isArray(data.Especialidad)
+      ? data.Especialidad.map((e) => ({
           id: e.id ?? null,
           nombre: e.nombre ?? '',
         }))
@@ -33,11 +33,11 @@ export const formatPrestadorDetalle = (data) => {
       ? data.CentroDeAtencion.map((ca) => ({
           id: ca.id ?? null,
           direccion: {
-            calle: ca.calle ?? '',
-            altura: ca.altura ?? '',
-            pisoDepto: ca.pisoDepto ?? '',
-            localidad: ca.localidad ?? '',
-            provincia: ca.provincia ?? null,
+            calle: ca.Direccion.calle ?? '',
+            altura: ca.Direccion.altura ?? '',
+            pisoDepto: ca.Direccion.pisoDepto ?? '',
+            localidad: ca.Direccion.localidad ?? '',
+            provincia: ca.Direccion.Provincia ?? null,
           },
           direccionTexto: formatDireccion(ca),
           horarios: Array.isArray(ca.Horarios)

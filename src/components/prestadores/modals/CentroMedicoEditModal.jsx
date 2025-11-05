@@ -15,7 +15,7 @@ import { usePrestador } from '../../../context/PrestadorContext';
 import { validateCentroMedico } from '../../../utils/validations/validateCentroMedico';
 import { getCentrosMedicos } from '../../../services/centrosMedicos';
 
-export default function CentroMedicoEditModal({ open, onClose, onSuccess }) {
+export default function CentroMedicoEditModal({ open, onClose }) {
   const { prestador, updateCentroMedico } = usePrestador();
   const [localData, setLocalData] = useState(null);
   const [listaCentros, setListaCentros] = useState([]);
@@ -79,13 +79,13 @@ export default function CentroMedicoEditModal({ open, onClose, onSuccess }) {
     };
 
     const validation = validateCentroMedico(payload);
+
     if (validation) {
       setError(validation);
       return;
     }
 
     await updateCentroMedico(payload);
-    onSuccess();
     onClose();
   };
 
@@ -141,5 +141,4 @@ export default function CentroMedicoEditModal({ open, onClose, onSuccess }) {
 CentroMedicoEditModal.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  onSuccess: PropTypes.func.isRequired,
 };

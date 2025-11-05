@@ -136,6 +136,29 @@ export const updatePrestadorEspecialidades = async (id, especialidadesIds) => {
 };
 
 /**
+ * Actualizar información de centro médico del prestador
+ */
+export const updatePrestadorCentroMedico = async (id, payload) => {
+  try {
+    const response = await api.put(`/prestadores/${id}/centro-medico`, payload);
+
+    if (response.status !== 200) {
+      throw new Error(
+        `Error al actualizar centro médico (status ${response.status})`
+      );
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error al actualizar centro médico del prestador ${id}:`,
+      error
+    );
+    throw error;
+  }
+};
+
+/**
  * Eliminar un prestador
  */
 export const deletePrestadorById = (id) => api.delete(`/prestadores/${id}`);

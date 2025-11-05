@@ -10,8 +10,8 @@ import {
   getPrestadorById,
   updatePrestadorDatosPersonales,
   updatePrestadorEspecialidades,
-  /*
   updatePrestadorCentroMedico,
+  /*
   updatePrestadorLugaresAtencion,*/
   deletePrestadorById,
 } from '../services/prestadores';
@@ -100,6 +100,30 @@ export function PrestadorProvider({ idPrestador, children }) {
     }
   };
 
+  const updateCentroMedico = async (data) => {
+    if (!prestador?.id) return;
+
+    setGlobalLoading(true);
+
+    const payload = {
+      esCentroMedico: data.esCentroMedico,
+      integraCentroMedico: data.integraCentroMedico,
+      centroMedicoId: data.integraCentroMedico ? data.centroMedicoId : null,
+    };
+
+    try {
+      await updatePrestadorCentroMedico(prestador.id, payload);
+      const updated = await fetchPrestador();
+
+      finishWithMessage({ success: 'Centro médico actualizado con éxito' });
+      return updated;
+    } catch {
+      finishWithMessage({
+        error: 'No se pudo actualizar el centro médico del prestador.',
+      });
+    }
+  };
+
   const deletePrestador = async () => {
     if (!prestador?.id) return false;
 
@@ -126,6 +150,7 @@ export function PrestadorProvider({ idPrestador, children }) {
         deletePrestador,
         updateDatosPersonales,
         updateEspecialidades,
+        updateCentroMedico,
         refetchPrestador: fetchPrestador,
         clearError: () => setError(null),
       }}

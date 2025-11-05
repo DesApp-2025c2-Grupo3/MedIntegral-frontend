@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { Typography, Stack, Snackbar, Alert } from '@mui/material';
+import { Typography, Stack } from '@mui/material';
 import ScienceIcon from '@mui/icons-material/Science';
-import CheckIcon from '@mui/icons-material/Check';
 import DetailsSection from '../common/details/DetailsSection';
 import { usePrestador } from '../../context/PrestadorContext';
 import EspecialidadesEditModal from './modals/EspecialidadesEditModal';
@@ -9,7 +8,6 @@ import EspecialidadesEditModal from './modals/EspecialidadesEditModal';
 export default function EspecialidadesDetailsSection() {
   const { prestador } = usePrestador();
   const [openModal, setOpenModal] = useState(false);
-  const [toast, setToast] = useState(null);
 
   if (!prestador) return null;
 
@@ -17,12 +15,6 @@ export default function EspecialidadesDetailsSection() {
 
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
-
-  const handleSuccess = () => {
-    setToast({ message: 'Especialidades actualizadas', key: Date.now() });
-  };
-
-  const handleToastClose = () => setToast(null);
 
   return (
     <>
@@ -45,30 +37,7 @@ export default function EspecialidadesDetailsSection() {
         </Stack>
       </DetailsSection>
 
-      <EspecialidadesEditModal
-        open={openModal}
-        onClose={handleClose}
-        onSuccess={handleSuccess}
-      />
-
-      {toast && (
-        <Snackbar
-          key={toast.key}
-          open
-          autoHideDuration={2000}
-          onClose={handleToastClose}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        >
-          <Alert
-            onClose={handleToastClose}
-            icon={<CheckIcon fontSize="inherit" />}
-            severity="success"
-            variant="filled"
-          >
-            {toast.message}
-          </Alert>
-        </Snackbar>
-      )}
+      <EspecialidadesEditModal open={openModal} onClose={handleClose} />
     </>
   );
 }

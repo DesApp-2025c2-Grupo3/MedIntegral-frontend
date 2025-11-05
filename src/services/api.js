@@ -22,12 +22,15 @@ import {
 } from '../mocks/afiliadosListadoMock';
 import { agendaTurnosMock } from '../mocks/agendaTurnosMock';
 
-const USE_AGENDA_TURNOS_MOCKS = true;
+const USE_AGENDA_TURNOS_MOCKS = false;
 const USE_PRESTADORES_MOCKS = false;
 const USE_AFILIADOS_MOCKS = false;
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL:
+    window.location.hostname === 'localhost'
+      ? 'http://localhost:3002/api'
+      : import.meta.env.VITE_API_URL,
   headers: { 'Content-Type': 'application/json' },
 });
 
