@@ -7,6 +7,7 @@ import DiasSemanaSelector from '../../common/forms/DiasSemanaSelector';
 import { DIAS_SEMANA } from '../../../utils/prestadores';
 import dayjs from 'dayjs';
 import EliminarButton from '../../common/forms/EliminarButton';
+import { useEffect, useState } from 'react';
 
 export default function CentroAtencionHorarioItem({
   horario,
@@ -14,6 +15,14 @@ export default function CentroAtencionHorarioItem({
   onChange,
   onEliminar,
 }) {
+  const [localDias, setLocalDias] = useState([]);
+
+  useEffect(() => {
+    if (Array.isArray(horario.dias)) {
+      setLocalDias(horario.dias);
+    }
+  }, [horario.dias]);
+
   const update = (field, value) => {
     onChange({ ...horario, [field]: value });
   };
@@ -22,8 +31,11 @@ export default function CentroAtencionHorarioItem({
     <Box sx={{ mb: 3 }}>
       <DiasSemanaSelector
         dias={DIAS_SEMANA}
-        selected={Array.isArray(horario.dias) ? horario.dias : []}
-        onChange={(v) => update('dias', v)}
+        selected={localDias}
+        onChange={(v) => {
+          setLocalDias(v);
+          update('dias', v);
+        }}
         multiple
       />
 
@@ -34,7 +46,10 @@ export default function CentroAtencionHorarioItem({
               label="Hora Inicio"
               ampm={false}
               value={
-                horario.horaInicio ? dayjs(horario.horaInicio, 'HH:mm') : null
+                horario.horaInicio &&
+                dayjs(horario.horaInicio, 'HH:mm').isValid()
+                  ? dayjs(horario.horaInicio, 'HH:mm')
+                  : null
               }
               onChange={(v) => update('horaInicio', v?.format('HH:mm') || '')}
               slotProps={{ textField: { fullWidth: true } }}
@@ -45,7 +60,11 @@ export default function CentroAtencionHorarioItem({
             <MobileTimePicker
               label="Hora Fin"
               ampm={false}
-              value={horario.horaFin ? dayjs(horario.horaFin, 'HH:mm') : null}
+              value={
+                horario.horaFin && dayjs(horario.horaFin, 'HH:mm').isValid()
+                  ? dayjs(horario.horaFin, 'HH:mm')
+                  : null
+              }
               onChange={(v) => update('horaFin', v?.format('HH:mm') || '')}
               slotProps={{ textField: { fullWidth: true } }}
             />

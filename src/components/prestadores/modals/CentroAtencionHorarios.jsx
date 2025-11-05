@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Box, Button } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import CentroAtencionHorarioItem from './CentroAtencioHorarioItem';
+import CentroAtencionHorarioItem from './CentroAtencionHorarioItem';
 
 export default function CentroAtencionHorarios({ centro, onChange }) {
   const addHorario = () => {
