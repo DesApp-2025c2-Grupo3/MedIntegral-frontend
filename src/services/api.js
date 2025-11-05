@@ -23,7 +23,7 @@ import {
 import { agendaTurnosMock } from '../mocks/agendaTurnosMock';
 
 const USE_AGENDA_TURNOS_MOCKS = false;
-const USE_PRESTADORES_MOCKS = true;
+const USE_PRESTADORES_MOCKS = false;
 const USE_AFILIADOS_MOCKS = false;
 
 const api = axios.create({
@@ -141,7 +141,11 @@ api.interceptors.request.use((config) => {
       });
     }
 
-    if (config.url === '/prestadores' && config.method === 'post') {
+    if (
+      USE_PRESTADORES_MOCKS &&
+      config.url === '/prestadores' &&
+      config.method === 'post'
+    ) {
       return Promise.reject({
         isMock: true,
         data: { id: crypto.randomUUID(), ...config.data },
