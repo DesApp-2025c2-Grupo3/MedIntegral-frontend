@@ -26,6 +26,7 @@ export const DIAS_SEMANA = [
   { id: 4, nombre: 'jueves', label: 'Jueves' },
   { id: 5, nombre: 'viernes', label: 'Viernes' },
   { id: 6, nombre: 'sabado', label: 'Sábado' },
+  { id: 7, nombre: 'domingo', label: 'Domingo' },
 ];
 
 export const diaToBackend = (nombre) => ({

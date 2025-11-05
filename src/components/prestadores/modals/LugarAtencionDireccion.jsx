@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Grid, TextField } from '@mui/material';
 
-export default function CentroAtencionDireccion({
+export default function LugarAtencionDireccion({
   centro,
   provincias,
   onChange,
@@ -80,7 +80,7 @@ export default function CentroAtencionDireccion({
   );
 }
 
-CentroAtencionDireccion.propTypes = {
+LugarAtencionDireccion.propTypes = {
   centro: PropTypes.object.isRequired,
   provincias: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,

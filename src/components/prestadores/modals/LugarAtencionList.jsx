@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import { Button } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import CentroAtencionItem from './CentroAtencionItem';
+import LugarAtencionItem from './LugarAtencionItem';
 
-export default function CentroAtencionList({ centros, provincias, onChange }) {
+export default function LugarAtencionList({ centros, provincias, onChange }) {
   const updateOne = (id, nuevo) => {
     onChange(centros.map((c) => (c.id === id ? nuevo : c)));
   };
@@ -39,7 +39,7 @@ export default function CentroAtencionList({ centros, provincias, onChange }) {
   return (
     <>
       {centros.map((c, i) => (
-        <CentroAtencionItem
+        <LugarAtencionItem
           key={c.id}
           centro={c}
           provincias={provincias}
@@ -57,7 +57,7 @@ export default function CentroAtencionList({ centros, provincias, onChange }) {
   );
 }
 
-CentroAtencionList.propTypes = {
+LugarAtencionList.propTypes = {
   centros: PropTypes.array.isRequired,
   provincias: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,

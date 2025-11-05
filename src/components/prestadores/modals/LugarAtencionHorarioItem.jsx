@@ -9,7 +9,7 @@ import dayjs from 'dayjs';
 import EliminarButton from '../../common/forms/EliminarButton';
 import { useEffect, useState } from 'react';
 
-export default function CentroAtencionHorarioItem({
+export default function LugarAtencionHorarioItem({
   horario,
   puedeEliminar,
   onChange,
@@ -84,7 +84,7 @@ export default function CentroAtencionHorarioItem({
   );
 }
 
-CentroAtencionHorarioItem.propTypes = {
+LugarAtencionHorarioItem.propTypes = {
   horario: PropTypes.object.isRequired,
   puedeEliminar: PropTypes.bool,
   onChange: PropTypes.func.isRequired,

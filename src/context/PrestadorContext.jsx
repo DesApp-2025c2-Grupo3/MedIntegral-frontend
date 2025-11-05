@@ -11,13 +11,14 @@ import {
   updatePrestadorDatosPersonales,
   updatePrestadorEspecialidades,
   updatePrestadorCentroMedico,
-  /*
-  updatePrestadorLugaresAtencion,*/
+  updatePrestadorCentrosAtencion,
   deletePrestadorById,
 } from '../services/prestadores';
 import SuccessSnackbar from '../components/common/SuccessSnackbar';
 import ErrorSnackbar from '../components/common/ErrorSnackbar';
 import { Backdrop, CircularProgress } from '@mui/material';
+
+import { validateLugarAtencionEditModal } from '../utils/validations/validateLugarAtencionEditModal';
 
 const PrestadorContext = createContext();
 
@@ -53,7 +54,6 @@ export function PrestadorProvider({ idPrestador, children }) {
 
   const updateDatosPersonales = async (data) => {
     if (!prestador?.id) return;
-
     setGlobalLoading(true);
 
     const payload = {
@@ -70,7 +70,6 @@ export function PrestadorProvider({ idPrestador, children }) {
     try {
       await updatePrestadorDatosPersonales(prestador.id, payload);
       const updated = await fetchPrestador();
-
       finishWithMessage({ success: 'Datos personales actualizados con éxito' });
       return updated;
     } catch {
@@ -82,7 +81,6 @@ export function PrestadorProvider({ idPrestador, children }) {
 
   const updateEspecialidades = async (lista) => {
     if (!prestador?.id) return;
-
     setGlobalLoading(true);
 
     const ids = lista.map((e) => e.id);
@@ -90,7 +88,6 @@ export function PrestadorProvider({ idPrestador, children }) {
     try {
       await updatePrestadorEspecialidades(prestador.id, ids);
       const updated = await fetchPrestador();
-
       finishWithMessage({ success: 'Especialidades actualizadas con éxito' });
       return updated;
     } catch {
@@ -102,7 +99,6 @@ export function PrestadorProvider({ idPrestador, children }) {
 
   const updateCentroMedico = async (data) => {
     if (!prestador?.id) return;
-
     setGlobalLoading(true);
 
     const payload = {
@@ -114,7 +110,6 @@ export function PrestadorProvider({ idPrestador, children }) {
     try {
       await updatePrestadorCentroMedico(prestador.id, payload);
       const updated = await fetchPrestador();
-
       finishWithMessage({ success: 'Centro médico actualizado con éxito' });
       return updated;
     } catch {
@@ -124,9 +119,34 @@ export function PrestadorProvider({ idPrestador, children }) {
     }
   };
 
+  const updateCentrosAtencion = async (centros) => {
+    if (!prestador?.id) return;
+
+    const validation = validateLugarAtencionEditModal(centros);
+    if (validation) {
+      finishWithMessage({ error: validation.message });
+      return { error: validation };
+    }
+
+    setGlobalLoading(true);
+
+    try {
+      await updatePrestadorCentrosAtencion(prestador.id, centros);
+      const updated = await fetchPrestador();
+      finishWithMessage({
+        success: 'Centros de atención actualizados con éxito',
+      });
+      return { data: updated };
+    } catch (err) {
+      finishWithMessage({
+        error: 'No se pudo actualizar los centros de atención.',
+      });
+      return { error: err };
+    }
+  };
+
   const deletePrestador = async () => {
     if (!prestador?.id) return false;
-
     setGlobalLoading(true);
     try {
       await deletePrestadorById(prestador.id);
@@ -151,6 +171,7 @@ export function PrestadorProvider({ idPrestador, children }) {
         updateDatosPersonales,
         updateEspecialidades,
         updateCentroMedico,
+        updateCentrosAtencion,
         refetchPrestador: fetchPrestador,
         clearError: () => setError(null),
       }}

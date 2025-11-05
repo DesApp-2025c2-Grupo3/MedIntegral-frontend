@@ -1,33 +1,27 @@
 import PropTypes from 'prop-types';
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import CentroAtencionHorarioItem from './CentroAtencionHorarioItem';
+import LugarAtencionHorarioItem from './LugarAtencionHorarioItem';
 
-export default function CentroAtencionHorarioGroup({ centro, onChange }) {
-  const updateHorario = (id, nuevoHorario) => {
-    onChange({
-      ...centro,
-      horarios: centro.horarios.map((h) => (h.id === id ? nuevoHorario : h)),
-    });
-  };
-
+export default function LugarAtencionHorarios({ centro, onChange }) {
   const addHorario = () => {
     onChange({
       ...centro,
       horarios: [
         ...centro.horarios,
-        {
-          id: crypto.randomUUID(),
-          dias: [],
-          horaInicio: '',
-          horaFin: '',
-        },
+        { id: crypto.randomUUID(), dias: [], horaInicio: '', horaFin: '' },
       ],
     });
   };
 
+  const updateHorario = (id, nuevo) => {
+    onChange({
+      ...centro,
+      horarios: centro.horarios.map((h) => (h.id === id ? nuevo : h)),
+    });
+  };
+
   const deleteHorario = (id) => {
-    if (centro.horarios.length === 1) return;
     onChange({
       ...centro,
       horarios: centro.horarios.filter((h) => h.id !== id),
@@ -35,13 +29,9 @@ export default function CentroAtencionHorarioGroup({ centro, onChange }) {
   };
 
   return (
-    <Box sx={{}}>
-      <Typography variant="subtitle1" fontWeight="medium" sx={{ mb: 2 }}>
-        Horarios de Atención
-      </Typography>
-
+    <Box>
       {centro.horarios.map((h) => (
-        <CentroAtencionHorarioItem
+        <LugarAtencionHorarioItem
           key={h.id}
           horario={h}
           puedeEliminar={centro.horarios.length > 1}
@@ -53,7 +43,6 @@ export default function CentroAtencionHorarioGroup({ centro, onChange }) {
       <Button
         size="small"
         startIcon={<AddCircleOutlineIcon />}
-        sx={{ mt: 1 }}
         onClick={addHorario}
       >
         Agregar horario
@@ -62,7 +51,7 @@ export default function CentroAtencionHorarioGroup({ centro, onChange }) {
   );
 }
 
-CentroAtencionHorarioGroup.propTypes = {
+LugarAtencionHorarios.propTypes = {
   centro: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
 };

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import {
   Dialog,
@@ -14,8 +14,8 @@ import ButtonsSection from '../../common/forms/FormActions';
 import { getProvincias } from '../../../services/provincias';
 import { usePrestador } from '../../../context/PrestadorContext';
 import { groupHorariosCentros } from '../../../utils/formats/horarioGrouping';
-
-import CentroAtencionList from './CentroAtencionList';
+import { validateLugarAtencionEditModal } from '../../../utils/validations/validateLugarAtencionEditModal';
+import LugarAtencionList from './LugarAtencionList';
 
 export default function LugarAtencionEditModal({ open, onClose }) {
   const { prestador, updateCentrosAtencion } = usePrestador();
@@ -23,6 +23,9 @@ export default function LugarAtencionEditModal({ open, onClose }) {
   const [centros, setCentros] = useState([]);
   const [provincias, setProvincias] = useState([]);
   const [modalLoading, setModalLoading] = useState(false);
+  const [validationError, setValidationError] = useState(null);
+
+  const errorRefMap = useRef(new Map());
 
   useEffect(() => {
     if (!open || !prestador) return;
@@ -56,22 +59,33 @@ export default function LugarAtencionEditModal({ open, onClose }) {
   }, [open, prestador]);
 
   const handleGuardar = async () => {
+    setValidationError(null);
+
+    const validation = validateLugarAtencionEditModal(centros);
+    if (validation) {
+      setValidationError(validation);
+
+      const ref = errorRefMap.current.get(validation.field);
+      if (ref?.scrollIntoView) {
+        ref.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      return;
+    }
+
     const payload = centros.map((c) => ({
       ...c,
       horarios: c.horarios.flatMap((h) =>
         h.dias.map((d) => ({
-          dia: {
-            id: d.id,
-            nombre: d.nombre,
-          },
+          dia: { id: d.id, nombre: d.nombre },
           horaInicio: h.horaInicio,
           horaFin: h.horaFin,
         }))
       ),
     }));
 
-    await updateCentrosAtencion(payload);
-    onClose();
+    const { error } = await updateCentrosAtencion(payload);
+    if (!error) onClose();
   };
 
   if (!prestador) return null;
@@ -95,10 +109,12 @@ export default function LugarAtencionEditModal({ open, onClose }) {
             <CircularProgress />
           </Box>
         ) : (
-          <CentroAtencionList
+          <LugarAtencionList
             centros={centros}
             provincias={provincias}
             onChange={setCentros}
+            validationError={validationError}
+            errorRefMap={errorRefMap}
           />
         )}
       </DialogContent>

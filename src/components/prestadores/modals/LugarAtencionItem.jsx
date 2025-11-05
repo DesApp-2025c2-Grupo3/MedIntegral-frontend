@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import { Box, Typography, Divider } from '@mui/material';
-import CentroAtencionDireccion from './CentroAtencionDireccion';
-import CentroAtencionHorarioGroup from './CentroAtencionHorarioGroup';
+import LugarAtencionDireccion from './LugarAtencionDireccion';
+import LugarAtencionHorarioGroup from './LugarAtencionHorarioGroup';
 import EliminarButton from '../../common/forms/EliminarButton';
 
-export default function CentroAtencionItem({
+export default function LugarAtencionItem({
   centro,
   provincias,
   index,
@@ -26,7 +26,7 @@ export default function CentroAtencionItem({
         )}
       </Box>
 
-      <CentroAtencionDireccion
+      <LugarAtencionDireccion
         centro={centro}
         provincias={provincias}
         onChange={updateCentro}
@@ -34,12 +34,12 @@ export default function CentroAtencionItem({
 
       <Divider sx={{ my: 3 }} />
 
-      <CentroAtencionHorarioGroup centro={centro} onChange={updateCentro} />
+      <LugarAtencionHorarioGroup centro={centro} onChange={updateCentro} />
     </Box>
   );
 }
 
-CentroAtencionItem.propTypes = {
+LugarAtencionItem.propTypes = {
   centro: PropTypes.object.isRequired,
   provincias: PropTypes.array.isRequired,
   index: PropTypes.number.isRequired,
