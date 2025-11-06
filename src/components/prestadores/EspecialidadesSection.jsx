@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 import { Box, Typography, Grid, TextField, Autocomplete } from '@mui/material';
 
 import CentroMedicoSection from './CentroMedicoSection';
+import { useFormValidationContext } from '../../context/FormValidationContext';
+import { getErrorProps } from '../../utils/formHelper';
 
 export default function EspecialidadesSection({
   especialidades,
@@ -14,6 +16,8 @@ export default function EspecialidadesSection({
   onSwitchChange,
   onCentroMedicoChange,
 }) {
+  const { error } = useFormValidationContext();
+
   return (
     <>
       <Box sx={{ mt: 4 }}>
@@ -31,7 +35,12 @@ export default function EspecialidadesSection({
               getOptionLabel={(o) => o?.nombre || ''}
               isOptionEqualToValue={(o, v) => o.id === v.id}
               renderInput={(params) => (
-                <TextField {...params} label="Especialidades" />
+                <TextField
+                  {...params}
+                  label="Especialidades"
+                  fullWidth
+                  {...getErrorProps(error, 'especialidades')}
+                />
               )}
             />
           </Grid>

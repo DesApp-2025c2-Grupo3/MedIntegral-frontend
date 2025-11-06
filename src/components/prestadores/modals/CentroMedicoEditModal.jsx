@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ButtonsSection from '../../common/forms/FormActions';
-import CentroMedicoSection from '../CentroMedicoSection';
+import CentroMedicoSectionForModal from '../CentroMedicoSectionForModal';
 import { usePrestador } from '../../../context/PrestadorContext';
 import { validateCentroMedico } from '../../../utils/validations/validateCentroMedico';
 import { getCentrosMedicos } from '../../../services/centrosMedicos';
@@ -135,7 +135,7 @@ export default function CentroMedicoEditModal({ open, onClose }) {
               {error.message}
             </Alert>
           )}
-          <CentroMedicoSection
+          <CentroMedicoSectionForModal
             isCentroMedico={localData.esCentroMedico}
             integraCentroMedico={localData.integraCentroMedico}
             centroMedicoId={localData.centroMedicoId}

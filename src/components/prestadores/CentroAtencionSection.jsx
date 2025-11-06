@@ -1,5 +1,5 @@
-import { Box, Divider, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
+import { Box, Divider, Typography } from '@mui/material';
 import { AnimatePresence } from 'framer-motion';
 import AgregarButton from '../common/forms/AgregarButton';
 import DireccionSection from '../common/DireccionSection';
@@ -7,8 +7,11 @@ import HorarioDeAtencion from './HorarioDeAtencion';
 import FadeSlide from '../common/animations/FadeSlide';
 import { newHorario, newCentroDeAtencion } from '../../utils/prestadores';
 import EliminarButton from '../common/forms/EliminarButton';
+import { useFormValidationContext } from '../../context/FormValidationContext';
 
 export default function CentroAtencionSection({ centros, onChange }) {
+  const { error } = useFormValidationContext();
+
   const handleAgregarCentro = () => {
     onChange([...centros, newCentroDeAtencion()]);
   };
@@ -52,7 +55,12 @@ export default function CentroAtencionSection({ centros, onChange }) {
         {centros.map((centro, index) => (
           <FadeSlide key={centro.id}>
             <Box
-              sx={{ mb: 4, p: 3, border: '2px solid #ddd', borderRadius: 2 }}
+              sx={{
+                mb: 4,
+                p: 3,
+                border: '2px solid #ddd',
+                borderRadius: 2,
+              }}
             >
               <Box
                 sx={{
@@ -78,6 +86,7 @@ export default function CentroAtencionSection({ centros, onChange }) {
                 direccion={centro}
                 onChange={(nuevo) => handleActualizarCentro(centro.id, nuevo)}
                 idPrefix={`centro-${centro.id}`}
+                error={error}
               />
 
               <Divider sx={{ my: 3 }} />
@@ -99,6 +108,8 @@ export default function CentroAtencionSection({ centros, onChange }) {
                     handleActualizarHorario(centro, horario.id, nuevo)
                   }
                   onEliminar={() => handleEliminarHorario(centro, horario.id)}
+                  idPrefix={`horario-${horario.id}`}
+                  error={error}
                 />
               ))}
 
