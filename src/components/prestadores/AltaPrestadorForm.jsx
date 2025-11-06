@@ -122,14 +122,16 @@ function AltaPrestadorForm() {
         localidad: c.localidad,
         provincia: c.provincia?.id || null,
         horarios: c.horarios.map((h) => ({
-          horaInicio: h.horaInicio,
-          horaFin: h.horaFin,
-          dias: h.dias.map((d) => d.nombre),
+          horaInicio: h.inicio ? h.inicio.format('HH:mm') : null,
+          horaFin: h.fin ? h.fin.format('HH:mm') : null,
+          dias: (h.dias || []).map((d) =>
+            typeof d === 'string' ? d : d.nombre
+          ),
         })),
       })),
     };
 
-    validateBeforeSave(payload, async () => {
+    validateBeforeSave(prestadorData, async () => {
       try {
         setSaving(true);
         await sleepIfLocal(1000);
