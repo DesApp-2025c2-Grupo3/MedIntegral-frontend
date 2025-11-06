@@ -4,7 +4,7 @@ import { Box, Typography, Grid, Autocomplete, TextField } from '@mui/material';
 import DiasSemanaSelector from '../common/forms/DiasSemanaSelector';
 import EliminarButton from '../common/forms/EliminarButton';
 import HorarioPickerGroup from '../common/forms/HorarioPickerGroup';
-import { usePrestador } from '../../context/PrestadorContext';
+import { usePrestador } from '../../context/PrestadorAgendaTurnosContext';
 import FadeSlide from '../common/animations/FadeSlide';
 import { useFormValidationContext } from '../../context/FormValidationContext';
 

@@ -41,6 +41,13 @@ export const validateAltaTurnos = ({
     error = validateHorarioDentroDireccion(h, direccion, i);
     if (error) return error;
 
+    if (!h.duracion || h.duracion <= 0) {
+      return {
+        field: `horario-${h.id}-duracion`,
+        message: 'La duración del turno es obligatoria',
+      };
+    }
+
     error = validateDuracionVsRango(h, i);
     if (error) return error;
 

@@ -28,6 +28,13 @@ export const validateAltaPrestador = (data) => {
     };
   }
 
+  if (data.integraCentroMedico && !data.centroMedicoQueIntegra) {
+    return {
+      field: 'centroMedicoId',
+      message: 'Seleccioná el centro médico que integra.',
+    };
+  }
+
   if (!data.centrosDeAtencion || data.centrosDeAtencion.length === 0) {
     return {
       field: 'centrosDeAtencion',
@@ -35,7 +42,7 @@ export const validateAltaPrestador = (data) => {
     };
   }
 
-  //Verificación de centros de atencion (dirección y horarios)
+  // Verificación de centros de atención (dirección y horarios)
   for (const centro of data.centrosDeAtencion) {
     const idPrefijo = `centro-${centro.id}`;
     error = validateSingleDireccion(centro, idPrefijo);
@@ -73,7 +80,7 @@ export const validateAltaPrestador = (data) => {
       if (horario.inicio.isSame(horario.fin)) {
         return {
           field: `horario-${horario.id}-horario`,
-          message: 'El inicio y el fin no pueden ser iguales',
+          message: 'El inicio y el fin no pueden ser iguales.',
         };
       }
 

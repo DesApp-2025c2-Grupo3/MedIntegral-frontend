@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef } from 'react';
 import { Box, Grid, Typography } from '@mui/material';
-import { usePrestador } from '../../context/PrestadorContext';
+import { usePrestador } from '../../context/PrestadorAgendaTurnosContext';
 import { useHorarios } from '../../context/HorariosContext';
 import ValidatedAutocomplete from '../common/forms/ValidatedAutocomplete';
 import { useFormValidationContext } from '../../context/FormValidationContext';

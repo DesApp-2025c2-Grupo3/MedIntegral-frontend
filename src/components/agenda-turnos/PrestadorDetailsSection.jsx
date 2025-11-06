@@ -3,7 +3,7 @@ import { Stack, Typography, Divider, Link } from '@mui/material';
 import LocalHospitalOutlinedIcon from '@mui/icons-material/LocalHospitalOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import DetailsSection from '../common/details/DetailsSection';
-import PrestadorEditModal from './PrestadorEditModal';
+import PrestadorEditModal from './modals/PrestadorEditModal';
 import { useAgenda } from '../../context/AgendaContext';
 
 export default function PrestadorDetailsSection() {

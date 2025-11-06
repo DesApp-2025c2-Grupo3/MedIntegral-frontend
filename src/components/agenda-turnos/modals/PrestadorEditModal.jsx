@@ -10,15 +10,14 @@ import {
   Typography,
   Autocomplete,
   TextField,
-  Alert,
   Stack,
   IconButton,
   Link,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import ButtonsSection from '../common/forms/FormActions';
-import { validateEspecialidad } from '../../utils/validations/validateEspecialidad';
-import { useAgenda } from '../../context/AgendaContext';
+import ButtonsSection from '../../common/forms/FormActions';
+import { validateEspecialidad } from '../../../utils/validations/validateEspecialidad';
+import { useAgenda } from '../../../context/AgendaContext';
 
 export default function PrestadorEditModal({ open, onClose }) {
   const { agenda, updateEspecialidad } = useAgenda();
@@ -73,22 +72,20 @@ export default function PrestadorEditModal({ open, onClose }) {
         <Box>
           <Grid container spacing={3}>
             <Grid size={{ xs: 12 }}>
-              <Alert severity="info" sx={{ fontSize: '0.9rem' }}>
-                Si querés actualizar el prestador o la dirección, deberás{' '}
-                <Link
-                  href="/agenda-turnos/alta"
-                  sx={{
-                    fontWeight: 600,
-                    fontSize: '0.875rem',
-                    color: '#1976d2',
-                    textDecoration: 'none',
-                    '&:hover': { textDecoration: 'underline' },
-                  }}
-                >
-                  crear una nueva agenda de turnos
-                </Link>
-                .
-              </Alert>
+              Si querés actualizar el prestador o la dirección, deberás{' '}
+              <Link
+                href="/agenda-turnos/alta"
+                sx={{
+                  fontWeight: 600,
+                  fontSize: '0.875rem',
+                  color: '#1976d2',
+                  textDecoration: 'none',
+                  '&:hover': { textDecoration: 'underline' },
+                }}
+              >
+                crear una nueva agenda de turnos
+              </Link>
+              .
             </Grid>
 
             <Grid size={{ xs: 12 }}>

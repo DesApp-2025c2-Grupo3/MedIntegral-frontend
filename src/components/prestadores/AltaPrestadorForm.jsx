@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Box, Divider } from '@mui/material';
+
 import LoadingOverlay from '../common/LoadingOverlay';
 import ButtonsSection from '../common/forms/FormActions';
 import ErrorSnackbar from '../common/ErrorSnackbar';
 import SuccessSnackbar from '../common/SuccessSnackbar';
+
 import { useFormValidation } from '../../hooks/useFormValidation';
 import { createPrestador } from '../../services/prestadores';
 import { sleepIfLocal } from '../../utils/sleepIfLocal';
@@ -13,13 +15,15 @@ import {
   useNavigateToEdicion,
 } from '../../hooks/navigation';
 
-import DatosPrincipales from './DatosPrincipales';
+import DatosPersonalesSection from './DatosPersonalesSection';
 import DatosDeContacto from '../common/DatosDeContacto';
+import EspecialidadesSection from './EspecialidadesSection';
+import CentroAtencionSection from './CentroAtencionSection';
+
 import { validateAltaPrestador } from '../../utils/validations/validateAltaPrestador';
 import { handleArrayChange } from '../../utils/handleArrayChanges';
 import { getEspecialidades } from '../../services/especialidades';
-import EspecialidadesSection from './EspecialidadesSection';
-import CentroAtencionSection from './CentroAtencionSection';
+import { getCentrosMedicos } from '../../services/centrosMedicos';
 import { newCentroDeAtencion } from '../../utils/prestadores';
 
 function AltaPrestadorForm() {
@@ -37,8 +41,9 @@ function AltaPrestadorForm() {
   });
 
   const [listaEspecialidades, setListaEspecialidades] = useState([]);
+  const [listaCentrosMedicos, setListaCentrosMedicos] = useState([]);
   const [integraCentroMedico, setIntegraCentroMedico] = useState(false);
-  const [centroMedicoQueIntegra, setCentroMedicoQueIntegra] = useState('');
+  const [centroMedicoId, setCentroMedicoId] = useState(null);
 
   const [saving, setSaving] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -47,15 +52,19 @@ function AltaPrestadorForm() {
   const { validateBeforeSave } = useFormValidation(validateAltaPrestador);
 
   useEffect(() => {
-    const cargarEspecialidades = async () => {
+    const cargarDataInicial = async () => {
       try {
-        const dataEspecialidades = await getEspecialidades();
-        setListaEspecialidades(dataEspecialidades);
+        const [especialidades, centros] = await Promise.all([
+          getEspecialidades(),
+          getCentrosMedicos(),
+        ]);
+        setListaEspecialidades(especialidades);
+        setListaCentrosMedicos(centros);
       } catch (err) {
-        console.error('Error al obtener especialidades:', err);
+        console.error('Error cargando datos iniciales: ', err);
       }
     };
-    cargarEspecialidades();
+    cargarDataInicial();
   }, []);
 
   const handleChange = (event) => {
@@ -66,48 +75,70 @@ function AltaPrestadorForm() {
     }));
   };
 
-  // handler genérico para arrays (emails, telefonos, especialidades)
   const handleArray = handleArrayChange(setPrestadorData);
 
-  // función para manejar los cambios de los interruptores
-  const handleSwitchChange = (name) => (event) => {
-    if (name === 'isCentroMedico') {
+  const handleSwitchChange = (field) => (event) => {
+    const checked = event.target.checked;
+
+    if (field === 'esCentroMedico') {
       setPrestadorData((prevData) => ({
         ...prevData,
-        esCentroMedico: event.target.checked,
+        esCentroMedico: checked,
       }));
-      // Si "Es centro médico" se activa, reseteamos el otro switch y el textfield
-      if (event.target.checked) {
+
+      if (checked) {
         setIntegraCentroMedico(false);
-        setCentroMedicoQueIntegra('');
+        setCentroMedicoId(null);
       }
-    } else if (name === 'integraCentroMedico') {
-      setIntegraCentroMedico(event.target.checked);
-      // Si se desactiva "Integra...", reseteamos el textfield
-      if (!event.target.checked) {
-        setCentroMedicoQueIntegra('');
+    }
+
+    if (field === 'integraCentroMedico') {
+      setIntegraCentroMedico(checked);
+
+      if (!checked) {
+        setCentroMedicoId(null);
       }
     }
   };
 
-  //función para manejar el cambio en el TextField
-  const handleCentroMedicoChange = (event) => {
-    setCentroMedicoQueIntegra(event.target.value);
+  const handleCentroMedicoChange = (id) => {
+    setCentroMedicoId(id);
   };
 
   const handleGuardar = () => {
-    const finalData = { ...prestadorData };
+    const payload = {
+      nombre: prestadorData.nombre,
+      cuilCuit: prestadorData.cuilCuit,
+      esCentroMedico: prestadorData.esCentroMedico,
+      integraCentroMedico,
+      centroMedicoQueIntegra: centroMedicoId,
+      especialidades: prestadorData.especialidades.map((e) => e.id),
+      emails: prestadorData.emails,
+      telefonos: prestadorData.telefonos,
+      lugaresAtencion: prestadorData.centrosDeAtencion.map((c) => ({
+        calle: c.calle,
+        altura: Number(c.altura) || null,
+        codigoPostal: c.codigoPostal || '',
+        localidad: c.localidad,
+        provincia: c.provincia?.id || null,
+        horarios: c.horarios.map((h) => ({
+          horaInicio: h.inicio ? h.inicio.format('HH:mm') : null,
+          horaFin: h.fin ? h.fin.format('HH:mm') : null,
+          dias: (h.dias || []).map((d) =>
+            typeof d === 'string' ? d : d.nombre
+          ),
+        })),
+      })),
+    };
 
     validateBeforeSave(prestadorData, async () => {
       try {
         setSaving(true);
-        await sleepIfLocal(1500);
+        await sleepIfLocal(1000);
 
-        const data = await createPrestador(finalData);
-
+        const data = await createPrestador(payload);
         navigateToEdicion(data.id, { created: true });
-      } catch (err) {
-        console.error('Error al guardar el prestador:', err);
+      } catch {
         setShowError(true);
       } finally {
         setSaving(false);
@@ -121,29 +152,35 @@ function AltaPrestadorForm() {
     <Box component="form" noValidate>
       <LoadingOverlay open={saving} />
 
-      <DatosPrincipales prestadorData={prestadorData} onChange={handleChange} />
+      <DatosPersonalesSection
+        prestadorData={prestadorData}
+        onChange={handleChange}
+      />
 
       <DatosDeContacto contactoData={prestadorData} handleArray={handleArray} />
 
       <Divider sx={{ my: 4 }} />
+
       <EspecialidadesSection
         especialidades={prestadorData.especialidades}
         onChange={handleArray}
         listaEspecialidades={listaEspecialidades}
+        listaCentrosMedicos={listaCentrosMedicos}
         isCentroMedico={prestadorData.esCentroMedico}
         integraCentroMedico={integraCentroMedico}
-        centroMedicoQueIntegra={centroMedicoQueIntegra}
+        centroMedicoId={centroMedicoId}
         onSwitchChange={handleSwitchChange}
         onCentroMedicoChange={handleCentroMedicoChange}
       />
+
       <Divider sx={{ my: 4 }} />
 
       <CentroAtencionSection
         centros={prestadorData.centrosDeAtencion}
-        onChange={(newCentros) =>
+        onChange={(nuevos) =>
           setPrestadorData((prev) => ({
             ...prev,
-            centrosDeAtencion: newCentros,
+            centrosDeAtencion: nuevos,
           }))
         }
       />
@@ -158,13 +195,13 @@ function AltaPrestadorForm() {
       <ErrorSnackbar
         open={showError}
         onClose={() => setShowError(false)}
-        message="Ocurrió un error al guardar el prestador. Por favor, revisa los campos."
+        message="Error al guardar el prestador"
       />
 
       <SuccessSnackbar
         open={showSuccess}
         onClose={() => setShowSuccess(false)}
-        message="Prestador creado exitosamente."
+        message="Prestador creado exitosamente"
       />
     </Box>
   );

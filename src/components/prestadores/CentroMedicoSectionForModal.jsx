@@ -9,21 +9,18 @@ import {
   Collapse,
 } from '@mui/material';
 
-import { useFormValidationContext } from '../../context/FormValidationContext';
-import { getErrorProps } from '../../utils/formHelper';
-
-export default function CentroMedicoSection({
+export default function CentroMedicoSectionForModal({
   isCentroMedico,
   integraCentroMedico,
   centroMedicoId,
   listaCentrosMedicos = [],
   onSwitchChange,
   onCentroMedicoChange,
+  error,
+  helperText,
   disabled = false,
   useFullWidth = false,
 }) {
-  const { error } = useFormValidationContext();
-
   const centrosOptions = Array.isArray(listaCentrosMedicos)
     ? listaCentrosMedicos
     : [];
@@ -62,14 +59,21 @@ export default function CentroMedicoSection({
           orientation="horizontal"
           sx={{
             width: useFullWidth ? '100%' : 'auto',
-            '& .MuiCollapse-wrapper': { width: '100%' },
-            '& .MuiCollapse-wrapperInner': { width: '100%' },
+            '& .MuiCollapse-wrapper': {
+              width: '100%',
+              paddingLeft: '0 !important',
+            },
+            '& .MuiCollapse-wrapperInner': {
+              width: '100%',
+              paddingLeft: '0 !important',
+            },
           }}
         >
           <Autocomplete
             sx={{
               width: useFullWidth ? '100% !important' : 300,
               flexGrow: useFullWidth ? 1 : 0,
+              minWidth: useFullWidth ? '100% !important' : 'auto',
             }}
             disabled={disabled}
             options={centrosOptions}
@@ -83,7 +87,8 @@ export default function CentroMedicoSection({
               <TextField
                 {...params}
                 label="Centro Médico que integra"
-                {...getErrorProps(error, 'centroMedicoId')}
+                error={error}
+                helperText={helperText}
               />
             )}
           />
@@ -93,13 +98,15 @@ export default function CentroMedicoSection({
   );
 }
 
-CentroMedicoSection.propTypes = {
+CentroMedicoSectionForModal.propTypes = {
   isCentroMedico: PropTypes.bool.isRequired,
   integraCentroMedico: PropTypes.bool.isRequired,
   centroMedicoId: PropTypes.number,
   listaCentrosMedicos: PropTypes.array.isRequired,
   onSwitchChange: PropTypes.func.isRequired,
   onCentroMedicoChange: PropTypes.func.isRequired,
+  error: PropTypes.bool,
+  helperText: PropTypes.string,
   disabled: PropTypes.bool,
   useFullWidth: PropTypes.bool,
 };

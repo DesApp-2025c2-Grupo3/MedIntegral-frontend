@@ -1,5 +1,6 @@
 import api from './api';
 import { formatPrestadoresListado } from '../utils/formats/prestadoresListado';
+import { formatPrestadorDetalle } from '../utils/formats/prestadoresDetalle';
 
 /**
  * Obtener todos los prestadores
@@ -39,12 +40,15 @@ export const getPrestadorById = async (id) => {
 
   try {
     const { data } = await api.get(`/prestadores/${id}`);
+
     if (!data || typeof data !== 'object') {
       throw new Error(
         `Prestador con ID ${id} no encontrado o formato inválido`
       );
     }
-    return data;
+
+    const formatted = formatPrestadorDetalle(data);
+    return formatted;
   } catch (err) {
     console.error(`Error al obtener prestador con ID ${id}:`, err);
     throw err;
@@ -81,6 +85,106 @@ export const createPrestador = async (prestadorData) => {
 };
 
 /**
+ * Actualizar datos personales del prestador
+ */
+export const updatePrestadorDatosPersonales = async (id, payload) => {
+  try {
+    const response = await api.put(
+      `/prestadores/${id}/datos-personales`,
+      payload
+    );
+
+    if (response.status !== 200) {
+      throw new Error(
+        `Error al actualizar datos personales (status ${response.status})`
+      );
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error al actualizar datos personales del prestador ${id}:`,
+      error
+    );
+    throw error;
+  }
+};
+
+/**
+ * Actualizar las especialidades de un prestador
+ */
+export const updatePrestadorEspecialidades = async (id, especialidadesIds) => {
+  try {
+    const response = await api.put(`/prestadores/${id}/especialidades`, {
+      especialidades: especialidadesIds,
+    });
+
+    if (response.status !== 200) {
+      throw new Error(
+        `Error al actualizar especialidades (status ${response.status})`
+      );
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error al actualizar especialidades del prestador ${id}:`,
+      error
+    );
+    throw error;
+  }
+};
+
+/**
+ * Actualizar información de centro médico del prestador
+ */
+export const updatePrestadorCentroMedico = async (id, payload) => {
+  try {
+    const response = await api.put(`/prestadores/${id}/centro-medico`, payload);
+
+    if (response.status !== 200) {
+      throw new Error(
+        `Error al actualizar centro médico (status ${response.status})`
+      );
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error al actualizar centro médico del prestador ${id}:`,
+      error
+    );
+    throw error;
+  }
+};
+
+export const updatePrestadorCentrosAtencion = async (
+  idPrestador,
+  lugaresAtencion
+) => {
+  try {
+    const response = await api.put(
+      `/prestadores/${idPrestador}/lugares-atencion`,
+      lugaresAtencion
+    );
+
+    if (response.status !== 200) {
+      throw new Error(
+        `Error al actualizar los centros de atención (status ${response.status})`
+      );
+    }
+
+    return formatPrestadorDetalle(response.data);
+  } catch (error) {
+    console.error(
+      `Error al actualizar centros de atención del prestador ${idPrestador}:`,
+      error
+    );
+    throw error;
+  }
+};
+
+/**
  * Eliminar un prestador
  */
-export const deletePrestador = (id) => api.delete(`/prestadores/${id}`);
+export const deletePrestadorById = (id) => api.delete(`/prestadores/${id}`);

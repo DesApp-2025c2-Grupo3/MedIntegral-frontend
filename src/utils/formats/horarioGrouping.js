@@ -63,3 +63,31 @@ export const groupHorariosSimple = (horarios = []) => {
 
   return Array.from(groups.values());
 };
+
+export const groupHorariosCentros = (horarios = []) => {
+  const groups = new Map();
+
+  horarios.forEach((h) => {
+    const key = `${h.horaInicio}|${h.horaFin}`;
+
+    if (!groups.has(key)) {
+      groups.set(key, {
+        id: crypto.randomUUID(),
+        dias: [],
+        horaInicio: h.horaInicio ?? '',
+        horaFin: h.horaFin ?? '',
+      });
+    }
+
+    const group = groups.get(key);
+
+    if (h.dia?.id && h.dia?.nombre) {
+      const exists = group.dias.some((d) => d.id === h.dia.id);
+      if (!exists) {
+        group.dias.push({ id: h.dia.id, nombre: h.dia.nombre });
+      }
+    }
+  });
+
+  return Array.from(groups.values());
+};

@@ -5,7 +5,7 @@ import HorariosSection from './HorariosSection';
 import ButtonsSection from '../common/forms/FormActions';
 import AgregarButton from '../common/forms/AgregarButton';
 import { AnimatePresence } from 'framer-motion';
-import { usePrestador } from '../../context/PrestadorContext';
+import { usePrestador } from '../../context/PrestadorAgendaTurnosContext';
 import { useHorarios } from '../../context/HorariosContext';
 import LoadingOverlay from '../common/LoadingOverlay';
 import { useFormValidation } from '../../hooks/useFormValidation';

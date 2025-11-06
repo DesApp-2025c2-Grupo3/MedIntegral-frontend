@@ -1,52 +1,44 @@
-const REGEX_NUMERIC = /^\d+$/; //solo dígitos
-const REGEX_CUIL_CUIT = /^\d{11}$/; //11 digitos
-const REGEX_NOMBRE = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,}$/; //solo letras
-const REGEX_TELEFONO_CLEAN = /^\d{8,15}$/; //al menos 8 dígitos
-const REGEX_EMAIL = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; //formato email
+const REGEX_NUMERIC = /^\d+$/;
 
-/**
- * Valida que el campo de documento sea obligatorio y tenga solo números (para CUIL/CUIT y Número de Documento).
- */
-const validateBaseNumeric = (id, fieldName) => {
-  if (!id) {
-    return { field: fieldName, message: `El documento es obligatorio.` };
+const REGEX_CUIL_CUIT = /^\d{11}$/;
+
+const REGEX_NOMBRE = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,}$/;
+
+const REGEX_TELEFONO_CLEAN = /^\d{8,15}$/;
+
+const REGEX_EMAIL = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+const validateBaseNumeric = (value, fieldName) => {
+  if (!value || String(value).trim() === '') {
+    return { field: fieldName, message: `Este campo es obligatorio.` };
   }
 
-  const cleanValue = String(id).replace(/[-.]/g, '');
-
-  if (!REGEX_NUMERIC.test(cleanValue)) {
+  if (!REGEX_NUMERIC.test(String(value))) {
     return {
       field: fieldName,
-      message: `El documento solo puede ser numérico.`,
+      message: `Solo se permiten números (sin puntos ni guiones).`,
     };
   }
+
   return null;
 };
 
-/**
- * CUIL/CUIT obligatorio, 11 dígitos, solo numérico.
- */
 export const validateCuilCuit = (cuilCuit) => {
   const fieldName = 'cuilCuit';
 
   let error = validateBaseNumeric(cuilCuit, fieldName);
   if (error) return error;
 
-  const cleanCuilCuit = String(cuilCuit).replace(/[-.]/g, '');
-
-  if (!REGEX_CUIL_CUIT.test(cleanCuilCuit)) {
+  if (!REGEX_CUIL_CUIT.test(String(cuilCuit))) {
     return {
       field: 'cuilCuit',
-      message:
-        'El CUIL o CUIT debe ser numérico y contener exactamente 11 dígitos.',
+      message: 'El CUIL/CUIT debe contener exactamente 11 dígitos.',
     };
   }
+
   return null;
 };
 
-/**
- * Número de Documento obligatorio y solo numérico.
- */
 export const validateNumeroDocumento = (
   numeroDocumento,
   fieldName = 'numeroDocumento'
@@ -54,59 +46,49 @@ export const validateNumeroDocumento = (
   return validateBaseNumeric(numeroDocumento, fieldName);
 };
 
-/**
- * Nombre/Apellido obligatorio, solo letras/espacios, mínimo 2 caracteres.
- */
 export const validateNombre = (nombre, fieldName = 'nombre') => {
-  if (!nombre) {
-    return { field: fieldName, message: `El nombre/apellido es obligatorio.` };
+  if (!nombre || nombre.trim() === '') {
+    return { field: fieldName, message: `El nombre es obligatorio.` };
   }
   if (!REGEX_NOMBRE.test(nombre)) {
     return {
       field: fieldName,
-      message: `El nombre/apellido solo puede contener letras y espacios (Mín. 2 caracteres).`,
+      message: `Solo letras y espacios (mínimo 2 caracteres).`,
     };
   }
   return null;
 };
 
-/**
- * Teéfono obligatorio, solo numérico, mínimo 8 dígitos.
- */
 export const validateTelefonos = (telefonos, fieldBase = 'telefonos') => {
   if (!telefonos || telefonos.length === 0) {
-    return { field: fieldBase, message: 'El teléfono es obligatorio.' };
+    return { field: fieldBase, message: 'Debe ingresar al menos un teléfono.' };
   }
 
   for (const t of telefonos) {
-    const valor = String(t.numero || t);
-    const valorLimpio = valor.replace(/[\s()\- +]/g, '');
+    const valor = String(t.numero ?? t).replace(/\s/g, '');
 
-    if (!REGEX_TELEFONO_CLEAN.test(valorLimpio)) {
+    if (!REGEX_TELEFONO_CLEAN.test(valor)) {
       return {
         field: fieldBase,
-        message: 'El teléfono debe ser numérico y tener entre 8 y 15 dígitos.',
+        message: 'Cada teléfono debe tener solo números entre 8 y 15 dígitos.',
       };
     }
   }
   return null;
 };
 
-/**
- * Email obligatorio, formato estándar de email.
- */
 export const validateEmails = (emails, fieldBase = 'emails') => {
   if (!emails || emails.length === 0) {
-    return { field: fieldBase, message: 'El email es obligatorio.' };
+    return { field: fieldBase, message: 'Debe ingresar al menos un email.' };
   }
 
   for (const e of emails) {
-    const valor = e.direccion;
+    const valor = e.direccion ?? e;
     if (!REGEX_EMAIL.test(valor)) {
       return {
         field: fieldBase,
         message:
-          'El email debe tener el formato correspondiente (ej: usuario@gmail.com).',
+          'Cada email debe tener un formato válido (ej: usuario@gmail.com).',
       };
     }
   }

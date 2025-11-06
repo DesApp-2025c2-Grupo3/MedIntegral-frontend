@@ -27,7 +27,10 @@ const USE_PRESTADORES_MOCKS = false;
 const USE_AFILIADOS_MOCKS = false;
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL:
+    window.location.hostname === 'localhost'
+      ? 'http://localhost:3002/api'
+      : import.meta.env.VITE_API_URL,
   headers: { 'Content-Type': 'application/json' },
 });
 
@@ -159,7 +162,7 @@ api.interceptors.request.use((config) => {
       });
     }
 
-    if (config.url === '/agenda-turnos/prestadores')
+    if (config.url === '/prestadores/sin-agenda' && USE_AGENDA_TURNOS_MOCKS)
       return Promise.reject({ isMock: true, data: prestadoresMock });
 
     if (config.url === '/prestadores/1' && USE_AGENDA_TURNOS_MOCKS)

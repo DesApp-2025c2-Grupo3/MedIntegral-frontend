@@ -40,13 +40,6 @@ export const validateHorarioBasico = (horario) => {
     };
   }
 
-  if (!horario.duracion) {
-    return {
-      field: `horario-${horario.id}-duracion`,
-      message: 'Tenés que indicar la duración del turno',
-    };
-  }
-
   if (!inicio || !inicio.isValid()) {
     return {
       field: `horario-${horario.id}-inicio`,
