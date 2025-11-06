@@ -14,17 +14,33 @@ export default function LugarAtencionHorarioItem({
   puedeEliminar,
   onChange,
   onEliminar,
+  validationError,
+  errorRefMap,
 }) {
   const [localDias, setLocalDias] = useState([]);
 
   useEffect(() => {
-    if (Array.isArray(horario.dias)) {
-      setLocalDias(horario.dias);
-    }
+    if (Array.isArray(horario.dias)) setLocalDias(horario.dias);
   }, [horario.dias]);
 
   const update = (field, value) => {
     onChange({ ...horario, [field]: value });
+  };
+
+  const baseKey = `horario-${horario.id}-`;
+
+  const isErr = (suffix) => {
+    if (!validationError?.field) return false;
+    return (
+      validationError.field === baseKey + suffix ||
+      validationError.field === baseKey + 'horario'
+    );
+  };
+
+  const registerRef = (suffix) => (el) => {
+    if (!el) return;
+    errorRefMap?.current.set(baseKey + suffix, el);
+    errorRefMap?.current.set(baseKey + 'horario', el);
   };
 
   return (
@@ -37,6 +53,9 @@ export default function LugarAtencionHorarioItem({
           update('dias', v);
         }}
         multiple
+        error={isErr('dias')}
+        helperText={isErr('dias') ? validationError.message : ''}
+        inputRef={registerRef('dias')}
       />
 
       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -52,7 +71,14 @@ export default function LugarAtencionHorarioItem({
                   : null
               }
               onChange={(v) => update('horaInicio', v?.format('HH:mm') || '')}
-              slotProps={{ textField: { fullWidth: true } }}
+              slotProps={{
+                textField: {
+                  fullWidth: true,
+                  error: isErr('inicio'),
+                  helperText: isErr('inicio') ? validationError.message : '',
+                  inputRef: registerRef('inicio'),
+                },
+              }}
             />
           </Grid>
 
@@ -66,7 +92,14 @@ export default function LugarAtencionHorarioItem({
                   : null
               }
               onChange={(v) => update('horaFin', v?.format('HH:mm') || '')}
-              slotProps={{ textField: { fullWidth: true } }}
+              slotProps={{
+                textField: {
+                  fullWidth: true,
+                  error: isErr('fin'),
+                  helperText: isErr('fin') ? validationError.message : '',
+                  inputRef: registerRef('fin'),
+                },
+              }}
             />
           </Grid>
 
@@ -86,7 +119,10 @@ export default function LugarAtencionHorarioItem({
 
 LugarAtencionHorarioItem.propTypes = {
   horario: PropTypes.object.isRequired,
+  centroId: PropTypes.string,
   puedeEliminar: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   onEliminar: PropTypes.func.isRequired,
+  validationError: PropTypes.object,
+  errorRefMap: PropTypes.object,
 };

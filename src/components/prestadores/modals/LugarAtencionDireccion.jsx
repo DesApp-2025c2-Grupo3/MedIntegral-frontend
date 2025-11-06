@@ -5,7 +5,11 @@ export default function LugarAtencionDireccion({
   centro,
   provincias,
   onChange,
+  validationError,
+  errorRefMap,
 }) {
+  const base = `centro-${centro.id}-`;
+
   const updateField = (field, value) => {
     onChange({
       ...centro,
@@ -16,12 +20,18 @@ export default function LugarAtencionDireccion({
     });
   };
 
+  const isErr = (k) => validationError?.field === base + k;
+  const register = (k) => (el) => el && errorRefMap?.current.set(base + k, el);
+
   return (
     <Grid container spacing={2} sx={{ mt: 1 }}>
       <Grid size={{ xs: 12, sm: 6 }}>
         <TextField
           label="Calle"
           fullWidth
+          inputRef={register('calle')}
+          error={isErr('calle')}
+          helperText={isErr('calle') ? validationError.message : ''}
           value={centro.direccion.calle}
           onChange={(e) => updateField('calle', e.target.value)}
         />
@@ -31,6 +41,9 @@ export default function LugarAtencionDireccion({
         <TextField
           label="Altura"
           fullWidth
+          inputRef={register('altura')}
+          error={isErr('altura')}
+          helperText={isErr('altura') ? validationError.message : ''}
           value={centro.direccion.altura}
           onChange={(e) => updateField('altura', e.target.value)}
         />
@@ -49,6 +62,9 @@ export default function LugarAtencionDireccion({
         <TextField
           label="Localidad"
           fullWidth
+          inputRef={register('localidad')}
+          error={isErr('localidad')}
+          helperText={isErr('localidad') ? validationError.message : ''}
           value={centro.direccion.localidad}
           onChange={(e) => updateField('localidad', e.target.value)}
         />
@@ -60,11 +76,13 @@ export default function LugarAtencionDireccion({
           SelectProps={{ native: true }}
           label="Provincia"
           fullWidth
+          inputRef={register('provincia')}
+          error={isErr('provincia')}
+          helperText={isErr('provincia') ? validationError.message : ''}
           value={centro.direccion.provincia?.id || ''}
           onChange={(e) => {
-            const provinciaId = Number(e.target.value);
             const selected =
-              provincias.find((p) => p.id === provinciaId) || null;
+              provincias.find((p) => p.id === Number(e.target.value)) || null;
             updateField('provincia', selected);
           }}
         >
@@ -84,4 +102,6 @@ LugarAtencionDireccion.propTypes = {
   centro: PropTypes.object.isRequired,
   provincias: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
+  validationError: PropTypes.object,
+  errorRefMap: PropTypes.object,
 };

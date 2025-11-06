@@ -3,7 +3,12 @@ import { Box, Typography, Button } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import LugarAtencionHorarioItem from './LugarAtencionHorarioItem';
 
-export default function LugarAtencionHorarioGroup({ centro, onChange }) {
+export default function LugarAtencionHorarioGroup({
+  centro,
+  onChange,
+  validationError,
+  errorRefMap,
+}) {
   const updateHorario = (id, nuevoHorario) => {
     onChange({
       ...centro,
@@ -21,6 +26,7 @@ export default function LugarAtencionHorarioGroup({ centro, onChange }) {
           dias: [],
           horaInicio: '',
           horaFin: '',
+          duracion: null,
         },
       ],
     });
@@ -35,7 +41,7 @@ export default function LugarAtencionHorarioGroup({ centro, onChange }) {
   };
 
   return (
-    <Box sx={{}}>
+    <Box>
       <Typography variant="subtitle1" fontWeight="medium" sx={{ mb: 2 }}>
         Horarios de Atención
       </Typography>
@@ -44,9 +50,12 @@ export default function LugarAtencionHorarioGroup({ centro, onChange }) {
         <LugarAtencionHorarioItem
           key={h.id}
           horario={h}
+          centroId={centro.id}
           puedeEliminar={centro.horarios.length > 1}
           onChange={(nuevo) => updateHorario(h.id, nuevo)}
           onEliminar={() => deleteHorario(h.id)}
+          validationError={validationError}
+          errorRefMap={errorRefMap}
         />
       ))}
 
@@ -65,4 +74,6 @@ export default function LugarAtencionHorarioGroup({ centro, onChange }) {
 LugarAtencionHorarioGroup.propTypes = {
   centro: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
+  validationError: PropTypes.object,
+  errorRefMap: PropTypes.object,
 };

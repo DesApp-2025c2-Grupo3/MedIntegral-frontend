@@ -1,50 +1,50 @@
-import { validateSingleDireccion } from './validateDireccion';
-import dayjs from 'dayjs';
-import {
-  validateHorarioBasico,
-  validateDuracionVsRango,
-  validateSolapamiento,
-} from './validateHorarios';
+import { validateHorarioBasico } from './validateHorarios';
 
 export const validateLugarAtencionEditModal = (centros) => {
   if (!centros || centros.length === 0) {
-    return {
-      field: 'centrosDeAtencion',
-      message: 'Tenés que agregar al menos un centro de atención.',
-    };
+    return { field: 'centro-0', message: 'Debe existir al menos un centro.' };
   }
 
-  for (const centro of centros) {
-    const prefix = `centro-${centro.id}`;
+  for (let c of centros) {
+    const baseCentro = `centro-${c.id}`;
 
-    const errorDireccion = validateSingleDireccion(centro, prefix);
-    if (errorDireccion) return errorDireccion;
+    if (!c.direccion?.calle) {
+      return { field: `${baseCentro}-calle`, message: 'Ingresá la calle.' };
+    }
 
-    if (!centro.horarios || centro.horarios.length === 0) {
+    if (!c.direccion?.altura) {
+      return { field: `${baseCentro}-altura`, message: 'Ingresá la altura.' };
+    }
+
+    if (!c.direccion?.localidad) {
       return {
-        field: `${prefix}-horarios`,
-        message: 'Tenés que agregar al menos un horario al centro.',
+        field: `${baseCentro}-localidad`,
+        message: 'Ingresá la localidad.',
       };
     }
 
-    for (const horario of centro.horarios) {
-      const idPrefix = `horario-${horario.id}`;
-      const h = {
-        ...horario,
-        inicio: dayjs(horario.horaInicio || horario.inicio, 'HH:mm'),
-        fin: dayjs(horario.horaFin || horario.fin, 'HH:mm'),
+    if (!c.direccion?.provincia) {
+      return {
+        field: `${baseCentro}-provincia`,
+        message: 'Seleccioná la provincia.',
       };
+    }
 
-      let error;
+    if (!c.horarios || c.horarios.length === 0) {
+      return {
+        field: `${baseCentro}-horarios`,
+        message: 'Agregá al menos un horario.',
+      };
+    }
 
-      error = validateHorarioBasico(h);
-      if (error) return { ...error, field: `${idPrefix}-${error.field}` };
-
-      error = validateDuracionVsRango(h);
-      if (error) return { ...error, field: `${idPrefix}-${error.field}` };
-
-      error = validateSolapamiento(h, centro.horarios);
-      if (error) return { ...error, field: `${idPrefix}-${error.field}` };
+    for (const h of c.horarios) {
+      const bh = validateHorarioBasico(h);
+      if (bh) {
+        return {
+          field: `horario-${h.id}-${bh.field.split('-').pop()}`,
+          message: bh.message,
+        };
+      }
     }
   }
 

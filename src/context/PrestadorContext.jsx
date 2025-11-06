@@ -18,8 +18,6 @@ import SuccessSnackbar from '../components/common/SuccessSnackbar';
 import ErrorSnackbar from '../components/common/ErrorSnackbar';
 import { Backdrop, CircularProgress } from '@mui/material';
 
-import { validateLugarAtencionEditModal } from '../utils/validations/validateLugarAtencionEditModal';
-
 const PrestadorContext = createContext();
 
 export function PrestadorProvider({ idPrestador, children }) {
@@ -120,28 +118,24 @@ export function PrestadorProvider({ idPrestador, children }) {
   };
 
   const updateCentrosAtencion = async (centros) => {
-    if (!prestador?.id) return;
-
-    const validation = validateLugarAtencionEditModal(centros);
-    if (validation) {
-      finishWithMessage({ error: validation.message });
-      return { error: validation };
-    }
+    if (!prestador?.id) return { error: true };
 
     setGlobalLoading(true);
 
     try {
       await updatePrestadorCentrosAtencion(prestador.id, centros);
       const updated = await fetchPrestador();
+
       finishWithMessage({
         success: 'Centros de atención actualizados con éxito',
       });
-      return { data: updated };
-    } catch (err) {
+
+      return { error: false, updated };
+    } catch {
       finishWithMessage({
-        error: 'No se pudo actualizar los centros de atención.',
+        error: 'No se pudieron actualizar los centros de atención.',
       });
-      return { error: err };
+      return { error: true };
     }
   };
 

@@ -11,6 +11,8 @@ export default function LugarAtencionItem({
   total,
   onUpdate,
   onDelete,
+  validationError,
+  errorRefMap,
 }) {
   const updateCentro = (nuevo) => onUpdate(nuevo);
 
@@ -30,11 +32,18 @@ export default function LugarAtencionItem({
         centro={centro}
         provincias={provincias}
         onChange={updateCentro}
+        validationError={validationError}
+        errorRefMap={errorRefMap}
       />
 
       <Divider sx={{ my: 3 }} />
 
-      <LugarAtencionHorarioGroup centro={centro} onChange={updateCentro} />
+      <LugarAtencionHorarioGroup
+        centro={centro}
+        onChange={updateCentro}
+        validationError={validationError}
+        errorRefMap={errorRefMap}
+      />
     </Box>
   );
 }
@@ -46,4 +55,6 @@ LugarAtencionItem.propTypes = {
   total: PropTypes.number.isRequired,
   onUpdate: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  validationError: PropTypes.object,
+  errorRefMap: PropTypes.object,
 };

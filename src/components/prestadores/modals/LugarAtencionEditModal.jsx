@@ -63,6 +63,7 @@ export default function LugarAtencionEditModal({ open, onClose }) {
 
     const validation = validateLugarAtencionEditModal(centros);
     if (validation) {
+      console.log(validation);
       setValidationError(validation);
 
       const ref = errorRefMap.current.get(validation.field);

@@ -3,7 +3,13 @@ import { Button } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import LugarAtencionItem from './LugarAtencionItem';
 
-export default function LugarAtencionList({ centros, provincias, onChange }) {
+export default function LugarAtencionList({
+  centros,
+  provincias,
+  onChange,
+  validationError,
+  errorRefMap,
+}) {
   const updateOne = (id, nuevo) => {
     onChange(centros.map((c) => (c.id === id ? nuevo : c)));
   };
@@ -47,6 +53,8 @@ export default function LugarAtencionList({ centros, provincias, onChange }) {
           total={centros.length}
           onUpdate={(nuevo) => updateOne(c.id, nuevo)}
           onDelete={() => deleteOne(c.id)}
+          validationError={validationError}
+          errorRefMap={errorRefMap}
         />
       ))}
 
@@ -61,4 +69,6 @@ LugarAtencionList.propTypes = {
   centros: PropTypes.array.isRequired,
   provincias: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
+  validationError: PropTypes.object,
+  errorRefMap: PropTypes.object,
 };

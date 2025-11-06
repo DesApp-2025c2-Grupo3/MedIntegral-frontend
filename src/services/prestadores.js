@@ -158,6 +158,31 @@ export const updatePrestadorCentroMedico = async (id, payload) => {
   }
 };
 
+export const updatePrestadorCentrosAtencion = async (idPrestador, centros) => {
+  try {
+    const response = await api.put(
+      `/prestadores/${idPrestador}/centros-atencion`,
+      {
+        centros,
+      }
+    );
+
+    if (response.status !== 200) {
+      throw new Error(
+        `Error al actualizar los centros de atención (status ${response.status})`
+      );
+    }
+
+    return formatPrestadorDetalle(response.data);
+  } catch (error) {
+    console.error(
+      `Error al actualizar centros de atención del prestador ${idPrestador}:`,
+      error
+    );
+    throw error;
+  }
+};
+
 /**
  * Eliminar un prestador
  */
