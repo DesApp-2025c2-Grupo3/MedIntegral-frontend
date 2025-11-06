@@ -25,7 +25,7 @@ export default function LugarAtencionDireccion({
 
   return (
     <Grid container spacing={2} sx={{ mt: 1 }}>
-      <Grid size={{ xs: 12, sm: 6 }}>
+      <Grid size={{ xs: 6, sm: 3 }}>
         <TextField
           label="Calle"
           fullWidth
@@ -46,6 +46,15 @@ export default function LugarAtencionDireccion({
           helperText={isErr('altura') ? validationError.message : ''}
           value={centro.direccion.altura}
           onChange={(e) => updateField('altura', e.target.value)}
+        />
+      </Grid>
+
+      <Grid size={{ xs: 6, sm: 3 }}>
+        <TextField
+          label="Código Postal"
+          fullWidth
+          value={centro.direccion.codigoPostal}
+          onChange={(e) => updateField('codigoPostal', e.target.value)}
         />
       </Grid>
 

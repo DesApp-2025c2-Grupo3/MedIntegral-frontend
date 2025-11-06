@@ -5,7 +5,7 @@ export const prestador1DetalleMock = {
   esCentroMedico: false,
   integraCentroMedico: true,
   centroMedicoId: 1,
-  centroMedicoNombre: 'Centro Médico Norte',
+  CentroMedico: { id: 1, nombre: 'Centro Médico Norte' },
   emails: [
     { id: 1, direccion: 'pepeg@gmail.com' },
     { id: 2, direccion: 'drgrillo@gmail.com' },

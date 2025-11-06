@@ -158,13 +158,14 @@ export const updatePrestadorCentroMedico = async (id, payload) => {
   }
 };
 
-export const updatePrestadorCentrosAtencion = async (idPrestador, centros) => {
+export const updatePrestadorCentrosAtencion = async (
+  idPrestador,
+  lugaresAtencion
+) => {
   try {
     const response = await api.put(
-      `/prestadores/${idPrestador}/centros-atencion`,
-      {
-        centros,
-      }
+      `/prestadores/${idPrestador}/lugares-atencion`,
+      lugaresAtencion
     );
 
     if (response.status !== 200) {

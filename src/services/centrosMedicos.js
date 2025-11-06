@@ -1,7 +1,15 @@
-import { centrosMedicosMock } from '../mocks/centrosMedicosMock';
-import { sleepIfLocal } from '../utils/sleepIfLocal';
+import api from './api';
 
 export const getCentrosMedicos = async () => {
-  await sleepIfLocal(300);
-  return centrosMedicosMock;
+  try {
+    const { data } = await api.get('/prestadores/centros-medicos');
+    console.log(data);
+    if (!Array.isArray(data)) {
+      throw new Error('Formato inesperado en la respuesta de centros medicos');
+    }
+    return data;
+  } catch (err) {
+    console.error('Error al obtener centros medicos:', err);
+    throw err;
+  }
 };

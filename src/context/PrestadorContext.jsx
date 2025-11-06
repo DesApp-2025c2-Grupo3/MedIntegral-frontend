@@ -102,8 +102,12 @@ export function PrestadorProvider({ idPrestador, children }) {
     const payload = {
       esCentroMedico: data.esCentroMedico,
       integraCentroMedico: data.integraCentroMedico,
-      centroMedicoId: data.integraCentroMedico ? data.centroMedicoId : null,
+      centroMedicoQueIntegra: data.integraCentroMedico
+        ? data.centroMedicoId
+        : null,
     };
+
+    console.log(payload);
 
     try {
       await updatePrestadorCentroMedico(prestador.id, payload);
@@ -122,8 +126,24 @@ export function PrestadorProvider({ idPrestador, children }) {
 
     setGlobalLoading(true);
 
+    const payload = {
+      lugaresAtencion: centros.map((c) => ({
+        calle: c.direccion.calle || '',
+        altura: Number(c.direccion.altura) || null,
+        codigoPostal: c.direccion.codigoPostal || '',
+        pisoDepto: c.direccion.pisoDepto || '',
+        localidad: c.direccion.localidad || '',
+        provincia: c.direccion.provincia?.id || null,
+        horarios: c.horarios.map((h) => ({
+          horaInicio: h.horaInicio,
+          horaFin: h.horaFin,
+          dias: h.dias.map((d) => (typeof d === 'string' ? d : d.nombre)),
+        })),
+      })),
+    };
+
     try {
-      await updatePrestadorCentrosAtencion(prestador.id, centros);
+      await updatePrestadorCentrosAtencion(prestador.id, payload);
       const updated = await fetchPrestador();
 
       finishWithMessage({

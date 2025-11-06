@@ -63,29 +63,16 @@ export default function LugarAtencionEditModal({ open, onClose }) {
 
     const validation = validateLugarAtencionEditModal(centros);
     if (validation) {
-      console.log(validation);
       setValidationError(validation);
 
       const ref = errorRefMap.current.get(validation.field);
       if (ref?.scrollIntoView) {
         ref.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
-
       return;
     }
 
-    const payload = centros.map((c) => ({
-      ...c,
-      horarios: c.horarios.flatMap((h) =>
-        h.dias.map((d) => ({
-          dia: { id: d.id, nombre: d.nombre },
-          horaInicio: h.horaInicio,
-          horaFin: h.horaFin,
-        }))
-      ),
-    }));
-
-    const { error } = await updateCentrosAtencion(payload);
+    const { error } = await updateCentrosAtencion(centros);
     if (!error) onClose();
   };
 

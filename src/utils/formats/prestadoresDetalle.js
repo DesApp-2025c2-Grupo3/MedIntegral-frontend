@@ -35,6 +35,7 @@ export const formatPrestadorDetalle = (data) => {
           direccion: {
             calle: ca.Direccion.calle ?? '',
             altura: ca.Direccion.altura ?? '',
+            codigoPostal: ca.Direccion.codigoPostal ?? '',
             pisoDepto: ca.Direccion.pisoDepto ?? '',
             localidad: ca.Direccion.localidad ?? '',
             provincia: ca.Direccion.Provincia ?? null,
@@ -68,7 +69,7 @@ export const formatPrestadorDetalle = (data) => {
       esCentroMedico: Boolean(data.esCentroMedico),
       integraCentroMedico: Boolean(data.integraCentroMedico),
       centroMedicoId: data.centroMedicoId ?? null,
-      centroMedicoNombre: data.centroMedicoNombre ?? null,
+      centroMedicoNombre: data.CentroMedico.nombre ?? null,
 
       emails,
       telefonos,
