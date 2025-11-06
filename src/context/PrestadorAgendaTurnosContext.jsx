@@ -40,7 +40,6 @@ export function PrestadorProvider({ children }) {
     try {
       await sleepIfLocal(1500);
       const formatted = await getPrestadorById(prestadorObj.id);
-      console.log(formatted);
       setPrestador(formatted);
     } catch (err) {
       console.error(

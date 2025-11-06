@@ -69,7 +69,7 @@ export const formatPrestadorDetalle = (data) => {
       esCentroMedico: Boolean(data.esCentroMedico),
       integraCentroMedico: Boolean(data.integraCentroMedico),
       centroMedicoId: data.centroMedicoId ?? null,
-      centroMedicoNombre: data.CentroMedico.nombre ?? null,
+      centroMedicoNombre: data.CentroMedico?.nombre ?? null,
 
       emails,
       telefonos,

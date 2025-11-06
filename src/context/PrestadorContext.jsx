@@ -107,8 +107,6 @@ export function PrestadorProvider({ idPrestador, children }) {
         : null,
     };
 
-    console.log(payload);
-
     try {
       await updatePrestadorCentroMedico(prestador.id, payload);
       const updated = await fetchPrestador();
@@ -186,7 +184,6 @@ export function PrestadorProvider({ idPrestador, children }) {
         updateEspecialidades,
         updateCentroMedico,
         updateCentrosAtencion,
-        refetchPrestador: fetchPrestador,
         clearError: () => setError(null),
       }}
     >

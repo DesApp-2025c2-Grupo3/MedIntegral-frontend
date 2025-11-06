@@ -107,9 +107,26 @@ function AltaPrestadorForm() {
 
   const handleGuardar = () => {
     const payload = {
-      ...prestadorData,
+      nombre: prestadorData.nombre,
+      cuilCuit: prestadorData.cuilCuit,
+      esCentroMedico: prestadorData.esCentroMedico,
       integraCentroMedico,
-      centroMedicoId,
+      centroMedicoQueIntegra: centroMedicoId,
+      especialidades: prestadorData.especialidades.map((e) => e.id),
+      emails: prestadorData.emails,
+      telefonos: prestadorData.telefonos,
+      lugaresAtencion: prestadorData.centrosDeAtencion.map((c) => ({
+        calle: c.calle,
+        altura: Number(c.altura) || null,
+        codigoPostal: c.codigoPostal || '',
+        localidad: c.localidad,
+        provincia: c.provincia?.id || null,
+        horarios: c.horarios.map((h) => ({
+          horaInicio: h.horaInicio,
+          horaFin: h.horaFin,
+          dias: h.dias.map((d) => d.nombre),
+        })),
+      })),
     };
 
     validateBeforeSave(payload, async () => {
@@ -119,8 +136,7 @@ function AltaPrestadorForm() {
 
         const data = await createPrestador(payload);
         navigateToEdicion(data.id, { created: true });
-      } catch (err) {
-        console.error('Error al guardar el prestador:', err);
+      } catch {
         setShowError(true);
       } finally {
         setSaving(false);

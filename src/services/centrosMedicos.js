@@ -3,7 +3,6 @@ import api from './api';
 export const getCentrosMedicos = async () => {
   try {
     const { data } = await api.get('/prestadores/centros-medicos');
-    console.log(data);
     if (!Array.isArray(data)) {
       throw new Error('Formato inesperado en la respuesta de centros medicos');
     }

@@ -16,7 +16,7 @@ import { usePageTitle } from '../../hooks/usePageTitle';
 import { useEffect } from 'react';
 
 function DetallePrestadorContent() {
-  const { prestador, loading } = usePrestador();
+  const { prestador, loading, deletePrestador } = usePrestador();
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -37,7 +37,7 @@ function DetallePrestadorContent() {
 
   return (
     <Box sx={{ mt: 2 }}>
-      <PageDetailHeader type="prestador" id={id} />
+      <PageDetailHeader type="prestador" id={id} onDelete={deletePrestador} />
 
       <Grid container spacing={3} mt={1}>
         <Grid size={{ xs: 12 }}>

@@ -5,21 +5,29 @@ export const formatAgendaTurnosPrestador = (data) => {
     if (!data || typeof data !== 'object') {
       throw new Error('La respuesta no tiene el formato esperado');
     }
-    const rawCentros = data.centrosDeAtencion;
+    const rawCentros = data.CentroDeAtencion;
     console.log(rawCentros);
     const centrosDeAtencion = Array.isArray(rawCentros)
       ? rawCentros.map((cda) => ({
           id: cda.id,
-          direccionId: cda.id ?? null,
-          calle: cda.calle ?? '',
-          altura: String(cda.altura ?? ''),
-          pisoDepto: cda.pisoDepto ?? '',
-          localidad: cda.localidad ?? '',
-          provincia: cda.provincia ?? '',
-          horarios: Array.isArray(cda.horarios)
-            ? cda.horarios.map((h) => {
+          direccionId: cda.Direccion?.id ?? null,
+          calle: cda.Direccion?.calle ?? '',
+          altura: String(cda.Direccion?.altura ?? ''),
+          pisoDepto: cda.Direccion?.pisoDepto ?? '',
+          codigoPostal: cda.Direccion?.codigoPostal ?? '',
+          localidad: cda.Direccion?.localidad ?? '',
+          provincia: cda.Direccion?.Provincia
+            ? {
+                id: cda.Direccion.Provincia.id,
+                nombre: cda.Direccion.Provincia.nombre,
+              }
+            : null,
+
+          horarios: Array.isArray(cda.Horarios)
+            ? cda.Horarios.map((h) => {
                 const diaNombre =
                   typeof h.dia === 'string' ? h.dia : (h.dia?.nombre ?? '');
+
                 return {
                   id: h.id,
                   dia: {
@@ -41,7 +49,7 @@ export const formatAgendaTurnosPrestador = (data) => {
       esCentroMedico: data.esCentroMedico ?? false,
       integraCentroMedico: data.integraCentroMedico ?? false,
       centroMedicoId: data.centroMedicoId ?? null,
-      especialidades: data.especialidades ?? [],
+      especialidades: data.Especialidad ?? [],
       centrosDeAtencion,
       emails: data.Emails ?? [],
       telefonos: data.Telefonos ?? [],
