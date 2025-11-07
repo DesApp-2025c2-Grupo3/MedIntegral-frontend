@@ -30,7 +30,7 @@ export const formatAfiliadosListado = (data) => {
           const dir = domicilio.Direccion;
           if (!dir) return '';
           const calleCompleta = `${dir.calle || ''} ${dir.altura || ''}`.trim();
-          return `${calleCompleta}, ${dir.localidad}, ${dir.Provincium?.nombre}`;
+          return `${calleCompleta}, ${dir.localidad}, ${dir.Provincia?.nombre}`;
         }) || [];
 
       const emails = afiliado.emails?.map((e) => e.direccion || '');
