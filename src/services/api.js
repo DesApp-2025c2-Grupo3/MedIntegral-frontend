@@ -117,7 +117,7 @@ api.interceptors.request.use((config) => {
             altura: d.altura,
             pisoDepto: '',
             localidad: d.localidad,
-            Provincium: {
+            Provincia: {
               nombre: d.provincia.nombre,
             },
             codigoPostal: d.codigoPostal,
@@ -155,7 +155,11 @@ api.interceptors.request.use((config) => {
       });
     }
 
-    if (config.url === '/afiliados' && config.method === 'post') {
+    if (
+      config.url === '/afiliados' &&
+      config.method === 'post' &&
+      USE_AFILIADOS_MOCKS
+    ) {
       return Promise.reject({
         isMock: true,
         data: { id: crypto.randomUUID(), ...config.data },
