@@ -1,70 +1,12 @@
-import { useEffect, useState, useCallback } from 'react';
-import { Box } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import PageHeader from '../components/common/PageHeader';
 import DashboardStats from '../components/dashboard/DashboardStats';
+import PrestadoresPorLocalidad from '../components/dashboard/PrestadoresPorLocalidad';
 import LoadingOverlay from '../components/common/LoadingOverlay';
+import { DashboardProvider, useDashboard } from '../context/DashboardContext';
 
-import {
-  getAfiliadosTotales,
-  getPrestadoresTotales,
-  getAgendasTotales,
-  getCantidadEspecialidades,
-} from '../services/dashboard';
-
-export default function AfiliadosAlta() {
-  const [stats, setStats] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const fetchStats = useCallback(async () => {
-    try {
-      const [afiliados, prestadores, agendas, especialidades] =
-        await Promise.all([
-          getAfiliadosTotales(),
-          getPrestadoresTotales(),
-          getAgendasTotales(),
-          getCantidadEspecialidades(),
-        ]);
-
-      setStats([
-        {
-          title: 'Afiliados totales',
-          value: afiliados,
-          color: 'linear-gradient(360deg, #0077C8 0%, #00B1EA 100%)',
-          textColor: '#fff',
-          link: '/afiliados/turnos',
-        },
-        {
-          title: 'Prestadores totales',
-          value: prestadores,
-          color: '#fff',
-          textColor: '#000',
-          link: '/prestadores/listado',
-        },
-        {
-          title: 'Agendas de turnos totales',
-          value: agendas,
-          color: '#fff',
-          textColor: '#000',
-          link: '/agenda-turnos/listado',
-        },
-        {
-          title: 'Especialidades',
-          value: especialidades,
-          color: '#fff',
-          textColor: '#000',
-          link: null,
-        },
-      ]);
-    } catch (error) {
-      console.error('Error al obtener estadísticas del dashboard:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchStats();
-  }, [fetchStats]);
+function HomeContent() {
+  const { stats, loading } = useDashboard();
 
   return (
     <Box sx={{ mt: 2, position: 'relative' }}>
@@ -75,7 +17,30 @@ export default function AfiliadosAlta() {
         subtitle="Un resumen actualizado de lo más importante en MedIntegral Administrativo"
       />
 
-      {!loading && <DashboardStats stats={stats} />}
+      {!loading && (
+        <Grid container spacing={3} sx={{ mt: 1 }}>
+          <Grid size={{ xs: 12 }} display="flex" flexDirection="column" gap={3}>
+            <DashboardStats stats={stats} />
+          </Grid>
+
+          <Grid
+            size={{ xs: 12, md: 6 }}
+            display="flex"
+            flexDirection="column"
+            gap={3}
+          >
+            <PrestadoresPorLocalidad />
+          </Grid>
+        </Grid>
+      )}
     </Box>
+  );
+}
+
+export default function Home() {
+  return (
+    <DashboardProvider>
+      <HomeContent />
+    </DashboardProvider>
   );
 }

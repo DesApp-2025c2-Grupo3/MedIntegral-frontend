@@ -10,16 +10,12 @@ import {
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import { Link as RouterLink } from 'react-router-dom';
 
-export default function DashboardStats({ stats }) {
+export default function DashboardStats({ stats = [] }) {
   return (
     <Box sx={{ p: 2 }}>
-      <Grid container sx={{ xs: 12 }} spacing={2} alignItems="stretch">
+      <Grid container spacing={2} alignItems="stretch">
         {stats.map((item, index) => (
-          <Grid
-            size={{ xs: 12, sm: 6, md: 3 }}
-            key={index}
-            sx={{ display: 'flex' }}
-          >
+          <Grid key={index} xs={12} sm={6} md={3} sx={{ display: 'flex' }}>
             <Card
               sx={{
                 background: item.color,
@@ -112,5 +108,5 @@ DashboardStats.propTypes = {
       textColor: PropTypes.string.isRequired,
       link: PropTypes.string,
     })
-  ).isRequired,
+  ),
 };

@@ -63,3 +63,26 @@ export const getCantidadEspecialidades = async () => {
     throw err;
   }
 };
+
+/**
+ * Obtener prestadores agrupados por localidad
+ * Devuelve: [{ localidad: string, provincia: string, cantidad: number }]
+ */
+export const getPrestadoresPorLocalidad = async () => {
+  try {
+    const { data } = await api.get('/dashboard/prestadores-por-localidad');
+
+    if (!Array.isArray(data)) {
+      throw new Error('Formato de respuesta inesperado');
+    }
+
+    return data.map((item) => ({
+      localidad: item.localidad ?? 'Sin localidad',
+      provincia: item.provincia ?? '',
+      cantidad: Number(item.cantidad) || 0,
+    }));
+  } catch (err) {
+    console.error('Error al obtener prestadores por localidad:', err);
+    throw err;
+  }
+};
