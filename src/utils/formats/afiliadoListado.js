@@ -50,7 +50,7 @@ export const formatAfiliadosListado = (data) => {
     });
     return {
       items: itemsFormateados,
-      total: itemsFormateados.length,
+      total: data.total,
     };
   } catch (err) {
     console.error('Error al formatear afiliados:', err);

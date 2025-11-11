@@ -395,10 +395,12 @@ export function searchAfiliadosMock(filters = {}, page = 1, limit = 10) {
   const filtered = afiliados.filter((a) => {
     if (
       text &&
-      !a.nombre.toLowerCase().includes(text) &&
-      !a.apellido.toLowerCase().includes(text) &&
-      !a.numeroDocumento.includes(text) &&
-      !a.nroAfiliado.includes(text)
+      !(
+        a.nombre.toLowerCase().includes(text) &&
+        a.apellido.toLowerCase().includes(text) &&
+        a.numeroDocumento.includes(text) &&
+        a.nroAfiliado.includes(text)
+      )
     )
       return false;
 
