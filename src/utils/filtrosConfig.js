@@ -105,7 +105,7 @@ export const filtrosConfig = {
           { value: 'Libreta cívica', label: 'Libreta Cívica' },
         ],
       },
-      { name: 'numeroDocumento', label: 'Nro de Documento', type: 'text' },
+      { name: 'nroAfiliado', label: 'Nro de Afiliado', type: 'text' },
       { name: 'fechaNacimiento', label: 'Fecha de nacimiento', type: 'date' },
       {
         name: 'planMedico',
@@ -136,6 +136,13 @@ export const filtrosConfig = {
       { name: 'email', label: 'E-mail', type: 'text' },
       { name: 'vigenciaDesde', label: 'Vigencia desde', type: 'date' },
       { name: 'vigenciaHasta', label: 'Vigencia hasta', type: 'date' },
+      { name: 'creacionDesde', label: 'Creación desde', type: 'date' },
+      { name: 'creacionHasta', label: 'Creación hasta', type: 'date' },
+      /*{
+        name: 'prestadoresBaja',
+        label: 'Incluir prestadores dados de baja',
+        type: 'checkbox',
+      },*/
     ],
     validateFn: validateFiltrosAfiliados,
   },
