@@ -25,6 +25,8 @@ export default function PrestadoresPorLocalidadModal({
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
+          borderBottom: 1,
+          borderBottomColor: '#D9D9D9',
         }}
       >
         <Box>
@@ -44,7 +46,7 @@ export default function PrestadoresPorLocalidadModal({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            mt: 2,
+            mt: 0,
           }}
         >
           <PieChart

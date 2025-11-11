@@ -2,6 +2,7 @@ import { Box, Grid } from '@mui/material';
 import PageHeader from '../components/common/PageHeader';
 import DashboardStats from '../components/dashboard/DashboardStats';
 import PrestadoresPorLocalidad from '../components/dashboard/PrestadoresPorLocalidad';
+import PrestadoresPorEspecialidad from '../components/dashboard/PrestadoresPorEspecialidad';
 import LoadingOverlay from '../components/common/LoadingOverlay';
 import { DashboardProvider, useDashboard } from '../context/DashboardContext';
 
@@ -24,12 +25,19 @@ function HomeContent() {
           </Grid>
 
           <Grid
-            size={{ xs: 12, md: 6 }}
+            size={{ xs: 12 }}
+            container
+            spacing={3}
             display="flex"
             flexDirection="column"
-            gap={3}
           >
-            <PrestadoresPorLocalidad />
+            <Grid size={{ xs: 12, md: 6 }} gap={3}>
+              <PrestadoresPorLocalidad />
+            </Grid>
+
+            <Grid size={{ xs: 12, md: 6 }} gap={3}>
+              <PrestadoresPorEspecialidad />
+            </Grid>
           </Grid>
         </Grid>
       )}

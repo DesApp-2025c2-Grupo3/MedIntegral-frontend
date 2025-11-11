@@ -86,3 +86,24 @@ export const getPrestadoresPorLocalidad = async () => {
     throw err;
   }
 };
+/**
+ * Obtener prestadores agrupados por especialidad
+ * Devuelve: [{ nombre: string, cantidad: number }]
+ */
+export const getPrestadoresPorEspecialidad = async () => {
+  try {
+    const { data } = await api.get('/dashboard/prestadores-por-especialidad');
+
+    if (!Array.isArray(data)) {
+      throw new Error('Formato de respuesta inesperado');
+    }
+
+    return data.map((item) => ({
+      nombre: item.nombre ?? 'Sin especialidad',
+      cantidad: Number(item.cantidad) || 0,
+    }));
+  } catch (err) {
+    console.error('Error al obtener prestadores por especialidad:', err);
+    throw err;
+  }
+};

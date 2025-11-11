@@ -12,6 +12,7 @@ import {
   getAgendasTotales,
   getCantidadEspecialidades,
   getPrestadoresPorLocalidad,
+  getPrestadoresPorEspecialidad,
 } from '../services/dashboard';
 
 const DashboardContext = createContext();
@@ -19,21 +20,32 @@ const DashboardContext = createContext();
 export const DashboardProvider = ({ children }) => {
   const [stats, setStats] = useState([]);
   const [prestadoresPorLocalidad, setPrestadoresPorLocalidad] = useState([]);
+  const [prestadoresPorEspecialidad, setPrestadoresPorEspecialidad] = useState(
+    []
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const fetchDashboardData = useCallback(async () => {
     setLoading(true);
     setError(null);
+
     try {
-      const [afiliados, prestadores, agendas, especialidades, localidades] =
-        await Promise.all([
-          getAfiliadosTotales(),
-          getPrestadoresTotales(),
-          getAgendasTotales(),
-          getCantidadEspecialidades(),
-          getPrestadoresPorLocalidad(),
-        ]);
+      const [
+        afiliados,
+        prestadores,
+        agendas,
+        especialidades,
+        localidades,
+        especialidadesData,
+      ] = await Promise.all([
+        getAfiliadosTotales(),
+        getPrestadoresTotales(),
+        getAgendasTotales(),
+        getCantidadEspecialidades(),
+        getPrestadoresPorLocalidad(),
+        getPrestadoresPorEspecialidad(),
+      ]);
 
       setStats([
         {
@@ -67,6 +79,7 @@ export const DashboardProvider = ({ children }) => {
       ]);
 
       setPrestadoresPorLocalidad(localidades);
+      setPrestadoresPorEspecialidad(especialidadesData);
     } catch (err) {
       console.error('Error al cargar dashboard:', err);
       setError('No se pudo cargar el dashboard.');
@@ -84,6 +97,7 @@ export const DashboardProvider = ({ children }) => {
       value={{
         stats,
         prestadoresPorLocalidad,
+        prestadoresPorEspecialidad,
         loading,
         error,
         refreshDashboard: fetchDashboardData,
