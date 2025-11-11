@@ -73,7 +73,7 @@ export default function ListadoAfiliadosTable({
                   <TableRow hover key={row.id}>
                     <TableCell sx={{ fontSize: '0.9rem' }}>
                       <Link
-                        href="#"
+                        href={row.url}
                         underline="always"
                         color="text.primary"
                         sx={{ fontSize: '0.9rem', fontWeight: 500 }}
