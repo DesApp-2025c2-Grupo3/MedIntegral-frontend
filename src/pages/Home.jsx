@@ -19,7 +19,7 @@ function HomeContent() {
 
       {!loading && (
         <Grid container spacing={3} sx={{ mt: 1 }}>
-          <Grid size={{ xs: 12 }} display="flex" flexDirection="column" gap={3}>
+          <Grid size={{ xs: 12 }} gap={3}>
             <DashboardStats stats={stats} />
           </Grid>
 

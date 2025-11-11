@@ -15,7 +15,11 @@ export default function DashboardStats({ stats = [] }) {
     <Box sx={{ p: 2 }}>
       <Grid container spacing={2} alignItems="stretch">
         {stats.map((item, index) => (
-          <Grid key={index} xs={12} sm={6} md={3} sx={{ display: 'flex' }}>
+          <Grid
+            key={index}
+            size={{ xs: 12, sm: 6, md: 3 }}
+            sx={{ display: 'flex' }}
+          >
             <Card
               sx={{
                 background: item.color,
