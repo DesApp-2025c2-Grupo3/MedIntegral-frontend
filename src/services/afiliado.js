@@ -4,6 +4,7 @@ import {
   formatAfiliadoData,
 } from '../utils/formats/afiliadoPayload';
 import { formatAfiliadosListado } from '../utils/formats/afiliadoListado';
+//import { formatAfiliadoDetalle } from '../utils/formats/afiliadoDetalle';
 
 export const createAfiliado = async (afiliadoData) => {
   const grupoFamiliarFormateado = formatGrupoFamiliar(
@@ -53,7 +54,7 @@ export const createAfiliado = async (afiliadoData) => {
 /**
  * Eliminar un afiliado
  */
-export const deleteAfiliado = (id) => api.delete(`/afiliados/${id}`);
+export const deleteAfiliadoById = (id) => api.delete(`/afiliados/${id}`);
 
 /*
  * Obtener listado de los afiliados titulares con filtros y paginación
@@ -75,6 +76,31 @@ export const getTitulares = async (filters = {}, page = 0, limit = 10) => {
     return formatAfiliadosListado(data);
   } catch (err) {
     console.error('Error al obtener listado de afiliados:', err);
+    throw err;
+  }
+};
+
+/**
+ * Obtener un prestador por ID
+ */
+export const getAfiliadoById = async (id) => {
+  if (!id) {
+    throw new Error('Se requiere un ID de afiliado');
+  }
+
+  try {
+    const { data } = await api.get(`/afiliados/${id}`);
+
+    if (!data || typeof data !== 'object') {
+      throw new Error(`Afiliado con ID ${id} no encontrado o formato inválido`);
+    }
+
+    //const formatted = formatAfiliadoDetalle(data);
+    //return formatted
+
+    return data;
+  } catch (err) {
+    console.error(`Error al obtener afiliado con ID ${id}:`, err);
     throw err;
   }
 };
