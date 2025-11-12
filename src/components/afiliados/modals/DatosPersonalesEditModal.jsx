@@ -49,6 +49,7 @@ export default function DatosPersonalesEditModal({ open, onClose }) {
         apellido: afiliado.apellido || '',
         tipoDocumento: afiliado.tipoDocumento || null,
         fechaNacimiento: afiliado.fechaNacimiento || '',
+        vigenciaInicio: afiliado.vigenciaInicio || '',
       });
       setError(null);
       loadTiposDocumento();
@@ -68,12 +69,15 @@ export default function DatosPersonalesEditModal({ open, onClose }) {
     setError(null);
   };
 
-  const handleFechaNacimientoChange = (newDate) => {
+  const handleDateChange = (fieldName) => (newDate) => {
     setLocalData((prev) => ({
       ...prev,
-      fechaNacimiento: newDate ? newDate.toISOString() : null,
+      [fieldName]: newDate ? newDate.toISOString() : null,
     }));
-    setError(null);
+
+    if (error?.field === fieldName) {
+      setError(null);
+    }
   };
 
   const onGuardar = async () => {
@@ -113,7 +117,6 @@ export default function DatosPersonalesEditModal({ open, onClose }) {
         <Stack spacing={3}>
           <Grid container spacing={4}>
             <Grid size={{ xs: 12, sm: 3 }}>
-              {' '}
               <Autocomplete
                 fullWidth
                 loading={loadingTipos}
@@ -151,7 +154,7 @@ export default function DatosPersonalesEditModal({ open, onClose }) {
                     ? dayjs(localData.fechaNacimiento)
                     : null
                 }
-                onChange={handleFechaNacimientoChange}
+                onChange={handleDateChange('fechaNacimiento')}
                 label="Fecha de Nacimiento"
                 slotProps={{
                   textField: {
@@ -182,6 +185,23 @@ export default function DatosPersonalesEditModal({ open, onClose }) {
                 onChange={handleField}
                 error={error?.field === 'apellido'}
                 helperText={error?.field === 'apellido' ? error.message : ''}
+              />
+            </Grid>
+
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <DatePicker
+                value={
+                  localData.vigenciaInicio
+                    ? dayjs(localData.vigenciaInicio)
+                    : null
+                }
+                onChange={handleDateChange('vigenciaInicio')}
+                label="Vigencia inicio"
+                slotProps={{
+                  textField: {
+                    fullWidth: true,
+                  },
+                }}
               />
             </Grid>
           </Grid>

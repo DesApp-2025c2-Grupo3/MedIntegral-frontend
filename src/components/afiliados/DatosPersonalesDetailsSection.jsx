@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Typography, Divider, Stack, Snackbar, Alert } from '@mui/material';
-import PersonIcon from '@mui/icons-material/MedicalServices';
+import PersonIcon from '@mui/icons-material/Person';
 import DetailsSection from '../common/details/DetailsSection';
 import { useAfiliado } from '../../context/AfiliadoContext';
 import DatosPersonalesEditModal from './modals/DatosPersonalesEditModal';
