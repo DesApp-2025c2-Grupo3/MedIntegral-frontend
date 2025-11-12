@@ -107,3 +107,58 @@ export const getPrestadoresPorEspecialidad = async () => {
     throw err;
   }
 };
+
+export const getAfiliadosConBaja = async () => {
+  try {
+    const { data } = await api.get('/dashboard/afiliados-con-baja');
+    if (!Array.isArray(data)) throw new Error('Formato inesperado');
+
+    return data.map((a) => ({
+      id: a.id,
+      nombre: a.nombre ?? 'Sin nombre',
+      fecha: a.vigenciaHasta
+        ? new Date(a.vigenciaHasta).toLocaleDateString('es-AR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+          })
+        : '-',
+    }));
+  } catch (err) {
+    console.error('Error al obtener afiliados con baja:', err);
+    return [];
+  }
+};
+
+export const getPrestadoresSinAgenda = async () => {
+  try {
+    const { data } = await api.get('/dashboard/prestadores-sin-agenda');
+    if (!Array.isArray(data)) throw new Error('Formato inesperado');
+
+    const formatDireccion = (direcciones) => {
+      if (!Array.isArray(direcciones) || direcciones.length === 0) {
+        return 'Sin dirección';
+      }
+      const dir = direcciones[0];
+      const calle = dir.calle?.trim() ?? '';
+      const altura = dir.altura ? ` ${dir.altura}` : '';
+      return `${calle}${altura}`.trim() || 'Sin dirección';
+    };
+
+    const formatEspecialidad = (especialidades) => {
+      if (!Array.isArray(especialidades) || especialidades.length === 0) {
+        return 'Sin especialidad';
+      }
+      return especialidades[0].nombre ?? 'Sin especialidad';
+    };
+
+    return data.map((p) => ({
+      id: p.id,
+      nombre: p.nombre ?? 'Sin nombre',
+      detalle: `${formatEspecialidad(p.especialidades)} - ${formatDireccion(p.direcciones)}`,
+    }));
+  } catch (err) {
+    console.error('Error al obtener prestadores sin agenda:', err);
+    return [];
+  }
+};

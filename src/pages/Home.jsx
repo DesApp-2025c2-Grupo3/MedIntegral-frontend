@@ -1,6 +1,7 @@
 import { Box, Grid } from '@mui/material';
 import PageHeader from '../components/common/PageHeader';
 import DashboardStats from '../components/dashboard/DashboardStats';
+import Recordatorios from '../components/dashboard/Recordatorios';
 import PrestadoresPorLocalidad from '../components/dashboard/PrestadoresPorLocalidad';
 import PrestadoresPorEspecialidad from '../components/dashboard/PrestadoresPorEspecialidad';
 import LoadingOverlay from '../components/common/LoadingOverlay';
@@ -20,22 +21,29 @@ function HomeContent() {
 
       {!loading && (
         <Grid container spacing={3} sx={{ mt: 1 }}>
-          <Grid size={{ xs: 12 }} gap={3}>
+          <Grid size={{ xs: 12 }}>
             <DashboardStats stats={stats} />
           </Grid>
 
-          <Grid
-            size={{ xs: 12 }}
-            container
-            spacing={3}
-            display="flex"
-            flexDirection="column"
-          >
-            <Grid size={{ xs: 12, md: 6 }} gap={3}>
-              <PrestadoresPorLocalidad />
+          <Grid container spacing={3} size={{ xs: 12 }}>
+            <Grid
+              item
+              size={{ xs: 12, md: 6 }}
+              display="flex"
+              flexDirection="column"
+              gap={3}
+            >
+              <Recordatorios />
             </Grid>
 
-            <Grid size={{ xs: 12, md: 6 }} gap={3}>
+            <Grid
+              item
+              size={{ xs: 12, md: 6 }}
+              display="flex"
+              flexDirection="column"
+              gap={3}
+            >
+              <PrestadoresPorLocalidad />
               <PrestadoresPorEspecialidad />
             </Grid>
           </Grid>

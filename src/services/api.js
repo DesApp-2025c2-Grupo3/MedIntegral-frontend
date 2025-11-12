@@ -21,10 +21,13 @@ import {
   searchAfiliadosMock,
 } from '../mocks/afiliadosListadoMock';
 import { agendaTurnosMock } from '../mocks/agendaTurnosMock';
+import { afiliadosConBajaMock } from '../mocks/afiliadosConBajaMock';
+import { prestadoresSinAgendaMock } from '../mocks/prestadoresSinAgendaMock';
 
 const USE_AGENDA_TURNOS_MOCKS = false;
 const USE_PRESTADORES_MOCKS = false;
 const USE_AFILIADOS_MOCKS = false;
+const USE_DASHBOARD_MOCKS = true;
 
 const api = axios.create({
   baseURL:
@@ -275,6 +278,27 @@ api.interceptors.request.use((config) => {
         data: null,
         status: 200,
       });
+    }
+    if (USE_DASHBOARD_MOCKS) {
+      if (
+        config.url === '/dashboard/afiliados-con-baja' &&
+        config.method === 'get'
+      ) {
+        return Promise.reject({
+          isMock: true,
+          data: afiliadosConBajaMock,
+        });
+      }
+
+      if (
+        config.url === '/dashboard/prestadores-sin-agenda' &&
+        config.method === 'get'
+      ) {
+        return Promise.reject({
+          isMock: true,
+          data: prestadoresSinAgendaMock,
+        });
+      }
     }
   }
   return config;

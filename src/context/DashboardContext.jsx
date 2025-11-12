@@ -13,6 +13,8 @@ import {
   getCantidadEspecialidades,
   getPrestadoresPorLocalidad,
   getPrestadoresPorEspecialidad,
+  getAfiliadosConBaja,
+  getPrestadoresSinAgenda,
 } from '../services/dashboard';
 
 const DashboardContext = createContext();
@@ -23,6 +25,8 @@ export const DashboardProvider = ({ children }) => {
   const [prestadoresPorEspecialidad, setPrestadoresPorEspecialidad] = useState(
     []
   );
+  const [afiliadosConBaja, setAfiliadosConBaja] = useState([]);
+  const [prestadoresSinAgenda, setPrestadoresSinAgenda] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -38,6 +42,8 @@ export const DashboardProvider = ({ children }) => {
         especialidades,
         localidades,
         especialidadesData,
+        afiliadosBaja,
+        prestadoresAgenda,
       ] = await Promise.all([
         getAfiliadosTotales(),
         getPrestadoresTotales(),
@@ -45,6 +51,8 @@ export const DashboardProvider = ({ children }) => {
         getCantidadEspecialidades(),
         getPrestadoresPorLocalidad(),
         getPrestadoresPorEspecialidad(),
+        getAfiliadosConBaja(),
+        getPrestadoresSinAgenda(),
       ]);
 
       setStats([
@@ -80,6 +88,8 @@ export const DashboardProvider = ({ children }) => {
 
       setPrestadoresPorLocalidad(localidades);
       setPrestadoresPorEspecialidad(especialidadesData);
+      setAfiliadosConBaja(afiliadosBaja);
+      setPrestadoresSinAgenda(prestadoresAgenda);
     } catch (err) {
       console.error('Error al cargar dashboard:', err);
       setError('No se pudo cargar el dashboard.');
@@ -98,6 +108,8 @@ export const DashboardProvider = ({ children }) => {
         stats,
         prestadoresPorLocalidad,
         prestadoresPorEspecialidad,
+        afiliadosConBaja,
+        prestadoresSinAgenda,
         loading,
         error,
         refreshDashboard: fetchDashboardData,
