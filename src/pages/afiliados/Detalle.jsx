@@ -6,6 +6,9 @@ import { usePageTitle } from '../../hooks/usePageTitle';
 import { AfiliadoProvider, useAfiliado } from '../../context/AfiliadoContext';
 import PageDetailHeader from '../../components/common/details/PageDetailHeader';
 import AuditInfoSection from '../../components/common/details/AuditInfoSection';
+import DatosPersonalesDetailsSection from '../../components/afiliados/DatosPersonalesDetailsSection';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 function DetalleAfiliadoContent() {
   const { afiliado, loading } = useAfiliado();
@@ -37,18 +40,9 @@ function DetalleAfiliadoContent() {
 
       <Grid container spacing={3} mt={1}>
         <Grid size={{ xs: 12 }}>
-          <Box sx={{ p: 2, border: '1px solid #eee', borderRadius: 1 }}>
-            <h3>Datos del Afiliado (Vista provisoria)</h3>
-            <p>
-              <strong>Nombre:</strong> {afiliado.nombre} {afiliado.apellido}
-            </p>
-            <p>
-              <strong>Documento:</strong> {afiliado.numeroDocumento}
-            </p>
-            <p>
-              <strong>Vigencia:</strong> {afiliado.vigenciaInicio}
-            </p>
-          </Box>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatosPersonalesDetailsSection />
+          </LocalizationProvider>
         </Grid>
       </Grid>
 
