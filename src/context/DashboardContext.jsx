@@ -15,6 +15,7 @@ import {
   getPrestadoresPorEspecialidad,
   getAfiliadosConBaja,
   getPrestadoresSinAgenda,
+  getPlanesMedicosPorMes,
 } from '../services/dashboard';
 
 const DashboardContext = createContext();
@@ -27,6 +28,7 @@ export const DashboardProvider = ({ children }) => {
   );
   const [afiliadosConBaja, setAfiliadosConBaja] = useState([]);
   const [prestadoresSinAgenda, setPrestadoresSinAgenda] = useState([]);
+  const [planesMedicosPorMes, setPlanesMedicosPorMes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -44,6 +46,7 @@ export const DashboardProvider = ({ children }) => {
         especialidadesData,
         afiliadosBaja,
         prestadoresAgenda,
+        planesMedicos,
       ] = await Promise.all([
         getAfiliadosTotales(),
         getPrestadoresTotales(),
@@ -53,6 +56,7 @@ export const DashboardProvider = ({ children }) => {
         getPrestadoresPorEspecialidad(),
         getAfiliadosConBaja(),
         getPrestadoresSinAgenda(),
+        getPlanesMedicosPorMes(),
       ]);
 
       setStats([
@@ -90,6 +94,7 @@ export const DashboardProvider = ({ children }) => {
       setPrestadoresPorEspecialidad(especialidadesData);
       setAfiliadosConBaja(afiliadosBaja);
       setPrestadoresSinAgenda(prestadoresAgenda);
+      setPlanesMedicosPorMes(planesMedicos);
     } catch (err) {
       console.error('Error al cargar dashboard:', err);
       setError('No se pudo cargar el dashboard.');
@@ -110,6 +115,7 @@ export const DashboardProvider = ({ children }) => {
         prestadoresPorEspecialidad,
         afiliadosConBaja,
         prestadoresSinAgenda,
+        planesMedicosPorMes,
         loading,
         error,
         refreshDashboard: fetchDashboardData,

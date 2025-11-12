@@ -23,6 +23,7 @@ import {
 import { agendaTurnosMock } from '../mocks/agendaTurnosMock';
 import { afiliadosConBajaMock } from '../mocks/afiliadosConBajaMock';
 import { prestadoresSinAgendaMock } from '../mocks/prestadoresSinAgendaMock';
+import { planesMedicosPorMesMock } from '../mocks/planesMedicosPorMesMock';
 
 const USE_AGENDA_TURNOS_MOCKS = false;
 const USE_PRESTADORES_MOCKS = false;
@@ -298,6 +299,13 @@ api.interceptors.request.use((config) => {
           isMock: true,
           data: prestadoresSinAgendaMock,
         });
+      }
+
+      if (
+        config.url === '/dashboard/planes-medicos-por-mes' &&
+        config.method === 'get'
+      ) {
+        return Promise.reject({ isMock: true, data: planesMedicosPorMesMock });
       }
     }
   }

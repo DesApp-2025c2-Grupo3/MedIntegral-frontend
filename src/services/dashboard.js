@@ -162,3 +162,18 @@ export const getPrestadoresSinAgenda = async () => {
     return [];
   }
 };
+
+export const getPlanesMedicosPorMes = async () => {
+  try {
+    const { data } = await api.get('/dashboard/planes-medicos-por-mes');
+    if (!Array.isArray(data)) throw new Error('Formato inesperado');
+
+    return data.map((d) => ({
+      mes: d.mes ?? 'Sin mes',
+      planes: typeof d.planes === 'object' ? d.planes : {},
+    }));
+  } catch (err) {
+    console.error('Error al obtener planes médicos por mes:', err);
+    return [];
+  }
+};

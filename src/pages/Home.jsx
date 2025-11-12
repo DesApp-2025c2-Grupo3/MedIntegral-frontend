@@ -4,6 +4,7 @@ import DashboardStats from '../components/dashboard/DashboardStats';
 import Recordatorios from '../components/dashboard/Recordatorios';
 import PrestadoresPorLocalidad from '../components/dashboard/PrestadoresPorLocalidad';
 import PrestadoresPorEspecialidad from '../components/dashboard/PrestadoresPorEspecialidad';
+import PlanesMedicosPorMes from '../components/dashboard/PlanesMedicosPorMes';
 import LoadingOverlay from '../components/common/LoadingOverlay';
 import { DashboardProvider, useDashboard } from '../context/DashboardContext';
 
@@ -25,26 +26,25 @@ function HomeContent() {
             <DashboardStats stats={stats} />
           </Grid>
 
-          <Grid container spacing={3} size={{ xs: 12 }}>
-            <Grid
-              item
-              size={{ xs: 12, md: 6 }}
-              display="flex"
-              flexDirection="column"
-              gap={3}
-            >
-              <Recordatorios />
+          <Grid
+            container
+            item
+            size={{ xs: 12 }}
+            spacing={3}
+            alignItems="flex-start"
+          >
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <Recordatorios />
+                <PlanesMedicosPorMes />
+              </Box>
             </Grid>
 
-            <Grid
-              item
-              size={{ xs: 12, md: 6 }}
-              display="flex"
-              flexDirection="column"
-              gap={3}
-            >
-              <PrestadoresPorLocalidad />
-              <PrestadoresPorEspecialidad />
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <PrestadoresPorLocalidad />
+                <PrestadoresPorEspecialidad />
+              </Box>
             </Grid>
           </Grid>
         </Grid>
