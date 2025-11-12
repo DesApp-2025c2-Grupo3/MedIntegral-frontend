@@ -9,6 +9,7 @@ import AuditInfoSection from '../../components/common/details/AuditInfoSection';
 import DatosPersonalesDetailsSection from '../../components/afiliados/DatosPersonalesDetailsSection';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import CoberturaDetailsSection from '../../components/afiliados/CoberturaDetailsSection';
 
 function DetalleAfiliadoContent() {
   const { afiliado, loading } = useAfiliado();
@@ -43,6 +44,9 @@ function DetalleAfiliadoContent() {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatosPersonalesDetailsSection />
           </LocalizationProvider>
+        </Grid>
+        <Grid size={{ xs: 12 }}>
+          <CoberturaDetailsSection />
         </Grid>
       </Grid>
 

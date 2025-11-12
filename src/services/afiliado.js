@@ -130,3 +130,28 @@ export const updateAfiliadoDatosPersonales = async (id, payload) => {
     throw error;
   }
 };
+
+/**
+ * Actualizar cobertura del afiliado
+ */
+export const updateAfiliadoCobertura = async (id, payload) => {
+  try {
+    const response = await api.put(`/afiliados/${id}/plan-medico`, {
+      planId: payload.planId,
+    });
+
+    if (response.status !== 200) {
+      throw new Error(
+        `Error al actualizar la cobertura (status ${response.status})`
+      );
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error al actualizar la cobertura del afiliado ${id}:`,
+      error
+    );
+    throw error;
+  }
+};

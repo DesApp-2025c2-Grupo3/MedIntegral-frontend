@@ -9,8 +9,8 @@ import PropTypes from 'prop-types';
 import {
   getAfiliadoById,
   updateAfiliadoDatosPersonales,
-  /*updateAfiliadoCobertura,
-  updateAfiliadoSituacionesTerapeuticas,
+  updateAfiliadoCobertura,
+  /*updateAfiliadoSituacionesTerapeuticas,
   updateAfiliadoDatosContacto,
   updateAfiliadoDirecciones,
   deleteAfiliadoById,
@@ -62,6 +62,7 @@ export function AfiliadoProvider({ idAfiliado, children }) {
       fechaNacimiento: data.fechaNacimiento,
       nombre: data.nombre,
       apellido: data.apellido,
+      vigenciaInicio: data.vigenciaInicio,
     };
 
     try {
@@ -76,6 +77,26 @@ export function AfiliadoProvider({ idAfiliado, children }) {
     }
   };
 
+  const updateCobertura = async (data) => {
+    if (!afiliado?.id) return;
+    setGlobalLoading(true);
+
+    const payload = {
+      planId: data.planId,
+    };
+
+    try {
+      await updateAfiliadoCobertura(afiliado.id, payload);
+      const updated = await fetchAfiliado();
+      finishWithMessage({ success: 'Cobertura actualizada con éxito' });
+      return updated;
+    } catch {
+      finishWithMessage({
+        error: 'No se pudo actualizar la cobertura.',
+      });
+    }
+  };
+
   return (
     <AfiliadoContext.Provider
       value={{
@@ -86,6 +107,7 @@ export function AfiliadoProvider({ idAfiliado, children }) {
         successMessage,
         setSuccessMessage,
         updateDatosPersonales,
+        updateCobertura,
         refetchAfiliado: fetchAfiliado,
         clearError: () => setError(null),
       }}
