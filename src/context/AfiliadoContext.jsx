@@ -8,8 +8,8 @@ import {
 import PropTypes from 'prop-types';
 import {
   getAfiliadoById,
-  /*updateAfiliadoDatosPersonales,
-  updateAfiliadoCobertura,
+  updateAfiliadoDatosPersonales,
+  /*updateAfiliadoCobertura,
   updateAfiliadoSituacionesTerapeuticas,
   updateAfiliadoDatosContacto,
   updateAfiliadoDirecciones,
@@ -18,14 +18,14 @@ import {
 } from '../services/afiliado';
 import SuccessSnackbar from '../components/common/SuccessSnackbar';
 import ErrorSnackbar from '../components/common/ErrorSnackbar';
-//import { Backdrop, CircularProgress } from '@mui/material';
+import { Backdrop, CircularProgress } from '@mui/material';
 
 const AfiliadoContext = createContext();
 
 export function AfiliadoProvider({ idAfiliado, children }) {
   const [afiliado, setAfiliado] = useState(null);
   const [loading, setLoading] = useState(true);
-  //const [globalLoading, setGlobalLoading] = useState(false);
+  const [globalLoading, setGlobalLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
 
@@ -46,13 +46,35 @@ export function AfiliadoProvider({ idAfiliado, children }) {
     fetchAfiliado();
   }, [fetchAfiliado]);
 
-  /*
   const finishWithMessage = ({ success, error }) => {
     if (success) setSuccessMessage(success);
     if (error) setError(error);
     setGlobalLoading(false);
   };
-  */
+
+  const updateDatosPersonales = async (data) => {
+    if (!afiliado?.id) return;
+    setGlobalLoading(true);
+
+    const payload = {
+      tipoDocumentoId: data.tipoDocumento?.id,
+      numeroDocumento: data.numeroDocumento,
+      fechaNacimiento: data.fechaNacimiento,
+      nombre: data.nombre,
+      apellido: data.apellido,
+    };
+
+    try {
+      await updateAfiliadoDatosPersonales(afiliado.id, payload);
+      const updated = await fetchAfiliado();
+      finishWithMessage({ success: 'Datos personales actualizados con éxito' });
+      return updated;
+    } catch {
+      finishWithMessage({
+        error: 'No se pudieron actualizar los datos personales.',
+      });
+    }
+  };
 
   return (
     <AfiliadoContext.Provider
@@ -60,19 +82,19 @@ export function AfiliadoProvider({ idAfiliado, children }) {
         afiliado,
         loading,
         error,
-        //globalLoading,
+        globalLoading,
         successMessage,
         setSuccessMessage,
+        updateDatosPersonales,
         refetchAfiliado: fetchAfiliado,
         clearError: () => setError(null),
       }}
     >
       {children}
-      {/*
+
       <Backdrop open={globalLoading} sx={{ zIndex: 2000, color: '#fff' }}>
         <CircularProgress color="inherit" />
       </Backdrop>
-      */}
 
       <SuccessSnackbar
         open={!!successMessage}

@@ -104,3 +104,29 @@ export const getAfiliadoById = async (id) => {
     throw err;
   }
 };
+
+/**
+ * Actualizar datos personales del afiliado
+ */
+export const updateAfiliadoDatosPersonales = async (id, payload) => {
+  try {
+    const response = await api.put(
+      `/afiliados/${id}/datos-personales`,
+      payload
+    );
+
+    if (response.status !== 200) {
+      throw new Error(
+        `Error al actualizar datos personales (status ${response.status})`
+      );
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error al actualizar datos personales del afiliado ${id}:`,
+      error
+    );
+    throw error;
+  }
+};
