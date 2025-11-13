@@ -7,7 +7,11 @@ import AgregarButton from '../common/forms/AgregarButton';
 import { newDireccion } from '../../utils/afiliados';
 import EliminarButton from '../common/forms/EliminarButton';
 
-export default function DireccionAfiliadoSection({ direcciones, onChange }) {
+export default function DireccionAfiliadoSection({
+  direcciones,
+  onChange,
+  idPrefix = '',
+}) {
   const handleAgregarDireccion = () => {
     onChange('direcciones', [...direcciones, newDireccion()]);
   };
@@ -59,7 +63,7 @@ export default function DireccionAfiliadoSection({ direcciones, onChange }) {
                 onChange={(nuevo) =>
                   handleActualizarDireccion(direccion.id, nuevo)
                 }
-                idPrefix={`direccion-${direccion.id}`}
+                idPrefix={`${idPrefix}direccion-${direccion.id}-`}
               />
             </Box>
           </FadeSlide>
@@ -79,4 +83,5 @@ export default function DireccionAfiliadoSection({ direcciones, onChange }) {
 DireccionAfiliadoSection.propTypes = {
   direcciones: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
+  idPrefix: PropTypes.string,
 };

@@ -13,7 +13,43 @@ export const validateDireccion = (direccion) => {
  * Valida un solo objeto de dirección (para Centros de Atención o Dirección del Afiliado).
  */
 export const validateSingleDireccion = (direccion, id) => {
-  const prefijo = id ? `${id}-` : '';
+  const prefijo = id ? `${id}` : '';
+
+  if (!direccion.provincia || !direccion.provincia.id) {
+    return {
+      field: `${prefijo}provincia`,
+      message: 'La provincia es obligatoria.',
+    };
+  }
+
+  if (!direccion.localidad) {
+    return {
+      field: `${prefijo}localidad`,
+      message: 'La localidad es obligatoria.',
+    };
+  }
+  if (!REGEX_ALPHANUMERIC.test(String(direccion.localidad))) {
+    return {
+      field: `${prefijo}localidad`,
+      message:
+        'La localidad no puede contener caracteres especiales (Mín. 4 caracteres).',
+    };
+  }
+
+  // Código postal -> mínimo 4 dígitos
+  if (!direccion.codigoPostal) {
+    return {
+      field: `${prefijo}codigoPostal`,
+      message: 'El código postal es obligatorio.',
+    };
+  }
+  if (!REGEX_ALPHANUMERIC.test(String(direccion.codigoPostal))) {
+    return {
+      field: `${prefijo}codigoPostal`,
+      message:
+        'El código postal no puede contener caracteres especiales (Mín. 4 caracteres).',
+    };
+  }
 
   // Calle -> mínimo 3 caracteres alfanuméricos
   if (!direccion.calle) {
@@ -43,49 +79,13 @@ export const validateSingleDireccion = (direccion, id) => {
     };
   }
 
-  // Código postal -> mínimo 4 dígitos
-  if (!direccion.codigoPostal) {
-    return {
-      field: `${prefijo}codigoPostal`,
-      message: 'El código postal es obligatorio.',
-    };
-  }
-  if (!REGEX_ALPHANUMERIC.test(String(direccion.codigoPostal))) {
-    return {
-      field: `${prefijo}codigoPostal`,
-      message:
-        'El código postal no puede contener caracteres especiales (Mín. 4 caracteres).',
-    };
-  }
-
-  if (!direccion.localidad) {
-    return {
-      field: `${prefijo}localidad`,
-      message: 'La localidad es obligatoria.',
-    };
-  }
-  if (!REGEX_ALPHANUMERIC.test(String(direccion.localidad))) {
-    return {
-      field: `${prefijo}localidad`,
-      message:
-        'La localidad no puede contener caracteres especiales (Mín. 4 caracteres).',
-    };
-  }
-
-  if (!direccion.provincia || !direccion.provincia.id) {
-    return {
-      field: `provincia`,
-      message: 'La provincia es obligatoria.',
-    };
-  }
-
   return null;
 };
 
 /**
  * Valida un array de direcciones.
  */
-export const validateDireccionesArray = (direcciones) => {
+export const validateDireccionesArray = (direcciones, fieldPrefix = '') => {
   if (!direcciones || direcciones.length === 0) {
     return {
       field: 'direcciones',
@@ -94,7 +94,10 @@ export const validateDireccionesArray = (direcciones) => {
   }
 
   for (const d of direcciones) {
-    const error = validateSingleDireccion(d, `direccion-${d.id}`);
+    const error = validateSingleDireccion(
+      d,
+      `${fieldPrefix}direccion-${d.id}-`
+    );
     if (error) return error;
   }
   return null;
