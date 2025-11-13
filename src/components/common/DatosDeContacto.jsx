@@ -1,6 +1,7 @@
 import { Box, Typography, Grid, TextField, Autocomplete } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useFormValidationContext } from '../../context/FormValidationContext';
+import { getErrorProps } from '../../utils/formHelper';
 
 export default function DatosDeContacto({
   contactoData,
@@ -8,16 +9,6 @@ export default function DatosDeContacto({
   idPrefix,
 }) {
   const { error } = useFormValidationContext();
-
-  const getErrorProps = (fieldName) => {
-    const fullFieldName = idPrefix ? `${idPrefix}-${fieldName}` : fieldName;
-
-    const hasError = error?.field === fullFieldName;
-    return {
-      error: hasError,
-      helperText: hasError ? error.message : '',
-    };
-  };
 
   const telefonosValues = contactoData.telefonos.map((t) => t.numero || '');
   const emailsValues = contactoData.emails.map((e) => e.direccion || '');
@@ -52,8 +43,8 @@ export default function DatosDeContacto({
                 {...params}
                 label="Teléfonos"
                 placeholder="Teléfonos"
-                data-field="telefonos"
-                {...getErrorProps('telefonos')}
+                {...getErrorProps(error, 'telefonos', idPrefix)}
+                data-field={idPrefix ? `${idPrefix}telefonos` : 'telefonos'}
               />
             )}
           />
@@ -72,7 +63,8 @@ export default function DatosDeContacto({
                 {...params}
                 label="Emails"
                 placeholder="Emails"
-                {...getErrorProps('emails')}
+                {...getErrorProps(error, 'emails', idPrefix)}
+                data-field={idPrefix ? `${idPrefix}emails` : 'emails'}
               />
             )}
           />
