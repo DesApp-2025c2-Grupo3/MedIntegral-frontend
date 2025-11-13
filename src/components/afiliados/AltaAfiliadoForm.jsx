@@ -70,7 +70,7 @@ export default function AltaAfiliadoForm() {
   const [showSuccess, setShowSuccess] = useState(false);
 
   const { validateBeforeSave } = useFormValidation(validateAltaAfiliado);
-  const { clearErrors } = useFormValidationContext();
+  const { setValidationError, clearErrors } = useFormValidationContext();
 
   useEffect(() => {
     const cargarListasIniciales = async () => {
@@ -128,11 +128,32 @@ export default function AltaAfiliadoForm() {
         navigateToEdicion(data.id, { created: true });
       } catch (err) {
         console.error('Error al guardar el afiliado:', err);
-        setShowError(true);
+
+        const errorMessage = err.response?.data?.message || err.message;
+        const statusCode = err.response?.status;
+
+        if (handleBackendError(errorMessage, statusCode)) {
+          setShowError(false);
+        } else {
+          setShowError(true);
+        }
       } finally {
         setSaving(false);
       }
     });
+  };
+
+  const handleBackendError = (errorMessage, statusCode) => {
+    // Error de documento duplicado
+    if (errorMessage.includes('ya está registrado') || statusCode === 400) {
+      setValidationError('numeroDocumento', errorMessage);
+      const campoDocumento = document.querySelector('[name="numeroDocumento"]');
+      if (campoDocumento) {
+        campoDocumento.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        campoDocumento.focus();
+      }
+      return true;
+    }
   };
 
   const handleCancelar = useCallback(

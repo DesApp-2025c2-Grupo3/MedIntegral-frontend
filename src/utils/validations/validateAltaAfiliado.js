@@ -5,6 +5,10 @@ import {
   validateNumeroDocumento,
 } from './validateContacto';
 import { validateDireccionesArray } from './validateDireccion';
+import {
+  validateFechaNacimiento,
+  validateFechasVigencia,
+} from './validateFechas';
 import { validateSituacionesTerapeuticasArray } from './validateSituacionesTerapeuticas';
 
 const validateMiembroFamiliar = (miembro, index) => {
@@ -29,17 +33,11 @@ const validateMiembroFamiliar = (miembro, index) => {
   );
   if (error) return error;
 
-  if (!miembro.fechaNacimiento)
-    return {
-      field: `${prefijo}fechaNacimiento`,
-      message: 'La fecha de nacimiento es obligatoria.',
-    };
-
-  if (new Date(miembro.fechaNacimiento) > new Date())
-    return {
-      field: `${prefijo}fechaNacimiento`,
-      message: 'La fecha de nacimiento no puede ser futura.',
-    };
+  error = validateFechaNacimiento(
+    miembro.fechaNacimiento,
+    `${prefijo}fechaNacimiento`
+  );
+  if (error) return error;
 
   error = validateNombre(miembro.nombre, `${prefijo}nombre`);
   if (error) return error;
@@ -48,32 +46,13 @@ const validateMiembroFamiliar = (miembro, index) => {
   if (error) return error;
 
   if (!miembro.usaMismaVigenciaTitular) {
-    if (!miembro.vigenciaInicio) {
-      return {
-        field: `${prefijo}vigenciaInicio`,
-        message:
-          'La fecha de inicio de vigencia es obligatoria para el miembro.',
-      };
-    }
-
-    if (miembro.tieneFechaBaja && !miembro.vigenciaFin) {
-      return {
-        field: `${prefijo}vigenciaFin`,
-        message:
-          'La fecha de fin de vigencia es obligatoria si se marca la opción.',
-      };
-    }
-
-    if (
-      miembro.tieneFechaBaja &&
-      miembro.vigenciaFin < miembro.vigenciaInicio
-    ) {
-      return {
-        field: `${prefijo}vigenciaFin`,
-        message:
-          'La fecha de fin de vigencia no puede ser anterior a la de inicio.',
-      };
-    }
+    error = validateFechasVigencia(
+      miembro.vigenciaInicio,
+      miembro.vigenciaFin,
+      miembro.tieneFechaBaja,
+      prefijo
+    );
+    if (error) return error;
   }
 
   if (miembro.tieneSituacionTerapeutica) {
@@ -91,10 +70,7 @@ const validateMiembroFamiliar = (miembro, index) => {
   if (error) return error;
 
   if (!miembro.usaMismaDireccionTitular) {
-    error = validateDireccionesArray(
-      miembro.direcciones,
-      `${prefijo}direcciones`
-    );
+    error = validateDireccionesArray(miembro.direcciones, `${prefijo}`);
     if (error) return error;
   }
 
@@ -124,23 +100,14 @@ export const validateAltaAfiliado = (data) => {
   error = validateNumeroDocumento(data.numeroDocumento, 'numeroDocumento');
   if (error) return error;
 
+  error = validateFechaNacimiento(data.fechaNacimiento, 'fechaNacimiento');
+  if (error) return error;
+
   error = validateNombre(data.nombre, 'nombre');
   if (error) return error;
 
   error = validateNombre(data.apellido, 'apellido');
   if (error) return error;
-
-  if (!data.fechaNacimiento)
-    return {
-      field: 'fechaNacimiento',
-      message: 'La fecha de nacimiento es obligatoria.',
-    };
-
-  if (new Date(data.fechaNacimiento) > new Date())
-    return {
-      field: 'fechaNacimiento',
-      message: 'La fecha de nacimiento no puede ser futura.',
-    };
 
   if (!data.cobertura)
     return {
@@ -148,29 +115,12 @@ export const validateAltaAfiliado = (data) => {
       message: 'El plan médico (cobertura) es obligatorio.',
     };
 
-  if (!data.vigenciaInicio)
-    return {
-      field: 'vigenciaInicio',
-      message: 'La fecha de inicio de vigencia es obligatoria.',
-    };
-
-  if (data.tieneFechaBaja) {
-    if (!data.vigenciaFin) {
-      return {
-        field: 'vigenciaFin',
-        message:
-          'La fecha de fin de vigencia es obligatoria si se marca la opción.',
-      };
-    }
-
-    if (data.vigenciaFin < data.vigenciaInicio) {
-      return {
-        field: 'vigenciaFin',
-        message:
-          'La fecha de fin de vigencia no puede ser anterior a la de inicio.',
-      };
-    }
-  }
+  error = validateFechasVigencia(
+    data.vigenciaInicio,
+    data.vigenciaFin,
+    data.tieneFechaBaja
+  );
+  if (error) return error;
 
   if (data.tieneSituacionTerapeutica) {
     error = validateSituacionesTerapeuticasArray(data.situacionesTerapeuticas);
