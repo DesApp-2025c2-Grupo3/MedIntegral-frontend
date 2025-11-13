@@ -82,6 +82,9 @@ export default function SituacionTerapeuticaItem({
               dataField={getFieldName('situacion')}
               required
               {...getErrorProps(error, getFieldName('situacion'))}
+              inputProps={{
+                'data-field': getFieldName('situacion'),
+              }}
             />
           </Grid>
 
