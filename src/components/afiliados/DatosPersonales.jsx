@@ -50,6 +50,9 @@ export default function DatosPersonales({
             value={afiliadoData.numeroDocumento}
             onChange={onChange}
             fullWidth
+            data-field={
+              idPrefix ? `${idPrefix}numeroDocumento` : 'numeroDocumento'
+            }
             {...getErrorProps(error, 'numeroDocumento', idPrefix)}
           />
         </Grid>
@@ -65,6 +68,9 @@ export default function DatosPersonales({
               textField: {
                 required: true,
                 fullWidth: true,
+                'data-field': idPrefix
+                  ? `${idPrefix}fechaNacimiento`
+                  : 'fechaNacimiento',
                 ...getErrorProps(error, 'fechaNacimiento', idPrefix),
               },
             }}
@@ -79,6 +85,7 @@ export default function DatosPersonales({
             value={afiliadoData.nombre}
             onChange={onChange}
             fullWidth
+            data-field={idPrefix ? `${idPrefix}nombre` : 'nombre'}
             {...getErrorProps(error, 'nombre', idPrefix)}
           />
         </Grid>
@@ -90,6 +97,7 @@ export default function DatosPersonales({
             value={afiliadoData.apellido}
             onChange={onChange}
             fullWidth
+            data-field={idPrefix ? `${idPrefix}apellido` : 'apellido'}
             {...getErrorProps(error, 'apellido', idPrefix)}
           />
         </Grid>

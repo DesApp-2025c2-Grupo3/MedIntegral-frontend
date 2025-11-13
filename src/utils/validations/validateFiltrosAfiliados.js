@@ -14,7 +14,6 @@ export default function validateFiltrosAgendaTurnos(filtros) {
     nombre,
     apellido,
     tipoDocumento,
-    numeroDocumento,
     nroAfiliado,
     fechaNacimiento,
     planMedico,
@@ -24,13 +23,15 @@ export default function validateFiltrosAgendaTurnos(filtros) {
     email,
     vigenciaDesde,
     vigenciaHasta,
+    creacionDesde,
+    creacionHasta,
+    prestadoresBaja,
   } = filtros;
 
   const algunoCargado = [
     nombre,
     apellido,
     tipoDocumento,
-    numeroDocumento,
     nroAfiliado,
     fechaNacimiento,
     planMedico,
@@ -40,6 +41,9 @@ export default function validateFiltrosAgendaTurnos(filtros) {
     email,
     vigenciaDesde,
     vigenciaHasta,
+    creacionDesde,
+    creacionHasta,
+    prestadoresBaja,
   ].some((v) => !!v && v !== '');
 
   if (!algunoCargado) {
@@ -64,22 +68,10 @@ export default function validateFiltrosAgendaTurnos(filtros) {
     };
   }
 
-  if (
-    numeroDocumento &&
-    (!REGEX_NUMERIC.test(numeroDocumento) || numeroDocumento.length < 8)
-  ) {
-    return {
-      field: 'numeroDocumento',
-      message:
-        'Ingrese un número de documento válido (debe contener 8 números).',
-    };
-  }
-
-  if (nroAfiliado && nroAfiliado.length < 6) {
+  if (nroAfiliado && !REGEX_NUMERIC.test(nroAfiliado)) {
     return {
       field: 'nroAfiliado',
-      message:
-        'Ingrese al menos 6 caracteres para buscar por número de afiliado.',
+      message: 'Ingrese sólo el número de afiliado sin 0.',
     };
   }
 
@@ -105,13 +97,11 @@ export default function validateFiltrosAgendaTurnos(filtros) {
   }
 
   if (telefono) {
-    const limpio = telefono.replace(/[\s()+-]/g, '');
-
-    if (!REGEX_TELEFONO_CLEAN.test(limpio)) {
+    if (!REGEX_TELEFONO_CLEAN.test(telefono) || telefono.length > 10) {
       return {
         field: 'telefono',
         message:
-          'El teléfono debe contener números y tener entre 8 y 15 dígitos.',
+          'Ingrese un número de teléfono válido (debe contener entre 8 y 10 dígitos).',
       };
     }
   }
@@ -130,6 +120,41 @@ export default function validateFiltrosAgendaTurnos(filtros) {
     if (desde.isAfter(hasta)) {
       return {
         field: 'vigenciaHasta',
+        message: 'La fecha "hasta" no puede ser anterior a la fecha "desde".',
+      };
+    }
+  }
+
+  const hoy = dayjs();
+
+  if (creacionDesde && dayjs(creacionDesde).isAfter(hoy)) {
+    return {
+      field: 'creacionDesde',
+      message: 'La fecha no puede ser posterior a hoy.',
+    };
+  }
+
+  if (creacionHasta && dayjs(creacionHasta).isAfter(hoy)) {
+    return {
+      field: 'creacionHasta',
+      message: 'La fecha no puede ser posterior a hoy.',
+    };
+  }
+
+  if (creacionDesde && creacionHasta) {
+    const desde = dayjs(creacionDesde);
+    const hasta = dayjs(creacionHasta);
+
+    if (desde.isSame(hasta)) {
+      return {
+        field: 'creacionHasta',
+        message: 'Las fechas no pueden ser iguales.',
+      };
+    }
+
+    if (desde.isAfter(hasta)) {
+      return {
+        field: 'creacionHasta',
         message: 'La fecha "hasta" no puede ser anterior a la fecha "desde".',
       };
     }
