@@ -39,7 +39,7 @@ export default function AltaTurnosForm() {
   const { validateBeforeSave } = useFormValidation(validateAltaTurnos);
 
   const handleChangeHorario = useCallback(
-    (id, newHorario) => actualizarHorario(id, newHorario),
+    (index, field, value) => actualizarHorario(index, field, value),
     [actualizarHorario]
   );
 
@@ -102,14 +102,14 @@ export default function AltaTurnosForm() {
       <AnimatePresence>
         <div>
           {horarios.map((horario, index) => (
-            <FadeSlide key={horario.id}>
+            <FadeSlide key={index}>
               <HorariosSection
                 horario={horario}
-                numero={index + 1}
+                index={index}
                 puedeEliminar={horarios.length > 1}
-                onEliminar={() => handleEliminarHorario(horario.id)}
-                onChange={(newHorario) =>
-                  handleChangeHorario(horario.id, newHorario)
+                onEliminar={(idx) => handleEliminarHorario(idx)}
+                onChange={(idx, field, value) =>
+                  handleChangeHorario(idx, field, value)
                 }
               />
 

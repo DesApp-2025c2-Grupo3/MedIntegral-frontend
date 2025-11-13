@@ -17,20 +17,22 @@ export const formatAgendaTurnosPrestador = (data) => {
           provincia: cda.provincia ?? '',
 
           horarios: Array.isArray(cda.horarios)
-            ? cda.horarios.map((h) => {
-                const diaNombre =
-                  typeof h.dia === 'string' ? h.dia : (h.dia?.nombre ?? '');
+            ? cda.horarios
+                .map((h) => {
+                  const diaNombre =
+                    typeof h.dia === 'string' ? h.dia : (h.dia?.nombre ?? '');
 
-                return {
-                  id: h.id,
-                  dia: {
-                    id: DIA_ENUM[diaNombre] ?? null,
-                    nombre: diaNombre,
-                  },
-                  horaInicio: h.horaInicio ?? '',
-                  horaFin: h.horaFin ?? '',
-                };
-              })
+                  return {
+                    id: h.id,
+                    dia: {
+                      id: DIA_ENUM[diaNombre] ?? null,
+                      nombre: diaNombre,
+                    },
+                    horaInicio: h.horaInicio ?? '',
+                    horaFin: h.horaFin ?? '',
+                  };
+                })
+                .sort((a, b) => (a.dia?.id ?? 999) - (b.dia?.id ?? 999))
             : [],
         }))
       : [];
