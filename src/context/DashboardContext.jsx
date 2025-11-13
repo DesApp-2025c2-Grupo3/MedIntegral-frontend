@@ -65,7 +65,7 @@ export const DashboardProvider = ({ children }) => {
           value: afiliados,
           color: 'linear-gradient(360deg, #0077C8 0%, #00B1EA 100%)',
           textColor: '#fff',
-          link: '/afiliados/turnos',
+          link: '/afiliados/listado',
         },
         {
           title: 'Prestadores totales',
