@@ -1,5 +1,6 @@
 export const formatFecha = (date) => {
-  return date && date.format ? date.format('YYYY-MM-DD') : null;
+  if (!date || !date.format) return null;
+  return date.clone().add(1, 'day').format('YYYY-MM-DD');
 };
 
 export const formatEmails = (emails) => {

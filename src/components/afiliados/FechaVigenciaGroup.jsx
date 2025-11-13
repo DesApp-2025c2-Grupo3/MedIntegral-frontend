@@ -19,6 +19,7 @@ export default function FechaVigenciaGroup({
   labelHasta,
   labelSwitch,
   idPrefix,
+  disabledFields = [],
 }) {
   const safeData = data || {};
 
@@ -31,6 +32,8 @@ export default function FechaVigenciaGroup({
   const currentLabelSwitch = labelSwitch || DEFAULT_LABEL_SWITCH;
 
   const { error } = useFormValidationContext();
+
+  const isFieldDisabled = (fieldName) => disabledFields.includes(fieldName);
 
   return (
     <Box>
@@ -52,6 +55,7 @@ export default function FechaVigenciaGroup({
                 },
               },
             }}
+            disabled={isFieldDisabled(FIELD_DESDE)}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
@@ -61,6 +65,7 @@ export default function FechaVigenciaGroup({
                 checked={safeData[FIELD_SWITCH]}
                 onChange={onSwitchChange}
                 name={FIELD_SWITCH}
+                disabled={isFieldDisabled(FIELD_SWITCH)}
               />
             }
             label={currentLabelSwitch}
@@ -83,6 +88,7 @@ export default function FechaVigenciaGroup({
                   },
                 },
               }}
+              disabled={isFieldDisabled(FIELD_HASTA)}
             />
           </Grid>
         )}
@@ -102,6 +108,7 @@ FechaVigenciaGroup.propTypes = {
   labelHasta: PropTypes.string,
   labelSwitch: PropTypes.string,
   idPrefix: PropTypes.string,
+  disabledFields: PropTypes.arrayOf(PropTypes.string),
 };
 
-FechaVigenciaGroup.defaultProps = {};
+FechaVigenciaGroup.defaultProps = { disabledFields: [] };
