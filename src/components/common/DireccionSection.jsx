@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { useFormValidationContext } from '../../context/FormValidationContext';
 import { getProvincias } from '../../services/provincias';
+import { getErrorProps } from '../../utils/formHelper';
 
 export default function DireccionSection({ direccion, onChange, idPrefix }) {
   const handleFieldChange = (field, value) => {
@@ -11,15 +12,6 @@ export default function DireccionSection({ direccion, onChange, idPrefix }) {
   };
 
   const { error } = useFormValidationContext();
-
-  const getErrorProps = (fieldName) => {
-    const fullFieldName = idPrefix ? `${idPrefix}-${fieldName}` : fieldName;
-    const hasError = error?.field === fullFieldName;
-    return {
-      error: hasError,
-      helperText: hasError ? error.message : '',
-    };
-  };
 
   const [listaProvincias, setListaProvincias] = useState([]);
 
@@ -53,8 +45,7 @@ export default function DireccionSection({ direccion, onChange, idPrefix }) {
             getOptionLabel={(option) => option?.nombre || ''}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             label="Provincia"
-            dataField="provincia"
-            {...getErrorProps('provincia')}
+            dataField={idPrefix ? `${idPrefix}provincia` : 'provincia'}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 6 }}>
@@ -63,7 +54,8 @@ export default function DireccionSection({ direccion, onChange, idPrefix }) {
             value={direccion.localidad}
             onChange={(e) => handleFieldChange('localidad', e.target.value)}
             fullWidth
-            {...getErrorProps('localidad')}
+            {...getErrorProps(error, 'localidad', idPrefix)}
+            data-field={idPrefix ? `${idPrefix}localidad` : 'localidad'}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 2 }}>
@@ -72,7 +64,8 @@ export default function DireccionSection({ direccion, onChange, idPrefix }) {
             value={direccion.codigoPostal}
             onChange={(e) => handleFieldChange('codigoPostal', e.target.value)}
             fullWidth
-            {...getErrorProps('codigoPostal')}
+            {...getErrorProps(error, 'codigoPostal', idPrefix)}
+            data-field={idPrefix ? `${idPrefix}codigoPostal` : 'codigoPostal'}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
@@ -81,7 +74,8 @@ export default function DireccionSection({ direccion, onChange, idPrefix }) {
             value={direccion.calle}
             onChange={(e) => handleFieldChange('calle', e.target.value)}
             fullWidth
-            {...getErrorProps('calle')}
+            {...getErrorProps(error, 'calle', idPrefix)}
+            data-field={idPrefix ? `${idPrefix}calle` : 'calle'}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
@@ -90,7 +84,8 @@ export default function DireccionSection({ direccion, onChange, idPrefix }) {
             value={direccion.altura}
             onChange={(e) => handleFieldChange('altura', e.target.value)}
             fullWidth
-            {...getErrorProps('altura')}
+            {...getErrorProps(error, 'altura', idPrefix)}
+            data-field={idPrefix ? `${idPrefix}altura` : 'altura'}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
@@ -99,7 +94,8 @@ export default function DireccionSection({ direccion, onChange, idPrefix }) {
             value={direccion.pisoDepto}
             onChange={(e) => handleFieldChange('pisoDepto', e.target.value)}
             fullWidth
-            {...getErrorProps('pisoDepto')}
+            {...getErrorProps(error, 'pisoDepto', idPrefix)}
+            data-field={idPrefix ? `${idPrefix}pisoDepto` : 'pisoDepto'}
           />
         </Grid>
       </Grid>

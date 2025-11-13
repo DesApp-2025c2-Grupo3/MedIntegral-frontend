@@ -45,6 +45,11 @@ export default function FechaVigenciaGroup({
                 fullWidth: true,
                 required: true,
                 ...getErrorProps(error, `${FIELD_DESDE}`, idPrefix),
+                inputProps: {
+                  'data-field': idPrefix
+                    ? `${idPrefix}${FIELD_DESDE}`
+                    : FIELD_DESDE,
+                },
               },
             }}
           />
@@ -71,6 +76,11 @@ export default function FechaVigenciaGroup({
                 textField: {
                   fullWidth: true,
                   ...getErrorProps(error, `${FIELD_HASTA}`, idPrefix),
+                  inputProps: {
+                    'data-field': idPrefix
+                      ? `${idPrefix}${FIELD_HASTA}`
+                      : FIELD_HASTA,
+                  },
                 },
               }}
             />
