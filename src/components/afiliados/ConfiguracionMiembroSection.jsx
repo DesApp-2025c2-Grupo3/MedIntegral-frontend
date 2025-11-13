@@ -129,6 +129,7 @@ export default function ConfiguracionMiembroSection({
             <DireccionAfiliadoSection
               direcciones={direcciones}
               onChange={handleDireccionChange}
+              idPrefix={idPrefix}
             />
           </Box>
         </Collapse>

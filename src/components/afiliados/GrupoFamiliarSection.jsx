@@ -188,7 +188,7 @@ export default function GrupoFamiliarSection({
                   handleArray={(field, value) =>
                     handleActualizarMiembro(miembro.id, field, value)
                   }
-                  idPrefix={`grupoFamiliar-${index}`}
+                  idPrefix={`grupoFamiliar-${index}-`}
                 />
 
                 <Divider sx={{ my: 3 }} />
