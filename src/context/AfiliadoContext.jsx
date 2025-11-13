@@ -63,6 +63,8 @@ export function AfiliadoProvider({ idAfiliado, children }) {
       nombre: data.nombre,
       apellido: data.apellido,
       vigenciaInicio: data.vigenciaInicio,
+      vigenciaFin: data.vigenciaFin,
+      tieneFechaBaja: data.tieneFechaBaja,
     };
 
     try {

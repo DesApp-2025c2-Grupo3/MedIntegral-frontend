@@ -21,6 +21,10 @@ import { useAfiliado } from '../../../context/AfiliadoContext';
 import { getTiposDocumento } from '../../../services/tipoDocumento';
 import dayjs from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers';
+import {
+  validateFechaNacimiento,
+  validateFechasVigencia,
+} from '../../../utils/validations/validateFechas';
 
 export default function DatosPersonalesEditModal({ open, onClose }) {
   const { afiliado, updateDatosPersonales } = useAfiliado();
@@ -50,6 +54,8 @@ export default function DatosPersonalesEditModal({ open, onClose }) {
         tipoDocumento: afiliado.tipoDocumento || null,
         fechaNacimiento: afiliado.fechaNacimiento || '',
         vigenciaInicio: afiliado.vigenciaInicio || '',
+        vigenciaFin: afiliado.vigenciaFin || '',
+        tieneFechaBaja: afiliado.tieneFechaBaja || null,
       });
       setError(null);
       loadTiposDocumento();
@@ -83,16 +89,31 @@ export default function DatosPersonalesEditModal({ open, onClose }) {
   const onGuardar = async () => {
     let v;
 
+    if (!localData.tipoDocumento) {
+      return setError({
+        field: 'tipoDocumento',
+        message: 'El tipo de documento es obligatorio.',
+      });
+    }
+
+    v = validateNumeroDocumento(localData.numeroDocumento, 'numeroDocumento');
+    if (v) return setError(v);
+
+    v = validateFechaNacimiento(localData.fechaNacimiento, 'fechaNacimiento');
+    if (v) return setError(v);
+
     v = validateNombre(localData.nombre, 'nombre');
     if (v) return setError(v);
 
     v = validateNombre(localData.apellido, 'apellido');
     if (v) return setError(v);
 
-    v = validateNumeroDocumento(localData.numeroDocumento, 'numeroDocumento');
+    v = validateFechasVigencia(
+      localData.vigenciaInicio,
+      localData.vigenciaFin,
+      localData.tieneFechaBaja
+    );
     if (v) return setError(v);
-
-    //falta validar fecha nacimiento y tipo documento
 
     await updateDatosPersonales(localData);
     onClose();
@@ -128,7 +149,14 @@ export default function DatosPersonalesEditModal({ open, onClose }) {
                   option.id === value?.id
                 }
                 renderInput={(params) => (
-                  <TextField {...params} label="Tipo de Documento" />
+                  <TextField
+                    {...params}
+                    label="Tipo de Documento"
+                    error={error?.field === 'tipoDocumento'}
+                    helperText={
+                      error?.field === 'tipoDocumento' ? error.message : ''
+                    }
+                  />
                 )}
               />
             </Grid>
@@ -159,6 +187,9 @@ export default function DatosPersonalesEditModal({ open, onClose }) {
                 slotProps={{
                   textField: {
                     fullWidth: true,
+                    error: error?.field === 'fechaNacimiento',
+                    helperText:
+                      error?.field === 'fechaNacimiento' ? error.message : '',
                   },
                 }}
               />
@@ -200,6 +231,9 @@ export default function DatosPersonalesEditModal({ open, onClose }) {
                 slotProps={{
                   textField: {
                     fullWidth: true,
+                    error: error?.field === 'vigenciaInicio',
+                    helperText:
+                      error?.field === 'vigenciaInicio' ? error.message : '',
                   },
                 }}
               />
