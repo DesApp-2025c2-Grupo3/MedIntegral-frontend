@@ -12,6 +12,7 @@ import {
   Grid,
   Autocomplete,
   TextField,
+  Button,
 } from '@mui/material';
 import AgregarButton from '../../common/forms/AgregarButton';
 import CloseIcon from '@mui/icons-material/Close';
@@ -36,6 +37,8 @@ export default function HorariosEditModal({ open, onClose }) {
   const { agenda, updateHorarios } = useAgenda();
   const [localHorarios, setLocalHorarios] = useState([]);
   const [errors, setErrors] = useState([]);
+
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const duraciones = buildDuraciones();
 
@@ -98,7 +101,9 @@ export default function HorariosEditModal({ open, onClose }) {
     setErrors((prev) => [...prev, {}]);
   };
 
-  const onGuardar = async () => {
+  const confirmGuardar = async () => {
+    setConfirmOpen(false);
+
     setErrors(localHorarios.map(() => ({})));
 
     const validation = validateHorarios(
@@ -121,176 +126,219 @@ export default function HorariosEditModal({ open, onClose }) {
     }
 
     await updateHorarios(localHorarios);
-
     onClose();
   };
 
+  const onClickGuardar = () => {
+    setConfirmOpen(true);
+  };
+
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>
-        Editar horarios de atención
-        <IconButton
-          aria-label="close"
-          onClick={onClose}
-          sx={{ position: 'absolute', right: 8, top: 8 }}
-        >
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
+    <>
+      <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+        <DialogTitle>
+          Editar horarios de atención
+          <IconButton
+            aria-label="close"
+            onClick={onClose}
+            sx={{ position: 'absolute', right: 8, top: 8 }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
 
-      <DialogContent dividers>
-        <FadeSlide>
-          <Stack spacing={4}>
-            {localHorarios.map((horario, index) => (
-              <Box
-                key={horario.id}
-                sx={{
-                  border: '1px solid',
-                  borderColor: 'divider',
-                  borderRadius: 2,
-                  p: 3,
-                  mt: 1,
-                }}
-              >
-                <Typography
-                  variant="subtitle1"
-                  fontWeight="medium"
-                  sx={{ mb: 2 }}
+        <DialogContent dividers>
+          <FadeSlide>
+            <Stack spacing={4}>
+              {localHorarios.map((horario, index) => (
+                <Box
+                  key={horario.id}
+                  sx={{
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    borderRadius: 2,
+                    p: 3,
+                    mt: 1,
+                  }}
                 >
-                  Horario {index + 1}
-                </Typography>
+                  <Typography
+                    variant="subtitle1"
+                    fontWeight="medium"
+                    sx={{ mb: 2 }}
+                  >
+                    Horario {index + 1}
+                  </Typography>
 
-                <DiasSemanaSelector
-                  dias={diasConHorarios}
-                  selected={horario.dias}
-                  onChange={(newDias) =>
-                    handleHorarioChange(index, 'dias', newDias)
-                  }
-                  error={Boolean(errors[index]?.[`horario-${horario.id}-dias`])}
-                  helperText={
-                    errors[index]?.[`horario-${horario.id}-dias`] || ''
-                  }
-                />
+                  <DiasSemanaSelector
+                    dias={diasConHorarios}
+                    selected={horario.dias}
+                    onChange={(newDias) =>
+                      handleHorarioChange(index, 'dias', newDias)
+                    }
+                    error={Boolean(
+                      errors[index]?.[`horario-${horario.id}-dias`]
+                    )}
+                    helperText={
+                      errors[index]?.[`horario-${horario.id}-dias`] || ''
+                    }
+                  />
 
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <Grid container spacing={3} sx={{ mt: 2 }}>
-                    <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                      <Autocomplete
-                        options={duraciones}
-                        value={horario.duracion ?? null}
-                        onChange={(_, newValue) =>
-                          handleHorarioChange(
-                            index,
-                            'duracion',
-                            newValue ?? null
-                          )
-                        }
-                        getOptionLabel={(opt) =>
-                          opt != null ? `${opt} min` : ''
-                        }
-                        isOptionEqualToValue={(opt, val) => opt === val}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Duración"
-                            fullWidth
-                            error={Boolean(
-                              errors[index]?.[`horario-${horario.id}-duracion`]
-                            )}
-                            helperText={
-                              errors[index]?.[
-                                `horario-${horario.id}-duracion`
-                              ] || ''
-                            }
-                          />
-                        )}
-                      />
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <Grid container spacing={3} sx={{ mt: 2 }}>
+                      <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+                        <Autocomplete
+                          options={duraciones}
+                          value={horario.duracion ?? null}
+                          onChange={(_, newValue) =>
+                            handleHorarioChange(
+                              index,
+                              'duracion',
+                              newValue ?? null
+                            )
+                          }
+                          getOptionLabel={(opt) =>
+                            opt != null ? `${opt} min` : ''
+                          }
+                          isOptionEqualToValue={(opt, val) => opt === val}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="Duración"
+                              fullWidth
+                              error={Boolean(
+                                errors[index]?.[
+                                  `horario-${horario.id}-duracion`
+                                ]
+                              )}
+                              helperText={
+                                errors[index]?.[
+                                  `horario-${horario.id}-duracion`
+                                ] || ''
+                              }
+                            />
+                          )}
+                        />
+                      </Grid>
+
+                      <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+                        <MobileTimePicker
+                          label="Horario inicio"
+                          value={toDayjs(horario.horaInicio)}
+                          onChange={(v) =>
+                            handleHorarioChange(
+                              index,
+                              'horaInicio',
+                              fromDayjs(v)
+                            )
+                          }
+                          ampm={false}
+                          slotProps={{
+                            textField: {
+                              fullWidth: true,
+                              error: Boolean(
+                                errors[index]?.[
+                                  `horario-${horario.id}-inicio`
+                                ] ||
+                                  errors[index]?.[
+                                    `horario-${horario.id}-horario`
+                                  ]
+                              ),
+                              helperText:
+                                errors[index]?.[
+                                  `horario-${horario.id}-inicio`
+                                ] ||
+                                errors[index]?.[
+                                  `horario-${horario.id}-horario`
+                                ] ||
+                                '',
+                            },
+                          }}
+                        />
+                      </Grid>
+
+                      <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+                        <MobileTimePicker
+                          label="Horario fin"
+                          value={toDayjs(horario.horaFin)}
+                          onChange={(v) =>
+                            handleHorarioChange(index, 'horaFin', fromDayjs(v))
+                          }
+                          ampm={false}
+                          slotProps={{
+                            textField: {
+                              fullWidth: true,
+                              error: Boolean(
+                                errors[index]?.[`horario-${horario.id}-fin`] ||
+                                  errors[index]?.[
+                                    `horario-${horario.id}-horario`
+                                  ]
+                              ),
+                              helperText:
+                                errors[index]?.[`horario-${horario.id}-fin`] ||
+                                errors[index]?.[
+                                  `horario-${horario.id}-horario`
+                                ] ||
+                                '',
+                            },
+                          }}
+                        />
+                      </Grid>
                     </Grid>
+                  </LocalizationProvider>
 
-                    <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                      <MobileTimePicker
-                        label="Horario inicio"
-                        value={toDayjs(horario.horaInicio)}
-                        onChange={(v) =>
-                          handleHorarioChange(index, 'horaInicio', fromDayjs(v))
-                        }
-                        ampm={false}
-                        slotProps={{
-                          textField: {
-                            fullWidth: true,
-                            error: Boolean(
-                              errors[index]?.[`horario-${horario.id}-inicio`] ||
-                                errors[index]?.[`horario-${horario.id}-horario`]
-                            ),
-                            helperText:
-                              errors[index]?.[`horario-${horario.id}-inicio`] ||
-                              errors[index]?.[
-                                `horario-${horario.id}-horario`
-                              ] ||
-                              '',
-                          },
-                        }}
+                  {localHorarios.length > 1 && (
+                    <Box sx={{ mt: 3 }}>
+                      <EliminarButton
+                        onEliminar={() => handleEliminar(index)}
+                        label="Eliminar horario"
                       />
-                    </Grid>
+                    </Box>
+                  )}
+                </Box>
+              ))}
 
-                    <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                      <MobileTimePicker
-                        label="Horario fin"
-                        value={toDayjs(horario.horaFin)}
-                        onChange={(v) =>
-                          handleHorarioChange(index, 'horaFin', fromDayjs(v))
-                        }
-                        ampm={false}
-                        slotProps={{
-                          textField: {
-                            fullWidth: true,
-                            error: Boolean(
-                              errors[index]?.[`horario-${horario.id}-fin`] ||
-                                errors[index]?.[`horario-${horario.id}-horario`]
-                            ),
-                            helperText:
-                              errors[index]?.[`horario-${horario.id}-fin`] ||
-                              errors[index]?.[
-                                `horario-${horario.id}-horario`
-                              ] ||
-                              '',
-                          },
-                        }}
-                      />
-                    </Grid>
-                  </Grid>
-                </LocalizationProvider>
+              <AgregarButton
+                onAgregar={() => handleAddHorario()}
+                label="Agregar horario"
+              />
+            </Stack>
+          </FadeSlide>
+        </DialogContent>
 
-                {localHorarios.length > 1 && (
-                  <Box sx={{ mt: 3 }}>
-                    <EliminarButton
-                      onEliminar={() => handleEliminar(index)}
-                      label="Eliminar horario"
-                    />
-                  </Box>
-                )}
-              </Box>
-            ))}
+        <DialogActions>
+          <ButtonsSection
+            handleGuardar={onClickGuardar}
+            onConfirmCancel={onClose}
+            cancelTitle={`¿Cancelar la edición de los horarios en la agenda #${agenda.id}?`}
+            cancelMessage="Si cancelás ahora, se perderán los cambios realizados."
+            confirmText="Guardar cambios"
+            cancelText="Cancelar"
+          />
+        </DialogActions>
+      </Dialog>
 
-            <AgregarButton
-              onAgregar={() => handleAddHorario()}
-              label="Agregar horario"
-            />
-          </Stack>
-        </FadeSlide>
-      </DialogContent>
+      <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
+        <DialogTitle>Confirmar edición de horarios</DialogTitle>
 
-      <DialogActions>
-        <ButtonsSection
-          handleGuardar={onGuardar}
-          onConfirmCancel={onClose}
-          cancelTitle={`¿Cancelar la edición de los horarios en la agenda #${agenda.id}?`}
-          cancelMessage="Si cancelás ahora, se perderán los cambios realizados."
-          confirmText="Guardar cambios"
-          cancelText="Cancelar"
-        />
-      </DialogActions>
-    </Dialog>
+        <DialogContent>
+          <Typography>
+            ¿Está seguro de editar los horarios de la agenda de turnos?
+          </Typography>
+
+          <Typography sx={{ mt: 2 }} color="error">
+            Si existen otras agendas de turnos para este mismo prestador,
+            <b> se eliminarán.</b>
+          </Typography>
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={() => setConfirmOpen(false)}>Cancelar</Button>
+          <Button variant="contained" color="primary" onClick={confirmGuardar}>
+            Confirmar
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }
 

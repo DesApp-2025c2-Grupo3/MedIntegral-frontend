@@ -5,39 +5,34 @@ export const formatAgendaTurnosPrestador = (data) => {
     if (!data || typeof data !== 'object') {
       throw new Error('La respuesta no tiene el formato esperado');
     }
-    const rawCentros = data.CentroDeAtencion;
-    console.log(rawCentros);
+    const rawCentros = data.centrosDeAtencion;
     const centrosDeAtencion = Array.isArray(rawCentros)
       ? rawCentros.map((cda) => ({
           id: cda.id,
-          direccionId: cda.Direccion?.id ?? null,
-          calle: cda.Direccion?.calle ?? '',
-          altura: String(cda.Direccion?.altura ?? ''),
-          pisoDepto: cda.Direccion?.pisoDepto ?? '',
-          codigoPostal: cda.Direccion?.codigoPostal ?? '',
-          localidad: cda.Direccion?.localidad ?? '',
-          provincia: cda.Direccion?.Provincia
-            ? {
-                id: cda.Direccion.Provincia.id,
-                nombre: cda.Direccion.Provincia.nombre,
-              }
-            : null,
+          direccionId: cda.id ?? null,
+          calle: cda.calle ?? '',
+          altura: String(cda.altura ?? ''),
+          pisoDepto: cda.pisoDepto ?? '',
+          localidad: cda.localidad ?? '',
+          provincia: cda.provincia ?? '',
 
-          horarios: Array.isArray(cda.Horarios)
-            ? cda.Horarios.map((h) => {
-                const diaNombre =
-                  typeof h.dia === 'string' ? h.dia : (h.dia?.nombre ?? '');
+          horarios: Array.isArray(cda.horarios)
+            ? cda.horarios
+                .map((h) => {
+                  const diaNombre =
+                    typeof h.dia === 'string' ? h.dia : (h.dia?.nombre ?? '');
 
-                return {
-                  id: h.id,
-                  dia: {
-                    id: DIA_ENUM[diaNombre] ?? null,
-                    nombre: diaNombre,
-                  },
-                  horaInicio: h.horaInicio ?? '',
-                  horaFin: h.horaFin ?? '',
-                };
-              })
+                  return {
+                    id: h.id,
+                    dia: {
+                      id: DIA_ENUM[diaNombre] ?? null,
+                      nombre: diaNombre,
+                    },
+                    horaInicio: h.horaInicio ?? '',
+                    horaFin: h.horaFin ?? '',
+                  };
+                })
+                .sort((a, b) => (a.dia?.id ?? 999) - (b.dia?.id ?? 999))
             : [],
         }))
       : [];
@@ -45,14 +40,8 @@ export const formatAgendaTurnosPrestador = (data) => {
     const result = {
       id: data.id ?? null,
       nombre: data.nombre ?? '',
-      cuilCuit: data.cuilCuit ?? '',
-      esCentroMedico: data.esCentroMedico ?? false,
-      integraCentroMedico: data.integraCentroMedico ?? false,
-      centroMedicoId: data.centroMedicoId ?? null,
-      especialidades: data.Especialidad ?? [],
+      especialidades: data.especialidades ?? [],
       centrosDeAtencion,
-      emails: data.Emails ?? [],
-      telefonos: data.Telefonos ?? [],
     };
 
     return result;

@@ -10,6 +10,7 @@ import { useFormValidationContext } from '../../context/FormValidationContext';
 
 export default function HorariosSection({
   horario,
+  index,
   puedeEliminar,
   onEliminar,
   onChange,
@@ -24,19 +25,17 @@ export default function HorariosSection({
 
   const diasConHorarios = React.useMemo(
     () =>
-      horarios.flatMap((h) =>
-        h.dia
-          ? [
-              {
-                id: h.dia.id,
-                nombre: h.dia.nombre,
-                label: `${h.dia.nombre} (${h.horaInicio} - ${h.horaFin})`,
-              },
-            ]
-          : []
-      ),
+      horarios.map((h, idx) => ({
+        id: `${h?.dia?.id ?? idx}-${h?.horaInicio}-${h?.horaFin}`,
+        diaId: h?.dia?.id ?? idx,
+        nombre: h?.dia?.nombre ?? '',
+        label: `${h?.dia?.nombre} (${h?.horaInicio} - ${h?.horaFin})`,
+        _inicio: h?.horaInicio ?? '',
+        _fin: h?.horaFin ?? '',
+      })),
     [horarios]
   );
+
   const duraciones = React.useMemo(
     () => Array.from({ length: 24 }, (_, i) => (i + 1) * 5),
     []
@@ -44,10 +43,10 @@ export default function HorariosSection({
 
   const handleFieldChange = React.useCallback(
     (field, value) => {
-      onChange({ ...horario, [field]: value });
-      if (value) clearError(`horario-${horario.id}-${field}`);
+      onChange(index, field, value);
+      if (value) clearError(`horario-${index}-${field}`);
     },
-    [onChange, horario, clearError]
+    [index, onChange, clearError]
   );
 
   return (
@@ -63,7 +62,6 @@ export default function HorariosSection({
           </Typography>
         ) : (
           <>
-            {/* Días de la semana */}
             <Typography variant="subtitle1" fontWeight="medium">
               Días de la semana
             </Typography>
@@ -72,16 +70,13 @@ export default function HorariosSection({
               dias={diasConHorarios}
               selected={horario.dias}
               onChange={(newDias) => handleFieldChange('dias', newDias)}
-              dataField={`horario-${horario.id}-dias`}
-              error={error?.field === `horario-${horario.id}-dias`}
+              dataField={`horario-${index}-dias`}
+              error={error?.field === `horario-${index}-dias`}
               helperText={
-                error?.field === `horario-${horario.id}-dias`
-                  ? error?.message
-                  : ''
+                error?.field === `horario-${index}-dias` ? error?.message : ''
               }
             />
 
-            {/* Especificaciones del turno */}
             <Typography variant="subtitle1" fontWeight="medium" sx={{ mt: 3 }}>
               Especificaciones del turno
             </Typography>
@@ -99,30 +94,28 @@ export default function HorariosSection({
                     <TextField
                       {...params}
                       label="Duración de turno (minutos)"
-                      variant="outlined"
-                      data-field={`horario-${horario.id}-duracion`}
-                      error={error?.field === `horario-${horario.id}-duracion`}
+                      data-field={`horario-${index}-duracion`}
+                      error={error?.field === `horario-${index}-duracion`}
                       helperText={
-                        error?.field === `horario-${horario.id}-duracion`
+                        error?.field === `horario-${index}-duracion`
                           ? error?.message
                           : ''
                       }
                     />
                   )}
-                  sx={{ width: '100%' }}
                 />
               </Grid>
 
               <HorarioPickerGroup
                 horario={horario}
-                onChange={handleFieldChange}
-                idPrefix={`horario-${horario.id}`}
+                onChange={(field, value) => handleFieldChange(field, value)}
+                idPrefix={`horario-${index}`}
               />
             </Grid>
 
             {puedeEliminar && (
               <EliminarButton
-                onEliminar={onEliminar}
+                onEliminar={() => onEliminar(index)}
                 label="Eliminar horario"
               />
             )}
@@ -134,13 +127,8 @@ export default function HorariosSection({
 }
 
 HorariosSection.propTypes = {
-  horario: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    duracion: PropTypes.number,
-    inicio: PropTypes.object,
-    fin: PropTypes.object,
-    dias: PropTypes.array,
-  }).isRequired,
+  horario: PropTypes.object.isRequired,
+  index: PropTypes.number.isRequired,
   puedeEliminar: PropTypes.bool,
   onEliminar: PropTypes.func,
   onChange: PropTypes.func.isRequired,

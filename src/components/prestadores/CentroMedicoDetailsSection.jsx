@@ -18,11 +18,7 @@ export default function CentroMedicoDetailsSection() {
   const handleClose = () => setOpenModal(false);
   return (
     <>
-      <DetailsSection
-        title="Centro Médico"
-        icon={BusinessIcon}
-        onEdit={handleOpen}
-      >
+      <DetailsSection title="Categoría" icon={BusinessIcon} onEdit={handleOpen}>
         {esCentroMedico ? (
           <Typography>Es un centro médico</Typography>
         ) : integraCentroMedico ? (

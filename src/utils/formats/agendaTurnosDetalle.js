@@ -7,6 +7,7 @@ export const formatAgendaTurnosDetalle = (data) => {
     if (!data || typeof data !== 'object') {
       throw new Error('La respuesta no tiene el formato esperado');
     }
+    console.log(data);
     const prestador = data.prestador
       ? {
           id: data.prestador.id ?? null,
@@ -18,38 +19,42 @@ export const formatAgendaTurnosDetalle = (data) => {
               }))
             : [],
           horarios: Array.isArray(data.prestador.horarios)
-            ? data.prestador.horarios.map((h) => {
-                const diaNombre = h.dia;
-                const diaId = DIA_ENUM[diaNombre] ?? null;
-                return {
-                  id: h.id,
-                  dia: {
-                    id: diaId,
-                    nombre: diaNombre,
-                  },
-                  horaInicio: h.horaInicio ?? '',
-                  horaFin: h.horaFin ?? '',
-                };
-              })
+            ? data.prestador.horarios
+                .map((h) => {
+                  const diaNombre = h.dia;
+                  const diaId = DIA_ENUM[diaNombre] ?? null;
+                  return {
+                    id: h.id,
+                    dia: {
+                      id: diaId,
+                      nombre: diaNombre,
+                    },
+                    horaInicio: h.horaInicio ?? '',
+                    horaFin: h.horaFin ?? '',
+                  };
+                })
+                .sort((a, b) => (a.dia?.id ?? 999) - (b.dia?.id ?? 999))
             : [],
         }
       : null;
 
     const horariosAtencion = Array.isArray(data.horariosAtencion)
-      ? data.horariosAtencion.map((h) => {
-          const diaNombre = h.dia;
-          const diaId = DIA_ENUM[diaNombre] ?? null;
-          return {
-            id: h.id,
-            dia: {
-              id: diaId,
-              nombre: diaNombre,
-            },
-            horaInicio: h.horaInicio ?? '',
-            horaFin: h.horaFin ?? '',
-            duracion: Number(h.duracionTurno) || null,
-          };
-        })
+      ? data.horariosAtencion
+          .map((h) => {
+            const diaNombre = h.dia;
+            const diaId = DIA_ENUM[diaNombre] ?? null;
+            return {
+              id: h.id,
+              dia: {
+                id: diaId,
+                nombre: diaNombre,
+              },
+              horaInicio: h.horaInicio ?? '',
+              horaFin: h.horaFin ?? '',
+              duracion: Number(h.duracionTurno) || null,
+            };
+          })
+          .sort((a, b) => (a.dia?.id ?? 999) - (b.dia?.id ?? 999))
       : [];
 
     return {

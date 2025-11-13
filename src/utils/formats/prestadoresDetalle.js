@@ -57,7 +57,7 @@ export const formatPrestadorDetalle = (data) => {
                   updatedAtFecha: formatFecha(h.updatedAt),
                   updatedAtHora: formatHora(h.updatedAt),
                 };
-              })
+              }).sort((a, b) => (a.dia?.id ?? 999) - (b.dia?.id ?? 999))
             : [],
         }))
       : [];

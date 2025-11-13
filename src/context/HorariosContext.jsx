@@ -9,11 +9,13 @@ export function HorariosProvider({ children }) {
 
   const agregarHorario = () => setHorarios((prev) => [...prev, makeHorario()]);
 
-  const eliminarHorario = (id) =>
-    setHorarios((prev) => prev.filter((h) => h.id !== id));
+  const eliminarHorario = (index) =>
+    setHorarios((prev) => prev.filter((_, i) => i !== index));
 
-  const actualizarHorario = (id, newHorario) =>
-    setHorarios((prev) => prev.map((h) => (h.id === id ? newHorario : h)));
+  const actualizarHorario = (index, field, value) =>
+    setHorarios((prev) =>
+      prev.map((h, i) => (i === index ? { ...h, [field]: value } : h))
+    );
 
   const resetHorarios = () => {
     setHorarios([makeHorario()]);
