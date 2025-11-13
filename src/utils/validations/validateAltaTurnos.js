@@ -33,26 +33,44 @@ export const validateAltaTurnos = ({
   }
 
   for (let i = 0; i < horarios.length; i++) {
-    const h = horarios[i];
+    const h = { ...horarios[i], id: i };
 
-    error = validateHorarioBasico(h, i);
-    if (error) return error;
+    error = validateHorarioBasico(h);
+    if (error)
+      return {
+        ...error,
+        field: error.field.replace(`${h.id}`, `${i}`),
+      };
 
-    error = validateHorarioDentroDireccion(h, direccion, i);
-    if (error) return error;
+    error = validateHorarioDentroDireccion(h, direccion);
+    if (error)
+      return {
+        ...error,
+        field: error.field.replace(`${h.id}`, `${i}`),
+      };
 
     if (!h.duracion || h.duracion <= 0) {
       return {
-        field: `horario-${h.id}-duracion`,
+        field: `horario-${i}-duracion`,
         message: 'La duración del turno es obligatoria',
       };
     }
 
-    error = validateDuracionVsRango(h, i);
-    if (error) return error;
+    error = validateDuracionVsRango(h);
+    if (error)
+      return {
+        ...error,
+        field: error.field.replace(`${h.id}`, `${i}`),
+      };
 
-    error = validateSolapamiento(h, horarios, i);
-    if (error) return error;
+    const universo = horarios.map((x, idx) => ({ ...x, id: idx }));
+
+    error = validateSolapamiento(h, universo);
+    if (error)
+      return {
+        ...error,
+        field: error.field.replace(`${h.id}`, `${i}`),
+      };
   }
 
   return null;

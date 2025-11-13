@@ -25,17 +25,14 @@ export default function HorariosSection({
 
   const diasConHorarios = React.useMemo(
     () =>
-      horarios.flatMap((h) =>
-        h.dia
-          ? [
-              {
-                id: h.dia.id,
-                nombre: h.dia.nombre,
-                label: `${h.dia.nombre} (${h.horaInicio} - ${h.horaFin})`,
-              },
-            ]
-          : []
-      ),
+      horarios.map((h, idx) => ({
+        id: `${h?.dia?.id ?? idx}-${h?.horaInicio}-${h?.horaFin}`,
+        diaId: h?.dia?.id ?? idx,
+        nombre: h?.dia?.nombre ?? '',
+        label: `${h?.dia?.nombre} (${h?.horaInicio} - ${h?.horaFin})`,
+        _inicio: h?.horaInicio ?? '',
+        _fin: h?.horaFin ?? '',
+      })),
     [horarios]
   );
 
