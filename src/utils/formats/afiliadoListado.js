@@ -46,6 +46,7 @@ export const formatAfiliadosListado = (data) => {
         direcciones: direcciones,
         telefonos: telefonos,
         emails: emails,
+        url: afiliado.id ? `/afiliados/detalle/${afiliado.id}` : null,
       };
     });
     return {

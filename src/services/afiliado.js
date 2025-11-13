@@ -4,6 +4,7 @@ import {
   formatAfiliadoData,
 } from '../utils/formats/afiliadoPayload';
 import { formatAfiliadosListado } from '../utils/formats/afiliadoListado';
+//import { formatAfiliadoDetalle } from '../utils/formats/afiliadoDetalle';
 
 export const createAfiliado = async (afiliadoData) => {
   const grupoFamiliarFormateado = formatGrupoFamiliar(
@@ -53,7 +54,29 @@ export const createAfiliado = async (afiliadoData) => {
 /**
  * Eliminar un afiliado
  */
-export const deleteAfiliado = (id) => api.delete(`/afiliados/${id}`);
+export const deleteAfiliadoById = async (id, fechaBaja = null) => {
+  try {
+    const payload = fechaBaja
+      ? {
+          tieneFechaBaja: true,
+          fechaBaja: fechaBaja,
+        }
+      : {};
+
+    const response = await api.delete(`/afiliados/${id}`, { data: payload });
+
+    if (response.status !== 200) {
+      throw new Error(
+        `Error al dar de baja el afiliado (status ${response.status})`
+      );
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error(`Error al dar de baja el afiliado ${id}:`, error);
+    throw error;
+  }
+};
 
 /*
  * Obtener listado de los afiliados titulares con filtros y paginación
@@ -76,5 +99,81 @@ export const getTitulares = async (filters = {}, page = 0, limit = 10) => {
   } catch (err) {
     console.error('Error al obtener listado de afiliados:', err);
     throw err;
+  }
+};
+
+/**
+ * Obtener un prestador por ID
+ */
+export const getAfiliadoById = async (id) => {
+  if (!id) {
+    throw new Error('Se requiere un ID de afiliado');
+  }
+
+  try {
+    const { data } = await api.get(`/afiliados/${id}`);
+
+    if (!data || typeof data !== 'object') {
+      throw new Error(`Afiliado con ID ${id} no encontrado o formato inválido`);
+    }
+
+    //const formatted = formatAfiliadoDetalle(data);
+    //return formatted
+
+    return data;
+  } catch (err) {
+    console.error(`Error al obtener afiliado con ID ${id}:`, err);
+    throw err;
+  }
+};
+
+/**
+ * Actualizar datos personales del afiliado
+ */
+export const updateAfiliadoDatosPersonales = async (id, payload) => {
+  try {
+    const response = await api.put(
+      `/afiliados/${id}/datos-personales`,
+      payload
+    );
+
+    if (response.status !== 200) {
+      throw new Error(
+        `Error al actualizar datos personales (status ${response.status})`
+      );
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error al actualizar datos personales del afiliado ${id}:`,
+      error
+    );
+    throw error;
+  }
+};
+
+/**
+ * Actualizar cobertura del afiliado
+ */
+export const updateAfiliadoCobertura = async (id, payload) => {
+  try {
+    const response = await api.put(`/afiliados/${id}/plan-medico`, {
+      planId: payload.planId,
+    });
+
+    if (response.status !== 200) {
+      throw new Error(
+        `Error al actualizar la cobertura (status ${response.status})`
+      );
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error al actualizar la cobertura del afiliado ${id}:`,
+      error
+    );
+    throw error;
   }
 };

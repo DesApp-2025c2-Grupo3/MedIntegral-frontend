@@ -6,7 +6,12 @@ import { useNavigate } from 'react-router-dom';
 import ConfirmCancelDialog from '../forms/ConfirmCancelDialog';
 import { detailHeaderConfig } from '../../../utils/detailHeaderConfig';
 
-export default function PageDetailHeader({ type, id, onDelete }) {
+export default function PageDetailHeader({
+  type,
+  id,
+  onDelete,
+  customDelete = false,
+}) {
   const [openDialog, setOpenDialog] = useState(false);
   const navigate = useNavigate();
 
@@ -20,6 +25,14 @@ export default function PageDetailHeader({ type, id, onDelete }) {
     const ok = await onDelete?.(id);
     setOpenDialog(false);
     if (ok) navigate(config.redirectTo);
+  };
+
+  const handleDeleteClick = () => {
+    if (customDelete) {
+      onDelete?.();
+    } else {
+      setOpenDialog(true);
+    }
   };
 
   return (
@@ -47,21 +60,22 @@ export default function PageDetailHeader({ type, id, onDelete }) {
               color="error"
               startIcon={<DeleteOutlineIcon />}
               sx={{ textTransform: 'none' }}
-              onClick={() => setOpenDialog(true)}
+              onClick={handleDeleteClick}
             >
               Dar de baja
             </Button>
           </Grid>
         )}
       </Grid>
-
-      <ConfirmCancelDialog
-        open={openDialog}
-        onClose={() => setOpenDialog(false)}
-        onConfirm={handleConfirmDelete}
-        title={config.deleteModal.title}
-        message={config.deleteModal.message(id)}
-      />
+      {!customDelete && (
+        <ConfirmCancelDialog
+          open={openDialog}
+          onClose={() => setOpenDialog(false)}
+          onConfirm={handleConfirmDelete}
+          title={config.deleteModal.title}
+          message={config.deleteModal.message(id)}
+        />
+      )}
     </Box>
   );
 }
@@ -71,4 +85,5 @@ PageDetailHeader.propTypes = {
     .isRequired,
   id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   onDelete: PropTypes.func,
+  customDelete: PropTypes.bool,
 };
