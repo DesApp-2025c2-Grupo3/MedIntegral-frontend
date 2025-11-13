@@ -99,7 +99,7 @@ export const getPrestadorById = async (id) => {
   }
 
   try {
-    const { data } = await api.get(`/prestadores/${id}`);
+    const { data } = await api.get(`/agenda-turnos/prestador/${id}`);
     if (!data || typeof data !== 'object') {
       throw new Error(
         `Prestador con ID ${id} no encontrado o formato inválido`
