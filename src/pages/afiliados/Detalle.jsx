@@ -10,11 +10,13 @@ import DatosPersonalesDetailsSection from '../../components/afiliados/DatosPerso
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import CoberturaDetailsSection from '../../components/afiliados/CoberturaDetailsSection';
+import BajaAfiliadoModal from '../../components/afiliados/modals/BajaAfiliadoModal';
 
 function DetalleAfiliadoContent() {
   const { afiliado, loading } = useAfiliado();
   const { id } = useParams();
   const navigate = useNavigate();
+  const [bajaModalOpen, setBajaModalOpen] = useState(false);
 
   useEffect(() => {
     if (!loading && !afiliado) {
@@ -36,7 +38,8 @@ function DetalleAfiliadoContent() {
       <PageDetailHeader
         type="afiliado"
         id={id}
-        //Agregar onDelete, modal para baja
+        onDelete={() => setBajaModalOpen(true)}
+        customDelete={true}
       />
 
       <Grid container spacing={3} mt={1}>
@@ -56,6 +59,13 @@ function DetalleAfiliadoContent() {
         updatedAtFecha={afiliado.updatedAtFecha}
         updatedAtHora={afiliado.updatedAtHora}
       />
+
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <BajaAfiliadoModal
+          open={bajaModalOpen}
+          onClose={() => setBajaModalOpen(false)}
+        />
+      </LocalizationProvider>
     </Box>
   );
 }

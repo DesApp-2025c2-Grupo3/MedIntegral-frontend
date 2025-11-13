@@ -54,7 +54,29 @@ export const createAfiliado = async (afiliadoData) => {
 /**
  * Eliminar un afiliado
  */
-export const deleteAfiliadoById = (id) => api.delete(`/afiliados/${id}`);
+export const deleteAfiliadoById = async (id, fechaBaja = null) => {
+  try {
+    const payload = fechaBaja
+      ? {
+          tieneFechaBaja: true,
+          fechaBaja: fechaBaja,
+        }
+      : {};
+
+    const response = await api.delete(`/afiliados/${id}`, { data: payload });
+
+    if (response.status !== 200) {
+      throw new Error(
+        `Error al dar de baja el afiliado (status ${response.status})`
+      );
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error(`Error al dar de baja el afiliado ${id}:`, error);
+    throw error;
+  }
+};
 
 /*
  * Obtener listado de los afiliados titulares con filtros y paginación

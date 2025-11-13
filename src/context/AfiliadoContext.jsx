@@ -10,6 +10,7 @@ import {
   getAfiliadoById,
   updateAfiliadoDatosPersonales,
   updateAfiliadoCobertura,
+  deleteAfiliadoById,
   /*updateAfiliadoSituacionesTerapeuticas,
   updateAfiliadoDatosContacto,
   updateAfiliadoDirecciones,
@@ -99,6 +100,23 @@ export function AfiliadoProvider({ idAfiliado, children }) {
     }
   };
 
+  const darDeBaja = async (vigenciaFin) => {
+    if (!afiliado?.id) return false;
+    setGlobalLoading(true);
+
+    try {
+      await deleteAfiliadoById(afiliado.id, vigenciaFin);
+      const updated = await fetchAfiliado();
+      finishWithMessage({
+        success: `Afiliado dado de baja exitosamente. Fecha de baja: ${vigenciaFin}`,
+      });
+      return { success: true, updated };
+    } catch {
+      finishWithMessage({ error: 'No se pudo dar de baja el afiliado.' });
+      return { success: false };
+    }
+  };
+
   return (
     <AfiliadoContext.Provider
       value={{
@@ -110,6 +128,7 @@ export function AfiliadoProvider({ idAfiliado, children }) {
         setSuccessMessage,
         updateDatosPersonales,
         updateCobertura,
+        darDeBaja,
         refetchAfiliado: fetchAfiliado,
         clearError: () => setError(null),
       }}
