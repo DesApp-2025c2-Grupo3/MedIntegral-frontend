@@ -22,7 +22,7 @@ const headerConfig = {
   },
   afiliado: {
     title: 'Afiliados',
-    placeholder: 'Buscar por nombre, DNI o número de afiliado...',
+    placeholder: 'Buscar por nombre, apellido o DNI...',
     addLink: '/afiliados/alta',
   },
 };

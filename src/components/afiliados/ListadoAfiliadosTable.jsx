@@ -25,7 +25,7 @@ export default function ListadoAfiliadosTable({
   onPageChange,
   onRowsPerPageChange,
   order = 'asc',
-  orderBy = 'prestador',
+  orderBy = 'afiliado',
   onRequestSort = () => {},
 }) {
   return (

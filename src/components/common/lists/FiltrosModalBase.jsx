@@ -8,6 +8,9 @@ import {
   Paper,
   Grid,
   Autocomplete,
+  Checkbox,
+  FormGroup,
+  FormControlLabel,
   IconButton,
   InputAdornment,
   Tooltip,
@@ -28,6 +31,7 @@ export default function FiltrosModalBase({
   const [error, setError] = useState(null);
   const [toastOpen, setToastOpen] = useState(false);
   const [optionsMap, setOptionsMap] = useState({});
+  const [isChecked, setIsChecked] = useState(false);
 
   useEffect(() => {
     fields?.forEach((field) => {
@@ -84,6 +88,10 @@ export default function FiltrosModalBase({
       field.debounceDelay || 400,
       field.formatter
     );
+  };
+
+  const handleCheckBoxChange = (e) => {
+    setIsChecked(e.target.checked);
   };
 
   return (
@@ -173,6 +181,19 @@ export default function FiltrosModalBase({
                       />
                     )}
                   />
+                ) : field.type === 'checkbox' ? (
+                  <FormGroup>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={isChecked}
+                          onChange={handleCheckBoxChange}
+                          color="primary"
+                        />
+                      }
+                      label={field.label}
+                    />
+                  </FormGroup>
                 ) : (
                   <TextField
                     fullWidth
