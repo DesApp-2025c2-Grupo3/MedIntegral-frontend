@@ -136,6 +136,7 @@ export default function AltaTurnosForm() {
 
       <ErrorSnackbar
         open={showError}
+        autoHideDuration={4000}
         onClose={() => setShowError(false)}
         message="Ocurrió un error al guardar la agenda de turnos."
       />

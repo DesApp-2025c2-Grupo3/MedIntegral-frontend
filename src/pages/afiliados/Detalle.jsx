@@ -95,6 +95,7 @@ export default function DetalleAfiliado() {
 
       <SuccessSnackbar
         open={showSuccess}
+        autoHideDuration={4000}
         onClose={() => setShowSuccess(false)}
         message="Afiliado creado con éxito"
       />

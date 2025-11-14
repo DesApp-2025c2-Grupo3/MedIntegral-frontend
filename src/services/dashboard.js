@@ -1,4 +1,6 @@
 import api from './api';
+import { getDireccionFormateada } from '../utils/formats/formatDireccion';
+import { formatEspecialidad } from '../utils/formats/formatEspecialidad';
 
 /**
  * Obtener cantidad total de afiliados
@@ -135,27 +137,10 @@ export const getPrestadoresSinAgenda = async () => {
     const { data } = await api.get('/dashboard/prestadores-sin-agenda');
     if (!Array.isArray(data)) throw new Error('Formato inesperado');
 
-    const formatDireccion = (direcciones) => {
-      if (!Array.isArray(direcciones) || direcciones.length === 0) {
-        return 'Sin dirección';
-      }
-      const dir = direcciones[0];
-      const calle = dir.calle?.trim() ?? '';
-      const altura = dir.altura ? ` ${dir.altura}` : '';
-      return `${calle}${altura}`.trim() || 'Sin dirección';
-    };
-
-    const formatEspecialidad = (especialidades) => {
-      if (!Array.isArray(especialidades) || especialidades.length === 0) {
-        return 'Sin especialidad';
-      }
-      return especialidades[0].nombre ?? 'Sin especialidad';
-    };
-
     return data.map((p) => ({
       id: p.id,
       nombre: p.nombre ?? 'Sin nombre',
-      detalle: `${formatEspecialidad(p.especialidades)} - ${formatDireccion(p.direcciones)}`,
+      detalle: `${formatEspecialidad(p.especialidades)} - ${getDireccionFormateada(p.direcciones)}`,
     }));
   } catch (err) {
     console.error('Error al obtener prestadores sin agenda:', err);

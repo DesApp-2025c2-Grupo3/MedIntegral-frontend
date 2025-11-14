@@ -1,4 +1,5 @@
 import { groupHorariosSimple } from './horarioGrouping';
+import { formatDireccion } from './formatDireccion';
 import { formatDias } from './formatDias';
 
 export const formatAgendaTurnosListado = (data) => {
@@ -8,11 +9,7 @@ export const formatAgendaTurnosListado = (data) => {
     }
 
     const itemsFormateados = data.items.map((a) => {
-      const dir = a.direccion
-        ? `${a.direccion.calle || ''} ${a.direccion.altura || ''}${
-            a.direccion.pisoDepto ? ', ' + a.direccion.pisoDepto : ''
-          }, ${a.direccion.localidad || ''}, ${a.direccion.provincia || ''}`.trim()
-        : '';
+      const dir = formatDireccion(a.direccion || null) || 'Sin dirección';
 
       const horariosAgrupados = groupHorariosSimple(a.horariosAtencion);
 

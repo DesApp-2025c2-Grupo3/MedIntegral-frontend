@@ -55,7 +55,7 @@ export default function NotFound() {
         }}
       >
         <img
-          src="../../../public/not-found-doctor.png"
+          src="../../../not-found-doctor.png"
           alt="Not found doctor"
           style={{ width: '360px', maxWidth: '90%' }}
         />

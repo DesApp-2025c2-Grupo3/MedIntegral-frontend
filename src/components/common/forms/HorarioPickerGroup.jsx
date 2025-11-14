@@ -33,6 +33,7 @@ export default function HorarioPickerGroup({ horario, onChange, idPrefix }) {
             label="Horario inicio"
             value={horario.inicio}
             onChange={(v) => handleChange('inicio', v)}
+            ampm={false}
             slotProps={{
               textField: {
                 fullWidth: true,
@@ -52,6 +53,7 @@ export default function HorarioPickerGroup({ horario, onChange, idPrefix }) {
             label="Horario fin"
             value={horario.fin}
             onChange={(v) => handleChange('fin', v)}
+            ampm={false}
             slotProps={{
               textField: {
                 fullWidth: true,

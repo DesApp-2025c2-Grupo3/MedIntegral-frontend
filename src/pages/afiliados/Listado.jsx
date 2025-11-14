@@ -4,9 +4,14 @@ import PageListHeader from '../../components/common/lists/PageListHeader';
 import { usePageTitle } from '../../hooks/usePageTitle';
 import ListadoAfiliadosTable from '../../components/afiliados/ListadoAfiliadosTable';
 import { getTitulares } from '../../services/afiliado';
+import SuccessSnackbar from '../../components/common/SuccessSnackbar';
+import { useLocation } from 'react-router-dom';
 
 export default function AfiliadosListado() {
   usePageTitle('MedIntegral | Listado de afiliados');
+
+  const location = useLocation();
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -14,6 +19,14 @@ export default function AfiliadosListado() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filters, setFilters] = useState({ textInputSearch: '' });
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('deleted') === 'true') {
+      setShowSuccess(true);
+      window.history.replaceState({}, document.title, '/afiliados');
+    }
+  }, [location]);
 
   useEffect(() => {
     const fetchAfiliados = async () => {
@@ -41,24 +54,20 @@ export default function AfiliadosListado() {
       return;
     }
 
-    setFilters((prev) => ({
-      ...prev,
-      ...newFilters,
-    }));
+    setFilters((prev) => ({ ...prev, ...newFilters }));
     setPage(0);
   };
 
-  const handleChangePage = (_, newPage) => {
-    setPage(newPage);
-  };
+  const handleChangePage = (_, newPage) => setPage(newPage);
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(Number(event.target.value));
     setPage(0);
   };
+
   return (
     <Box sx={{ mb: 2 }}>
-      <PageListHeader type="afiliado" onSearch={handleSearch} />
+      <PageListHeader type="afiliado" onSearch={handleSearch} total={total} />
 
       <ListadoAfiliadosTable
         rows={rows}
@@ -68,6 +77,13 @@ export default function AfiliadosListado() {
         rowsPerPage={rowsPerPage}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+
+      <SuccessSnackbar
+        open={showSuccess}
+        autoHideDuration={4000}
+        message="Afiliado eliminado con éxito"
+        onClose={() => setShowSuccess(false)}
       />
     </Box>
   );

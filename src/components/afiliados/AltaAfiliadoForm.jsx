@@ -237,12 +237,14 @@ export default function AltaAfiliadoForm() {
 
       <ErrorSnackbar
         open={showError}
+        autoHideDuration={4000}
         onClose={() => setShowError(false)}
         message="Ocurrió un error al guardar el afiliado. Por favor, revisa los campos."
       />
 
       <SuccessSnackbar
         open={showSuccess}
+        autoHideDuration={4000}
         onClose={() => setShowSuccess(false)}
         message="Afiliado creado exitosamente."
       />

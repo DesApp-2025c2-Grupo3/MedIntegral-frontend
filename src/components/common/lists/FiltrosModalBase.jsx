@@ -249,6 +249,7 @@ export default function FiltrosModalBase({
 
       <ErrorSnackbar
         open={toastOpen}
+        autoHideDuration={4000}
         onClose={() => setToastOpen(false)}
         message={error?.message || 'Error de validación.'}
       />

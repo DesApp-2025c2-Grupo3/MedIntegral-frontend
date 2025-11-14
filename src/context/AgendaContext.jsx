@@ -136,12 +136,14 @@ export function AgendaProvider({ idAgenda, children }) {
       </Backdrop>
 
       <SuccessSnackbar
+        autoHideDuration={4000}
         open={!!successMessage}
         onClose={() => setSuccessMessage('')}
         message={successMessage}
       />
 
       <ErrorSnackbar
+        autoHideDuration={4000}
         open={!!error}
         onClose={() => setError(null)}
         message={error}

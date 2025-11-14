@@ -89,6 +89,7 @@ export default function DetallePrestador() {
 
       <SuccessSnackbar
         open={showSuccess}
+        autoHideDuration={4000}
         onClose={() => setShowSuccess(false)}
         message="Prestador creado con éxito"
       />

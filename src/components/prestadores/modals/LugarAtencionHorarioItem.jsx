@@ -62,7 +62,7 @@ export default function LugarAtencionHorarioItem({
         <Grid container spacing={2} sx={{ mt: 1 }}>
           <Grid size={{ xs: 12, sm: 6 }}>
             <MobileTimePicker
-              label="Hora Inicio"
+              label="Horario inicio"
               ampm={false}
               value={
                 horario.horaInicio &&
@@ -84,7 +84,7 @@ export default function LugarAtencionHorarioItem({
 
           <Grid size={{ xs: 12, sm: 6 }}>
             <MobileTimePicker
-              label="Hora Fin"
+              label="Horario fin"
               ampm={false}
               value={
                 horario.horaFin && dayjs(horario.horaFin, 'HH:mm').isValid()

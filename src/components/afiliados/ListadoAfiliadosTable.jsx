@@ -56,7 +56,7 @@ export default function ListadoAfiliadosTable({
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={5} align="center" sx={{ py: 4 }}>
+                  <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
                     <Typography color="text.secondary">
                       Cargando resultados...
                     </Typography>
@@ -64,7 +64,7 @@ export default function ListadoAfiliadosTable({
                 </TableRow>
               ) : rows.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} align="center" sx={{ py: 4 }}>
+                  <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
                     <Typography>No se encontraron resultados</Typography>
                   </TableCell>
                 </TableRow>

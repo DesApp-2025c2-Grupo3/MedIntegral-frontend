@@ -82,6 +82,7 @@ export default function DetalleAgendaTurnos() {
 
       <SuccessSnackbar
         open={showSuccess}
+        autoHideDuration={4000}
         onClose={() => setShowSuccess(false)}
         message="Agenda de turnos creada con éxito"
       />

@@ -194,12 +194,14 @@ function AltaPrestadorForm() {
 
       <ErrorSnackbar
         open={showError}
+        autoHideDuration={4000}
         onClose={() => setShowError(false)}
         message="Error al guardar el prestador"
       />
 
       <SuccessSnackbar
         open={showSuccess}
+        autoHideDuration={4000}
         onClose={() => setShowSuccess(false)}
         message="Prestador creado exitosamente"
       />

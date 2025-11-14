@@ -5,9 +5,13 @@ import { usePageTitle } from '../../hooks/usePageTitle';
 import ListadoTurnosTable from '../../components/agenda-turnos/ListadoTurnosTable';
 import { getAgendaTurnosListado } from '../../services/agendaTurnos';
 import SuccessSnackbar from '../../components/common/SuccessSnackbar';
+import { useLocation } from 'react-router-dom';
 
 export default function AgendaTurnosListado() {
   usePageTitle('MedIntegral | Listado de agendas de turnos');
+
+  const location = useLocation();
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -15,6 +19,14 @@ export default function AgendaTurnosListado() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filters, setFilters] = useState({ textInputSearch: '' });
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('deleted') === 'true') {
+      setShowSuccess(true);
+      window.history.replaceState({}, document.title, '/agenda-de-turnos');
+    }
+  }, [location]);
 
   useEffect(() => {
     const fetchAgendas = async () => {
@@ -42,16 +54,11 @@ export default function AgendaTurnosListado() {
       return;
     }
 
-    setFilters((prev) => ({
-      ...prev,
-      ...newFilters,
-    }));
+    setFilters((prev) => ({ ...prev, ...newFilters }));
     setPage(0);
   };
 
-  const handleChangePage = (_, newPage) => {
-    setPage(newPage);
-  };
+  const handleChangePage = (_, newPage) => setPage(newPage);
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(Number(event.target.value));
@@ -60,7 +67,11 @@ export default function AgendaTurnosListado() {
 
   return (
     <Box sx={{ mt: 2 }}>
-      <PageListHeader type="agenda-de-turnos" onSearch={handleSearch} />
+      <PageListHeader
+        type="agenda-de-turnos"
+        onSearch={handleSearch}
+        total={total}
+      />
 
       <ListadoTurnosTable
         rows={rows}
@@ -71,13 +82,13 @@ export default function AgendaTurnosListado() {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-      {location.search.includes('deleted=true') && (
-        <SuccessSnackbar
-          open
-          message={'Agenda de turnos eliminada con éxito'}
-          onClose={() => {}}
-        />
-      )}
+
+      <SuccessSnackbar
+        open={showSuccess}
+        autoHideDuration={4000}
+        message="Agenda de turnos eliminada con éxito"
+        onClose={() => setShowSuccess(false)}
+      />
     </Box>
   );
 }

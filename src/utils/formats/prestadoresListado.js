@@ -1,3 +1,5 @@
+import { formatDireccion } from './formatDireccion';
+
 export const formatPrestadoresListado = (data) => {
   try {
     if (!data || !Array.isArray(data.items)) {
@@ -5,27 +7,27 @@ export const formatPrestadoresListado = (data) => {
     }
 
     const itemsFormateados = data.items.map((p) => {
-      const direcciones =
-        p.centrosDeAtencion?.map((d) =>
-          `${d.calle || ''} ${d.altura || ''}${
-            d.pisoDepto ? ', ' + d.pisoDepto : ''
-          }, ${d.localidad || ''}, ${d.provincia || ''}`.trim()
-        ) || [];
+      const direcciones = Array.isArray(p.centrosDeAtencion)
+        ? p.centrosDeAtencion.map((d) => formatDireccion(d).trim())
+        : [];
 
       const telefonos = p.telefonos?.map((t) => t.numero || '') || [];
+
       const emails = p.emails?.map((e) => e.direccion || '') || [];
+
+      const especialidades =
+        Array.isArray(p.especialidades) && p.especialidades.length
+          ? p.especialidades.map((e) =>
+              typeof e === 'object' ? (e.nombre ?? '') : e
+            )
+          : [];
 
       return {
         id: p.id ?? null,
         nombre: p.nombre || '',
         cuilCuit: p.cuilCuit || '',
         esCentroMedico: p.esCentroMedico ?? false,
-        especialidades:
-          Array.isArray(p.especialidades) && p.especialidades.length
-            ? p.especialidades.map((e) =>
-                typeof e === 'object' ? (e.nombre ?? '') : e
-              )
-            : [],
+        especialidades,
         direcciones,
         telefonos,
         emails,

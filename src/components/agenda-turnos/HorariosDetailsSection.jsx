@@ -13,7 +13,7 @@ export default function HorariosDetailsSection() {
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
 
-  const horariosAtencion = agenda?.horariosAtencion || [];
+  const horariosAtencion = agenda?.horariosAtencionGrouped || [];
 
   return (
     <>
@@ -27,7 +27,7 @@ export default function HorariosDetailsSection() {
             {horariosAtencion.map((h, index) => (
               <Box key={index}>
                 <Typography variant="body1" fontWeight={500}>
-                  {h.dia?.nombre}
+                  {h.dias}
                 </Typography>
                 <Stack direction="row" alignItems="center" spacing={1} mt={1}>
                   <AccessTimeOutlinedIcon fontSize="small" color="action" />

@@ -194,6 +194,7 @@ export function PrestadorProvider({ idPrestador, children }) {
       </Backdrop>
 
       <SuccessSnackbar
+        autoHideDuration={4000}
         open={!!successMessage}
         onClose={() => setSuccessMessage('')}
         message={successMessage}
@@ -201,6 +202,7 @@ export function PrestadorProvider({ idPrestador, children }) {
 
       <ErrorSnackbar
         open={!!error}
+        autoHideDuration={4000}
         onClose={() => setError(null)}
         message={error}
       />

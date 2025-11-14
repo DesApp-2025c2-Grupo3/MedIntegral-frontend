@@ -14,20 +14,23 @@ const headerConfig = {
     title: 'Agendas de turnos',
     placeholder: 'Buscar por prestador, especialidad...',
     addLink: '/agenda-turnos/alta',
+    labels: { singular: 'agenda de turnos', plural: 'agendas de turnos' },
   },
   prestador: {
     title: 'Prestadores',
     placeholder: 'Buscar por nombre, código postal, CUIT/CUIL...',
     addLink: '/prestadores/alta',
+    labels: { singular: 'prestador', plural: 'prestadores' },
   },
   afiliado: {
     title: 'Afiliados',
     placeholder: 'Buscar por nombre, apellido o DNI...',
     addLink: '/afiliados/alta',
+    labels: { singular: 'afiliado', plural: 'afiliados' },
   },
 };
 
-export default function PageListHeader({ type, onSearch }) {
+export default function PageListHeader({ type, onSearch, total }) {
   const config = headerConfig[type] || headerConfig['agenda-de-turnos'];
   const [searchTerm, setSearchTerm] = useState('');
   const [filterValues, setFilterValues] = useState({});
@@ -71,6 +74,14 @@ export default function PageListHeader({ type, onSearch }) {
     setFilterValues(values);
     onSearch({ textInputSearch: searchTerm.trim(), ...values });
   };
+
+  const labelConfig = config.labels;
+  const label =
+    typeof total === 'number'
+      ? total === 1
+        ? labelConfig.singular
+        : labelConfig.plural
+      : '';
 
   return (
     <Box sx={{ mb: 4 }}>
@@ -151,7 +162,9 @@ export default function PageListHeader({ type, onSearch }) {
       </Grid>
 
       <Typography variant="subtitle1" color="text.secondary" sx={{ mt: 1.5 }}>
-        Resultados de la búsqueda
+        {typeof total === 'number'
+          ? `Resultados de la búsqueda: ${total} ${label}`
+          : 'Resultados de la búsqueda'}
       </Typography>
 
       <FiltrosModalBase
@@ -168,4 +181,5 @@ PageListHeader.propTypes = {
   type: PropTypes.oneOf(['agenda-de-turnos', 'prestador', 'afiliado'])
     .isRequired,
   onSearch: PropTypes.func,
+  total: PropTypes.number,
 };

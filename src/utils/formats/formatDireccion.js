@@ -15,9 +15,16 @@ export const formatDireccion = (dir) => {
     partes.push(`Piso/Depto ${dir.pisoDepto.trim()}`);
   }
 
+  let localidadStr = '';
   if (dir.localidad && dir.localidad.trim()) {
-    partes.push(dir.localidad.trim());
+    localidadStr = dir.localidad.trim();
   }
+
+  if (dir.codigoPostal && String(dir.codigoPostal).trim()) {
+    localidadStr += ` (${String(dir.codigoPostal).trim()})`;
+  }
+
+  if (localidadStr) partes.push(localidadStr);
 
   const provinciaObj = dir.provincia || dir.Provincia;
 
@@ -31,4 +38,18 @@ export const formatDireccion = (dir) => {
   }
 
   return partes.join(', ');
+};
+
+export const getDireccionFormateada = (direcciones) => {
+  if (!Array.isArray(direcciones) || direcciones.length === 0) {
+    return 'Sin dirección';
+  }
+
+  const direccionesFormateadas = direcciones
+    .map((dir) => formatDireccion(dir)?.trim())
+    .filter((d) => d && d.length > 0);
+
+  return direccionesFormateadas.length > 0
+    ? direccionesFormateadas.join(' | ')
+    : 'Sin dirección';
 };

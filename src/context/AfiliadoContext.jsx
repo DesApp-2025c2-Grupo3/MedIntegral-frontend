@@ -141,12 +141,14 @@ export function AfiliadoProvider({ idAfiliado, children }) {
 
       <SuccessSnackbar
         open={!!successMessage}
+        autoHideDuration={4000}
         onClose={() => setSuccessMessage('')}
         message={successMessage}
       />
 
       <ErrorSnackbar
         open={!!error}
+        autoHideDuration={4000}
         onClose={() => setError(null)}
         message={error}
       />
