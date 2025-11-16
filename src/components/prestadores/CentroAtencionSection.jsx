@@ -47,7 +47,7 @@ export default function CentroAtencionSection({ centros, onChange }) {
 
   return (
     <Box sx={{ mt: 2 }}>
-      <Typography variant="h5" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         Centros de Atención
       </Typography>
 
@@ -70,7 +70,11 @@ export default function CentroAtencionSection({ centros, onChange }) {
                   mb: 2,
                 }}
               >
-                <Typography variant="h6" gutterBottom>
+                <Typography
+                  variant="subtitle1"
+                  sx={{ fontWeight: 'bold' }}
+                  gutterBottom
+                >
                   Centro de Atención #{index + 1}
                 </Typography>
 

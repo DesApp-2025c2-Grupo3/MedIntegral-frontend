@@ -29,7 +29,7 @@ export default function DiasSemanaSelector({
   const helper = hasError ? (helperText ?? '') : '';
 
   return (
-    <FormGroup sx={{ mb: 3, width: '100%', mt: 1 }}>
+    <FormGroup sx={{ mb: 1, width: '100%', mt: 1 }}>
       <Grid container spacing={2} sx={{ mt: 1 }} data-field={dataField}>
         {dias.map((dia) => (
           <Grid sx={{ xs: 6, sm: 3, md: 2 }} key={dia.id}>

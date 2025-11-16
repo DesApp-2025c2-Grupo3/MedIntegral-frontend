@@ -67,6 +67,7 @@ export default function CentroMedicoSection({
           }}
         >
           <Autocomplete
+            data-field="centroMedicoId"
             sx={{
               width: useFullWidth ? '100% !important' : 300,
               flexGrow: useFullWidth ? 1 : 0,

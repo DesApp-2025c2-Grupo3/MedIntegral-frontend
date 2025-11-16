@@ -12,9 +12,6 @@ export const useFormValidation = (validator) => {
       const el = document.querySelector(`[data-field="${validation.field}"]`);
       if (el) {
         el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        if (typeof el.focus === 'function') {
-          el.focus();
-        }
       }
 
       return false;

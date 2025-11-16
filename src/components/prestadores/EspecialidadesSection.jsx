@@ -29,6 +29,7 @@ export default function EspecialidadesSection({
           <Grid size={{ xs: 12 }}>
             <Autocomplete
               multiple
+              data-field="especialidades"
               value={especialidades}
               onChange={(_, val) => onChange('especialidades', val)}
               options={listaEspecialidades}
