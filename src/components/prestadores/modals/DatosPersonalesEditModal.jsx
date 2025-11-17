@@ -150,6 +150,7 @@ export default function DatosPersonalesEditModal({ open, onClose }) {
                 <TextField
                   {...params}
                   label="Emails"
+                  placeholder="Ingresá un email y presioná Enter"
                   inputRef={emailRef}
                   error={error?.field === 'emails'}
                   helperText={error?.field === 'emails' ? error.message : ''}
@@ -175,6 +176,7 @@ export default function DatosPersonalesEditModal({ open, onClose }) {
                 <TextField
                   {...params}
                   label="Teléfonos"
+                  placeholder="Ingresá un teléfono y presioná Enter"
                   inputRef={telRef}
                   error={error?.field === 'telefonos'}
                   helperText={error?.field === 'telefonos' ? error.message : ''}

@@ -61,7 +61,10 @@ export const validateNombre = (nombre, fieldName = 'nombre') => {
 
 export const validateTelefonos = (telefonos, fieldBase = 'telefonos') => {
   if (!telefonos || telefonos.length === 0) {
-    return { field: fieldBase, message: 'Debe ingresar al menos un teléfono.' };
+    return {
+      field: fieldBase,
+      message: 'Agregá al menos un teléfono y presioná Enter.',
+    };
   }
 
   for (const t of telefonos) {
@@ -70,7 +73,8 @@ export const validateTelefonos = (telefonos, fieldBase = 'telefonos') => {
     if (!REGEX_TELEFONO_CLEAN.test(valor)) {
       return {
         field: fieldBase,
-        message: 'Cada teléfono debe tener solo números entre 8 y 15 dígitos.',
+        message:
+          'Cada teléfono debe tener entre 8 y 15 dígitos numéricos. Ingresalo y presioná Enter.',
       };
     }
   }
@@ -79,7 +83,10 @@ export const validateTelefonos = (telefonos, fieldBase = 'telefonos') => {
 
 export const validateEmails = (emails, fieldBase = 'emails') => {
   if (!emails || emails.length === 0) {
-    return { field: fieldBase, message: 'Debe ingresar al menos un email.' };
+    return {
+      field: fieldBase,
+      message: 'Agregá al menos un email y presioná Enter.',
+    };
   }
 
   for (const e of emails) {
@@ -88,7 +95,7 @@ export const validateEmails = (emails, fieldBase = 'emails') => {
       return {
         field: fieldBase,
         message:
-          'Cada email debe tener un formato válido (ej: usuario@gmail.com).',
+          'Ingresá un email válido (ej: usuario@gmail.com) y presioná Enter.',
       };
     }
   }
