@@ -58,7 +58,7 @@ export function AfiliadoProvider({ idAfiliado, children }) {
     setGlobalLoading(true);
 
     const payload = {
-      tipoDocumentoId: data.tipoDocumento?.id,
+      tipoDocumentoId: data.tipoDocumentoId,
       numeroDocumento: data.numeroDocumento,
       fechaNacimiento: data.fechaNacimiento,
       nombre: data.nombre,
