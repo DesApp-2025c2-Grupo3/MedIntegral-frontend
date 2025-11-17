@@ -78,7 +78,7 @@ export default function GrupoFamiliarSection({
   const { error } = useFormValidationContext();
 
   return (
-    <Box>
+    <Box data-section="grupo-familiar">
       <Typography variant="h6" fontWeight="medium" sx={{ mb: 2 }}>
         Grupo Familiar
       </Typography>
