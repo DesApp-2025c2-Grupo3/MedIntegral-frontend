@@ -30,7 +30,9 @@ export default function DatosPersonalesDetailsSection() {
 
   const formatFecha = (fecha) => {
     if (!fecha) return '—';
-    return new Date(fecha).toLocaleDateString('es-AR');
+    const [datePart] = fecha.split('T');
+    const [year, month, day] = datePart.split('-');
+    return `${day}/${month}/${year}`;
   };
 
   return (
