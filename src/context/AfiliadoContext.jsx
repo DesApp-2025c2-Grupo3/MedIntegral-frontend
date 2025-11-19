@@ -11,9 +11,9 @@ import {
   updateAfiliadoDatosPersonales,
   updateAfiliadoCobertura,
   deleteAfiliadoById,
-  /*updateAfiliadoSituacionesTerapeuticas,
+  /*updateAfiliadoSituacionesTerapeuticas,*/
   updateAfiliadoDatosContacto,
-  updateAfiliadoDirecciones,
+  /*updateAfiliadoDirecciones,
   deleteAfiliadoById,
   */
 } from '../services/afiliado';
@@ -100,6 +100,33 @@ export function AfiliadoProvider({ idAfiliado, children }) {
     }
   };
 
+  const updateDatosContacto = async (data) => {
+    if (!afiliado?.id) return;
+    setGlobalLoading(true);
+
+    const payload = {
+      emails: (data.emails || []).map((e) => ({
+        direccion: e.direccion || e,
+      })),
+      telefonos: (data.telefonos || []).map((t) => ({
+        numero: t.numero || t,
+      })),
+    };
+
+    try {
+      await updateAfiliadoDatosContacto(afiliado.id, payload);
+      const updated = await fetchAfiliado();
+      finishWithMessage({
+        success: 'Datos de contacto actualizados con éxito',
+      });
+      return updated;
+    } catch {
+      finishWithMessage({
+        error: 'No se pudieron actualizar los datos de contacto.',
+      });
+    }
+  };
+
   const darDeBaja = async (vigenciaFin) => {
     if (!afiliado?.id) return false;
     setGlobalLoading(true);
@@ -128,6 +155,7 @@ export function AfiliadoProvider({ idAfiliado, children }) {
         setSuccessMessage,
         updateDatosPersonales,
         updateCobertura,
+        updateDatosContacto,
         darDeBaja,
         refetchAfiliado: fetchAfiliado,
         clearError: () => setError(null),

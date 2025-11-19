@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Typography, Stack, Snackbar, Alert } from '@mui/material';
-import PersonIcon from '@mui/icons-material/Person';
+import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import DetailsSection from '../common/details/DetailsSection';
 import { useAfiliado } from '../../context/AfiliadoContext';
 import CheckIcon from '@mui/icons-material/Check';
@@ -24,7 +24,10 @@ export default function DatosPersonalesDetailsSection() {
 
   return (
     <>
-      <DetailsSection title="Situaciones Terapeúticas" icon={PersonIcon}>
+      <DetailsSection
+        title="Situaciones Terapeúticas"
+        icon={MedicalServicesIcon}
+      >
         <Stack component="ul" spacing={1} sx={{ pl: 2, m: 0 }}>
           {Array.isArray(situacionesTerapeuticas) &&
           situacionesTerapeuticas.length > 0 ? (

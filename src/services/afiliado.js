@@ -103,7 +103,7 @@ export const getTitulares = async (filters = {}, page = 0, limit = 10) => {
 };
 
 /**
- * Obtener un prestador por ID
+ * Obtener un afiliado por ID
  */
 export const getAfiliadoById = async (id) => {
   if (!id) {
@@ -172,6 +172,29 @@ export const updateAfiliadoCobertura = async (id, payload) => {
   } catch (error) {
     console.error(
       `Error al actualizar la cobertura del afiliado ${id}:`,
+      error
+    );
+    throw error;
+  }
+};
+
+/**
+ * Actualizar datos de contacto del afiliado
+ */
+export const updateAfiliadoDatosContacto = async (id, payload) => {
+  try {
+    const response = await api.put(`/afiliados/${id}/datos-contacto`, payload);
+
+    if (response.status !== 200) {
+      throw new Error(
+        `Error al actualizar datos de contacto (status ${response.status})`
+      );
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error al actualizar datos de contacto del afiliado ${id}:`,
       error
     );
     throw error;

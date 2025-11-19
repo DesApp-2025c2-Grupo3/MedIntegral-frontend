@@ -12,6 +12,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import CoberturaDetailsSection from '../../components/afiliados/CoberturaDetailsSection';
 import BajaAfiliadoModal from '../../components/afiliados/modals/BajaAfiliadoModal';
 import SituacionesTerapeuticasSection from '../../components/afiliados/SituacionesTerapeuticasDetailsSection';
+import DatosContactoDetailsSection from '../../components/afiliados/DatosContactoDetailsSection';
 
 function DetalleAfiliadoContent() {
   const { afiliado, loading } = useAfiliado();
@@ -54,6 +55,9 @@ function DetalleAfiliadoContent() {
         </Grid>
         <Grid size={{ xs: 12 }}>
           <SituacionesTerapeuticasSection />
+        </Grid>
+        <Grid size={{ xs: 12 }}>
+          <DatosContactoDetailsSection />
         </Grid>
       </Grid>
 
