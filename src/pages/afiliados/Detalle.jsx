@@ -13,6 +13,7 @@ import CoberturaDetailsSection from '../../components/afiliados/CoberturaDetails
 import BajaAfiliadoModal from '../../components/afiliados/modals/BajaAfiliadoModal';
 import SituacionesTerapeuticasSection from '../../components/afiliados/SituacionesTerapeuticasDetailsSection';
 import DatosContactoDetailsSection from '../../components/afiliados/DatosContactoDetailsSection';
+import DireccionDetailsSection from '../../components/afiliados/DireccionDetailsSection';
 
 function DetalleAfiliadoContent() {
   const { afiliado, loading } = useAfiliado();
@@ -58,6 +59,9 @@ function DetalleAfiliadoContent() {
         </Grid>
         <Grid size={{ xs: 12 }}>
           <DatosContactoDetailsSection />
+        </Grid>
+        <Grid size={{ xs: 12 }}>
+          <DireccionDetailsSection />
         </Grid>
       </Grid>
 
