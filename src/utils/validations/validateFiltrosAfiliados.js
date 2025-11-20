@@ -25,7 +25,7 @@ export default function validateFiltrosAgendaTurnos(filtros) {
     vigenciaHasta,
     creacionDesde,
     creacionHasta,
-    prestadoresBaja,
+    estado,
   } = filtros;
 
   const algunoCargado = [
@@ -43,7 +43,7 @@ export default function validateFiltrosAgendaTurnos(filtros) {
     vigenciaHasta,
     creacionDesde,
     creacionHasta,
-    prestadoresBaja,
+    estado,
   ].some((v) => !!v && v !== '');
 
   if (!algunoCargado) {

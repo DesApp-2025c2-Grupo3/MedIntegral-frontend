@@ -138,11 +138,18 @@ export const filtrosConfig = {
       { name: 'vigenciaHasta', label: 'Vigencia hasta', type: 'date' },
       { name: 'creacionDesde', label: 'Creación desde', type: 'date' },
       { name: 'creacionHasta', label: 'Creación hasta', type: 'date' },
-      /*{
-        name: 'prestadoresBaja',
-        label: 'Incluir prestadores dados de baja',
-        type: 'checkbox',
-      },*/
+      {
+        name: 'estado',
+        label: 'Vigencia afiliados',
+        type: 'select',
+        defaultValue: { value: 'Vigentes', label: 'Sólo vigentes' },
+        options: [
+          { value: 'Vigentes', label: 'Afiliados vigentes' },
+          { value: 'Bajas', label: 'Afiliados dados de baja' },
+          { value: 'Vigencia futura', label: 'Afiliados con vigencia futura' },
+          { value: 'Todos', label: 'Todos los afiliados' },
+        ],
+      },
     ],
     validateFn: validateFiltrosAfiliados,
   },
