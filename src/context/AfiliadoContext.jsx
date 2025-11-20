@@ -13,9 +13,9 @@ import {
   deleteAfiliadoById,
   /*updateAfiliadoSituacionesTerapeuticas,*/
   updateAfiliadoDatosContacto,
-  /*updateAfiliadoDirecciones,
-  deleteAfiliadoById,
-  */
+  updateAfiliadoDirecciones,
+  /*deleteAfiliadoById,
+   */
 } from '../services/afiliado';
 import SuccessSnackbar from '../components/common/SuccessSnackbar';
 import ErrorSnackbar from '../components/common/ErrorSnackbar';
@@ -127,6 +127,37 @@ export function AfiliadoProvider({ idAfiliado, children }) {
     }
   };
 
+  const updateDirecciones = async (direccionesData) => {
+    if (!afiliado?.id) return;
+    setGlobalLoading(true);
+
+    try {
+      const direccionesPayload = direccionesData.map((direccionItem) => ({
+        calle: direccionItem.calle,
+        altura: String(direccionItem.altura),
+        pisoDepto: direccionItem.pisoDepto || '',
+        codigoPostal: direccionItem.codigoPostal,
+        localidad: direccionItem.localidad,
+        provinciaId: direccionItem.provincia?.id || direccionItem.provinciaId,
+      }));
+
+      const payload = {
+        direcciones: direccionesPayload,
+      };
+
+      await updateAfiliadoDirecciones(afiliado.id, payload);
+      const updated = await fetchAfiliado();
+      finishWithMessage({
+        success: 'Direcciones actualizadas con éxito',
+      });
+      return updated;
+    } catch {
+      finishWithMessage({
+        error: 'No se pudieron actualizar las direcciones.',
+      });
+    }
+  };
+
   const darDeBaja = async (vigenciaFin) => {
     if (!afiliado?.id) return false;
     setGlobalLoading(true);
@@ -156,6 +187,7 @@ export function AfiliadoProvider({ idAfiliado, children }) {
         updateDatosPersonales,
         updateCobertura,
         updateDatosContacto,
+        updateDirecciones,
         darDeBaja,
         refetchAfiliado: fetchAfiliado,
         clearError: () => setError(null),

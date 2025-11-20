@@ -200,3 +200,26 @@ export const updateAfiliadoDatosContacto = async (id, payload) => {
     throw error;
   }
 };
+
+/**
+ * Actualizar direcciones del afiliado
+ */
+export const updateAfiliadoDirecciones = async (id, payload) => {
+  try {
+    const response = await api.put(`/afiliados/${id}/direcciones`, payload);
+
+    if (response.status !== 200) {
+      throw new Error(
+        `Error al actualizar las direcciones (status ${response.status})`
+      );
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error al actualizar las direcciones del afiliado ${id}:`,
+      error
+    );
+    throw error;
+  }
+};
