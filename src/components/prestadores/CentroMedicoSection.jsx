@@ -84,6 +84,7 @@ export default function CentroMedicoSection({
               <TextField
                 {...params}
                 label="Centro Médico que integra"
+                placeholder="Seleccioná el centro médico"
                 {...getErrorProps(error, 'centroMedicoId')}
               />
             )}

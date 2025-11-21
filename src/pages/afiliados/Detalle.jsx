@@ -38,6 +38,7 @@ function DetalleAfiliadoContent() {
       <PageDetailHeader
         type="afiliado"
         id={id}
+        nombre={`${afiliado.nombre}`}
         onDelete={() => setBajaModalOpen(true)}
         customDelete={true}
       />

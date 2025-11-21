@@ -161,12 +161,15 @@ export default function HorariosEditModal({ open, onClose }) {
                     mt: 1,
                   }}
                 >
+                  <Typography variant="h6" fontWeight="medium" sx={{ mb: 2 }}>
+                    Horarios de atención #{index + 1}
+                  </Typography>
                   <Typography
                     variant="subtitle1"
                     fontWeight="medium"
                     sx={{ mb: 2 }}
                   >
-                    Horario {index + 1}
+                    Días de la semana
                   </Typography>
 
                   <DiasSemanaSelector
@@ -182,6 +185,13 @@ export default function HorariosEditModal({ open, onClose }) {
                       errors[index]?.[`horario-${horario.id}-dias`] || ''
                     }
                   />
+                  <Typography
+                    variant="subtitle1"
+                    fontWeight="medium"
+                    sx={{ mb: 2 }}
+                  >
+                    Especificaciones del turno
+                  </Typography>
 
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <Grid container spacing={3} sx={{ mt: 2 }}>
@@ -205,6 +215,7 @@ export default function HorariosEditModal({ open, onClose }) {
                               {...params}
                               label="Duración"
                               fullWidth
+                              placeholder="Seleccioná la duración de los turnos"
                               error={Boolean(
                                 errors[index]?.[
                                   `horario-${horario.id}-duracion`

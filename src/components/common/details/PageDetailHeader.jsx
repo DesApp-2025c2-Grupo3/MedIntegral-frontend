@@ -9,6 +9,7 @@ import { detailHeaderConfig } from '../../../utils/detailHeaderConfig';
 export default function PageDetailHeader({
   type,
   id,
+  nombre,
   onDelete,
   customDelete = false,
 }) {
@@ -18,8 +19,8 @@ export default function PageDetailHeader({
   const config = detailHeaderConfig[type];
   if (!config || !id) return null;
 
-  const title = config.title(id);
-  const subtitle = config.subtitle?.(id);
+  const title = config.title(id, nombre);
+  const subtitle = config.subtitle?.(id, nombre);
 
   const handleConfirmDelete = async () => {
     const ok = await onDelete?.(id);
@@ -67,13 +68,14 @@ export default function PageDetailHeader({
           </Grid>
         )}
       </Grid>
+
       {!customDelete && (
         <ConfirmCancelDialog
           open={openDialog}
           onClose={() => setOpenDialog(false)}
           onConfirm={handleConfirmDelete}
           title={config.deleteModal.title}
-          message={config.deleteModal.message(id)}
+          message={config.deleteModal.message(id, nombre)}
         />
       )}
     </Box>
@@ -84,6 +86,7 @@ PageDetailHeader.propTypes = {
   type: PropTypes.oneOf(['agenda-de-turnos', 'prestador', 'afiliado'])
     .isRequired,
   id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  nombre: PropTypes.string,
   onDelete: PropTypes.func,
   customDelete: PropTypes.bool,
 };

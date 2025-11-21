@@ -113,6 +113,7 @@ export default function DatosPersonalesEditModal({ open, onClose }) {
                 fullWidth
                 label="CUIL / CUIT"
                 name="cuilCuit"
+                placeholder="Ingresá un CUIL/CUIT sin puntos ni guiones"
                 value={localData.cuilCuit}
                 onChange={handleField}
                 error={error?.field === 'cuilCuit'}
@@ -125,6 +126,7 @@ export default function DatosPersonalesEditModal({ open, onClose }) {
                 fullWidth
                 label="Nombre completo"
                 name="nombre"
+                placeholder="Ingresá el nombre completo"
                 value={localData.nombre}
                 onChange={handleField}
                 error={error?.field === 'nombre'}

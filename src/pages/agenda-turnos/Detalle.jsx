@@ -35,6 +35,7 @@ function DetalleAgendaContent() {
       <PageDetailHeader
         type="agenda-de-turnos"
         id={id}
+        nombre={`${agenda.prestador.nombre}`}
         onDelete={deleteAgenda}
       />
 

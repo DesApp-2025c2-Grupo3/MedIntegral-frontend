@@ -39,6 +39,7 @@ export default function EspecialidadesSection({
                 <TextField
                   {...params}
                   label="Especialidades"
+                  placeholder="Seleccioná o ingresá una o más especialidades"
                   fullWidth
                   {...getErrorProps(error, 'especialidades')}
                 />

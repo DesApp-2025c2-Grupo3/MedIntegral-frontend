@@ -55,6 +55,7 @@ export default function PrestadorSection() {
             getOptionLabel={(option) => option?.nombre || ''}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             label="Prestador"
+            placeholder="Seleccioná el prestador"
             dataField="prestador"
           />
         </Grid>
@@ -68,6 +69,7 @@ export default function PrestadorSection() {
             getOptionLabel={(option) => option?.nombre || ''}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             label="Especialidad"
+            placeholder="Seleccioná la especialidad"
             dataField="especialidad"
             disabled={!prestador}
             inputRef={especialidadRef}
@@ -85,6 +87,7 @@ export default function PrestadorSection() {
             }
             isOptionEqualToValue={(option, value) => option.id === value.id}
             label="Dirección"
+            placeholder="Seleccioná la dirección"
             dataField="direccion"
             disabled={!prestador}
           />

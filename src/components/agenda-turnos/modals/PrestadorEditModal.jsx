@@ -77,7 +77,7 @@ export default function PrestadorEditModal({ open, onClose }) {
                 href="/agenda-turnos/alta"
                 sx={{
                   fontWeight: 600,
-                  fontSize: '0.875rem',
+                  fontSize: '1rem',
                   color: '#1976d2',
                   textDecoration: 'none',
                   '&:hover': { textDecoration: 'underline' },
@@ -113,6 +113,7 @@ export default function PrestadorEditModal({ open, onClose }) {
                 renderInput={(params) => (
                   <TextField
                     {...params}
+                    placeholder="Seleccioná la especialidad"
                     label="Especialidad"
                     inputRef={especialidadRef}
                     error={!!error}
