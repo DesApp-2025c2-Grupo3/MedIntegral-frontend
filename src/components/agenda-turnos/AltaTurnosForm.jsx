@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import { Box, Divider } from '@mui/material';
+import { useState, useCallback, useEffect, useRef } from 'react';
+import { Box, Divider, Alert, Link, Typography } from '@mui/material';
 import PrestadorSection from './PrestadorSection';
 import HorariosSection from './HorariosSection';
 import ButtonsSection from '../common/forms/FormActions';
@@ -18,6 +18,7 @@ import {
 } from '../../hooks/navigation';
 import { sleepIfLocal } from '../../utils/sleepIfLocal';
 import ErrorSnackbar from '../common/ErrorSnackbar';
+import { Link as RouterLink } from 'react-router-dom';
 
 export default function AltaTurnosForm() {
   const navigateToListado = useNavigateToListado();
@@ -35,8 +36,20 @@ export default function AltaTurnosForm() {
 
   const [saving, setSaving] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [agendaExistenteId, setAgendaExistenteId] = useState(null);
 
   const { validateBeforeSave } = useFormValidation(validateAltaTurnos);
+
+  const alertRef = useRef(null);
+
+  useEffect(() => {
+    if (agendaExistenteId && alertRef.current) {
+      alertRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }, [agendaExistenteId]);
 
   const handleChangeHorario = useCallback(
     (index, field, value) => actualizarHorario(index, field, value),
@@ -49,6 +62,8 @@ export default function AltaTurnosForm() {
   );
 
   const handleGuardar = useCallback(() => {
+    setAgendaExistenteId(null);
+
     validateBeforeSave(
       {
         prestador,
@@ -70,7 +85,15 @@ export default function AltaTurnosForm() {
 
           navigateToEdicion(data.id, { created: true });
         } catch (err) {
-          console.error('Error al guardar el alta de agenda de turnos:', err);
+          const msg = err?.response?.data || '';
+
+          const match = msg.match(/#(\d+)#/);
+          if (match?.[1]) {
+            setAgendaExistenteId(match[1]);
+            setSaving(false);
+            return;
+          }
+
           setShowError(true);
         } finally {
           setSaving(false);
@@ -95,10 +118,51 @@ export default function AltaTurnosForm() {
     <Box component="form" noValidate>
       <LoadingOverlay open={loading || saving} />
 
+      {agendaExistenteId && (
+        <Alert
+          severity="error"
+          ref={alertRef}
+          sx={{
+            mb: 3,
+            fontSize: '.9rem',
+            display: 'flex',
+            alignItems: 'center',
+            '& .MuiAlert-icon': {
+              alignSelf: 'center',
+              mt: 0.2,
+            },
+          }}
+        >
+          <Box>
+            <Typography component="div">
+              Ya existe una agenda para esta combinación de prestador,
+              especialidad y centro de atención.
+            </Typography>
+
+            <Typography component="div" sx={{ mt: 0.5 }}>
+              Si querés sumar más horarios, podés editarla haciendo{' '}
+              <Link
+                component={RouterLink}
+                to={`/agenda-turnos/detalle/${agendaExistenteId}`}
+                underline="hover"
+                sx={{
+                  fontWeight: 600,
+                  color: 'inherit',
+                  textDecoration: 'underline',
+                }}
+              >
+                click acá
+              </Link>
+              .
+            </Typography>
+          </Box>
+        </Alert>
+      )}
+
       <PrestadorSection />
+
       <Divider sx={{ mt: 4 }} />
 
-      {/* Horarios */}
       <AnimatePresence>
         <div>
           {horarios.map((horario, index) => (
@@ -126,7 +190,6 @@ export default function AltaTurnosForm() {
 
       <Divider sx={{ my: 4 }} />
 
-      {/* Botones de acción */}
       <ButtonsSection
         handleGuardar={handleGuardar}
         onConfirmCancel={handleCancelar}
