@@ -14,6 +14,7 @@ import BajaAfiliadoModal from '../../components/afiliados/modals/BajaAfiliadoMod
 import SituacionesTerapeuticasSection from '../../components/afiliados/SituacionesTerapeuticasDetailsSection';
 import DatosContactoDetailsSection from '../../components/afiliados/DatosContactoDetailsSection';
 import DireccionDetailsSection from '../../components/afiliados/DireccionDetailsSection';
+import GrupoFamiliarDetailsSection from '../../components/afiliados/GrupoFamiliarDetailsSection';
 
 function DetalleAfiliadoContent() {
   const { afiliado, loading } = useAfiliado();
@@ -62,6 +63,9 @@ function DetalleAfiliadoContent() {
         </Grid>
         <Grid size={{ xs: 12 }}>
           <DireccionDetailsSection />
+        </Grid>
+        <Grid size={{ xs: 12 }}>
+          <GrupoFamiliarDetailsSection />
         </Grid>
       </Grid>
 
