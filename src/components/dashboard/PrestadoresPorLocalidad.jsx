@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { useDashboard } from '../../context/DashboardContext';
-import PrestadoresPorLocalidadModal from './PrestadoresPorLocalidadModal';
+import PrestadoresPorLocalidadModal from './modals/PrestadoresPorLocalidadModal';
 import { usePrestadoresPorLocalidadData } from '../../hooks/usePrestadoresPorLocalidadData';
 
 export default function PrestadoresPorLocalidad() {

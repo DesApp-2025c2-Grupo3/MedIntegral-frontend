@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { useDashboard } from '../../context/DashboardContext';
 import { usePrestadoresPorEspecialidadData } from '../../hooks/usePrestadoresPorEspecialidadData';
-import PrestadoresPorEspecialidadModal from './PrestadoresPorEspecialidadModal';
+import PrestadoresPorEspecialidadModal from './modals/PrestadoresPorEspecialidadModal';
 
 export default function PrestadoresPorEspecialidad() {
   const { prestadoresPorEspecialidad } = useDashboard();
