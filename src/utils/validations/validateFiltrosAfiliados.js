@@ -11,8 +11,6 @@ const REGEX_TELEFONO_CLEAN = /^\d{8,15}$/;
 
 export default function validateFiltrosAgendaTurnos(filtros) {
   const {
-    nombre,
-    apellido,
     tipoDocumento,
     nroAfiliado,
     fechaNacimiento,
@@ -29,8 +27,6 @@ export default function validateFiltrosAgendaTurnos(filtros) {
   } = filtros;
 
   const algunoCargado = [
-    nombre,
-    apellido,
     tipoDocumento,
     nroAfiliado,
     fechaNacimiento,
@@ -54,24 +50,14 @@ export default function validateFiltrosAgendaTurnos(filtros) {
     };
   }
 
-  if (nombre && nombre.length < 2) {
-    return {
-      field: 'nombre',
-      message: 'Tenés que ingresar al menos 2 carácteres.',
-    };
-  }
-
-  if (apellido && apellido.length < 2) {
-    return {
-      field: 'apellido',
-      message: 'Tenés que ingresar al menos 2 carácteres.',
-    };
-  }
-
-  if (nroAfiliado && !REGEX_NUMERIC.test(nroAfiliado)) {
+  if (
+    nroAfiliado &&
+    (!REGEX_NUMERIC.test(nroAfiliado) || nroAfiliado.length > 7)
+  ) {
     return {
       field: 'nroAfiliado',
-      message: 'Ingrese sólo el número de afiliado sin 0.',
+      message:
+        'El número de afiliado no puede contener más de 7 números ni caracteres especiales.',
     };
   }
 
@@ -85,7 +71,7 @@ export default function validateFiltrosAgendaTurnos(filtros) {
   if (provincia && typeof provincia === 'string') {
     return {
       field: 'provincia',
-      message: 'Seleccioná una provincia válida de la lista.',
+      message: 'Seleccione una provincia válida de la lista.',
     };
   }
 
@@ -97,11 +83,10 @@ export default function validateFiltrosAgendaTurnos(filtros) {
   }
 
   if (telefono) {
-    if (!REGEX_TELEFONO_CLEAN.test(telefono) || telefono.length > 10) {
+    if (!REGEX_TELEFONO_CLEAN.test(telefono)) {
       return {
         field: 'telefono',
-        message:
-          'Ingrese un número de teléfono válido (debe contener entre 8 y 10 dígitos).',
+        message: 'El teléfono debe tener solo números entre 8 y 15 dígitos.',
       };
     }
   }
@@ -109,13 +94,64 @@ export default function validateFiltrosAgendaTurnos(filtros) {
   if (email && !REGEX_EMAIL.test(email)) {
     return {
       field: 'email',
-      message: 'Tenés que ingresar un correo electrónico válido.',
+      message: 'El email debe tener un formato válido (ej: usuario@gmail.com).',
+    };
+  }
+
+  const hoy = dayjs();
+
+  if (
+    vigenciaDesde &&
+    dayjs(vigenciaDesde).isAfter(hoy) &&
+    (!estado || estado.value === 'Vigentes' || estado.value === 'Bajas')
+  ) {
+    return {
+      field: 'vigenciaDesde',
+      message: 'La fecha no puede ser posterior a hoy',
+    };
+  } else if (
+    vigenciaDesde &&
+    dayjs(vigenciaDesde).isBefore(hoy) &&
+    estado?.value === 'Vigencia futura'
+  ) {
+    return {
+      field: 'vigenciaDesde',
+      message: 'La fecha no puede ser anterior a hoy',
+    };
+  }
+
+  if (
+    vigenciaHasta &&
+    dayjs(vigenciaHasta).isBefore(hoy) &&
+    (!estado ||
+      estado.value === 'Vigentes' ||
+      estado.value === 'Vigencia futura')
+  ) {
+    return {
+      field: 'vigenciaHasta',
+      message: 'La fecha debe ser posterior a hoy.',
+    };
+  } else if (
+    vigenciaHasta &&
+    dayjs(vigenciaHasta).isAfter(hoy) &&
+    estado?.value === 'Bajas'
+  ) {
+    return {
+      field: 'vigenciaHasta',
+      message: 'La fecha no puede ser posterior a hoy',
     };
   }
 
   if (vigenciaDesde && vigenciaHasta) {
     const desde = dayjs(vigenciaDesde);
     const hasta = dayjs(vigenciaHasta);
+
+    if (desde.isSame(hasta)) {
+      return {
+        field: 'vigenciaHasta',
+        message: 'Las fechas no pueden ser iguales',
+      };
+    }
 
     if (desde.isAfter(hasta)) {
       return {
@@ -124,8 +160,6 @@ export default function validateFiltrosAgendaTurnos(filtros) {
       };
     }
   }
-
-  const hoy = dayjs();
 
   if (creacionDesde && dayjs(creacionDesde).isAfter(hoy)) {
     return {

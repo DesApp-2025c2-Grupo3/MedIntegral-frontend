@@ -142,7 +142,6 @@ export const filtrosConfig = {
         name: 'estado',
         label: 'Vigencia afiliados',
         type: 'select',
-        defaultValue: { value: 'Vigentes', label: 'Sólo vigentes' },
         options: [
           { value: 'Vigentes', label: 'Afiliados vigentes' },
           { value: 'Bajas', label: 'Afiliados dados de baja' },
