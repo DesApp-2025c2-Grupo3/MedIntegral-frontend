@@ -9,6 +9,62 @@ const REGEX_NUMERIC = /^\d+$/;
 const REGEX_EMAIL = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const REGEX_TELEFONO_CLEAN = /^\d{8,15}$/;
 
+const validateVigenciaDesde = (vigencia, hoy, estado) => {
+  if (
+    vigencia.isAfter(hoy) &&
+    (!estado || estado.value === 'Vigentes' || estado.value === 'Bajas')
+  ) {
+    return {
+      field: 'vigenciaDesde',
+      message: 'La fecha no puede ser posterior a hoy',
+    };
+  } else if (vigencia.isBefore(hoy) && estado?.value === 'Vigencia futura') {
+    return {
+      field: 'vigenciaDesde',
+      message: 'La fecha debe ser posterior a hoy',
+    };
+  }
+  return null;
+};
+
+const validateVigenciaHasta = (vigencia, hoy, estado) => {
+  if (
+    vigencia.isBefore(hoy) &&
+    (!estado ||
+      estado.value === 'Vigentes' ||
+      estado.value === 'Vigencia futura')
+  ) {
+    return {
+      field: 'vigenciaHasta',
+      message: 'La fecha debe ser posterior a hoy.',
+    };
+  } else if (vigencia.isAfter(hoy) && estado?.value === 'Bajas') {
+    return {
+      field: 'vigenciaHasta',
+      message: 'La fecha no puede ser posterior a hoy',
+    };
+  }
+  return null;
+};
+
+const validateRangoDeFechas = (fechaDesde, fechaHasta, fieldName) => {
+  if (fechaDesde.isSame(fechaHasta)) {
+    return {
+      field: `${fieldName}`,
+      message: 'Las fechas no pueden ser iguales',
+    };
+  }
+
+  if (fechaDesde.isAfter(fechaHasta)) {
+    return {
+      field: `${fieldName}`,
+      message: 'La fecha "hasta" no puede ser anterior a la fecha "desde".',
+    };
+  }
+
+  return null;
+};
+
 export default function validateFiltrosAgendaTurnos(filtros) {
   const {
     tipoDocumento,
@@ -82,13 +138,11 @@ export default function validateFiltrosAgendaTurnos(filtros) {
     };
   }
 
-  if (telefono) {
-    if (!REGEX_TELEFONO_CLEAN.test(telefono)) {
-      return {
-        field: 'telefono',
-        message: 'El teléfono debe tener solo números entre 8 y 15 dígitos.',
-      };
-    }
+  if (telefono && !REGEX_TELEFONO_CLEAN.test(telefono)) {
+    return {
+      field: 'telefono',
+      message: 'El teléfono debe tener solo números entre 8 y 15 dígitos.',
+    };
   }
 
   if (email && !REGEX_EMAIL.test(email)) {
@@ -99,76 +153,39 @@ export default function validateFiltrosAgendaTurnos(filtros) {
   }
 
   const hoy = dayjs();
+  const fechaDesde = dayjs(vigenciaDesde);
+  const fechaHasta = dayjs(vigenciaHasta);
 
-  if (
-    vigenciaDesde &&
-    dayjs(vigenciaDesde).isAfter(hoy) &&
-    (!estado || estado.value === 'Vigentes' || estado.value === 'Bajas')
-  ) {
-    return {
-      field: 'vigenciaDesde',
-      message: 'La fecha no puede ser posterior a hoy',
-    };
-  } else if (
-    vigenciaDesde &&
-    dayjs(vigenciaDesde).isBefore(hoy) &&
-    estado?.value === 'Vigencia futura'
-  ) {
-    return {
-      field: 'vigenciaDesde',
-      message: 'La fecha no puede ser anterior a hoy',
-    };
+  if (vigenciaDesde) {
+    const error = validateVigenciaDesde(fechaDesde, hoy, estado);
+    if (error) return error;
   }
 
-  if (
-    vigenciaHasta &&
-    dayjs(vigenciaHasta).isBefore(hoy) &&
-    (!estado ||
-      estado.value === 'Vigentes' ||
-      estado.value === 'Vigencia futura')
-  ) {
-    return {
-      field: 'vigenciaHasta',
-      message: 'La fecha debe ser posterior a hoy.',
-    };
-  } else if (
-    vigenciaHasta &&
-    dayjs(vigenciaHasta).isAfter(hoy) &&
-    estado?.value === 'Bajas'
-  ) {
-    return {
-      field: 'vigenciaHasta',
-      message: 'La fecha no puede ser posterior a hoy',
-    };
+  if (vigenciaHasta) {
+    const error = validateVigenciaHasta(fechaHasta, hoy, estado);
+    if (error) return error;
   }
 
   if (vigenciaDesde && vigenciaHasta) {
-    const desde = dayjs(vigenciaDesde);
-    const hasta = dayjs(vigenciaHasta);
-
-    if (desde.isSame(hasta)) {
-      return {
-        field: 'vigenciaHasta',
-        message: 'Las fechas no pueden ser iguales',
-      };
-    }
-
-    if (desde.isAfter(hasta)) {
-      return {
-        field: 'vigenciaHasta',
-        message: 'La fecha "hasta" no puede ser anterior a la fecha "desde".',
-      };
-    }
+    const error = validateRangoDeFechas(
+      fechaDesde,
+      fechaHasta,
+      'vigenciaHasta'
+    );
+    if (error) return error;
   }
 
-  if (creacionDesde && dayjs(creacionDesde).isAfter(hoy)) {
+  const desde = dayjs(creacionDesde);
+  const hasta = dayjs(creacionHasta);
+
+  if (creacionDesde && desde.isAfter(hoy)) {
     return {
       field: 'creacionDesde',
       message: 'La fecha no puede ser posterior a hoy.',
     };
   }
 
-  if (creacionHasta && dayjs(creacionHasta).isAfter(hoy)) {
+  if (creacionHasta && hasta.isAfter(hoy)) {
     return {
       field: 'creacionHasta',
       message: 'La fecha no puede ser posterior a hoy.',
@@ -176,22 +193,9 @@ export default function validateFiltrosAgendaTurnos(filtros) {
   }
 
   if (creacionDesde && creacionHasta) {
-    const desde = dayjs(creacionDesde);
-    const hasta = dayjs(creacionHasta);
-
-    if (desde.isSame(hasta)) {
-      return {
-        field: 'creacionHasta',
-        message: 'Las fechas no pueden ser iguales.',
-      };
-    }
-
-    if (desde.isAfter(hasta)) {
-      return {
-        field: 'creacionHasta',
-        message: 'La fecha "hasta" no puede ser anterior a la fecha "desde".',
-      };
-    }
+    const error = validateRangoDeFechas(desde, hasta, 'creacionHasta');
+    if (error) return error;
   }
+
   return null;
 }
