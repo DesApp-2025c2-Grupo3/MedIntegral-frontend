@@ -26,6 +26,7 @@ export default function FiltrosModalBase({
   onClose,
   fields,
   validateFn,
+  initialValues = {},
 }) {
   const [values, setValues] = useState({});
   const [error, setError] = useState(null);
@@ -40,6 +41,12 @@ export default function FiltrosModalBase({
       }
     });
   }, [fields, optionsMap]);
+
+  useEffect(() => {
+    if (open) {
+      setValues(initialValues);
+    }
+  }, [open, initialValues]);
 
   const isFieldError = (name) => error?.field === name;
   const getHelperText = (name) => (isFieldError(name) ? error.message : '');
@@ -262,4 +269,5 @@ FiltrosModalBase.propTypes = {
   onClose: PropTypes.func.isRequired,
   fields: PropTypes.array,
   validateFn: PropTypes.func,
+  initialValues: PropTypes.array,
 };
