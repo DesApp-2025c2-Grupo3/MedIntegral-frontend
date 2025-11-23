@@ -1,7 +1,7 @@
 import { formatDireccion } from './formatDireccion';
 import { formatFecha, formatHora } from './formatFechaHora';
 import { DIA_ENUM } from './diaEnum';
-import { groupHorariosSimpleDetalle } from './horarioGrouping';
+import { groupHorariosSimpleDetalle, mergeHorarios } from './horarioGrouping';
 import { formatDias } from './formatDias';
 
 export const formatAgendaTurnosDetalle = (data) => {
@@ -11,30 +11,38 @@ export const formatAgendaTurnosDetalle = (data) => {
     }
 
     const prestador = data.prestador
-      ? {
-          id: data.prestador.id ?? null,
-          nombre: data.prestador.nombre ?? '',
-          especialidades: Array.isArray(data.prestador.especialidades)
-            ? data.prestador.especialidades.map((e) => ({
-                id: e.id ?? null,
-                nombre: e.nombre ?? '',
-              }))
-            : [],
-          horarios: Array.isArray(data.prestador.horarios)
-            ? data.prestador.horarios
-                .map((h) => {
-                  const diaNombre = h.dia;
-                  const diaId = DIA_ENUM[diaNombre] ?? null;
-                  return {
-                    id: h.id,
-                    dia: { id: diaId, nombre: diaNombre },
-                    horaInicio: h.horaInicio ?? '',
-                    horaFin: h.horaFin ?? '',
-                  };
-                })
-                .sort((a, b) => (a.dia?.id ?? 999) - (b.dia?.id ?? 999))
-            : [],
-        }
+      ? (() => {
+          const horariosRaw = Array.isArray(data.prestador.horarios)
+            ? data.prestador.horarios.map((h) => {
+                const diaNombre = h.dia;
+                const diaId = DIA_ENUM[diaNombre] ?? null;
+
+                return {
+                  id: h.id,
+                  dia: { id: diaId, nombre: diaNombre },
+                  horaInicio: h.horaInicio ?? '',
+                  horaFin: h.horaFin ?? '',
+                };
+              })
+            : [];
+
+          const horariosOrdenados = horariosRaw.sort(
+            (a, b) => (a.dia?.id ?? 999) - (b.dia?.id ?? 999)
+          );
+          const horariosMergeados = mergeHorarios(horariosOrdenados);
+
+          return {
+            id: data.prestador.id ?? null,
+            nombre: data.prestador.nombre ?? '',
+            especialidades: Array.isArray(data.prestador.especialidades)
+              ? data.prestador.especialidades.map((e) => ({
+                  id: e.id ?? null,
+                  nombre: e.nombre ?? '',
+                }))
+              : [],
+            horarios: horariosMergeados,
+          };
+        })()
       : null;
 
     const horariosAtencion = Array.isArray(data.horariosAtencion)
