@@ -9,10 +9,64 @@ const REGEX_NUMERIC = /^\d+$/;
 const REGEX_EMAIL = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const REGEX_TELEFONO_CLEAN = /^\d{8,15}$/;
 
+const validateVigenciaDesde = (vigencia, hoy, estado) => {
+  if (
+    vigencia.isAfter(hoy) &&
+    (!estado || estado.value === 'Vigentes' || estado.value === 'Bajas')
+  ) {
+    return {
+      field: 'vigenciaDesde',
+      message: 'La fecha no puede ser posterior a hoy',
+    };
+  } else if (vigencia.isBefore(hoy) && estado?.value === 'Vigencia futura') {
+    return {
+      field: 'vigenciaDesde',
+      message: 'La fecha debe ser posterior a hoy',
+    };
+  }
+  return null;
+};
+
+const validateVigenciaHasta = (vigencia, hoy, estado) => {
+  if (
+    vigencia.isBefore(hoy) &&
+    (!estado ||
+      estado.value === 'Vigentes' ||
+      estado.value === 'Vigencia futura')
+  ) {
+    return {
+      field: 'vigenciaHasta',
+      message: 'La fecha debe ser posterior a hoy.',
+    };
+  } else if (vigencia.isAfter(hoy) && estado?.value === 'Bajas') {
+    return {
+      field: 'vigenciaHasta',
+      message: 'La fecha no puede ser posterior a hoy',
+    };
+  }
+  return null;
+};
+
+const validateRangoDeFechas = (fechaDesde, fechaHasta, fieldName) => {
+  if (fechaDesde.isSame(fechaHasta)) {
+    return {
+      field: `${fieldName}`,
+      message: 'Las fechas no pueden ser iguales',
+    };
+  }
+
+  if (fechaDesde.isAfter(fechaHasta)) {
+    return {
+      field: `${fieldName}`,
+      message: 'La fecha "hasta" no puede ser anterior a la fecha "desde".',
+    };
+  }
+
+  return null;
+};
+
 export default function validateFiltrosAgendaTurnos(filtros) {
   const {
-    nombre,
-    apellido,
     tipoDocumento,
     nroAfiliado,
     fechaNacimiento,
@@ -25,12 +79,10 @@ export default function validateFiltrosAgendaTurnos(filtros) {
     vigenciaHasta,
     creacionDesde,
     creacionHasta,
-    prestadoresBaja,
+    estado,
   } = filtros;
 
   const algunoCargado = [
-    nombre,
-    apellido,
     tipoDocumento,
     nroAfiliado,
     fechaNacimiento,
@@ -43,7 +95,7 @@ export default function validateFiltrosAgendaTurnos(filtros) {
     vigenciaHasta,
     creacionDesde,
     creacionHasta,
-    prestadoresBaja,
+    estado,
   ].some((v) => !!v && v !== '');
 
   if (!algunoCargado) {
@@ -54,24 +106,14 @@ export default function validateFiltrosAgendaTurnos(filtros) {
     };
   }
 
-  if (nombre && nombre.length < 2) {
-    return {
-      field: 'nombre',
-      message: 'Tenés que ingresar al menos 2 carácteres.',
-    };
-  }
-
-  if (apellido && apellido.length < 2) {
-    return {
-      field: 'apellido',
-      message: 'Tenés que ingresar al menos 2 carácteres.',
-    };
-  }
-
-  if (nroAfiliado && !REGEX_NUMERIC.test(nroAfiliado)) {
+  if (
+    nroAfiliado &&
+    (!REGEX_NUMERIC.test(nroAfiliado) || nroAfiliado.length > 7)
+  ) {
     return {
       field: 'nroAfiliado',
-      message: 'Ingrese sólo el número de afiliado sin 0.',
+      message:
+        'El número de afiliado no puede contener más de 7 números ni caracteres especiales.',
     };
   }
 
@@ -85,7 +127,7 @@ export default function validateFiltrosAgendaTurnos(filtros) {
   if (provincia && typeof provincia === 'string') {
     return {
       field: 'provincia',
-      message: 'Seleccioná una provincia válida de la lista.',
+      message: 'Seleccione una provincia válida de la lista.',
     };
   }
 
@@ -96,45 +138,54 @@ export default function validateFiltrosAgendaTurnos(filtros) {
     };
   }
 
-  if (telefono) {
-    if (!REGEX_TELEFONO_CLEAN.test(telefono) || telefono.length > 10) {
-      return {
-        field: 'telefono',
-        message:
-          'Ingrese un número de teléfono válido (debe contener entre 8 y 10 dígitos).',
-      };
-    }
+  if (telefono && !REGEX_TELEFONO_CLEAN.test(telefono)) {
+    return {
+      field: 'telefono',
+      message: 'El teléfono debe tener solo números entre 8 y 15 dígitos.',
+    };
   }
 
   if (email && !REGEX_EMAIL.test(email)) {
     return {
       field: 'email',
-      message: 'Tenés que ingresar un correo electrónico válido.',
+      message: 'El email debe tener un formato válido (ej: usuario@gmail.com).',
     };
   }
 
-  if (vigenciaDesde && vigenciaHasta) {
-    const desde = dayjs(vigenciaDesde);
-    const hasta = dayjs(vigenciaHasta);
+  const hoy = dayjs();
+  const fechaDesde = dayjs(vigenciaDesde);
+  const fechaHasta = dayjs(vigenciaHasta);
 
-    if (desde.isAfter(hasta)) {
-      return {
-        field: 'vigenciaHasta',
-        message: 'La fecha "hasta" no puede ser anterior a la fecha "desde".',
-      };
-    }
+  if (vigenciaDesde) {
+    const error = validateVigenciaDesde(fechaDesde, hoy, estado);
+    if (error) return error;
   }
 
-  const hoy = dayjs();
+  if (vigenciaHasta) {
+    const error = validateVigenciaHasta(fechaHasta, hoy, estado);
+    if (error) return error;
+  }
 
-  if (creacionDesde && dayjs(creacionDesde).isAfter(hoy)) {
+  if (vigenciaDesde && vigenciaHasta) {
+    const error = validateRangoDeFechas(
+      fechaDesde,
+      fechaHasta,
+      'vigenciaHasta'
+    );
+    if (error) return error;
+  }
+
+  const desde = dayjs(creacionDesde);
+  const hasta = dayjs(creacionHasta);
+
+  if (creacionDesde && desde.isAfter(hoy)) {
     return {
       field: 'creacionDesde',
       message: 'La fecha no puede ser posterior a hoy.',
     };
   }
 
-  if (creacionHasta && dayjs(creacionHasta).isAfter(hoy)) {
+  if (creacionHasta && hasta.isAfter(hoy)) {
     return {
       field: 'creacionHasta',
       message: 'La fecha no puede ser posterior a hoy.',
@@ -142,22 +193,9 @@ export default function validateFiltrosAgendaTurnos(filtros) {
   }
 
   if (creacionDesde && creacionHasta) {
-    const desde = dayjs(creacionDesde);
-    const hasta = dayjs(creacionHasta);
-
-    if (desde.isSame(hasta)) {
-      return {
-        field: 'creacionHasta',
-        message: 'Las fechas no pueden ser iguales.',
-      };
-    }
-
-    if (desde.isAfter(hasta)) {
-      return {
-        field: 'creacionHasta',
-        message: 'La fecha "hasta" no puede ser anterior a la fecha "desde".',
-      };
-    }
+    const error = validateRangoDeFechas(desde, hasta, 'creacionHasta');
+    if (error) return error;
   }
+
   return null;
 }
