@@ -30,7 +30,9 @@ export default function DatosPersonalesDetailsSection() {
 
   const formatFecha = (fecha) => {
     if (!fecha) return '—';
-    return new Date(fecha).toLocaleDateString('es-AR');
+    const [datePart] = fecha.split('T');
+    const [year, month, day] = datePart.split('-');
+    return `${day}/${month}/${year}`;
   };
 
   return (
@@ -69,21 +71,6 @@ export default function DatosPersonalesDetailsSection() {
             </Typography>
           )}
         </Stack>
-
-        {afiliado.dependientes && afiliado.dependientes.length > 0 && (
-          <>
-            <Divider sx={{ my: 1.5 }} />
-            <Typography fontWeight={600}>Grupo Familiar</Typography>
-            <Stack component="ul" spacing={1} sx={{ pl: 2, m: 0 }}>
-              {afiliado.dependientes.map((dependiente) => (
-                <Typography key={dependiente.id} component="li">
-                  {dependiente.nombre} {dependiente.apellido} -{' '}
-                  {dependiente.parentesco?.relacion}
-                </Typography>
-              ))}
-            </Stack>
-          </>
-        )}
       </DetailsSection>
 
       <DatosPersonalesEditModal open={openModal} onClose={handleClose} />

@@ -1,6 +1,6 @@
 export const formatFecha = (date) => {
   if (!date || !date.format) return null;
-  return date.clone().add(1, 'day').format('YYYY-MM-DD');
+  return date.format('YYYY-MM-DD');
 };
 
 export const formatEmails = (emails) => {
@@ -59,6 +59,14 @@ export const formatGrupoFamiliar = (grupoFamiliar, datosTitular = {}) => {
     const data = {
       ...formatAfiliadoData(familiar),
       parentescoId: familiar.parentesco?.id,
+      usaMismaVigenciaTitular:
+        familiar.usaMismaVigenciaTitular !== undefined
+          ? familiar.usaMismaVigenciaTitular
+          : true,
+      usaMismaDireccionTitular:
+        familiar.usaMismaDireccionTitular !== undefined
+          ? familiar.usaMismaDireccionTitular
+          : true,
     };
 
     if (familiar.usaMismaVigenciaTitular) {

@@ -11,6 +11,10 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import CoberturaDetailsSection from '../../components/afiliados/CoberturaDetailsSection';
 import BajaAfiliadoModal from '../../components/afiliados/modals/BajaAfiliadoModal';
+import SituacionesTerapeuticasSection from '../../components/afiliados/SituacionesTerapeuticasDetailsSection';
+import DatosContactoDetailsSection from '../../components/afiliados/DatosContactoDetailsSection';
+import DireccionDetailsSection from '../../components/afiliados/DireccionDetailsSection';
+import GrupoFamiliarDetailsSection from '../../components/afiliados/GrupoFamiliarDetailsSection';
 
 function DetalleAfiliadoContent() {
   const { afiliado, loading } = useAfiliado();
@@ -50,6 +54,18 @@ function DetalleAfiliadoContent() {
         </Grid>
         <Grid size={{ xs: 12 }}>
           <CoberturaDetailsSection />
+        </Grid>
+        <Grid size={{ xs: 12 }}>
+          <SituacionesTerapeuticasSection />
+        </Grid>
+        <Grid size={{ xs: 12 }}>
+          <DatosContactoDetailsSection />
+        </Grid>
+        <Grid size={{ xs: 12 }}>
+          <DireccionDetailsSection />
+        </Grid>
+        <Grid size={{ xs: 12 }}>
+          <GrupoFamiliarDetailsSection />
         </Grid>
       </Grid>
 
