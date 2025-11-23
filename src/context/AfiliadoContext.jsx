@@ -11,11 +11,11 @@ import {
   updateAfiliadoDatosPersonales,
   updateAfiliadoCobertura,
   deleteAfiliadoById,
-  /*updateAfiliadoSituacionesTerapeuticas,
+  /*updateAfiliadoSituacionesTerapeuticas,*/
   updateAfiliadoDatosContacto,
   updateAfiliadoDirecciones,
-  deleteAfiliadoById,
-  */
+  /*deleteAfiliadoById,
+   */
 } from '../services/afiliado';
 import SuccessSnackbar from '../components/common/SuccessSnackbar';
 import ErrorSnackbar from '../components/common/ErrorSnackbar';
@@ -58,7 +58,7 @@ export function AfiliadoProvider({ idAfiliado, children }) {
     setGlobalLoading(true);
 
     const payload = {
-      tipoDocumentoId: data.tipoDocumento?.id,
+      tipoDocumentoId: data.tipoDocumentoId,
       numeroDocumento: data.numeroDocumento,
       fechaNacimiento: data.fechaNacimiento,
       nombre: data.nombre,
@@ -100,6 +100,64 @@ export function AfiliadoProvider({ idAfiliado, children }) {
     }
   };
 
+  const updateDatosContacto = async (data) => {
+    if (!afiliado?.id) return;
+    setGlobalLoading(true);
+
+    const payload = {
+      emails: (data.emails || []).map((e) => ({
+        direccion: e.direccion || e,
+      })),
+      telefonos: (data.telefonos || []).map((t) => ({
+        numero: t.numero || t,
+      })),
+    };
+
+    try {
+      await updateAfiliadoDatosContacto(afiliado.id, payload);
+      const updated = await fetchAfiliado();
+      finishWithMessage({
+        success: 'Datos de contacto actualizados con éxito',
+      });
+      return updated;
+    } catch {
+      finishWithMessage({
+        error: 'No se pudieron actualizar los datos de contacto.',
+      });
+    }
+  };
+
+  const updateDirecciones = async (direccionesData) => {
+    if (!afiliado?.id) return;
+    setGlobalLoading(true);
+
+    try {
+      const direccionesPayload = direccionesData.map((direccionItem) => ({
+        calle: direccionItem.calle,
+        altura: String(direccionItem.altura),
+        pisoDepto: direccionItem.pisoDepto || '',
+        codigoPostal: direccionItem.codigoPostal,
+        localidad: direccionItem.localidad,
+        provinciaId: direccionItem.provincia?.id || direccionItem.provinciaId,
+      }));
+
+      const payload = {
+        direcciones: direccionesPayload,
+      };
+
+      await updateAfiliadoDirecciones(afiliado.id, payload);
+      const updated = await fetchAfiliado();
+      finishWithMessage({
+        success: 'Direcciones actualizadas con éxito',
+      });
+      return updated;
+    } catch {
+      finishWithMessage({
+        error: 'No se pudieron actualizar las direcciones.',
+      });
+    }
+  };
+
   const darDeBaja = async (vigenciaFin) => {
     if (!afiliado?.id) return false;
     setGlobalLoading(true);
@@ -128,6 +186,8 @@ export function AfiliadoProvider({ idAfiliado, children }) {
         setSuccessMessage,
         updateDatosPersonales,
         updateCobertura,
+        updateDatosContacto,
+        updateDirecciones,
         darDeBaja,
         refetchAfiliado: fetchAfiliado,
         clearError: () => setError(null),

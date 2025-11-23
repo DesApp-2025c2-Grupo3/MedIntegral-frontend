@@ -40,6 +40,27 @@ export default function DatosPersonalesEditModal({ open, onClose }) {
         try {
           const tipos = await getTiposDocumento();
           setTiposDocumento(tipos);
+
+          const tipoDocumentoCompleto = tipos.find(
+            (tipo) => tipo.tipo === afiliado.tipoDocumento?.tipo
+          );
+
+          setLocalData({
+            numeroDocumento: afiliado.numeroDocumento || '',
+            nombre: afiliado.nombre || '',
+            apellido: afiliado.apellido || '',
+            tipoDocumento: tipoDocumentoCompleto || null,
+            fechaNacimiento: afiliado.fechaNacimiento
+              ? dayjs(afiliado.fechaNacimiento).format('YYYY-MM-DD')
+              : '',
+            vigenciaInicio: afiliado.vigenciaInicio
+              ? dayjs(afiliado.vigenciaInicio).format('YYYY-MM-DD')
+              : '',
+            vigenciaFin: afiliado.vigenciaFin
+              ? dayjs(afiliado.vigenciaFin).format('YYYY-MM-DD')
+              : null,
+            tieneFechaBaja: afiliado.tieneFechaBaja,
+          });
         } catch (err) {
           console.error('Error cargando tipos de documento:', err);
         } finally {
@@ -47,16 +68,6 @@ export default function DatosPersonalesEditModal({ open, onClose }) {
         }
       };
 
-      setLocalData({
-        numeroDocumento: afiliado.numeroDocumento || '',
-        nombre: afiliado.nombre || '',
-        apellido: afiliado.apellido || '',
-        tipoDocumento: afiliado.tipoDocumento || null,
-        fechaNacimiento: afiliado.fechaNacimiento || '',
-        vigenciaInicio: afiliado.vigenciaInicio || '',
-        vigenciaFin: afiliado.vigenciaFin || '',
-        tieneFechaBaja: afiliado.tieneFechaBaja || null,
-      });
       setError(null);
       loadTiposDocumento();
     }
@@ -78,7 +89,7 @@ export default function DatosPersonalesEditModal({ open, onClose }) {
   const handleDateChange = (fieldName) => (newDate) => {
     setLocalData((prev) => ({
       ...prev,
-      [fieldName]: newDate ? newDate.toISOString() : null,
+      [fieldName]: newDate ? dayjs(newDate).format('YYYY-MM-DD') : null,
     }));
 
     if (error?.field === fieldName) {
@@ -89,7 +100,7 @@ export default function DatosPersonalesEditModal({ open, onClose }) {
   const onGuardar = async () => {
     let v;
 
-    if (!localData.tipoDocumento) {
+    if (!localData.tipoDocumento || !localData.tipoDocumento.id) {
       return setError({
         field: 'tipoDocumento',
         message: 'El tipo de documento es obligatorio.',
@@ -115,7 +126,18 @@ export default function DatosPersonalesEditModal({ open, onClose }) {
     );
     if (v) return setError(v);
 
-    await updateDatosPersonales(localData);
+    const payload = {
+      tipoDocumentoId: localData.tipoDocumento.id,
+      numeroDocumento: localData.numeroDocumento,
+      fechaNacimiento: localData.fechaNacimiento,
+      nombre: localData.nombre,
+      apellido: localData.apellido,
+      vigenciaInicio: localData.vigenciaInicio,
+      vigenciaFin: localData.vigenciaFin || null,
+      tieneFechaBaja: localData.tieneFechaBaja,
+    };
+
+    await updateDatosPersonales(payload);
     onClose();
   };
 

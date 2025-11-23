@@ -146,14 +146,35 @@ export default function AltaAfiliadoForm() {
   const handleBackendError = (errorMessage, statusCode) => {
     // Error de documento duplicado
     if (errorMessage.includes('ya está registrado') || statusCode === 400) {
-      setValidationError('numeroDocumento', errorMessage);
-      const campoDocumento = document.querySelector('[name="numeroDocumento"]');
-      if (campoDocumento) {
-        campoDocumento.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        campoDocumento.focus();
+      if (errorMessage.includes('miembro')) {
+        setValidationError('grupoFamiliar-0-numeroDocumento', errorMessage);
+
+        const grupoFamiliarSection = document.querySelector(
+          '[data-section="grupo-familiar"]'
+        );
+        if (grupoFamiliarSection) {
+          grupoFamiliarSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+          });
+        }
+        return true;
+      } else {
+        setValidationError('numeroDocumento', errorMessage);
+        const campoDocumento = document.querySelector(
+          '[name="numeroDocumento"]'
+        );
+        if (campoDocumento) {
+          campoDocumento.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+          });
+          campoDocumento.focus();
+        }
+        return true;
       }
-      return true;
     }
+    return false;
   };
 
   const handleCancelar = useCallback(
