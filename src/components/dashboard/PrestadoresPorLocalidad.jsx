@@ -58,6 +58,7 @@ export default function PrestadoresPorLocalidad() {
                   data: chartData.map((d, i) => ({
                     id: d.id,
                     value: d.value,
+                    label: d.label,
                     color: colors[i % colors.length],
                   })),
                   innerRadius: 40,
@@ -73,6 +74,11 @@ export default function PrestadoresPorLocalidad() {
                   },
                 },
               ]}
+              tooltip={{
+                trigger: 'item',
+                formatter: (params) =>
+                  `${params.data.label}: ${params.data.value}%`,
+              }}
               width={180}
               height={200}
             />
@@ -105,18 +111,24 @@ export default function PrestadoresPorLocalidad() {
                   </Typography>
                 </Stack>
               ))}
-              <Button
-                variant="text"
-                size="small"
-                sx={{ mt: 1, textTransform: 'none', color: 'primary.main' }}
-                onClick={() => setOpenModal(true)}
-              >
-                Ver más
-              </Button>
+              {chartData.length > 3 && (
+                <Button
+                  variant="text"
+                  size="small"
+                  sx={{ mt: 1, textTransform: 'none', color: 'primary.main' }}
+                  onClick={() => setOpenModal(true)}
+                >
+                  Ver más
+                </Button>
+              )}
             </Stack>
           </Box>
 
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ mt: 2, textAlign: 'center' }}
+          >
             Distribución porcentual de prestadores según localidad
           </Typography>
         </CardContent>

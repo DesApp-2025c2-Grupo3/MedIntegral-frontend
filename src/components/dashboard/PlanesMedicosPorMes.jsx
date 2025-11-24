@@ -97,7 +97,11 @@ export default function PlanesMedicosPorMes() {
           {...chartSetting}
         />
 
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ mt: 2, textAlign: 'center' }}
+        >
           Cantidad de afiliados por plan médico en los últimos meses
         </Typography>
       </CardContent>

@@ -22,6 +22,8 @@ export default function PrestadoresPorEspecialidad() {
 
   if (!chartData.length) return null;
 
+  const mostrarVerMas = chartData.length > 5;
+
   return (
     <>
       <Card
@@ -68,20 +70,22 @@ export default function PrestadoresPorEspecialidad() {
             ))}
           </Stack>
 
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
-            <Button
-              variant="text"
-              size="small"
-              sx={{
-                textTransform: 'none',
-                color: 'primary.main',
-              }}
-              fullWidth
-              onClick={() => setOpenModal(true)}
-            >
-              Ver más
-            </Button>
-          </Box>
+          {mostrarVerMas && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
+              <Button
+                variant="text"
+                size="small"
+                sx={{
+                  textTransform: 'none',
+                  color: 'primary.main',
+                }}
+                fullWidth
+                onClick={() => setOpenModal(true)}
+              >
+                Ver más
+              </Button>
+            </Box>
+          )}
         </CardContent>
       </Card>
 

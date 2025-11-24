@@ -80,7 +80,7 @@ export default function Recordatorios() {
           {hasRecordatorios ? (
             <Stack spacing={2}>
               {recordatoriosFiltrados.map((rec, i) => {
-                const mostrarVerMas = rec.items.length > 4;
+                const mostrarVerMas = rec.items.length > 1;
                 const itemsVisibles = mostrarVerMas
                   ? rec.items.slice(0, 4)
                   : rec.items;
