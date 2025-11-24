@@ -19,7 +19,7 @@ export default function AfiliadosListado() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filters, setFilters] = useState({ textInputSearch: '' });
-
+  console.log(filters);
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     if (params.get('deleted') === 'true') {
@@ -48,13 +48,7 @@ export default function AfiliadosListado() {
   }, [filters, page, rowsPerPage]);
 
   const handleSearch = (newFilters) => {
-    if (!newFilters || Object.keys(newFilters).length === 0) {
-      setFilters({ textInputSearch: '' });
-      setPage(0);
-      return;
-    }
-
-    setFilters((prev) => ({ ...prev, ...newFilters }));
+    setFilters(newFilters);
     setPage(0);
   };
 

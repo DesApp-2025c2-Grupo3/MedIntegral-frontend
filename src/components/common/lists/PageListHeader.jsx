@@ -62,6 +62,13 @@ export default function PageListHeader({ type, onSearch, total }) {
     return () => clearTimeout(handler);
   }, [searchTerm]);
 
+  useEffect(() => {
+    onSearch({
+      textInputSearch: searchTerm.trim(),
+      ...filterValues,
+    });
+  }, [filterValues]);
+
   const handleFilterApply = (values) => {
     setOpenFilter(false);
 
@@ -96,6 +103,7 @@ export default function PageListHeader({ type, onSearch, total }) {
     const nuevosValoresFiltros = { ...filterValues };
 
     delete nuevosValoresFiltros[chip];
+
     setFilterValues(nuevosValoresFiltros);
     onSearch({ textInputSearch: searchTerm.trim(), ...nuevosValoresFiltros });
   };
@@ -205,7 +213,7 @@ export default function PageListHeader({ type, onSearch, total }) {
       </Typography>
 
       {filtrosActivos.length > 0 && (
-        <Stack direction="row" spacing={1} mt={2} flexWrap={'wrap'}>
+        <Stack direction="row" flexWrap={'wrap'} sx={{ rowGap: 1, mt: 1 }}>
           {filtrosActivos.map((filtro) => (
             <Chip
               key={filtro.key}
@@ -214,6 +222,7 @@ export default function PageListHeader({ type, onSearch, total }) {
               variant="outlined"
               color="primary"
               size="small"
+              sx={{ mr: 0.5 }}
             />
           ))}
         </Stack>
@@ -224,7 +233,7 @@ export default function PageListHeader({ type, onSearch, total }) {
         onClose={handleFilterApply}
         fields={filtrosConfig[type]?.fields}
         validateFn={filtrosConfig[type]?.validateFn}
-        initialValues={filterValues}
+        chipValues={filterValues}
       />
     </Box>
   );
