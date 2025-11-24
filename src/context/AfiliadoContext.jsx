@@ -73,10 +73,9 @@ export function AfiliadoProvider({ idAfiliado, children }) {
       const updated = await fetchAfiliado();
       finishWithMessage({ success: 'Datos personales actualizados con éxito' });
       return updated;
-    } catch {
-      finishWithMessage({
-        error: 'No se pudieron actualizar los datos personales.',
-      });
+    } catch (error) {
+      setGlobalLoading(false);
+      throw error;
     }
   };
 

@@ -137,8 +137,17 @@ export default function DatosPersonalesEditModal({ open, onClose }) {
       tieneFechaBaja: localData.tieneFechaBaja,
     };
 
-    await updateDatosPersonales(payload);
-    onClose();
+    try {
+      await updateDatosPersonales(payload);
+      onClose();
+    } catch (err) {
+      const backendError = err.response?.data;
+      if (backendError?.field && backendError?.message) {
+        setError({ field: backendError.field, message: backendError.message });
+      } else {
+        console.error('Error al actualizar datos personales:', err);
+      }
+    }
   };
 
   return (
