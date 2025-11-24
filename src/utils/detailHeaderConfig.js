@@ -6,8 +6,7 @@ export const detailHeaderConfig = {
     redirectTo: '/agenda-turnos/listado?deleted=true',
     deleteModal: {
       title: 'Dar de baja agenda',
-      message: (id) =>
-        `¿Estás seguro de dar de baja la agenda #${id}? Esta acción no se puede deshacer.`,
+      message: (id) => `¿Estás seguro de dar de baja la agenda #${id}?`,
     },
   },
 
@@ -19,7 +18,7 @@ export const detailHeaderConfig = {
     deleteModal: {
       title: 'Dar de baja prestador',
       message: (_, nombre) =>
-        `¿Estás seguro de dar de baja al prestador ${nombre}? También se eliminarán las agendas de turno asociadas, si tiene. Esta acción no se puede deshacer.`,
+        `¿Estás seguro de dar de baja al prestador ${nombre}? <br/> También <strong>se eliminarán las agendas de turno asociadas</strong>, si tiene.`,
     },
   },
 
@@ -31,7 +30,7 @@ export const detailHeaderConfig = {
     deleteModal: {
       title: 'Dar de baja afiliado',
       message: (_, nombre) =>
-        `¿Estás seguro de dar de baja al afiliado ${nombre}? También se darán de baja a los miembros de su grupo familiar, si tiene. Esta acción no se puede deshacer.`,
+        `¿Estás seguro de dar de baja al afiliado ${nombre}? <br/> También <strong>se darán de baja a los miembros de su grupo familiar</strong>, si tiene.`,
     },
   },
 };

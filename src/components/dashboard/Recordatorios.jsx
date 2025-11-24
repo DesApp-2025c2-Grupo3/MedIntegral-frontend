@@ -7,6 +7,7 @@ import {
   Stack,
   Link as MuiLink,
   Button,
+  Chip,
 } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CircleIcon from '@mui/icons-material/Circle';
@@ -25,6 +26,7 @@ export default function Recordatorios() {
     {
       titulo: `${afiliadosConBaja.length} afiliado(s) con baja programada próximamente`,
       color: '#00B1EA',
+      tipo: 'afiliados',
       items: afiliadosConBaja.map((a) => ({
         id: a.id,
         nombre: a.nombre,
@@ -36,19 +38,23 @@ export default function Recordatorios() {
     {
       titulo: `${prestadoresSinAgenda.length} prestador(es) sin agenda de turnos definida`,
       color: '#00B1EA',
+      tipo: 'prestadores',
       items: prestadoresSinAgenda.map((p) => ({
         id: p.id,
         nombre: p.nombre,
-        detalle: p.detalle,
+        especialidades: p.especialidades || [],
+        direccion: p.direccion || '',
         tipo: 'prestador',
       })),
       onOpenModal: () => setOpenPrestadoresModal(true),
     },
   ];
 
-  const hasRecordatorios = recordatorios.some(
-    (r) => Array.isArray(r.items) && r.items.length > 0
+  const recordatoriosFiltrados = recordatorios.filter(
+    (r) => r.items.length > 0
   );
+
+  const hasRecordatorios = recordatoriosFiltrados.length > 0;
 
   return (
     <>
@@ -61,7 +67,7 @@ export default function Recordatorios() {
           boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
           transition: 'transform 0.2s ease, box-shadow 0.2s ease',
           '&:hover': {
-            transform: 'scale(1.02)',
+            transform: 'scale(1.01)',
             boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
           },
         }}
@@ -73,7 +79,7 @@ export default function Recordatorios() {
 
           {hasRecordatorios ? (
             <Stack spacing={2}>
-              {recordatorios.map((rec, i) => {
+              {recordatoriosFiltrados.map((rec, i) => {
                 const mostrarVerMas = rec.items.length > 4;
                 const itemsVisibles = mostrarVerMas
                   ? rec.items.slice(0, 4)
@@ -87,15 +93,10 @@ export default function Recordatorios() {
                       color: '#fff',
                       borderRadius: 3,
                       boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                      transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-                      '&:hover': {
-                        transform: 'scale(1.02)',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
-                      },
                     }}
                   >
                     <CardContent
-                      sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
+                      sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
                     >
                       <Box
                         sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
@@ -106,33 +107,94 @@ export default function Recordatorios() {
                         </Typography>
                       </Box>
 
-                      <Stack sx={{ pl: 3 }} spacing={0.5}>
-                        {itemsVisibles.map((item) => (
-                          <Box
-                            key={`${rec.titulo}-${item.id}`}
-                            sx={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: 1,
-                            }}
-                          >
-                            <CircleIcon sx={{ fontSize: 6, opacity: 0.8 }} />
-                            <MuiLink
-                              component={RouterLink}
-                              to={`/${item.tipo === 'prestador' ? 'prestadores' : 'afiliados'}/detalle/${item.id}`}
-                              underline="hover"
+                      <Stack spacing={2} sx={{ mt: 1 }}>
+                        {itemsVisibles.map((item, index) => (
+                          <Box key={item.id}>
+                            <Box
                               sx={{
-                                color: '#fff',
-                                fontWeight: 500,
-                                textDecoration: 'underline',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 1,
+                                mb: 0.5,
                               }}
                             >
-                              {item.nombre}
-                            </MuiLink>
-                            <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                              {' - '}
-                              {item.detalle || item.fecha}
-                            </Typography>
+                              <CircleIcon
+                                sx={{
+                                  fontSize: 6,
+                                  color: 'rgba(255,255,255,0.8)',
+                                }}
+                              />
+                              <MuiLink
+                                component={RouterLink}
+                                to={`/${
+                                  item.tipo === 'prestador'
+                                    ? 'prestadores'
+                                    : 'afiliados'
+                                }/detalle/${item.id}`}
+                                underline="hover"
+                                sx={{
+                                  color: '#fff',
+                                  fontWeight: 600,
+                                  fontSize: '0.95rem',
+                                }}
+                              >
+                                {item.nombre}
+                              </MuiLink>
+                            </Box>
+
+                            {item.tipo === 'prestador' &&
+                              item.especialidades?.length > 0 && (
+                                <Box
+                                  sx={{
+                                    display: 'flex',
+                                    flexWrap: 'wrap',
+                                    gap: 1,
+                                    ml: 2,
+                                    mb: 0.5,
+                                  }}
+                                >
+                                  {item.especialidades.map((esp) => (
+                                    <Chip
+                                      key={esp}
+                                      label={esp}
+                                      size="small"
+                                      sx={{
+                                        color: '#fff',
+                                        fontWeight: 500,
+                                      }}
+                                    />
+                                  ))}
+                                </Box>
+                              )}
+
+                            {item.tipo === 'prestador' && (
+                              <Typography
+                                variant="body2"
+                                sx={{ ml: 2, opacity: 0.9 }}
+                              >
+                                Dirección: {item.direccion || 'Sin dirección'}
+                              </Typography>
+                            )}
+
+                            {item.tipo === 'afiliado' && (
+                              <Typography
+                                variant="body2"
+                                sx={{ ml: 2, opacity: 0.9 }}
+                              >
+                                Fecha: {item.fecha}
+                              </Typography>
+                            )}
+
+                            {index < itemsVisibles.length - 1 && (
+                              <Box
+                                sx={{
+                                  height: 1,
+                                  backgroundColor: 'rgba(255,255,255,0.2)',
+                                  my: 1.5,
+                                  ml: 1,
+                                }}
+                              />
+                            )}
                           </Box>
                         ))}
 
@@ -140,7 +202,11 @@ export default function Recordatorios() {
                           <Button
                             variant="text"
                             size="small"
-                            sx={{ color: '#fff', textTransform: 'none', mt: 1 }}
+                            sx={{
+                              color: '#fff',
+                              textTransform: 'none',
+                              fontWeight: 600,
+                            }}
                             onClick={rec.onOpenModal}
                           >
                             Ver más

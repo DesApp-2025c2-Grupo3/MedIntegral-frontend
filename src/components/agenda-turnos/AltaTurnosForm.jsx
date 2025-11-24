@@ -135,8 +135,8 @@ export default function AltaTurnosForm() {
         >
           <Box>
             <Typography component="div">
-              Ya existe una agenda para esta combinación de prestador,
-              especialidad y centro de atención.
+              Ya existe una agenda para este prestador, especialidad y centro de
+              atención.
             </Typography>
 
             <Typography component="div" sx={{ mt: 0.5 }}>

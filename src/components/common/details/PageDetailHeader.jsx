@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Box, Grid, Typography, Button } from '@mui/material';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { useNavigate } from 'react-router-dom';
-import ConfirmCancelDialog from '../forms/ConfirmCancelDialog';
+import WarningDeleteDialog from '../forms/WarningDeleteDialog';
 import { detailHeaderConfig } from '../../../utils/detailHeaderConfig';
 
 export default function PageDetailHeader({
@@ -70,7 +70,7 @@ export default function PageDetailHeader({
       </Grid>
 
       {!customDelete && (
-        <ConfirmCancelDialog
+        <WarningDeleteDialog
           open={openDialog}
           onClose={() => setOpenDialog(false)}
           onConfirm={handleConfirmDelete}
