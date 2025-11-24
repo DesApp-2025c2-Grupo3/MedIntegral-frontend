@@ -19,7 +19,7 @@ export default function AfiliadosListado() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filters, setFilters] = useState({ textInputSearch: '' });
-  console.log(filters);
+
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     if (params.get('deleted') === 'true') {
