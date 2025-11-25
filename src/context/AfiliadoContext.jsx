@@ -14,6 +14,7 @@ import {
   /*updateAfiliadoSituacionesTerapeuticas,*/
   updateAfiliadoDatosContacto,
   updateAfiliadoDirecciones,
+  addDependiente,
   /*deleteAfiliadoById,
    */
 } from '../services/afiliado';
@@ -174,6 +175,21 @@ export function AfiliadoProvider({ idAfiliado, children }) {
     }
   };
 
+  const agregarDependiente = async (dependienteData) => {
+    if (!afiliado?.id) return;
+    setGlobalLoading(true);
+
+    try {
+      await addDependiente(afiliado.id, dependienteData);
+      const updated = await fetchAfiliado();
+      finishWithMessage({ success: 'Miembro agregado con éxito' });
+      return updated;
+    } catch (err) {
+      setGlobalLoading(false);
+      throw err;
+    }
+  };
+
   return (
     <AfiliadoContext.Provider
       value={{
@@ -188,6 +204,7 @@ export function AfiliadoProvider({ idAfiliado, children }) {
         updateDatosContacto,
         updateDirecciones,
         darDeBaja,
+        agregarDependiente,
         refetchAfiliado: fetchAfiliado,
         clearError: () => setError(null),
       }}

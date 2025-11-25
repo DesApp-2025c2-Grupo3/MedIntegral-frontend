@@ -223,3 +223,19 @@ export const updateAfiliadoDirecciones = async (id, payload) => {
     throw error;
   }
 };
+
+/**
+ * Agregar un miembro dependiente al afiliado
+ */
+export const addDependiente = async (idAfiliado, dependienteData) => {
+  try {
+    const { data } = await api.post(
+      `/afiliados/${idAfiliado}/dependientes`,
+      dependienteData
+    );
+    return data;
+  } catch (error) {
+    console.error('Error al agregar dependiente:', error);
+    throw error;
+  }
+};
