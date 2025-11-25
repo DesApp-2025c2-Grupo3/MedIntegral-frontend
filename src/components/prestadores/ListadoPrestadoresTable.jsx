@@ -56,7 +56,7 @@ export default function ListadoPrestadoresTable({
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={5} align="center" sx={{ py: 4 }}>
+                  <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
                     <Typography color="text.secondary">
                       Cargando resultados...
                     </Typography>
@@ -64,7 +64,7 @@ export default function ListadoPrestadoresTable({
                 </TableRow>
               ) : rows.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} align="center" sx={{ py: 4 }}>
+                  <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
                     <Typography>No se encontraron resultados</Typography>
                   </TableCell>
                 </TableRow>
@@ -89,13 +89,21 @@ export default function ListadoPrestadoresTable({
                       {Array.isArray(row.especialidades) &&
                       row.especialidades.length > 0 ? (
                         row.especialidades.map((e, i) => (
-                          <Typography key={i} fontSize="0.9rem">
-                            • {e}
+                          <Typography
+                            key={i}
+                            fontSize="0.9rem"
+                            sx={{
+                              overflowWrap: 'break-word',
+                              wordBreak: 'break-word',
+                            }}
+                          >
+                            {'•\u00A0'}
+                            {e}
                           </Typography>
                         ))
                       ) : (
                         <Typography fontSize="0.9rem" color="text.secondary">
-                          Sin horarios
+                          Sin especialidades
                         </Typography>
                       )}
                     </TableCell>

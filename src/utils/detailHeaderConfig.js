@@ -6,30 +6,31 @@ export const detailHeaderConfig = {
     redirectTo: '/agenda-turnos/listado?deleted=true',
     deleteModal: {
       title: 'Dar de baja agenda',
-      message: (id) =>
-        `¿Estás seguro de dar de baja la agenda #${id}? Esta acción no se puede deshacer.`,
+      message: (id) => `¿Estás seguro de dar de baja la agenda #${id}?`,
     },
   },
 
   prestador: {
-    title: (id) => `Prestador #${id}`,
+    title: (_, nombre) => `Prestador: ${nombre}`,
     subtitle: () => `Detalles con opción de edición`,
     deleteService: 'deletePrestador',
     redirectTo: '/prestadores/listado?deleted=true',
     deleteModal: {
-      title: 'Eliminar prestador',
-      message: (id) => `¿Seguro que deseas eliminar el prestador con ID ${id}?`,
+      title: 'Dar de baja prestador',
+      message: (_, nombre) =>
+        `¿Estás seguro de dar de baja al prestador ${nombre}? <br/> También <strong>se eliminarán las agendas de turno asociadas</strong>, si tiene.`,
     },
   },
 
   afiliado: {
-    title: (id) => `Afiliado #${id}`,
+    title: (_, nombre) => `Afiliado: ${nombre}`,
     subtitle: () => `Detalles con opción de edición`,
     deleteService: 'deleteAfiliado',
     redirectTo: '/afiliados/listado?deleted=true',
     deleteModal: {
-      title: 'Eliminar afiliado',
-      message: (id) => `¿Seguro que deseas eliminar el afiliado con ID ${id}?`,
+      title: 'Dar de baja afiliado',
+      message: (_, nombre) =>
+        `¿Estás seguro de dar de baja al afiliado ${nombre}? <br/> También <strong>se darán de baja a los miembros de su grupo familiar</strong>, si tiene.`,
     },
   },
 };

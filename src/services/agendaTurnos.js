@@ -141,9 +141,14 @@ export const getAgendaTurnoById = async (id) => {
 /**
  * Actualizar la especialidad de una agenda de turnos existente
  */
-export const updateAgendaEspecialidad = async (id, especialidadId) => {
+export const updateAgendaEspecialidad = async (
+  id,
+  prestadorId,
+  especialidadId
+) => {
   try {
     const response = await api.put(`/agenda-turnos/${id}/especialidades`, {
+      prestadorId,
       especialidadId,
     });
 

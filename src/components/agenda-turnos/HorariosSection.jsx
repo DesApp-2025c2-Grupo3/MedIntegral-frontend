@@ -16,7 +16,7 @@ export default function HorariosSection({
   onChange,
 }) {
   const { direccionSeleccionada } = usePrestador();
-  const { error, clearError } = useFormValidationContext();
+  const { error, clearError, clearErrorsByPrefix } = useFormValidationContext();
 
   const horarios = React.useMemo(
     () => direccionSeleccionada?.horarios || [],
@@ -48,6 +48,13 @@ export default function HorariosSection({
     },
     [index, onChange, clearError]
   );
+
+  const handleEliminar = () => {
+    clearErrorsByPrefix(`horario-${index}-`);
+    clearError('horarios');
+
+    onEliminar(index);
+  };
 
   return (
     <Box sx={{ mt: 4 }}>
@@ -93,7 +100,8 @@ export default function HorariosSection({
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Duración de turno (minutos)"
+                      label="Duración del turno (minutos)"
+                      placeholder="Seleccioná la duración de los turnos"
                       data-field={`horario-${index}-duracion`}
                       error={error?.field === `horario-${index}-duracion`}
                       helperText={
@@ -115,7 +123,7 @@ export default function HorariosSection({
 
             {puedeEliminar && (
               <EliminarButton
-                onEliminar={() => onEliminar(index)}
+                onEliminar={handleEliminar}
                 label="Eliminar horario"
               />
             )}

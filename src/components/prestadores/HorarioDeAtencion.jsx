@@ -24,7 +24,7 @@ export default function HorarioSection({
 
   return (
     <Box sx={{ p: 2, border: '1px solid #ddd', borderRadius: 2, mb: 3 }}>
-      <Grid container spacing={3}>
+      <Grid container spacing={3} gap={2}>
         <Grid size={{ xs: 12, sm: 6, md: 12 }}>
           <Typography variant="subtitle2" sx={{ mb: 1 }}>
             Días de la semana

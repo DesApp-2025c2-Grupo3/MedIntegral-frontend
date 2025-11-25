@@ -1,52 +1,43 @@
-import { validateHorarioBasico } from './validateHorarios';
+import { validateSingleDireccion } from './validateDireccion';
+
+import {
+  validateHorarioBasico,
+  validateSolapamiento,
+  validateSolapamientoEntreCentros,
+} from './validateHorarios';
 
 export const validateLugarAtencionEditModal = (centros) => {
   if (!centros || centros.length === 0) {
-    return { field: 'centro-0', message: 'Debe existir al menos un centro.' };
+    return {
+      field: 'centrosDeAtencion',
+      message: 'Tenés que agregar al menos un centro de atención.',
+    };
   }
 
-  for (let c of centros) {
-    const baseCentro = `centro-${c.id}`;
+  for (const centro of centros) {
+    const idPrefijo = `centro-${centro.id}-`;
 
-    if (!c.direccion?.calle) {
-      return { field: `${baseCentro}-calle`, message: 'Ingresá la calle.' };
-    }
+    const errorDireccion = validateSingleDireccion(centro.direccion, idPrefijo);
+    if (errorDireccion) return errorDireccion;
 
-    if (!c.direccion?.altura) {
-      return { field: `${baseCentro}-altura`, message: 'Ingresá la altura.' };
-    }
-
-    if (!c.direccion?.localidad) {
+    if (!centro.horarios || centro.horarios.length === 0) {
       return {
-        field: `${baseCentro}-localidad`,
-        message: 'Ingresá la localidad.',
+        field: `${idPrefijo}-horarios`,
+        message: 'Tenés que agregar al menos un horario al centro.',
       };
     }
 
-    if (!c.direccion?.provincia) {
-      return {
-        field: `${baseCentro}-provincia`,
-        message: 'Seleccioná la provincia.',
-      };
-    }
+    for (const horario of centro.horarios) {
+      const errorBasico = validateHorarioBasico(horario);
+      if (errorBasico) return errorBasico;
 
-    if (!c.horarios || c.horarios.length === 0) {
-      return {
-        field: `${baseCentro}-horarios`,
-        message: 'Agregá al menos un horario.',
-      };
-    }
-
-    for (const h of c.horarios) {
-      const bh = validateHorarioBasico(h);
-      if (bh) {
-        return {
-          field: `horario-${h.id}-${bh.field.split('-').pop()}`,
-          message: bh.message,
-        };
-      }
+      const errorSolap = validateSolapamiento(horario, centro.horarios);
+      if (errorSolap) return errorSolap;
     }
   }
+
+  const errorEntreCentros = validateSolapamientoEntreCentros(centros);
+  if (errorEntreCentros) return errorEntreCentros;
 
   return null;
 };

@@ -18,7 +18,17 @@ import {
   getPlanesMedicosPorMes,
 } from '../services/dashboard';
 
-const DashboardContext = createContext();
+const DashboardContext = createContext({
+  stats: [],
+  prestadoresPorLocalidad: [],
+  prestadoresPorEspecialidad: [],
+  afiliadosConBaja: [],
+  prestadoresSinAgenda: [],
+  planesMedicosPorMes: [],
+  loading: true,
+  error: null,
+  refreshDashboard: () => {},
+});
 
 export const DashboardProvider = ({ children }) => {
   const [stats, setStats] = useState([]);

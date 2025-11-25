@@ -12,6 +12,7 @@ export default function ValidatedAutocomplete({
   dataField,
   disabled = false,
   inputRef,
+  placeholder,
 }) {
   const { error } = useFormValidationContext();
   const hasError = error?.field === dataField;
@@ -30,6 +31,7 @@ export default function ValidatedAutocomplete({
         <TextField
           {...params}
           label={label}
+          placeholder={placeholder} // ← agregado
           data-field={dataField}
           error={hasError}
           helperText={helperText}
@@ -50,4 +52,5 @@ ValidatedAutocomplete.propTypes = {
   dataField: PropTypes.string.isRequired,
   disabled: PropTypes.bool,
   inputRef: PropTypes.object,
+  placeholder: PropTypes.string,
 };

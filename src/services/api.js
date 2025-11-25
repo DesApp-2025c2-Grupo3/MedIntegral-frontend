@@ -28,7 +28,7 @@ import { planesMedicosPorMesMock } from '../mocks/planesMedicosPorMesMock';
 const USE_AGENDA_TURNOS_MOCKS = false;
 const USE_PRESTADORES_MOCKS = false;
 const USE_AFILIADOS_MOCKS = false;
-const USE_DASHBOARD_MOCKS = true;
+const USE_DASHBOARD_MOCKS = false;
 
 const api = axios.create({
   baseURL:

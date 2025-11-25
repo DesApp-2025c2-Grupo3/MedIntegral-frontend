@@ -55,6 +55,7 @@ export default function PrestadoresPorLocalidadModal({
                 data: fullData.map((d, i) => ({
                   id: d.id,
                   value: d.value,
+                  label: d.label,
                   color: colors[i % colors.length],
                 })),
                 innerRadius: 50,
@@ -70,6 +71,11 @@ export default function PrestadoresPorLocalidadModal({
                 },
               },
             ]}
+            tooltip={{
+              trigger: 'item',
+              formatter: (params) =>
+                `${params.data.label}: ${params.data.value}%`,
+            }}
             width={200}
             height={230}
           />

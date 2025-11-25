@@ -67,6 +67,7 @@ export default function CentroMedicoSection({
           }}
         >
           <Autocomplete
+            data-field="centroMedicoId"
             sx={{
               width: useFullWidth ? '100% !important' : 300,
               flexGrow: useFullWidth ? 1 : 0,
@@ -83,6 +84,7 @@ export default function CentroMedicoSection({
               <TextField
                 {...params}
                 label="Centro Médico que integra"
+                placeholder="Seleccioná el centro médico"
                 {...getErrorProps(error, 'centroMedicoId')}
               />
             )}
