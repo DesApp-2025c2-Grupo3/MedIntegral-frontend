@@ -7,7 +7,6 @@ import {
   Stack,
   Link as MuiLink,
   Button,
-  Chip,
 } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CircleIcon from '@mui/icons-material/Circle';
@@ -42,8 +41,8 @@ export default function Recordatorios() {
       items: prestadoresSinAgenda.map((p) => ({
         id: p.id,
         nombre: p.nombre,
-        especialidades: p.especialidades || [],
-        direccion: p.direccion || '',
+        especialidades: p.especialidades || '',
+        direcciones: p.direcciones || '',
         tipo: 'prestador',
       })),
       onOpenModal: () => setOpenPrestadoresModal(true),
@@ -80,9 +79,9 @@ export default function Recordatorios() {
           {hasRecordatorios ? (
             <Stack spacing={2}>
               {recordatoriosFiltrados.map((rec, i) => {
-                const mostrarVerMas = rec.items.length > 1;
+                const mostrarVerMas = rec.items.length > 3;
                 const itemsVisibles = mostrarVerMas
-                  ? rec.items.slice(0, 4)
+                  ? rec.items.slice(0, 3)
                   : rec.items;
 
                 return (
@@ -143,36 +142,32 @@ export default function Recordatorios() {
                             </Box>
 
                             {item.tipo === 'prestador' &&
-                              item.especialidades?.length > 0 && (
-                                <Box
-                                  sx={{
-                                    display: 'flex',
-                                    flexWrap: 'wrap',
-                                    gap: 1,
-                                    ml: 2,
-                                    mb: 0.5,
-                                  }}
+                              item.especialidades && (
+                                <Typography
+                                  variant="body2"
+                                  sx={{ ml: 2, opacity: 0.9 }}
                                 >
-                                  {item.especialidades.map((esp) => (
-                                    <Chip
-                                      key={esp}
-                                      label={esp}
-                                      size="small"
-                                      sx={{
-                                        color: '#fff',
-                                        fontWeight: 500,
-                                      }}
-                                    />
-                                  ))}
-                                </Box>
+                                  <strong>
+                                    Especialidad
+                                    {item.especialidades.includes(',')
+                                      ? 'es'
+                                      : ''}
+                                    :
+                                  </strong>{' '}
+                                  {item.especialidades}
+                                </Typography>
                               )}
 
-                            {item.tipo === 'prestador' && (
+                            {item.tipo === 'prestador' && item.direcciones && (
                               <Typography
                                 variant="body2"
                                 sx={{ ml: 2, opacity: 0.9 }}
                               >
-                                Dirección: {item.direccion || 'Sin dirección'}
+                                <strong>
+                                  Dirección
+                                  {item.direcciones.includes(',') ? 'es' : ''}:
+                                </strong>{' '}
+                                {item.direcciones}
                               </Typography>
                             )}
 

@@ -126,7 +126,6 @@ export const groupHorariosSimpleDetalle = (horarios = []) => {
 
 export const mergeHorarios = (horarios = []) => {
   if (!Array.isArray(horarios)) return [];
-  console.log('entró');
 
   const normalizados = horarios.map((h) => ({
     id: h.id ?? null,

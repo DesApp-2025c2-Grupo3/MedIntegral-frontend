@@ -1,5 +1,6 @@
 import api from './api';
-import { getDireccionFormateada } from '../utils/formats/formatDireccion';
+import { getDireccionesFormateadas } from '../utils/formats/formatDireccion';
+import { formatList } from '../utils/formats/formatList';
 
 /**
  * Obtener cantidad total de afiliados
@@ -141,13 +142,15 @@ export const getPrestadoresSinAgenda = async () => {
       id: p.id,
       nombre: p.nombre ?? 'Sin nombre',
 
-      especialidades: Array.isArray(p.especialidades)
-        ? p.especialidades.map((e) => e.nombre)
-        : [],
+      especialidades:
+        Array.isArray(p.especialidades) && p.especialidades.length > 0
+          ? `${formatList(p.especialidades.map((e) => e.nombre))}`
+          : 'Sin datos',
 
-      direcciones: Array.isArray(p.Direccion)
-        ? p.Direccion.map((d) => getDireccionFormateada(d))
-        : [],
+      direcciones:
+        Array.isArray(p.direcciones) && p.direcciones.length > 0
+          ? getDireccionesFormateadas(p.direcciones)
+          : 'Sin dirección',
     }));
   } catch (err) {
     console.error('Error al obtener prestadores sin agenda:', err);

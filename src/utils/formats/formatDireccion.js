@@ -40,7 +40,7 @@ export const formatDireccion = (dir) => {
   return partes.join(', ');
 };
 
-export const getDireccionFormateada = (direcciones) => {
+export const getDireccionesFormateadas = (direcciones) => {
   if (!Array.isArray(direcciones) || direcciones.length === 0) {
     return 'Sin dirección';
   }

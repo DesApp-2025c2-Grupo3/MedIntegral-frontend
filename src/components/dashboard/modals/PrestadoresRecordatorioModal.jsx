@@ -22,30 +22,54 @@ export default function PrestadoresRecordatorioModal({
       <DialogTitle>Prestadores sin agenda de turnos</DialogTitle>
 
       <DialogContent dividers>
-        <Stack spacing={1.5}>
-          {items.map((item) => (
-            <Box
-              key={item.id}
-              sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-            >
-              <CircleIcon sx={{ fontSize: 8, color: 'primary.main' }} />
+        <Stack spacing={2}>
+          {items.map((item, index) => (
+            <Box key={item.id} sx={{ pb: 1 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <CircleIcon sx={{ fontSize: 8, color: 'primary.main' }} />
 
-              <Typography
-                component={RouterLink}
-                to={`/prestadores/detalle/${item.id}`}
-                sx={{
-                  fontWeight: 600,
-                  textDecoration: 'underline',
-                  color: 'primary.main',
-                }}
-              >
-                {item.nombre}
-              </Typography>
-
-              {item.detalle && (
-                <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                  - {item.detalle}
+                <Typography
+                  component={RouterLink}
+                  to={`/prestadores/detalle/${item.id}`}
+                  sx={{
+                    fontWeight: 600,
+                    textDecoration: 'underline',
+                    color: 'primary.main',
+                    fontSize: '1rem',
+                  }}
+                >
+                  {item.nombre}
                 </Typography>
+              </Box>
+
+              {item.especialidades && (
+                <Typography variant="body2" sx={{ ml: 2, mt: 0.5 }}>
+                  <strong>
+                    Especialidad
+                    {item.especialidades.includes(',') ? 'es' : ''}:
+                  </strong>{' '}
+                  {item.especialidades}
+                </Typography>
+              )}
+
+              {item.direcciones && (
+                <Typography variant="body2" sx={{ ml: 2, mt: 0.5 }}>
+                  <strong>
+                    Dirección
+                    {item.direcciones.includes(',') ? 'es' : ''}:
+                  </strong>{' '}
+                  {item.direcciones}
+                </Typography>
+              )}
+
+              {index < items.length - 1 && (
+                <Box
+                  sx={{
+                    height: 1,
+                    backgroundColor: 'rgba(0,0,0,0.15)',
+                    mt: 1.5,
+                  }}
+                />
               )}
             </Box>
           ))}
