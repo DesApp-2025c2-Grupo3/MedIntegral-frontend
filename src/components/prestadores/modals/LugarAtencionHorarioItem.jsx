@@ -40,7 +40,18 @@ export default function LugarAtencionHorarioItem({
   };
 
   return (
-    <Box sx={{ mb: 3 }}>
+    <Box
+      sx={{
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 2,
+        p: 3,
+        mb: 3,
+      }}
+    >
+      <Typography variant="body2" fontWeight="medium">
+        Días de la semana
+      </Typography>
       <DiasSemanaSelector
         dias={DIAS_SEMANA}
         selected={localDias}
@@ -55,7 +66,7 @@ export default function LugarAtencionHorarioItem({
       />
 
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Grid container spacing={2} sx={{ mt: 1 }}>
+        <Grid container spacing={2} sx={{ my: 2 }}>
           <Grid size={{ xs: 12, sm: 6 }}>
             <MobileTimePicker
               label="Horario inicio"

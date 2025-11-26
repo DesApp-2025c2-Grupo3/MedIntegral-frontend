@@ -36,14 +36,14 @@ function HomeContent() {
             <Grid size={{ xs: 12, md: 6 }}>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                 <Recordatorios />
-                <PlanesMedicosPorMes />
+                <PrestadoresPorEspecialidad />
               </Box>
             </Grid>
 
             <Grid size={{ xs: 12, md: 6 }}>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <PlanesMedicosPorMes />
                 <PrestadoresPorLocalidad />
-                <PrestadoresPorEspecialidad />
               </Box>
             </Grid>
           </Grid>

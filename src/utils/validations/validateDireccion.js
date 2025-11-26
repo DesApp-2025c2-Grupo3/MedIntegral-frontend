@@ -1,6 +1,6 @@
 const REGEX_NUMERIC_MIN_2 = /^\d{2,}$/; //mínimo 2 dígitos
 const REGEX_ALPHANUMERIC = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\d]{4,}$/; //letras, números. Mínimo 4 caracteres.
-const REGEX_CP = /^([A-Za-z]\d{3}|\d{4})$/;
+const REGEX_CP = /^([A-Za-z]\d{3,4}|\d{4})$/;
 
 // para agenda de turnos
 export const validateDireccion = (direccion) => {
@@ -47,7 +47,7 @@ export const validateSingleDireccion = (direccion, id) => {
     return {
       field: `${prefijo}codigoPostal`,
       message:
-        'El código postal debe tener 4 caracteres: 4 números (ej. 1708) o una letra + 3 números (ej. B178).',
+        'El código postal debe ser de 4 dígitos (ej: 1708) o una letra seguida de 3 o 4 dígitos (ej: B123 o B1234).',
     };
   }
 

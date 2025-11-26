@@ -28,7 +28,6 @@ export const formatPrestadorDetalle = (data) => {
           nombre: e.nombre ?? '',
         }))
       : [];
-
     const centrosAtencion = Array.isArray(data.CentroDeAtencion)
       ? data.CentroDeAtencion.map((ca) => ({
           id: ca.id ?? null,

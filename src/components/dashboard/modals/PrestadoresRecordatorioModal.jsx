@@ -5,11 +5,13 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  Stack,
   Typography,
   Box,
+  Card,
+  CardContent,
+  Grid,
 } from '@mui/material';
-import CircleIcon from '@mui/icons-material/Circle';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Link as RouterLink } from 'react-router-dom';
 
 export default function PrestadoresRecordatorioModal({
@@ -18,62 +20,82 @@ export default function PrestadoresRecordatorioModal({
   items = [],
 }) {
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>Prestadores sin agenda de turnos</DialogTitle>
 
       <DialogContent dividers>
-        <Stack spacing={2}>
-          {items.map((item, index) => (
-            <Box key={item.id} sx={{ pb: 1 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <CircleIcon sx={{ fontSize: 8, color: 'primary.main' }} />
-
-                <Typography
-                  component={RouterLink}
-                  to={`/prestadores/detalle/${item.id}`}
+        <Grid container spacing={2}>
+          {items.map((item) => (
+            <Grid key={item.id} size={{ xs: 12, md: 6 }}>
+              <Card
+                component={RouterLink}
+                to={`/prestadores/detalle/${item.id}`}
+                sx={{
+                  backgroundColor: '#f44336',
+                  color: '#fff',
+                  borderRadius: 3,
+                  width: '100%',
+                  height: '100%',
+                  textDecoration: 'none',
+                  boxSizing: 'border-box',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'flex-start',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                  transition: 'all 0.2s ease',
+                  '&:hover': {
+                    transform: 'scale(1.02)',
+                    filter: 'brightness(1.08)',
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
+                  },
+                }}
+              >
+                <CardContent
                   sx={{
-                    fontWeight: 600,
-                    textDecoration: 'underline',
-                    color: 'primary.main',
-                    fontSize: '1rem',
+                    flexGrow: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 1.5,
                   }}
                 >
-                  {item.nombre}
-                </Typography>
-              </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <InfoOutlinedIcon sx={{ fontSize: 20, opacity: 0.9 }} />
 
-              {item.especialidades && (
-                <Typography variant="body2" sx={{ ml: 2, mt: 0.5 }}>
-                  <strong>
-                    Especialidad
-                    {item.especialidades.includes(',') ? 'es' : ''}:
-                  </strong>{' '}
-                  {item.especialidades}
-                </Typography>
-              )}
+                    <Typography
+                      sx={{
+                        fontWeight: 600,
+                        fontSize: '1rem',
+                        color: '#fff',
+                      }}
+                    >
+                      {item.nombre}
+                    </Typography>
+                  </Box>
 
-              {item.direcciones && (
-                <Typography variant="body2" sx={{ ml: 2, mt: 0.5 }}>
-                  <strong>
-                    Dirección
-                    {item.direcciones.includes(',') ? 'es' : ''}:
-                  </strong>{' '}
-                  {item.direcciones}
-                </Typography>
-              )}
+                  {item.especialidades && (
+                    <Typography variant="body2" sx={{ ml: 3, opacity: 0.9 }}>
+                      <strong>
+                        Especialidad
+                        {item.especialidades.includes(',') ? 'es' : ''}:
+                      </strong>{' '}
+                      {item.especialidades}
+                    </Typography>
+                  )}
 
-              {index < items.length - 1 && (
-                <Box
-                  sx={{
-                    height: 1,
-                    backgroundColor: 'rgba(0,0,0,0.15)',
-                    mt: 1.5,
-                  }}
-                />
-              )}
-            </Box>
+                  {item.direcciones && (
+                    <Typography variant="body2" sx={{ ml: 3, opacity: 0.9 }}>
+                      <strong>
+                        Dirección
+                        {item.direcciones.includes(',') ? 'es' : ''}:
+                      </strong>{' '}
+                      {item.direcciones}
+                    </Typography>
+                  )}
+                </CardContent>
+              </Card>
+            </Grid>
           ))}
-        </Stack>
+        </Grid>
       </DialogContent>
 
       <DialogActions>

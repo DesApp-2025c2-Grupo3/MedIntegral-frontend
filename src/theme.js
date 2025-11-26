@@ -7,7 +7,7 @@ const theme = createTheme({
     fontWeightMedium: 700,
     fontWeightBold: 900,
     color: '#9B9B9B',
-    fontSize: 14,
+    fontSize: 13,
   },
   palette: {
     primary: { main: '#00AEEF', dark: '#0077C8', contrastText: '#FFFFFF' },

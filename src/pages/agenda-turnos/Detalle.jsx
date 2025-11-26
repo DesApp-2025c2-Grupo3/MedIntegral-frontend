@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, CircularProgress, Grid } from '@mui/material';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import PageDetailHeader from '../../components/common/details/PageDetailHeader';
@@ -8,7 +8,6 @@ import AuditInfoSection from '../../components/common/details/AuditInfoSection';
 import SuccessSnackbar from '../../components/common/SuccessSnackbar';
 import { AgendaProvider, useAgenda } from '../../context/AgendaContext';
 import { usePageTitle } from '../../hooks/usePageTitle';
-import { useEffect } from 'react';
 
 function DetalleAgendaContent() {
   const { agenda, loading, deleteAgenda } = useAgenda();
@@ -21,12 +20,13 @@ function DetalleAgendaContent() {
     }
   }, [loading, agenda, navigate]);
 
-  if (loading)
+  if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}>
         <CircularProgress />
       </Box>
     );
+  }
 
   if (!agenda) return null;
 
@@ -35,7 +35,7 @@ function DetalleAgendaContent() {
       <PageDetailHeader
         type="agenda-de-turnos"
         id={id}
-        nombre={`${agenda.prestador.nombre}`}
+        nombre={agenda.prestador?.nombre || ''}
         onDelete={deleteAgenda}
       />
 
@@ -69,6 +69,7 @@ export default function DetalleAgendaTurnos() {
     const params = new URLSearchParams(location.search);
     if (params.get('created') === 'true') {
       setShowSuccess(true);
+
       window.history.replaceState(
         {},
         document.title,

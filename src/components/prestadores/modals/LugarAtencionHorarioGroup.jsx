@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import { Box, Typography, Button } from '@mui/material';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { Box, Typography } from '@mui/material';
+import AgregarButton from '../../common/forms/AgregarButton';
 import LugarAtencionHorarioItem from './LugarAtencionHorarioItem';
 
 export default function LugarAtencionHorarioGroup({
@@ -59,14 +59,10 @@ export default function LugarAtencionHorarioGroup({
         />
       ))}
 
-      <Button
-        size="small"
-        startIcon={<AddCircleOutlineIcon />}
-        sx={{ mt: 1 }}
-        onClick={addHorario}
-      >
-        Agregar horario
-      </Button>
+      <AgregarButton
+        onAgregar={() => addHorario(centro)}
+        label="Agregar horario"
+      />
     </Box>
   );
 }

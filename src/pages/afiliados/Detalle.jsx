@@ -23,6 +23,9 @@ function DetalleAfiliadoContent() {
   const [bajaModalOpen, setBajaModalOpen] = useState(false);
 
   useEffect(() => {
+    if (afiliado && afiliado.parentesco.relacion.toLowerCase() !== 'titular') {
+      navigate('/403', { replace: true });
+    }
     if (!loading && !afiliado) {
       navigate('/404', { replace: true });
     }
