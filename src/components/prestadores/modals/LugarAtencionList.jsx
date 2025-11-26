@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
-import { Button } from '@mui/material';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import AgregarButton from '../../common/forms/AgregarButton';
 import LugarAtencionItem from './LugarAtencionItem';
 
 export default function LugarAtencionList({
@@ -58,9 +57,7 @@ export default function LugarAtencionList({
         />
       ))}
 
-      <Button startIcon={<AddCircleOutlineIcon />} onClick={addOne}>
-        Agregar centro de atención
-      </Button>
+      <AgregarButton onAgregar={addOne} label="Agregar centro de atención" />
     </>
   );
 }

@@ -36,7 +36,7 @@ export default function Recordatorios() {
     },
     {
       titulo: `${prestadoresSinAgenda.length} prestador(es) sin agenda de turnos definida`,
-      color: '#00B1EA',
+      color: '#f44336',
       tipo: 'prestadores',
       items: prestadoresSinAgenda.map((p) => ({
         id: p.id,
@@ -176,7 +176,7 @@ export default function Recordatorios() {
                                 variant="body2"
                                 sx={{ ml: 2, opacity: 0.9 }}
                               >
-                                Fecha: {item.fecha}
+                                Fecha de baja: {item.fecha}
                               </Typography>
                             )}
 
@@ -214,13 +214,19 @@ export default function Recordatorios() {
               })}
             </Stack>
           ) : (
-            <Typography
-              color="text.secondary"
-              sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                color: 'text.secondary',
+                gap: 1,
+              }}
             >
               <InfoOutlinedIcon fontSize="small" />
-              No hay recordatorios pendientes.
-            </Typography>
+              <Typography variant="body2">
+                No hay recordatorios pendientes.
+              </Typography>
+            </Box>
           )}
         </CardContent>
       </Card>

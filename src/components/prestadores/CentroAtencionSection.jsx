@@ -56,7 +56,7 @@ export default function CentroAtencionSection({ centros, onChange }) {
           <FadeSlide key={centro.id}>
             <Box
               sx={{
-                mb: 4,
+                mb: 0,
                 p: 3,
                 border: '2px solid #ddd',
                 borderRadius: 2,
@@ -125,11 +125,12 @@ export default function CentroAtencionSection({ centros, onChange }) {
           </FadeSlide>
         ))}
       </AnimatePresence>
-
-      <AgregarButton
-        onAgregar={handleAgregarCentro}
-        label="Agregar centro de atención"
-      />
+      <Box sx={{ mb: 4 }}>
+        <AgregarButton
+          onAgregar={handleAgregarCentro}
+          label="Agregar centro de atención"
+        />
+      </Box>
     </Box>
   );
 }
