@@ -118,9 +118,12 @@ export default function PageListHeader({ type, onSearch, total }) {
       const camposConfig = filtrosCampos.find((f) => f.name === key);
       if (!camposConfig) return;
 
+      const claves = ['provincia', 'tipoPrestador', 'especialidad'];
+
       activos.push({
         key: key,
         name: camposConfig.label,
+        value: claves.includes(key) ? value.label : (value.value ?? value),
       });
     });
     return activos;
@@ -217,9 +220,8 @@ export default function PageListHeader({ type, onSearch, total }) {
           {filtrosActivos.map((filtro) => (
             <Chip
               key={filtro.key}
-              label={`${filtro.name}`}
+              label={`${filtro.name}: ${filtro.value}`}
               onDelete={() => handleChipDelete(filtro.key)}
-              variant="outlined"
               color="primary"
               size="small"
               sx={{ mr: 0.5 }}
