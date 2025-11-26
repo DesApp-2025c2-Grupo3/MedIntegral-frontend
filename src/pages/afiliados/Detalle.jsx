@@ -4,23 +4,21 @@ import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import SuccessSnackbar from '../../components/common/SuccessSnackbar';
 import { usePageTitle } from '../../hooks/usePageTitle';
 import { AfiliadoProvider, useAfiliado } from '../../context/AfiliadoContext';
-import PageDetailHeader from '../../components/common/details/PageDetailHeader';
 import AuditInfoSection from '../../components/common/details/AuditInfoSection';
 import DatosPersonalesDetailsSection from '../../components/afiliados/DatosPersonalesDetailsSection';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import CoberturaDetailsSection from '../../components/afiliados/CoberturaDetailsSection';
-import BajaAfiliadoModal from '../../components/afiliados/modals/BajaAfiliadoModal';
 import SituacionesTerapeuticasSection from '../../components/afiliados/SituacionesTerapeuticasDetailsSection';
 import DatosContactoDetailsSection from '../../components/afiliados/DatosContactoDetailsSection';
 import DireccionDetailsSection from '../../components/afiliados/DireccionDetailsSection';
 import GrupoFamiliarDetailsSection from '../../components/afiliados/GrupoFamiliarDetailsSection';
+import AfiliadoDetailHeader from '../../components/afiliados/AfiliadoDetailHeader';
 
 function DetalleAfiliadoContent() {
   const { afiliado, loading } = useAfiliado();
   const { id } = useParams();
   const navigate = useNavigate();
-  const [bajaModalOpen, setBajaModalOpen] = useState(false);
 
   useEffect(() => {
     if (!loading && !afiliado) {
@@ -38,51 +36,39 @@ function DetalleAfiliadoContent() {
   if (!afiliado) return null;
 
   return (
-    <Box sx={{ mt: 2 }}>
-      <PageDetailHeader
-        type="afiliado"
-        id={id}
-        onDelete={() => setBajaModalOpen(true)}
-        customDelete={true}
-      />
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Box sx={{ mt: 2 }}>
+        <AfiliadoDetailHeader id={id} />
 
-      <Grid container spacing={3} mt={1}>
-        <Grid size={{ xs: 12 }}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <Grid container spacing={3} mt={1}>
+          <Grid size={{ xs: 12 }}>
             <DatosPersonalesDetailsSection />
-          </LocalizationProvider>
+          </Grid>
+          <Grid size={{ xs: 12 }}>
+            <CoberturaDetailsSection />
+          </Grid>
+          <Grid size={{ xs: 12 }}>
+            <SituacionesTerapeuticasSection />
+          </Grid>
+          <Grid size={{ xs: 12 }}>
+            <DatosContactoDetailsSection />
+          </Grid>
+          <Grid size={{ xs: 12 }}>
+            <DireccionDetailsSection />
+          </Grid>
+          <Grid size={{ xs: 12 }}>
+            <GrupoFamiliarDetailsSection />
+          </Grid>
         </Grid>
-        <Grid size={{ xs: 12 }}>
-          <CoberturaDetailsSection />
-        </Grid>
-        <Grid size={{ xs: 12 }}>
-          <SituacionesTerapeuticasSection />
-        </Grid>
-        <Grid size={{ xs: 12 }}>
-          <DatosContactoDetailsSection />
-        </Grid>
-        <Grid size={{ xs: 12 }}>
-          <DireccionDetailsSection />
-        </Grid>
-        <Grid size={{ xs: 12 }}>
-          <GrupoFamiliarDetailsSection />
-        </Grid>
-      </Grid>
 
-      <AuditInfoSection
-        createdAtFecha={afiliado.createdAtFecha}
-        createdAtHora={afiliado.createdAtHora}
-        updatedAtFecha={afiliado.updatedAtFecha}
-        updatedAtHora={afiliado.updatedAtHora}
-      />
-
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <BajaAfiliadoModal
-          open={bajaModalOpen}
-          onClose={() => setBajaModalOpen(false)}
+        <AuditInfoSection
+          createdAtFecha={afiliado.createdAtFecha}
+          createdAtHora={afiliado.createdAtHora}
+          updatedAtFecha={afiliado.updatedAtFecha}
+          updatedAtHora={afiliado.updatedAtHora}
         />
-      </LocalizationProvider>
-    </Box>
+      </Box>
+    </LocalizationProvider>
   );
 }
 
