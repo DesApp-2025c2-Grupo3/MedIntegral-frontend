@@ -5,6 +5,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { useNavigate } from 'react-router-dom';
 import WarningDeleteDialog from '../forms/WarningDeleteDialog';
 import { detailHeaderConfig } from '../../../utils/detailHeaderConfig';
+import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 
 export default function PageDetailHeader({
   type,
@@ -56,6 +57,17 @@ export default function PageDetailHeader({
 
         {onDelete && (
           <Grid size={{ xs: 12, md: 'auto' }}>
+            {type === 'afiliado' && (
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<ArrowCircleDownIcon />}
+                sx={{ textTransform: 'none', mr: 1 }}
+                //onClick={}
+              >
+                Descargar reporte
+              </Button>
+            )}
             <Button
               variant="contained"
               color="error"
