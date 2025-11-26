@@ -5,6 +5,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { useNavigate } from 'react-router-dom';
 import WarningDeleteDialog from '../forms/WarningDeleteDialog';
 import { detailHeaderConfig } from '../../../utils/detailHeaderConfig';
+import { getReporteAfiliadoById } from '../../../services/afiliado';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 
 export default function PageDetailHeader({
@@ -37,6 +38,18 @@ export default function PageDetailHeader({
     }
   };
 
+  const downloadReport = async () => {
+    const pdf = await getReporteAfiliadoById(id);
+    const url = window.URL.createObjectURL(pdf);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `reporteAfiliado${id}.pdf`);
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  };
+
   return (
     <Box sx={{ mb: 4 }}>
       <Grid container alignItems="center" justifyContent="space-between">
@@ -63,7 +76,7 @@ export default function PageDetailHeader({
                 color="primary"
                 startIcon={<ArrowCircleDownIcon />}
                 sx={{ textTransform: 'none', mr: 1 }}
-                //onClick={}
+                onClick={downloadReport}
               >
                 Descargar reporte
               </Button>
