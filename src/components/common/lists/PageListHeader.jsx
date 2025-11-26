@@ -1,5 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
-import { Box, Grid, Typography, InputBase, Button, Paper } from '@mui/material';
+import {
+  Box,
+  Grid,
+  Typography,
+  InputBase,
+  Button,
+  Paper,
+  Chip,
+  Stack,
+} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import AddIcon from '@mui/icons-material/Add';
@@ -53,6 +62,13 @@ export default function PageListHeader({ type, onSearch, total }) {
     return () => clearTimeout(handler);
   }, [searchTerm]);
 
+  useEffect(() => {
+    onSearch({
+      textInputSearch: searchTerm.trim(),
+      ...filterValues,
+    });
+  }, [filterValues]);
+
   const handleFilterApply = (values) => {
     setOpenFilter(false);
 
@@ -82,6 +98,38 @@ export default function PageListHeader({ type, onSearch, total }) {
         ? labelConfig.singular
         : labelConfig.plural
       : '';
+
+  const handleChipDelete = (chip) => {
+    const nuevosValoresFiltros = { ...filterValues };
+
+    delete nuevosValoresFiltros[chip];
+
+    setFilterValues(nuevosValoresFiltros);
+    onSearch({ textInputSearch: searchTerm.trim(), ...nuevosValoresFiltros });
+  };
+
+  const obtenerFiltrosActivos = () => {
+    const activos = [];
+    const filtrosCampos = filtrosConfig[type]?.fields || [];
+
+    Object.entries(filterValues).forEach(([key, value]) => {
+      if (value === null || value === '' || value === undefined) return;
+
+      const camposConfig = filtrosCampos.find((f) => f.name === key);
+      if (!camposConfig) return;
+
+      const claves = ['provincia', 'tipoPrestador', 'especialidad'];
+
+      activos.push({
+        key: key,
+        name: camposConfig.label,
+        value: claves.includes(key) ? value.label : (value.value ?? value),
+      });
+    });
+    return activos;
+  };
+
+  const filtrosActivos = obtenerFiltrosActivos();
 
   return (
     <Box sx={{ mb: 4 }}>
@@ -167,11 +215,27 @@ export default function PageListHeader({ type, onSearch, total }) {
           : 'Resultados de la búsqueda'}
       </Typography>
 
+      {filtrosActivos.length > 0 && (
+        <Stack direction="row" flexWrap={'wrap'} sx={{ rowGap: 1, mt: 1 }}>
+          {filtrosActivos.map((filtro) => (
+            <Chip
+              key={filtro.key}
+              label={`${filtro.name}: ${filtro.value}`}
+              onDelete={() => handleChipDelete(filtro.key)}
+              color="primary"
+              size="small"
+              sx={{ mr: 0.5 }}
+            />
+          ))}
+        </Stack>
+      )}
+
       <FiltrosModalBase
         open={openFilter}
         onClose={handleFilterApply}
         fields={filtrosConfig[type]?.fields}
         validateFn={filtrosConfig[type]?.validateFn}
+        chipValues={filterValues}
       />
     </Box>
   );
