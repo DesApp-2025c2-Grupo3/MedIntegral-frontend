@@ -6,7 +6,6 @@ export default function EliminarButton({ onEliminar, label }) {
   return (
     <Box
       sx={{
-        mt: 2,
         display: 'flex',
         alignItems: 'center',
       }}

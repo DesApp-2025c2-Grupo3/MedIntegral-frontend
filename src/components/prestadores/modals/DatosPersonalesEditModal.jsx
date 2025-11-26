@@ -113,6 +113,7 @@ export default function DatosPersonalesEditModal({ open, onClose }) {
                 fullWidth
                 label="CUIL / CUIT"
                 name="cuilCuit"
+                placeholder="Ingresá un CUIL/CUIT sin puntos ni guiones"
                 value={localData.cuilCuit}
                 onChange={handleField}
                 error={error?.field === 'cuilCuit'}
@@ -125,6 +126,7 @@ export default function DatosPersonalesEditModal({ open, onClose }) {
                 fullWidth
                 label="Nombre completo"
                 name="nombre"
+                placeholder="Ingresá el nombre completo"
                 value={localData.nombre}
                 onChange={handleField}
                 error={error?.field === 'nombre'}
@@ -150,6 +152,7 @@ export default function DatosPersonalesEditModal({ open, onClose }) {
                 <TextField
                   {...params}
                   label="Emails"
+                  placeholder="Ingresá un email y presioná Enter"
                   inputRef={emailRef}
                   error={error?.field === 'emails'}
                   helperText={error?.field === 'emails' ? error.message : ''}
@@ -175,6 +178,7 @@ export default function DatosPersonalesEditModal({ open, onClose }) {
                 <TextField
                   {...params}
                   label="Teléfonos"
+                  placeholder="Ingresá un teléfono y presioná Enter"
                   inputRef={telRef}
                   error={error?.field === 'telefonos'}
                   helperText={error?.field === 'telefonos' ? error.message : ''}

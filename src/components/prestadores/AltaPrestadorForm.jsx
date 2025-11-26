@@ -7,6 +7,8 @@ import ErrorSnackbar from '../common/ErrorSnackbar';
 import SuccessSnackbar from '../common/SuccessSnackbar';
 
 import { useFormValidation } from '../../hooks/useFormValidation';
+import { useFormValidationContext } from '../../context/FormValidationContext';
+
 import { createPrestador } from '../../services/prestadores';
 import { sleepIfLocal } from '../../utils/sleepIfLocal';
 
@@ -34,6 +36,8 @@ function AltaPrestadorForm() {
     nombre: '',
     cuilCuit: '',
     esCentroMedico: false,
+    integraCentroMedico: false,
+    centroMedicoQueIntegra: null,
     especialidades: [],
     emails: [],
     telefonos: [],
@@ -42,14 +46,13 @@ function AltaPrestadorForm() {
 
   const [listaEspecialidades, setListaEspecialidades] = useState([]);
   const [listaCentrosMedicos, setListaCentrosMedicos] = useState([]);
-  const [integraCentroMedico, setIntegraCentroMedico] = useState(false);
-  const [centroMedicoId, setCentroMedicoId] = useState(null);
 
   const [saving, setSaving] = useState(false);
   const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
   const { validateBeforeSave } = useFormValidation(validateAltaPrestador);
+  const { setValidationError } = useFormValidationContext();
 
   useEffect(() => {
     const cargarDataInicial = async () => {
@@ -69,8 +72,8 @@ function AltaPrestadorForm() {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setPrestadorData((prevData) => ({
-      ...prevData,
+    setPrestadorData((prev) => ({
+      ...prev,
       [name]: value,
     }));
   };
@@ -80,29 +83,50 @@ function AltaPrestadorForm() {
   const handleSwitchChange = (field) => (event) => {
     const checked = event.target.checked;
 
-    if (field === 'esCentroMedico') {
-      setPrestadorData((prevData) => ({
-        ...prevData,
-        esCentroMedico: checked,
-      }));
+    setPrestadorData((prev) => {
+      const updated = { ...prev, [field]: checked };
 
-      if (checked) {
-        setIntegraCentroMedico(false);
-        setCentroMedicoId(null);
+      if (field === 'esCentroMedico' && checked) {
+        updated.integraCentroMedico = false;
+        updated.centroMedicoQueIntegra = null;
       }
-    }
 
-    if (field === 'integraCentroMedico') {
-      setIntegraCentroMedico(checked);
-
-      if (!checked) {
-        setCentroMedicoId(null);
+      if (field === 'integraCentroMedico' && !checked) {
+        updated.centroMedicoQueIntegra = null;
       }
-    }
+
+      return updated;
+    });
   };
 
   const handleCentroMedicoChange = (id) => {
-    setCentroMedicoId(id);
+    setPrestadorData((prev) => ({
+      ...prev,
+      centroMedicoQueIntegra: id,
+    }));
+  };
+
+  const handleBackendCuilError = (errorMessage) => {
+    if (
+      errorMessage.includes('CUIL') ||
+      errorMessage.includes('C.U.I.L') ||
+      errorMessage.includes('ya está registrado')
+    ) {
+      const mensajePersonalizado =
+        'Este CUIL/CUIT ya está registrado. Verificá los datos ingresados.';
+
+      setValidationError('cuilCuit', mensajePersonalizado);
+
+      const campo = document.querySelector('[name="cuilCuit"]');
+      if (campo) {
+        campo.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        campo.focus();
+      }
+
+      return true;
+    }
+
+    return false;
   };
 
   const handleGuardar = () => {
@@ -110,8 +134,8 @@ function AltaPrestadorForm() {
       nombre: prestadorData.nombre,
       cuilCuit: prestadorData.cuilCuit,
       esCentroMedico: prestadorData.esCentroMedico,
-      integraCentroMedico,
-      centroMedicoQueIntegra: centroMedicoId,
+      integraCentroMedico: prestadorData.integraCentroMedico,
+      centroMedicoQueIntegra: prestadorData.centroMedicoQueIntegra,
       especialidades: prestadorData.especialidades.map((e) => e.id),
       emails: prestadorData.emails,
       telefonos: prestadorData.telefonos,
@@ -138,7 +162,14 @@ function AltaPrestadorForm() {
 
         const data = await createPrestador(payload);
         navigateToEdicion(data.id, { created: true });
-      } catch {
+      } catch (err) {
+        const backendMsg = err?.response?.data || '';
+
+        if (handleBackendCuilError(backendMsg)) {
+          setSaving(false);
+          return;
+        }
+
         setShowError(true);
       } finally {
         setSaving(false);
@@ -167,8 +198,8 @@ function AltaPrestadorForm() {
         listaEspecialidades={listaEspecialidades}
         listaCentrosMedicos={listaCentrosMedicos}
         isCentroMedico={prestadorData.esCentroMedico}
-        integraCentroMedico={integraCentroMedico}
-        centroMedicoId={centroMedicoId}
+        integraCentroMedico={prestadorData.integraCentroMedico}
+        centroMedicoId={prestadorData.centroMedicoQueIntegra}
         onSwitchChange={handleSwitchChange}
         onCentroMedicoChange={handleCentroMedicoChange}
       />

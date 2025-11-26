@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Box, Grid } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -29,22 +29,29 @@ export default function LugarAtencionHorarioItem({
 
   const baseKey = `horario-${horario.id}-`;
 
-  const isErr = (suffix) => {
-    if (!validationError?.field) return false;
-    return (
-      validationError.field === baseKey + suffix ||
-      validationError.field === baseKey + 'horario'
-    );
-  };
+  const isFieldError = (suffix) =>
+    validationError?.field === `${baseKey}${suffix}`;
+
+  const isGroupError = validationError?.field === `${baseKey}horario`;
 
   const registerRef = (suffix) => (el) => {
     if (!el) return;
-    errorRefMap?.current.set(baseKey + suffix, el);
-    errorRefMap?.current.set(baseKey + 'horario', el);
+    errorRefMap?.current.set(`${baseKey}${suffix}`, el);
   };
 
   return (
-    <Box sx={{ mb: 3 }}>
+    <Box
+      sx={{
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 2,
+        p: 3,
+        mb: 3,
+      }}
+    >
+      <Typography variant="body2" fontWeight="medium">
+        Días de la semana
+      </Typography>
       <DiasSemanaSelector
         dias={DIAS_SEMANA}
         selected={localDias}
@@ -53,13 +60,13 @@ export default function LugarAtencionHorarioItem({
           update('dias', v);
         }}
         multiple
-        error={isErr('dias')}
-        helperText={isErr('dias') ? validationError.message : ''}
+        error={isFieldError('dias')}
+        helperText={isFieldError('dias') ? validationError?.message : ''}
         inputRef={registerRef('dias')}
       />
 
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Grid container spacing={2} sx={{ mt: 1 }}>
+        <Grid container spacing={2} sx={{ my: 2 }}>
           <Grid size={{ xs: 12, sm: 6 }}>
             <MobileTimePicker
               label="Horario inicio"
@@ -74,8 +81,10 @@ export default function LugarAtencionHorarioItem({
               slotProps={{
                 textField: {
                   fullWidth: true,
-                  error: isErr('inicio'),
-                  helperText: isErr('inicio') ? validationError.message : '',
+                  error: isFieldError('inicio') || isGroupError,
+                  helperText: isFieldError('inicio')
+                    ? validationError?.message
+                    : '',
                   inputRef: registerRef('inicio'),
                 },
               }}
@@ -95,24 +104,35 @@ export default function LugarAtencionHorarioItem({
               slotProps={{
                 textField: {
                   fullWidth: true,
-                  error: isErr('fin'),
-                  helperText: isErr('fin') ? validationError.message : '',
+                  error: isFieldError('fin') || isGroupError,
+                  helperText: isFieldError('fin')
+                    ? validationError?.message
+                    : '',
                   inputRef: registerRef('fin'),
                 },
               }}
             />
           </Grid>
-
-          {puedeEliminar && (
-            <Grid size={{ xs: 12 }}>
-              <EliminarButton
-                onEliminar={onEliminar}
-                label="Eliminar horario"
-              />
-            </Grid>
-          )}
         </Grid>
       </LocalizationProvider>
+
+      {isGroupError && (
+        <Typography
+          color="error"
+          variant="body2"
+          sx={{ mt: 1, ml: 0.5 }}
+          data-field={`${baseKey}horario`}
+          ref={(el) => errorRefMap?.current.set(`${baseKey}horario`, el)}
+        >
+          {validationError?.message}
+        </Typography>
+      )}
+
+      {puedeEliminar && (
+        <Box sx={{ mt: 1 }}>
+          <EliminarButton onEliminar={onEliminar} label="Eliminar horario" />
+        </Box>
+      )}
     </Box>
   );
 }

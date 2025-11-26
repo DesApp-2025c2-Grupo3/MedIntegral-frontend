@@ -87,6 +87,7 @@ export default function CentroMedicoSectionForModal({
               <TextField
                 {...params}
                 label="Centro Médico que integra"
+                placeholder="Seleccioná el centro médico"
                 error={error}
                 helperText={helperText}
               />

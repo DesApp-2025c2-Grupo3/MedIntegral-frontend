@@ -165,7 +165,6 @@ export const getAfiliadoById = async (id) => {
 
     //const formatted = formatAfiliadoDetalle(data);
     //return formatted
-
     return data;
   } catch (err) {
     console.error(`Error al obtener afiliado con ID ${id}:`, err);

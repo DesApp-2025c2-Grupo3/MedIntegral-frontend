@@ -29,6 +29,7 @@ export default function EspecialidadesSection({
           <Grid size={{ xs: 12 }}>
             <Autocomplete
               multiple
+              data-field="especialidades"
               value={especialidades}
               onChange={(_, val) => onChange('especialidades', val)}
               options={listaEspecialidades}
@@ -38,6 +39,7 @@ export default function EspecialidadesSection({
                 <TextField
                   {...params}
                   label="Especialidades"
+                  placeholder="Seleccioná o ingresá una o más especialidades"
                   fullWidth
                   {...getErrorProps(error, 'especialidades')}
                 />

@@ -60,12 +60,23 @@ export function AgendaProvider({ idAgenda, children }) {
 
     setGlobalLoading(true);
     try {
-      await updateAgendaEspecialidad(agenda.id, especialidad.id);
+      await updateAgendaEspecialidad(
+        agenda.id,
+        agenda.prestador.id,
+        especialidad.id
+      );
       await sleepIfLocal(600);
       const updated = await fetchAgenda();
       finishWithMessage({ success: 'Especialidad actualizada con éxito' });
       return updated;
-    } catch {
+    } catch (err) {
+      const msg = err?.response?.data || '';
+
+      if (/#\d+#/.test(msg)) {
+        setGlobalLoading(false);
+        throw err;
+      }
+
       finishWithMessage({ error: 'No se pudo actualizar la especialidad.' });
     }
   };

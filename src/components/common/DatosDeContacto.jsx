@@ -42,7 +42,7 @@ export default function DatosDeContacto({
               <TextField
                 {...params}
                 label="Teléfonos"
-                placeholder="Teléfonos"
+                placeholder="Ingresá un teléfono y presioná Enter"
                 {...getErrorProps(error, 'telefonos', idPrefix)}
                 data-field={idPrefix ? `${idPrefix}telefonos` : 'telefonos'}
               />
@@ -62,7 +62,7 @@ export default function DatosDeContacto({
               <TextField
                 {...params}
                 label="Emails"
-                placeholder="Emails"
+                placeholder="Ingresá un email y presioná Enter"
                 {...getErrorProps(error, 'emails', idPrefix)}
                 data-field={idPrefix ? `${idPrefix}emails` : 'emails'}
               />

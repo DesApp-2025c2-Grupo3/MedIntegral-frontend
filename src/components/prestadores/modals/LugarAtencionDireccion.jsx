@@ -25,6 +25,53 @@ export default function LugarAtencionDireccion({
 
   return (
     <Grid container spacing={2} sx={{ mt: 1 }}>
+      <Grid size={{ xs: 12, sm: 6 }}>
+        <TextField
+          select
+          SelectProps={{ native: true }}
+          label="Provincia"
+          fullWidth
+          inputRef={register('provincia')}
+          error={isErr('provincia')}
+          helperText={isErr('provincia') ? validationError.message : ''}
+          value={centro.direccion.provincia?.id || ''}
+          onChange={(e) => {
+            const selected =
+              provincias.find((p) => p.id === Number(e.target.value)) || null;
+            updateField('provincia', selected);
+          }}
+        >
+          <option value=""></option>
+          {provincias.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.nombre}
+            </option>
+          ))}
+        </TextField>
+      </Grid>
+      <Grid size={{ xs: 12, sm: 6 }}>
+        <TextField
+          label="Localidad"
+          fullWidth
+          inputRef={register('localidad')}
+          error={isErr('localidad')}
+          helperText={isErr('localidad') ? validationError.message : ''}
+          value={centro.direccion.localidad}
+          onChange={(e) => updateField('localidad', e.target.value)}
+        />
+      </Grid>
+
+      <Grid size={{ xs: 6, sm: 3 }}>
+        <TextField
+          label="Código Postal"
+          fullWidth
+          inputRef={register('codigoPostal')}
+          error={isErr('codigoPostal')}
+          helperText={isErr('codigoPostal') ? validationError.message : ''}
+          value={centro.direccion.codigoPostal}
+          onChange={(e) => updateField('codigoPostal', e.target.value)}
+        />
+      </Grid>
       <Grid size={{ xs: 6, sm: 3 }}>
         <TextField
           label="Calle"
@@ -51,57 +98,11 @@ export default function LugarAtencionDireccion({
 
       <Grid size={{ xs: 6, sm: 3 }}>
         <TextField
-          label="Código Postal"
-          fullWidth
-          value={centro.direccion.codigoPostal}
-          onChange={(e) => updateField('codigoPostal', e.target.value)}
-        />
-      </Grid>
-
-      <Grid size={{ xs: 6, sm: 3 }}>
-        <TextField
           label="Piso/Depto"
           fullWidth
           value={centro.direccion.pisoDepto}
           onChange={(e) => updateField('pisoDepto', e.target.value)}
         />
-      </Grid>
-
-      <Grid size={{ xs: 12, sm: 6 }}>
-        <TextField
-          label="Localidad"
-          fullWidth
-          inputRef={register('localidad')}
-          error={isErr('localidad')}
-          helperText={isErr('localidad') ? validationError.message : ''}
-          value={centro.direccion.localidad}
-          onChange={(e) => updateField('localidad', e.target.value)}
-        />
-      </Grid>
-
-      <Grid size={{ xs: 12, sm: 6 }}>
-        <TextField
-          select
-          SelectProps={{ native: true }}
-          label="Provincia"
-          fullWidth
-          inputRef={register('provincia')}
-          error={isErr('provincia')}
-          helperText={isErr('provincia') ? validationError.message : ''}
-          value={centro.direccion.provincia?.id || ''}
-          onChange={(e) => {
-            const selected =
-              provincias.find((p) => p.id === Number(e.target.value)) || null;
-            updateField('provincia', selected);
-          }}
-        >
-          <option value=""></option>
-          {provincias.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.nombre}
-            </option>
-          ))}
-        </TextField>
       </Grid>
     </Grid>
   );

@@ -37,7 +37,12 @@ function DetallePrestadorContent() {
 
   return (
     <Box sx={{ mt: 2 }}>
-      <PageDetailHeader type="prestador" id={id} onDelete={deletePrestador} />
+      <PageDetailHeader
+        type="prestador"
+        nombre={`${prestador.nombre}`}
+        id={id}
+        onDelete={deletePrestador}
+      />
 
       <Grid container spacing={3} mt={1}>
         <Grid size={{ xs: 12 }}>

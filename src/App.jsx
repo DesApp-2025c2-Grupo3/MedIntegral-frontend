@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './layout/layoutBase';
 
 import Home from './pages/Home';
@@ -14,6 +14,8 @@ import PrestadoresDetalle from './pages/prestadores/Detalle';
 import AfiliadosListado from './pages/afiliados/Listado';
 import AfiliadosAlta from './pages/afiliados/Alta';
 import AfiliadosDetalle from './pages/afiliados/Detalle';
+
+import Forbidden from './pages/403/Forbidden';
 
 import NotFound from './pages/404/404';
 
@@ -43,10 +45,10 @@ function App() {
           <Route path="detalle/:id" element={<AfiliadosDetalle />} />
         </Route>
 
+        <Route path="/403" element={<Forbidden />} />
         <Route path="404" element={<NotFound />} />
       </Route>
-
-      <Route path="404" element={<NotFound />} />
+      <Route path="*" element={<Navigate to="/404" replace />} />
     </Routes>
   );
 }

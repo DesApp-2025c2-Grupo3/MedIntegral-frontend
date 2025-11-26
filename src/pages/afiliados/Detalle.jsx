@@ -21,6 +21,9 @@ function DetalleAfiliadoContent() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (afiliado && afiliado.parentesco.relacion.toLowerCase() !== 'titular') {
+      navigate('/403', { replace: true });
+    }
     if (!loading && !afiliado) {
       navigate('/404', { replace: true });
     }

@@ -1,5 +1,6 @@
 const REGEX_NUMERIC_MIN_2 = /^\d{2,}$/; //mínimo 2 dígitos
 const REGEX_ALPHANUMERIC = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\d]{4,}$/; //letras, números. Mínimo 4 caracteres.
+const REGEX_CP = /^([A-Za-z]\d{3,4}|\d{4})$/;
 
 // para agenda de turnos
 export const validateDireccion = (direccion) => {
@@ -36,18 +37,17 @@ export const validateSingleDireccion = (direccion, id) => {
     };
   }
 
-  // Código postal -> mínimo 4 dígitos
   if (!direccion.codigoPostal) {
     return {
       field: `${prefijo}codigoPostal`,
       message: 'El código postal es obligatorio.',
     };
   }
-  if (!REGEX_ALPHANUMERIC.test(String(direccion.codigoPostal))) {
+  if (!REGEX_CP.test(String(direccion.codigoPostal))) {
     return {
       field: `${prefijo}codigoPostal`,
       message:
-        'El código postal no puede contener caracteres especiales (Mín. 4 caracteres).',
+        'El código postal debe ser de 4 dígitos (ej: 1708) o una letra seguida de 3 o 4 dígitos (ej: B123 o B1234).',
     };
   }
 

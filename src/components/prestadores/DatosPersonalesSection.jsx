@@ -21,11 +21,12 @@ export default function DatosPersonalesSection({ prestadorData, onChange }) {
 
       {/* cuil / cuit */}
       <Grid container spacing={3}>
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 5 }}>
           <TextField
             fullWidth
             label="CUIL / CUIT"
             name="cuilCuit"
+            placeholder="Ingresá un CUIL/CUIT sin puntos ni guiones"
             value={prestadorData.cuilCuit}
             onChange={onChange}
             data-field="cuilCuit"
@@ -34,11 +35,12 @@ export default function DatosPersonalesSection({ prestadorData, onChange }) {
         </Grid>
 
         {/* nombre */}
-        <Grid size={{ xs: 12, sm: 6, md: 8 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 7 }}>
           <TextField
             fullWidth
             label="Nombre completo"
             name="nombre"
+            placeholder="Ingresá el nombre completo"
             value={prestadorData.nombre}
             onChange={onChange}
             data-field="nombre"

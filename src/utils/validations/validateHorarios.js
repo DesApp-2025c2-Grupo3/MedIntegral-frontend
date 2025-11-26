@@ -142,10 +142,64 @@ export const validateSolapamiento = (horario, horarios) => {
       inicio.isSameOrBefore(oInicio) && fin.isSameOrAfter(oFin);
 
     if (empiezaDuranteOtro || terminaDuranteOtro || cubreTotalmente) {
+      const indexOther = j;
+      const ultimoIndex = Math.max(index, indexOther);
+      const ultimo = horarios[ultimoIndex];
+
       return {
-        field: `horario-${horario.id}-horario`,
+        field: `horario-${ultimo.id}-horario`,
         message: `El rango horario se solapa con otro horario para el ${diasSolapados.join(', ')}`,
       };
+    }
+  }
+
+  return null;
+};
+
+export const validateSolapamientoEntreCentros = (centros) => {
+  const todosLosHorarios = [];
+
+  for (const centro of centros) {
+    for (const h of centro.horarios || []) {
+      todosLosHorarios.push({
+        ...h,
+        centroId: centro.id,
+      });
+    }
+  }
+
+  for (let i = 0; i < todosLosHorarios.length; i++) {
+    const h1 = todosLosHorarios[i];
+    const { inicio: i1, fin: f1 } = normalizarHorarios(h1);
+
+    for (let j = i + 1; j < todosLosHorarios.length; j++) {
+      const h2 = todosLosHorarios[j];
+
+      if (h1.centroId === h2.centroId) continue;
+
+      const { inicio: i2, fin: f2 } = normalizarHorarios(h2);
+
+      const dias1 = (h1.dias || []).map(obtenerNombreDia);
+      const dias2 = (h2.dias || []).map(obtenerNombreDia);
+      const diasSolapados = dias1.filter((d) => dias2.includes(d));
+
+      if (diasSolapados.length === 0) continue;
+
+      const empieza1 = i1.isAfter(i2) && i1.isBefore(f2);
+      const termina1 = f1.isAfter(i2) && f1.isBefore(f2);
+      const cubre1 = i1.isSameOrBefore(i2) && f1.isSameOrAfter(f2);
+      const empieza2 = i2.isAfter(i1) && i2.isBefore(f1);
+
+      if (empieza1 || termina1 || cubre1 || empieza2) {
+        const ultimo = todosLosHorarios[j];
+
+        const indiceCentro = centros.findIndex((c) => c.id === h1.centroId) + 1;
+
+        return {
+          field: `horario-${ultimo.id}-horario`,
+          message: `El horario se solapa con otro horario del Centro de Atención #${indiceCentro} para el día ${diasSolapados.join(', ')}`,
+        };
+      }
     }
   }
 

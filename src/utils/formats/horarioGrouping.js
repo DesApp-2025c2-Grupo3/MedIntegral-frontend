@@ -123,3 +123,56 @@ export const groupHorariosSimpleDetalle = (horarios = []) => {
     return aId - bId;
   });
 };
+
+export const mergeHorarios = (horarios = []) => {
+  if (!Array.isArray(horarios)) return [];
+
+  const normalizados = horarios.map((h) => ({
+    id: h.id ?? null,
+    dia: h.dia,
+    horaInicio: h.horaInicio,
+    horaFin: h.horaFin,
+    duracion: h.duracion ?? h.duracionTurno ?? null,
+  }));
+
+  const ordenados = normalizados.sort((a, b) => {
+    const diffDia = (a.dia?.id ?? 999) - (b.dia?.id ?? 999);
+    if (diffDia !== 0) return diffDia;
+    return a.horaInicio.localeCompare(b.horaInicio);
+  });
+
+  const resultado = [];
+  let actual = null;
+
+  const toMin = (str) => {
+    const [h, m] = (str ?? '').split(':').map(Number);
+    return h * 60 + m;
+  };
+
+  for (const h of ordenados) {
+    if (!actual) {
+      actual = { ...h };
+      continue;
+    }
+
+    const mismoDia = actual.dia?.id === h.dia?.id;
+
+    const finA = toMin(actual.horaFin);
+    const inicioB = toMin(h.horaInicio);
+    const finB = toMin(h.horaFin);
+
+    const seSolapa = mismoDia && inicioB <= finA;
+    const esConsecutivo = mismoDia && inicioB === finA;
+
+    if (seSolapa || esConsecutivo) {
+      actual.horaFin = finB > finA ? h.horaFin : actual.horaFin;
+    } else {
+      resultado.push(actual);
+      actual = { ...h };
+    }
+  }
+
+  if (actual) resultado.push(actual);
+
+  return resultado;
+};

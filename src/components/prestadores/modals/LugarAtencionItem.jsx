@@ -17,8 +17,17 @@ export default function LugarAtencionItem({
   const updateCentro = (nuevo) => onUpdate(nuevo);
 
   return (
-    <Box sx={{ mb: 5 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+    <Box
+      sx={{
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 2,
+        p: 3,
+        mb: 4,
+      }}
+      ref={(el) => errorRefMap.current.set(`centro-${centro.id}`, el)}
+    >
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
         <Typography variant="h6" fontWeight="medium">
           Centro de Atención #{index + 1}
         </Typography>
