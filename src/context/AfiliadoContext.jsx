@@ -23,9 +23,9 @@ import { Backdrop, CircularProgress } from '@mui/material';
 
 const AfiliadoContext = createContext();
 
-export function AfiliadoProvider({ idAfiliado, afiliadoData, children }) {
+export function AfiliadoProvider({ idAfiliado, children, afiliadoData }) {
   const [afiliado, setAfiliado] = useState(afiliadoData || null);
-  const [loading, setLoading] = useState(!afiliadoData);
+  const [loading, setLoading] = useState(true);
   const [globalLoading, setGlobalLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
@@ -44,14 +44,14 @@ export function AfiliadoProvider({ idAfiliado, afiliadoData, children }) {
   }, [idAfiliado]);
 
   useEffect(() => {
-    if (afiliadoData) {
-      setAfiliado(afiliadoData);
-      setLoading(false);
-      return;
-    }
-
     fetchAfiliado();
-  }, [afiliadoData, fetchAfiliado]);
+  }, [fetchAfiliado]);
+
+  useEffect(() => {
+    if (afiliadoData && afiliadoData !== afiliado) {
+      setAfiliado(afiliadoData);
+    }
+  }, [afiliadoData, afiliado]);
 
   const finishWithMessage = ({ success, error }) => {
     if (success) setSuccessMessage(success);
@@ -89,7 +89,9 @@ export function AfiliadoProvider({ idAfiliado, afiliadoData, children }) {
     if (!afiliado?.id) return;
     setGlobalLoading(true);
 
-    const payload = { planId: data.planId };
+    const payload = {
+      planId: data.planId,
+    };
 
     try {
       await updateAfiliadoCobertura(afiliado.id, payload);
@@ -144,7 +146,9 @@ export function AfiliadoProvider({ idAfiliado, afiliadoData, children }) {
         provinciaId: direccionItem.provincia?.id || direccionItem.provinciaId,
       }));
 
-      const payload = { direcciones: direccionesPayload };
+      const payload = {
+        direcciones: direccionesPayload,
+      };
 
       await updateAfiliadoDirecciones(afiliado.id, payload);
       const updated = await fetchAfiliado();
@@ -279,8 +283,8 @@ export function AfiliadoProvider({ idAfiliado, afiliadoData, children }) {
 AfiliadoProvider.propTypes = {
   idAfiliado: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
     .isRequired,
-  afiliadoData: PropTypes.object,
   children: PropTypes.node.isRequired,
+  afiliadoData: PropTypes.object,
 };
 
 export const useAfiliado = () => useContext(AfiliadoContext);
