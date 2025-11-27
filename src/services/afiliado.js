@@ -191,10 +191,7 @@ export const getReporteAfiliadoById = async (id) => {
 
     return data;
   } catch (err) {
-    console.error(
-      `Error al obtener reporte de situaciones terapéuticas de afiliado con ID ${id}:`,
-      err
-    );
+    console.error(`Error al obtener reporte del afiliado con ID ${id}:`, err);
     throw err;
   }
 };
