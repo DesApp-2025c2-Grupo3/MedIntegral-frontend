@@ -90,14 +90,14 @@ export const validateFechasVigencia = (
           'La fecha de fin debe ser al menos 30 días después de la fecha de inicio.',
       };
     }
-  }
 
-  if (fin.diff(inicio, 'day') < 30) {
-    return {
-      field: inicioField,
-      message:
-        'La fecha de inicio no puede modificarse a una fecha que deje menos de 30 días con la fecha de fin.',
-    };
+    if (fin.diff(inicio, 'day') < 30) {
+      return {
+        field: inicioField,
+        message:
+          'La fecha de inicio no puede modificarse a una fecha que deje menos de 30 días con la fecha de fin.',
+      };
+    }
   }
 
   return null;

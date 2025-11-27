@@ -79,9 +79,10 @@ export function AfiliadoProvider({ idAfiliado, afiliadoData, children }) {
       const updated = await fetchAfiliado();
       finishWithMessage({ success: 'Datos personales actualizados con éxito' });
       return updated;
-    } catch (error) {
-      setGlobalLoading(false);
-      throw error;
+    } catch {
+      finishWithMessage({
+        error: 'No se pudieron actualizar los datos personales.',
+      });
     }
   };
 
@@ -185,9 +186,10 @@ export function AfiliadoProvider({ idAfiliado, afiliadoData, children }) {
       const updated = await fetchAfiliado();
       finishWithMessage({ success: 'Miembro agregado con éxito' });
       return updated;
-    } catch (err) {
-      setGlobalLoading(false);
-      throw err;
+    } catch {
+      finishWithMessage({
+        error: 'No se puedo agregar el miembro al grupo familiar.',
+      });
     }
   };
 
