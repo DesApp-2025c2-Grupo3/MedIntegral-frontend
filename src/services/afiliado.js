@@ -56,13 +56,7 @@ export const createAfiliado = async (afiliadoData) => {
  */
 export const deleteAfiliadoById = async (id, fechaBaja = null) => {
   try {
-    const payload = fechaBaja
-      ? {
-          tieneFechaBaja: true,
-          fechaBaja: fechaBaja,
-        }
-      : {};
-
+    const payload = fechaBaja ? { fechaBaja } : {};
     const response = await api.delete(`/afiliados/${id}`, { data: payload });
 
     if (response.status !== 200) {
@@ -70,10 +64,62 @@ export const deleteAfiliadoById = async (id, fechaBaja = null) => {
         `Error al dar de baja el afiliado (status ${response.status})`
       );
     }
-
     return response.data;
   } catch (error) {
     console.error(`Error al dar de baja el afiliado ${id}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Modificar fecha de baja existente
+ */
+export const modificarFechaBajaAfiliado = async (
+  id,
+  fechaBaja,
+  aplicarAGrupoFamiliar = false
+) => {
+  try {
+    const response = await api.put(`/afiliados/${id}/fecha-baja`, {
+      fechaBaja,
+      aplicarAGrupoFamiliar,
+    });
+
+    if (response.status !== 200) {
+      throw new Error(
+        `Error al modificar fecha de baja (status ${response.status})`
+      );
+    }
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error al modificar fecha de baja del afiliado ${id}:`,
+      error
+    );
+    throw error;
+  }
+};
+
+/**
+ * Reincorporar afiliado
+ */
+export const reincorporarAfiliado = async (
+  id,
+  reincorporarGrupoFamiliar = false
+) => {
+  try {
+    const response = await api.put(`/afiliados/${id}/reincorporar`, {
+      reincorporarGrupoFamiliar,
+    });
+
+    if (response.status !== 200) {
+      throw new Error(
+        `Error al reincorporar afiliado (status ${response.status})`
+      );
+    }
+    return response.data;
+  } catch (error) {
+    console.error(`Error al reincorporar afiliado ${id}:`, error);
     throw error;
   }
 };
@@ -246,6 +292,22 @@ export const updateAfiliadoDirecciones = async (id, payload) => {
       `Error al actualizar las direcciones del afiliado ${id}:`,
       error
     );
+    throw error;
+  }
+};
+
+/**
+ * Agregar un miembro dependiente al afiliado
+ */
+export const addDependiente = async (idAfiliado, dependienteData) => {
+  try {
+    const { data } = await api.post(
+      `/afiliados/${idAfiliado}/dependientes`,
+      dependienteData
+    );
+    return data;
+  } catch (error) {
+    console.error('Error al agregar dependiente:', error);
     throw error;
   }
 };

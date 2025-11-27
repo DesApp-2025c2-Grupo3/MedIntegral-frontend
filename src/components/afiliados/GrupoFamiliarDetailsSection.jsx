@@ -1,14 +1,20 @@
 import { useState } from 'react';
-import { Typography, Stack, Snackbar, Alert } from '@mui/material';
+import { Typography, Stack, Snackbar, Alert, Button } from '@mui/material';
 import FamilyRestroomIcon from '@mui/icons-material/FamilyRestroom';
+import AddIcon from '@mui/icons-material/Add';
 import DetailsSection from '../common/details/DetailsSection';
 import { useAfiliado } from '../../context/AfiliadoContext';
 import MiembroFamiliarDetails from './MiembroFamiliarDetails';
 import CheckIcon from '@mui/icons-material/Check';
+import AgregarMiembroModal from './modals/AgregarMiembroModal';
+import { FormValidationProvider } from '../../context/FormValidationContext';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 export default function GrupoFamiliarDetailsSection() {
   const { afiliado } = useAfiliado();
   const [toast, setToast] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
 
   if (!afiliado) return null;
 
@@ -17,8 +23,21 @@ export default function GrupoFamiliarDetailsSection() {
   const handleToastClose = () => setToast(null);
 
   return (
-    <>
-      <DetailsSection title="Grupo Familiar" icon={FamilyRestroomIcon}>
+    <FormValidationProvider>
+      <DetailsSection
+        title="Grupo Familiar"
+        icon={FamilyRestroomIcon}
+        action={
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<AddIcon />}
+            onClick={() => setOpenModal(true)}
+          >
+            Agregar miembro
+          </Button>
+        }
+      >
         {dependientes && dependientes.length > 0 ? (
           <Stack spacing={3}>
             {dependientes.map((miembro, index) => (
@@ -35,6 +54,13 @@ export default function GrupoFamiliarDetailsSection() {
           </Typography>
         )}
       </DetailsSection>
+
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <AgregarMiembroModal
+          open={openModal}
+          onClose={() => setOpenModal(false)}
+        />
+      </LocalizationProvider>
 
       {toast && (
         <Snackbar
@@ -55,6 +81,6 @@ export default function GrupoFamiliarDetailsSection() {
           </Alert>
         </Snackbar>
       )}
-    </>
+    </FormValidationProvider>
   );
 }
