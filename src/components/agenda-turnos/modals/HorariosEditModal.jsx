@@ -24,7 +24,7 @@ import ButtonsSection from '../../common/forms/FormActions';
 import DiasSemanaSelector from '../../common/forms/DiasSemanaSelector';
 import EliminarButton from '../../common/forms/EliminarButton';
 import FadeSlide from '../../common/animations/FadeSlide';
-import { validateHorarios } from '../../../utils/validations/validateHorariosEdicion';
+import { validateHorarios } from '../../../utils/validations/validateHorariosEdicionAgenda';
 
 import { toDayjs, fromDayjs } from '../../../utils/formats/dateUtils';
 import {
@@ -55,11 +55,13 @@ export default function HorariosEditModal({ open, onClose }) {
     if (!(open && Array.isArray(agenda?.horariosAtencion))) return;
 
     const payload = groupHorarios(agenda.horariosAtencion, diasConHorarios);
+
     setLocalHorarios(
       payload.length
         ? payload
         : [{ id: '1', dias: [], horaInicio: '', horaFin: '', duracion: null }]
     );
+
     setErrors(payload.map(() => ({})));
   }, [agenda, open, diasConHorarios]);
 
@@ -110,18 +112,17 @@ export default function HorariosEditModal({ open, onClose }) {
     );
 
     if (validation) {
-      const idx = localHorarios.findIndex((h) => h.id === validation.horarioId);
+      const idx = validation.horarioId;
       if (idx !== -1) {
         setErrors((prev) => {
           const updated = [...prev];
           updated[idx] = { [validation.field]: validation.message };
           return updated;
         });
-      } else {
-        setErrors(validation);
       }
       return;
     }
+
     await updateHorarios(localHorarios);
     onClose();
   };
@@ -171,10 +172,8 @@ export default function HorariosEditModal({ open, onClose }) {
                   onChange={(newDias) =>
                     handleHorarioChange(index, 'dias', newDias)
                   }
-                  error={Boolean(errors[index]?.[`horario-${horario.id}-dias`])}
-                  helperText={
-                    errors[index]?.[`horario-${horario.id}-dias`] || ''
-                  }
+                  error={Boolean(errors[index]?.[`horario-${index}-dias`])}
+                  helperText={errors[index]?.[`horario-${index}-dias`] || ''}
                 />
 
                 <Typography
@@ -209,12 +208,10 @@ export default function HorariosEditModal({ open, onClose }) {
                             fullWidth
                             placeholder="Seleccioná la duración de los turnos"
                             error={Boolean(
-                              errors[index]?.[`horario-${horario.id}-duracion`]
+                              errors[index]?.[`horario-${index}-duracion`]
                             )}
                             helperText={
-                              errors[index]?.[
-                                `horario-${horario.id}-duracion`
-                              ] || ''
+                              errors[index]?.[`horario-${index}-duracion`] || ''
                             }
                           />
                         )}
@@ -233,15 +230,11 @@ export default function HorariosEditModal({ open, onClose }) {
                           textField: {
                             fullWidth: true,
                             error: Boolean(
-                              errors[index]?.[`horario-${horario.id}-inicio`] ||
-                                errors[index]?.[`horario-${horario.id}-horario`]
+                              errors[index]?.[`horario-${index}-inicio`] ||
+                                errors[index]?.[`horario-${index}-horario`]
                             ),
                             helperText:
-                              errors[index]?.[`horario-${horario.id}-inicio`] ||
-                              errors[index]?.[
-                                `horario-${horario.id}-horario`
-                              ] ||
-                              '',
+                              errors[index]?.[`horario-${index}-inicio`] || '',
                           },
                         }}
                       />
@@ -259,21 +252,33 @@ export default function HorariosEditModal({ open, onClose }) {
                           textField: {
                             fullWidth: true,
                             error: Boolean(
-                              errors[index]?.[`horario-${horario.id}-fin`] ||
-                                errors[index]?.[`horario-${horario.id}-horario`]
+                              errors[index]?.[`horario-${index}-fin`] ||
+                                errors[index]?.[`horario-${index}-horario`]
                             ),
                             helperText:
-                              errors[index]?.[`horario-${horario.id}-fin`] ||
-                              errors[index]?.[
-                                `horario-${horario.id}-horario`
-                              ] ||
-                              '',
+                              errors[index]?.[`horario-${index}-fin`] || '',
                           },
                         }}
                       />
                     </Grid>
                   </Grid>
                 </LocalizationProvider>
+
+                {errors[index]?.[`horario-${index}-horario`] && (
+                  <Grid container spacing={3} sx={{ mt: 1 }}>
+                    <Grid size={{ xs: 12, sm: 12, md: 4 }}></Grid>
+                    <Grid size={{ xs: 12, sm: 12, md: 8 }}>
+                      <Typography
+                        color="error"
+                        variant="body2"
+                        textAlign="center"
+                        sx={{ mt: 1, ml: 0.5 }}
+                      >
+                        {errors[index][`horario-${index}-horario`]}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                )}
 
                 {localHorarios.length > 1 && (
                   <Box sx={{ mt: 3 }}>
