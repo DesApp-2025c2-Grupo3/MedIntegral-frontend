@@ -17,7 +17,6 @@ import AfiliadoDetailHeader from '../../components/afiliados/AfiliadoDetailHeade
 
 function DetalleAfiliadoContent() {
   const { afiliado, loading } = useAfiliado();
-  const { id } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,7 +40,10 @@ function DetalleAfiliadoContent() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box sx={{ mt: 2 }}>
-        <AfiliadoDetailHeader id={id} />
+        <AfiliadoDetailHeader
+          nombre={afiliado.nombre}
+          apellido={afiliado.apellido}
+        />
 
         <Grid container spacing={3} mt={1}>
           <Grid size={{ xs: 12 }}>

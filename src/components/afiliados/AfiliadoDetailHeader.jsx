@@ -21,7 +21,7 @@ import { useAfiliado } from '../../context/AfiliadoContext';
 import BajaAfiliadoModal from './modals/BajaAfiliadoModal';
 import ReincorporarModal from './modals/ReincorporarModal';
 
-export default function AfiliadoDetailHeader({ id }) {
+export default function AfiliadoDetailHeader({ nombre, apellido }) {
   const { afiliado } = useAfiliado();
   const [bajaModalOpen, setBajaModalOpen] = useState(false);
   const [reincorporarModalOpen, setReincorporarModalOpen] = useState(false);
@@ -73,7 +73,7 @@ export default function AfiliadoDetailHeader({ id }) {
       <Grid container alignItems="center" justifyContent="space-between">
         <Grid size={{ xs: 12, md: 'auto' }}>
           <Typography variant="h4" fontWeight="bold">
-            Afiliado #{id}
+            Afiliado: {nombre} {apellido}
           </Typography>
           <Typography
             variant="subtitle1"
@@ -174,5 +174,6 @@ export default function AfiliadoDetailHeader({ id }) {
 }
 
 AfiliadoDetailHeader.propTypes = {
-  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  nombre: PropTypes.string.isRequired,
+  apellido: PropTypes.string.isRequired,
 };
