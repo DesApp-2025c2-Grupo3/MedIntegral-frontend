@@ -173,6 +173,30 @@ export const getAfiliadoById = async (id) => {
 };
 
 /**
+ * Obtener reporte de situaciones terapéuticas de un afiliado y su grupo familiar
+ */
+export const getReporteAfiliadoById = async (id) => {
+  if (!id) {
+    throw new Error('Se requiere un ID de afiliado');
+  }
+
+  try {
+    const { data } = await api.get(`/afiliados/${id}/reporte`, {
+      responseType: 'blob',
+    });
+
+    if (!data) {
+      throw new Error(`Afiliado con ID ${id} no encontrado o formato inválido`);
+    }
+
+    return data;
+  } catch (err) {
+    console.error(`Error al obtener reporte del afiliado con ID ${id}:`, err);
+    throw err;
+  }
+};
+
+/**
  * Actualizar datos personales del afiliado
  */
 export const updateAfiliadoDatosPersonales = async (id, payload) => {

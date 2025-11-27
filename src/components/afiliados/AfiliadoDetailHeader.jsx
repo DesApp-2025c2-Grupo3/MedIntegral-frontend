@@ -20,6 +20,9 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useAfiliado } from '../../context/AfiliadoContext';
 import BajaAfiliadoModal from './modals/BajaAfiliadoModal';
 import ReincorporarModal from './modals/ReincorporarModal';
+import { getReporteAfiliadoById } from '../../services/afiliado';
+import { downloadFile } from '../../utils/downloadFile';
+import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 
 export default function AfiliadoDetailHeader({ nombre, apellido }) {
   const { afiliado } = useAfiliado();
@@ -68,6 +71,13 @@ export default function AfiliadoDetailHeader({ nombre, apellido }) {
     setReincorporarModalOpen(true);
   };
 
+  const downloadReport = () => {
+    downloadFile(
+      () => getReporteAfiliadoById(afiliado.id),
+      `reporteAfiliado${afiliado.id}.pdf`
+    );
+  };
+
   return (
     <Box sx={{ mb: 4 }}>
       <Grid container alignItems="center" justifyContent="space-between">
@@ -91,6 +101,16 @@ export default function AfiliadoDetailHeader({ nombre, apellido }) {
               color={estado.color}
               variant="outlined"
             />
+
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<ArrowCircleDownIcon />}
+              sx={{ textTransform: 'none', mr: 1 }}
+              onClick={downloadReport}
+            >
+              Descargar reporte
+            </Button>
 
             <Button
               variant="contained"
