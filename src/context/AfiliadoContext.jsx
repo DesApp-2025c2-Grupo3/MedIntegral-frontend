@@ -13,6 +13,9 @@ import {
   deleteAfiliadoById,
   updateAfiliadoDatosContacto,
   updateAfiliadoDirecciones,
+  addDependiente,
+  modificarFechaBajaAfiliado,
+  reincorporarAfiliado,
 } from '../services/afiliado';
 import SuccessSnackbar from '../components/common/SuccessSnackbar';
 import ErrorSnackbar from '../components/common/ErrorSnackbar';
@@ -174,6 +177,63 @@ export function AfiliadoProvider({ idAfiliado, afiliadoData, children }) {
     }
   };
 
+  const agregarDependiente = async (dependienteData) => {
+    if (!afiliado?.id) return;
+    setGlobalLoading(true);
+
+    try {
+      await addDependiente(afiliado.id, dependienteData);
+      const updated = await fetchAfiliado();
+      finishWithMessage({ success: 'Miembro agregado con éxito' });
+      return updated;
+    } catch {
+      finishWithMessage({
+        error: 'No se puedo agregar el miembro al grupo familiar.',
+      });
+    }
+  };
+
+  const modificarFechaBaja = async (
+    fechaBaja,
+    aplicarAGrupoFamiliar = false
+  ) => {
+    if (!afiliado?.id) return false;
+    setGlobalLoading(true);
+
+    try {
+      await modificarFechaBajaAfiliado(
+        afiliado.id,
+        fechaBaja,
+        aplicarAGrupoFamiliar
+      );
+      const updated = await fetchAfiliado();
+      finishWithMessage({
+        success: `Fecha de baja modificada exitosamente${aplicarAGrupoFamiliar ? ' para todo el grupo familiar' : ''}`,
+      });
+      return { success: true, updated };
+    } catch {
+      finishWithMessage({ error: 'No se pudo modificar la fecha de baja.' });
+      return { success: false };
+    }
+  };
+
+  const reincorporar = async (reincorporarGrupoFamiliar = false) => {
+    if (!afiliado?.id) return false;
+    setGlobalLoading(true);
+
+    try {
+      await reincorporarAfiliado(afiliado.id, reincorporarGrupoFamiliar);
+      const updated = await fetchAfiliado();
+      finishWithMessage({
+        success: `Afiliado reincorporado exitosamente${reincorporarGrupoFamiliar ? ' junto con su grupo familiar' : ''}`,
+      });
+      return { success: true, updated };
+    } catch {
+      finishWithMessage({ error: 'No se pudo reincorporar el afiliado.' });
+      return { success: false };
+    }
+  };
+
   return (
     <AfiliadoContext.Provider
       value={{
@@ -188,6 +248,9 @@ export function AfiliadoProvider({ idAfiliado, afiliadoData, children }) {
         updateDatosContacto,
         updateDirecciones,
         darDeBaja,
+        agregarDependiente,
+        modificarFechaBaja,
+        reincorporar,
         refetchAfiliado: fetchAfiliado,
         clearError: () => setError(null),
       }}

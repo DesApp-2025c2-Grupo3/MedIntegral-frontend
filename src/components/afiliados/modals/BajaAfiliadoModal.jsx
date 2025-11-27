@@ -21,10 +21,15 @@ import FechaVigenciaGroup from '../FechaVigenciaGroup';
 import { FormValidationProvider } from '../../../context/FormValidationContext';
 import { formatFecha } from '../../../utils/formats/afiliadoPayload';
 
-export default function BajaAfiliadoModal({ open, onClose }) {
-  const { afiliado, darDeBaja } = useAfiliado();
+export default function BajaAfiliadoModal({
+  open,
+  onClose,
+  esModificacion = false,
+}) {
+  const { afiliado, darDeBaja, modificarFechaBaja } = useAfiliado();
   const [localData, setLocalData] = useState(null);
   const [error, setError] = useState(null);
+  const [aplicarAGrupoFamiliar, setAplicarAGrupoFamiliar] = useState(false);
 
   useEffect(() => {
     if (open && afiliado) {
@@ -42,6 +47,7 @@ export default function BajaAfiliadoModal({ open, onClose }) {
         tieneFechaBaja: true,
       });
       setError(null);
+      setAplicarAGrupoFamiliar(false);
     }
   }, [open, afiliado]);
 
@@ -66,7 +72,6 @@ export default function BajaAfiliadoModal({ open, onClose }) {
     const vigenciaFinString = localData.vigenciaFin
       ? formatFecha(localData.vigenciaFin)
       : null;
-    const vigenciaInicioString = afiliado.vigenciaInicio;
 
     if (!vigenciaFinString) {
       setError({
@@ -76,19 +81,36 @@ export default function BajaAfiliadoModal({ open, onClose }) {
       return;
     }
 
-    const v = validateFechasVigencia(
-      vigenciaInicioString,
+    const validationError = validateFechasVigencia(
+      afiliado.vigenciaInicio,
       vigenciaFinString,
-      true
+      true,
+      ''
     );
-    if (v) return setError(v);
 
-    const result = await darDeBaja(vigenciaFinString);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
+    let result;
+    if (esModificacion) {
+      result = await modificarFechaBaja(
+        vigenciaFinString,
+        aplicarAGrupoFamiliar
+      );
+    } else {
+      result = await darDeBaja(vigenciaFinString);
+    }
+
     if (result.success) {
       onClose();
     }
-    onClose();
   };
+
+  const titulo = esModificacion
+    ? 'Modificar fecha de baja'
+    : 'Dar de baja afiliado';
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
@@ -99,7 +121,7 @@ export default function BajaAfiliadoModal({ open, onClose }) {
           alignItems: 'center',
         }}
       >
-        Dar de baja afiliado
+        {titulo}
         <IconButton onClick={onClose} size="small">
           <CloseIcon />
         </IconButton>
@@ -109,8 +131,9 @@ export default function BajaAfiliadoModal({ open, onClose }) {
         <FormValidationProvider>
           <Stack spacing={3}>
             <Alert severity="warning" sx={{ mb: 2 }}>
-              Esta acción dará de baja al afiliado. Podrá reactivarlo
-              posteriormente si es necesario.
+              {esModificacion
+                ? 'Esta acción modificará la fecha de baja del afiliado.'
+                : 'Esta acción dará de baja al afiliado. Podrá reactivarlo posteriormente si es necesario.'}
             </Alert>
 
             <Box sx={{ p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
@@ -122,6 +145,12 @@ export default function BajaAfiliadoModal({ open, onClose }) {
               {afiliado.numeroDocumento && (
                 <Typography variant="body2" color="text.secondary">
                   Documento: {afiliado.numeroDocumento}
+                </Typography>
+              )}
+              {esModificacion && afiliado.vigenciaFin && (
+                <Typography variant="body2" color="text.secondary">
+                  Fecha de baja actual:
+                  {new Date(afiliado.vigenciaFin).toLocaleDateString()}
                 </Typography>
               )}
             </Box>
@@ -154,8 +183,9 @@ export default function BajaAfiliadoModal({ open, onClose }) {
             </Grid>
 
             <Typography variant="caption" color="text.secondary">
-              * El afiliado dejará de aparecer en los listados a partir de la
-              fecha de baja seleccionada.
+              {esModificacion
+                ? 'La nueva fecha de baja debe ser al menos 30 días después de la fecha de inicio.'
+                : 'El afiliado dejará de aparecer en los listados a partir de la fecha de baja seleccionada.'}
             </Typography>
           </Stack>
         </FormValidationProvider>
@@ -165,9 +195,9 @@ export default function BajaAfiliadoModal({ open, onClose }) {
         <ButtonsSection
           handleGuardar={onConfirmarBaja}
           onConfirmCancel={onClose}
-          cancelTitle={`¿Cancelar la baja del afiliado ${afiliado.nombre}?`}
-          cancelMessage="Si cancelás ahora, se perderán los cambios realizados."
-          confirmText="Guardar cambios"
+          cancelTitle={`¿Cancelar la ${esModificacion ? 'modificación' : 'baja'} del afiliado?`}
+          cancelMessage={`Si cancelás ahora, se perderán los cambios realizados.`}
+          confirmText={esModificacion ? 'Modificar fecha' : 'Confirmar baja'}
           cancelText="Cancelar"
         />
       </DialogActions>
@@ -178,4 +208,5 @@ export default function BajaAfiliadoModal({ open, onClose }) {
 BajaAfiliadoModal.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  esModificacion: PropTypes.bool,
 };
