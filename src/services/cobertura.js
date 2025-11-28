@@ -5,7 +5,7 @@ import api from './api';
  */
 export const getPlanesMedicos = async () => {
   try {
-    const { data } = await api.get('/planesMedicos');
+    const { data } = await api.get('/planes-medicos');
     if (!Array.isArray(data)) {
       throw new Error('Formato inesperado en la respuesta');
     }

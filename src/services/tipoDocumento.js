@@ -5,7 +5,7 @@ import api from './api';
  */
 export const getTiposDocumento = async () => {
   try {
-    const { data } = await api.get('/tipoDocumentos');
+    const { data } = await api.get('/tipo-documentos');
     if (!Array.isArray(data)) {
       throw new Error('Formato inesperado en la respuesta');
     }

@@ -197,11 +197,11 @@ api.interceptors.request.use((config) => {
       });
     }
 
-    if (config.url === '/planesMedicos' && USE_AFILIADOS_MOCKS) {
+    if (config.url === '/planes-medicos' && USE_AFILIADOS_MOCKS) {
       return Promise.reject({ isMock: true, data: planesMedicos });
     }
 
-    if (config.url === '/situacionesTerapeuticas' && USE_AFILIADOS_MOCKS) {
+    if (config.url === '/situaciones-terapeuticas' && USE_AFILIADOS_MOCKS) {
       return Promise.reject({
         isMock: true,
         data: SituacionesTerapeuticasMock,
