@@ -5,7 +5,7 @@ import api from './api';
  */
 export const getSituacionesTerapeuticas = async () => {
   try {
-    const { data } = await api.get('/situacionesTerapeuticas');
+    const { data } = await api.get('/situaciones-terapeuticas');
     if (!Array.isArray(data)) {
       throw new Error('Formato inesperado en la respuesta');
     }
