@@ -10,6 +10,7 @@ import AgregarMiembroModal from './modals/AgregarMiembroModal';
 import { FormValidationProvider } from '../../context/FormValidationContext';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import 'dayjs/locale/es';
 
 export default function GrupoFamiliarDetailsSection() {
   const { afiliado } = useAfiliado();
@@ -55,7 +56,7 @@ export default function GrupoFamiliarDetailsSection() {
         )}
       </DetailsSection>
 
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
         <AgregarMiembroModal
           open={openModal}
           onClose={() => setOpenModal(false)}

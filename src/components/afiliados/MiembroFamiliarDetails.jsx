@@ -32,6 +32,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import BajaAfiliadoModal from './modals/BajaAfiliadoModal';
 import ReincorporarModal from './modals/ReincorporarModal';
+import 'dayjs/locale/es';
 
 function MiembroFamiliarContent({ miembro }) {
   const { afiliado } = useAfiliado();
@@ -85,7 +86,7 @@ function MiembroFamiliarContent({ miembro }) {
   const handleToastClose = () => setToast(null);
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
       <Card sx={{ mb: 2 }}>
         <CardContent>
           <Box

@@ -78,6 +78,13 @@ export default function AfiliadoDetailHeader({ nombre, apellido }) {
     );
   };
 
+  const formatFecha = (fecha) => {
+    if (!fecha) return '—';
+    const [datePart] = fecha.split('T');
+    const [year, month, day] = datePart.split('-');
+    return `${day}/${month}/${year}`;
+  };
+
   return (
     <Box sx={{ mb: 4 }}>
       <Grid container alignItems="center" justifyContent="space-between">
@@ -166,16 +173,16 @@ export default function AfiliadoDetailHeader({ nombre, apellido }) {
       {fechaBajaFutura && (
         <Alert severity="warning" sx={{ mt: 2 }}>
           El afiliado tiene programada una baja para el{' '}
-          {new Date(afiliado.vigenciaFin).toLocaleDateString()}. Puede modificar
-          la fecha o reincorporarlo.
+          {formatFecha(afiliado.vigenciaFin)}. Puede modificar la fecha o
+          reincorporarlo.
         </Alert>
       )}
 
       {fechaBajaPasada && (
         <Alert severity="error" sx={{ mt: 2 }}>
           El afiliado se encuentra inactivo desde el{' '}
-          {new Date(afiliado.vigenciaFin).toLocaleDateString()}. Puede
-          reincorporarlo para reactivarlo.
+          {formatFecha(afiliado.vigenciaFin)}. Puede reincorporarlo para
+          reactivarlo.
         </Alert>
       )}
 

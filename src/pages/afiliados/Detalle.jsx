@@ -14,6 +14,7 @@ import DatosContactoDetailsSection from '../../components/afiliados/DatosContact
 import DireccionDetailsSection from '../../components/afiliados/DireccionDetailsSection';
 import GrupoFamiliarDetailsSection from '../../components/afiliados/GrupoFamiliarDetailsSection';
 import AfiliadoDetailHeader from '../../components/afiliados/AfiliadoDetailHeader';
+import 'dayjs/locale/es';
 
 function DetalleAfiliadoContent() {
   const { afiliado, loading } = useAfiliado();
@@ -38,7 +39,7 @@ function DetalleAfiliadoContent() {
   if (!afiliado) return null;
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
       <Box sx={{ mt: 2 }}>
         <AfiliadoDetailHeader
           nombre={afiliado.nombre}

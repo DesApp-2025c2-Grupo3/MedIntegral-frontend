@@ -6,7 +6,8 @@ const REGEX_NOMBRE = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,}$/;
 
 const REGEX_TELEFONO_CLEAN = /^\d{8,15}$/;
 
-const REGEX_EMAIL = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const REGEX_EMAIL =
+  /^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 const validateBaseNumeric = (value, fieldName) => {
   if (!value || String(value).trim() === '') {
