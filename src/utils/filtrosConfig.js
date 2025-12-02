@@ -96,6 +96,18 @@ export const filtrosConfig = {
   afiliado: {
     fields: [
       {
+        name: 'estado',
+        label: 'Mostrar afiliados por vigencia',
+        type: 'select',
+        options: [
+          { value: 'Vigentes', label: 'Afiliados vigentes' },
+          { value: 'Bajas', label: 'Afiliados dados de baja' },
+          { value: 'Vigencia futura', label: 'Afiliados con vigencia futura' },
+          { value: 'Todos', label: 'Todos los afiliados' },
+        ],
+      },
+      { name: 'nroAfiliado', label: 'Nro de Afiliado', type: 'text' },
+      {
         name: 'tipoDocumento',
         label: 'Tipo de documento',
         type: 'select',
@@ -105,8 +117,6 @@ export const filtrosConfig = {
           { value: 'Libreta cívica', label: 'Libreta Cívica' },
         ],
       },
-      { name: 'nroAfiliado', label: 'Nro de Afiliado', type: 'text' },
-      { name: 'fechaNacimiento', label: 'Fecha de nacimiento', type: 'date' },
       {
         name: 'planMedico',
         label: 'Plan Médico',
@@ -132,23 +142,13 @@ export const filtrosConfig = {
         options: [],
         asyncSearchUrl: '/afiliados/localidades',
       },
-      { name: 'telefono', label: 'Teléfono', type: 'text' },
-      { name: 'email', label: 'E-mail', type: 'text' },
       { name: 'vigenciaDesde', label: 'Vigencia desde', type: 'date' },
       { name: 'vigenciaHasta', label: 'Vigencia hasta', type: 'date' },
       { name: 'creacionDesde', label: 'Creación desde', type: 'date' },
       { name: 'creacionHasta', label: 'Creación hasta', type: 'date' },
-      {
-        name: 'estado',
-        label: 'Vigencia afiliados',
-        type: 'select',
-        options: [
-          { value: 'Vigentes', label: 'Afiliados vigentes' },
-          { value: 'Bajas', label: 'Afiliados dados de baja' },
-          { value: 'Vigencia futura', label: 'Afiliados con vigencia futura' },
-          { value: 'Todos', label: 'Todos los afiliados' },
-        ],
-      },
+      { name: 'fechaNacimiento', label: 'Fecha de nacimiento', type: 'date' },
+      { name: 'telefono', label: 'Teléfono', type: 'text' },
+      { name: 'email', label: 'E-mail', type: 'text' },
     ],
     validateFn: validateFiltrosAfiliados,
   },
