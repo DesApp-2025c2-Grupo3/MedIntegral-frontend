@@ -13,7 +13,12 @@ export default function Footer({ sx }) {
 
         <Grid className="footer-text">
           <Typography variant="body2" className="footer-rights">
-            © 2025 - Medicina Integral Group
+            <a
+              href="https://github.com/DesApp-2025c2-Grupo3"
+              style={{ textDecoration: 'none', color: 'inherit' }}
+            >
+              © 2025 - Medicina Integral Group
+            </a>
           </Typography>
         </Grid>
       </Grid>

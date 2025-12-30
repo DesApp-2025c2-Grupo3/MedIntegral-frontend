@@ -1,13 +1,13 @@
-# MedIntegral – Frontend  
+# MedIntegral – Frontend
 
 > Interfaz de usuario del sistema **MedIntegral**, construida con React y Vite.  
-<img width="4032" height="2302" alt="image" src="https://github.com/user-attachments/assets/50fe2b69-f212-4664-b207-0d57e66fc93b" />
+> <img width="4032" height="2302" alt="image" src="https://github.com/user-attachments/assets/50fe2b69-f212-4664-b207-0d57e66fc93b" />
 
 ---
 
-## Descripción  
+## Descripción
 
-MedIntegral-frontend es la parte visual del proyecto MedIntegral, pensado para administrar la gestión de datos médicos / de salud (turnos, pacientes, historial, etc.). El frontend consume una API (backend), presentando formularios, vistas y componentes de interfaz para que los administrativos accedan a las funcionalidades del sistema. 
+MedIntegral-frontend es la parte visual del proyecto MedIntegral, pensado para administrar la gestión de datos médicos / de salud (turnos, pacientes, historial, etc.). El frontend consume una API (backend), presentando formularios, vistas y componentes de interfaz para que los administrativos accedan a las funcionalidades del sistema.
 
 ---
 
@@ -29,16 +29,16 @@ Desde esta instancia se puede acceder a todas las funcionalidades principales de
 
 - Navegación optimizada y UI responsiva
 
-La aplicación se actualiza automáticamente con cada merge a dev de este repositorio. 
+La aplicación se actualiza automáticamente con cada merge a dev de este repositorio.
 
 ---
 
-## Estructura general  
+## Estructura general
 
 ```
 /public – recursos públicos, index.html, favicon, etc.
 /src – código fuente React JSX
-├── assets – imágenes, logos, estilos y otros recursos estáticos. 
+├── assets – imágenes, logos, estilos y otros recursos estáticos.
 ├── components – omponentes reutilizables de UI usados en distintas partes de la app.
 ├── context – contextos globales de React.
 ├── hooks – hooks personalizados con lógica reutilizable (fetch, formularios, helpers).
@@ -49,32 +49,38 @@ La aplicación se actualiza automáticamente con cada merge a dev de este reposi
 ├── utils – utilidades genéricas: formateadores, validadores y funciones auxiliares.
 ```
 
-
-Esta organización sigue buenas prácticas de proyectos React + Vite, manteniendo una arquitectura modular y legible.  
+Esta organización sigue buenas prácticas de proyectos React + Vite, manteniendo una arquitectura modular y legible.
 
 ---
 
-## Instalación / Desarrollo local  
+## Instalación / Desarrollo local
 
-1. Clonar el repositorio  
+1. Clonar el repositorio
+
 ```
  git clone https://github.com/DesApp-2025c2-Grupo3/MedIntegral-frontend.git
  cd MedIntegral-frontend
 ```
+
 2. Instalar dependencias
+
 ```
 npm install
 ```
+
 3. Ejecutar en modo desarrollo (con recarga automática — HMR)
+
 ```
 npm run dev
 ```
+
 4. Abrir en el browser en la URL que indique la terminal (por defecto suele ser http://localhost:3000)
-5.(Opcional) Linter / formateo: si querés asegurarte de seguir las reglas de estilo/proyectos
+   5.(Opcional) Linter / formateo: si querés asegurarte de seguir las reglas de estilo/proyectos
+
 ```
 npm run lint
 npm run format
-``` 
+```
 
 ---
 
@@ -85,13 +91,13 @@ npm run format
 - JavaScript
 - Material UI
 - ESLint / Prettier
-  
+
 ---
 
 ## Equipo
 
-- Ailen Pisoni
-- Alina Marquez
-- Cristian Gonzalez
-- Gabriel Ledezma
-- Melina Alvarez
+- [Ailen Pisoni](https://github.com/AilenPisoni0)
+- [Alina Marquez](https://github.com/alymarquez)
+- [Melina Alvarez](https://github.com/MeliAlvarez14)
+- [Cristian Gonzalez](https://github.com/CristianEGonzalez)
+- [Gabriel Ledezma](https://www.github.com/gabrielledezma21/)
